@@ -568,6 +568,104 @@ select.fselect{appearance:none;cursor:pointer;}
 .modal-close:hover{color:var(--text);}
 .modal-wrap{position:relative;}
 
+/* GO IN DEPTH MODAL */
+.gid-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;
+  display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.gid-modal.show{display:flex;}
+.gid-box{background:var(--bg1);border:1px solid var(--border2);border-radius:16px;
+  width:min(680px,94vw);max-height:82vh;overflow-y:auto;padding:1.6rem;}
+.gid-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+.gid-title{font-family:'Instrument Serif',serif;font-size:1.35rem;line-height:1.3;padding-right:1rem;}
+.gid-close{background:transparent;border:none;color:var(--text3);font-size:1.3rem;
+  transition:color .15s;flex-shrink:0;margin-top:2px;}
+.gid-close:hover{color:var(--text);}
+.gid-context{font-size:12px;color:var(--text3);margin-bottom:1rem;padding:.5rem .75rem;
+  background:var(--s2);border-radius:7px;font-family:'Geist Mono',monospace;}
+.gid-body{font-size:13.5px;color:var(--text2);line-height:1.8;}
+.gid-body h3{font-size:13px;font-weight:700;color:var(--text);margin:1rem 0 .4rem;
+  text-transform:uppercase;letter-spacing:.6px;}
+.gid-body p{margin-bottom:.75rem;}
+.gid-body .highlight{background:var(--gblue);border-left:3px solid var(--blue);
+  padding:.6rem .9rem;border-radius:0 7px 7px 0;margin:.6rem 0;font-size:13px;}
+.gid-body .example{background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:.75rem;margin:.6rem 0;font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--text);}
+.gid-body .trap{background:var(--gred);border-left:3px solid var(--red);
+  padding:.6rem .9rem;border-radius:0 7px 7px 0;margin:.6rem 0;font-size:13px;color:var(--text2);}
+.gid-loading{display:flex;align-items:center;gap:10px;color:var(--text3);font-size:13.5px;padding:2rem 0;}
+.gid-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);
+  animation:gidpulse 1.2s ease-in-out infinite;}
+.gid-dot:nth-child(2){animation-delay:.2s;}
+.gid-dot:nth-child(3){animation-delay:.4s;}
+@keyframes gidpulse{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+/* REAL WORLD TAB */
+.rw-grid{display:flex;flex-direction:column;gap:.75rem;}
+.rw-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:.95rem 1rem;}
+.rw-title{font-size:13.5px;font-weight:600;margin-bottom:.5rem;color:var(--text);}
+.rw-body{font-size:13px;color:var(--text2);line-height:1.7;}
+
+/* GID BUTTON */
+/* ── TUTOR MODE ── */
+.tutor-unit-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:1.1rem;cursor:pointer;transition:all .2s;text-align:left;}
+.tutor-unit-card:hover{border-color:var(--border2);background:var(--s2);transform:translateY(-1px);}
+.tutor-unit-card .tuc-num{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:.4rem;}
+.tutor-unit-card .tuc-title{font-size:14px;font-weight:600;margin-bottom:.25rem;}
+.tutor-unit-card .tuc-desc{font-size:12px;color:var(--text3);line-height:1.4;}
+.tutor-unit-card .tuc-pct{font-size:11px;margin-top:.5rem;font-weight:600;}
+
+.tb-step{padding:4px 11px;border-radius:99px;font-size:11px;font-weight:600;
+  background:var(--s2);color:var(--text3);border:1px solid var(--border);}
+.tb-step.active{background:var(--blue2);color:#fff;border-color:var(--blue2);}
+.tb-step.done{background:var(--ggreen);color:var(--green);border-color:rgba(34,211,160,.3);}
+
+.tutor-bubble{background:var(--s1);border:1px solid var(--border);border-radius:13px;
+  padding:1.3rem 1.4rem;margin-bottom:.85rem;position:relative;}
+.tutor-bubble.ai{border-left:3px solid var(--blue);}
+.tutor-bubble.ai::before{content:'🎓';position:absolute;top:1rem;left:-14px;
+  background:var(--bg1);border-radius:50%;width:24px;height:24px;display:flex;
+  align-items:center;justify-content:center;font-size:13px;}
+.tutor-bubble.correct{border-left:3px solid var(--green);background:var(--ggreen);}
+.tutor-bubble.wrong{border-left:3px solid var(--red);background:var(--gred);}
+.tutor-bubble.hint{border-left:3px solid var(--amber);background:var(--gamber);}
+.tutor-txt{font-size:13.5px;color:var(--text2);line-height:1.85;}
+.tutor-txt h3{font-size:13px;font-weight:700;color:var(--text);margin:1rem 0 .4rem;
+  text-transform:uppercase;letter-spacing:.5px;}
+.tutor-txt h4{font-size:13px;font-weight:600;color:var(--blue);margin:.75rem 0 .3rem;}
+.tutor-txt p{margin-bottom:.65rem;}
+.tutor-txt .ex-box{background:var(--bg);border:1px solid var(--border2);border-radius:8px;
+  padding:.75rem 1rem;margin:.6rem 0;font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--text);}
+.tutor-txt .key-box{background:var(--gblue);border-left:3px solid var(--blue);
+  padding:.6rem .9rem;border-radius:0 7px 7px 0;margin:.6rem 0;font-size:13px;}
+.tutor-txt .warn-box{background:var(--gred);border-left:3px solid var(--red);
+  padding:.6rem .9rem;border-radius:0 7px 7px 0;margin:.6rem 0;font-size:13px;}
+
+.tutor-loading{display:flex;align-items:center;gap:10px;color:var(--text3);
+  font-size:13.5px;padding:1.5rem;background:var(--s1);border-radius:12px;margin-bottom:.85rem;}
+
+.prob-card{background:var(--s2);border:1px solid var(--border2);border-radius:11px;
+  padding:1.1rem;margin-bottom:.75rem;}
+.prob-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--text3);margin-bottom:.5rem;}
+.prob-q{font-size:14px;font-weight:500;color:var(--text);line-height:1.6;}
+.prob-diff{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;
+  border-radius:99px;margin-left:8px;vertical-align:middle;}
+.prob-diff.easy{background:var(--ggreen);color:var(--green);}
+.prob-diff.medium{background:var(--gamber);color:var(--amber);}
+.prob-diff.hard{background:var(--gred);color:var(--red);}
+
+.phase-intro{text-align:center;padding:1.5rem 1rem;background:var(--s1);
+  border:1px solid var(--border);border-radius:13px;margin-bottom:1rem;}
+.phase-intro .pi-ic{font-size:3rem;margin-bottom:.5rem;}
+.phase-intro h2{font-family:'Instrument Serif',serif;font-size:1.6rem;margin-bottom:.4rem;}
+.phase-intro p{font-size:13.5px;color:var(--text2);max-width:440px;margin:0 auto .9rem;line-height:1.6;}
+
+.gid-btn{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
+  border-radius:6px;border:1px solid rgba(155,114,255,.3);background:var(--gpurp);
+  color:var(--purple);font-size:11px;font-weight:600;cursor:pointer;
+  transition:all .15s;margin-left:8px;white-space:nowrap;vertical-align:middle;}
+.gid-btn:hover{background:rgba(155,114,255,.2);border-color:var(--purple);}
+
 @media print{.topbar,.sidebar{display:none!important;}.shell{grid-template-columns:1fr;}
   body{background:white;color:black;}.fs-f{background:#f5f5f5;color:black;}}
 @media(max-width:768px){
@@ -602,6 +700,7 @@ select.fselect{appearance:none;cursor:pointer;}
   </div>
   <div class="sb-sec">
     <span class="sb-lbl">Learn</span>
+    <button class="sb-btn" onclick="nav('tutor',this)"><span class="sb-ic">🎓</span>AI Tutor</button>
     <button class="sb-btn" onclick="nav('notes',this)"><span class="sb-ic">📚</span>Unit Notes</button>
     <button class="sb-btn" onclick="nav('cmap',this)"><span class="sb-ic">🗺</span>Concept Map</button>
     <button class="sb-btn" onclick="nav('formulas',this)"><span class="sb-ic">📐</span>Formula Sheet</button>
@@ -674,6 +773,50 @@ select.fselect{appearance:none;cursor:pointer;}
     <button class="btn pri" onclick="generatePlan()">Generate My Plan →</button>
   </div>
   <div id="planOutput"></div>
+</div>
+
+<!-- TUTOR -->
+<div class="page" id="p-tutor">
+  <div style="max-width:780px">
+    <div class="ptitle">🎓 AI Tutor</div>
+    <p class="psub">Pick a unit and your tutor walks you through everything — from scratch, step by step, with practice problems and answer checking. Like having a real teacher, just for you.</p>
+
+    <!-- Unit picker -->
+    <div id="tutorPicker">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem" id="tutorUnitGrid"></div>
+    </div>
+
+    <!-- Session -->
+    <div id="tutorSession" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
+        <button class="btn" onclick="resetTutor()">← Pick different unit</button>
+        <div style="font-size:13px;color:var(--text2)" id="tutorUnitLabel"></div>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <div class="tb-step" id="ts0">📖 Learn</div>
+          <div class="tb-step" id="ts1">🔢 Formulas</div>
+          <div class="tb-step" id="ts2">🧩 Guided</div>
+          <div class="tb-step" id="ts3">✏️ Practice</div>
+          <div class="tb-step" id="ts4">🌍 Apply</div>
+        </div>
+      </div>
+
+      <!-- Phase content -->
+      <div id="tutorContent"></div>
+
+      <!-- Input area (for practice phases) -->
+      <div id="tutorInputArea" style="display:none;margin-top:1rem">
+        <textarea class="ftextarea" id="tutorAnswer" placeholder="Type your answer here... Show your work! You can write equations, explain your thinking, or just give a number." rows="4"></textarea>
+        <div style="display:flex;gap:8px;margin-top:.6rem">
+          <button class="btn pri" id="tutorSubmitBtn" onclick="submitTutorAnswer()">Submit Answer →</button>
+          <button class="btn" onclick="tutorHint()">💡 Hint</button>
+          <button class="btn" onclick="tutorSkip()">Skip this problem</button>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div id="tutorNav" style="margin-top:1.25rem;display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+  </div>
 </div>
 
 <!-- NOTES -->
@@ -975,6 +1118,23 @@ select.fselect{appearance:none;cursor:pointer;}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- GO IN DEPTH MODAL -->
+<div class="gid-modal" id="gidModal">
+  <div class="gid-box">
+    <div class="gid-header">
+      <div class="gid-title" id="gidTitle">Go In Depth</div>
+      <button class="gid-close" onclick="closeGID()">✕</button>
+    </div>
+    <div class="gid-context" id="gidContext"></div>
+    <div class="gid-body" id="gidBody">
+      <div class="gid-loading">
+        <div class="gid-dot"></div><div class="gid-dot"></div><div class="gid-dot"></div>
+        <span>Thinking through this for you...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- CONFUSED MODAL -->
 <div class="modal-bg" id="confusedModal">
   <div class="modal modal-wrap">
@@ -993,220 +1153,251 @@ select.fselect{appearance:none;cursor:pointer;}
 // ═══════════════════════════════════════════
 const UNITS=[
   {num:'1',title:'Kinematics',pct:'10–15%',color:'#4f8dff',
-   desc:'Motion without causes. 1D, 2D, and projectile motion using the four kinematic equations.',
-   cheatSheet:{
-     decision:'Have v₀,a,t? → v=v₀+at or Δx=v₀t+½at²\nHave v₀,v,a, no t? → v²=v₀²+2aΔx\nHave t, no a? → Δx=½(v₀+v)t\nMissing one var? That\'s your unknown.',
-     prop:'v₀ doubles → stop distance ×4 (quadratic). a doubles → Δx quadruples. Time independent of both.'
-   },
+   desc:'Motion without causes — HOW things move before asking WHY. 1D, free fall, projectiles, graphical analysis.',
+   cheatSheet:{decision:'Have v₀,a,t? → v=v₀+at\nHave v₀,v,a, no t? → v²=v₀²+2aΔx\nHave t, no a? → Δx=½(v₀+v)t\nMissing one var? That is your unknown.',prop:'v₀ doubles → stop distance x4 (quadratic). Fall time independent of horizontal speed.'},
+   realWorld:[
+     {title:'🚗 Highway Braking',body:'A car at 30 m/s brakes at -8 m/s². Stopping distance: v²=v₀²+2aΔx → 0=900-16Δx → 56 m. At 60 m/s that quadruples to 225 m. Stopping distance grows with the SQUARE of speed. This is v²=v₀²+2aΔx saving or ending lives on roads every day.'},
+     {title:'🏀 Basketball Free Throw',body:'A ball at 45° has two independent motions: horizontal (constant speed) and vertical (free fall). Only time links them. Solve vertical first to get t, plug into horizontal. The 45° angle maximizes range. NBA players unconsciously solve kinematics equations every shot.'},
+     {title:'🎢 Roller Coaster Drop',body:'Drop 40 m from rest. Speed at bottom: v=√(2×9.8×40)≈28 m/s in 2.9 seconds. That stomach-dropping feeling is pure kinematic acceleration. Every thrill ride is a physics problem designed by engineers who know these equations cold.'},
+   ],
    topics:[
-     {h:'Displacement & Velocity',p:'Δx=x_f−x_i (can be negative). avg v=Δx/Δt. Instantaneous v=slope of x-t graph.'},
-     {h:'Acceleration',p:'a=Δv/Δt. Slope of v-t graph. Area under v-t=displacement.'},
-     {h:'Four Kinematic Equations',p:'Valid ONLY for constant acceleration. Pick based on which variable is missing.'},
-     {h:'Projectile Motion',p:'Split x and y. a_x=0 (v_x constant). a_y=−9.8. Solve y for time, use t in x.'},
-     {h:'Graphical Analysis',p:'x-t: slope=v. v-t: slope=a, area=Δx. Curved x-t → nonzero a.'},
+     {h:'Displacement vs Distance',p:'Displacement (Δx) is a VECTOR — it has direction and can be negative or zero even if you moved a lot. Drive 10 km north then 10 km south: distance=20 km, displacement=0. The AP exam tests this distinction constantly. Always ask yourself: is this asking for how far traveled (distance) or net change in position (displacement)? They are completely different quantities and lead to completely different answers.'},
+     {h:'Velocity and Speed',p:'Average velocity = Δx/Δt (vector, can be negative). Average speed = total distance/time (always positive). Instantaneous velocity = slope of the x-t graph at that exact point. Steep positive slope = moving fast forward. Flat slope = stopped. Negative slope = moving backward. If the x-t graph curves, velocity is changing — acceleration exists. These graph relationships appear in nearly every AP exam.'},
+     {h:'Acceleration',p:'Acceleration = rate of change of velocity = Δv/Δt. The key insight most students miss: you can be accelerating while slowing down (braking car has negative a, positive v), and you can have acceleration while momentarily stopped (ball at peak of throw still has a=−9.8 m/s² downward). Acceleration is purely about HOW velocity is changing, not whether you are moving at all.'},
+     {h:'Four Kinematic Equations',p:'Valid ONLY for constant acceleration. Your strategy every time: list your 5 variables (v₀, v, a, Δx, t), identify which 3 are known, identify your unknown, then pick the equation missing the variable you do NOT have. Missing t? Use v²=v₀²+2aΔx. Missing v? Use Δx=v₀t+½at². Writing your knowns before touching an equation is the single habit separating good physics students from great ones.'},
+     {h:'Projectile Motion',p:'Two completely independent motions happening simultaneously. Horizontal: a_x=0 always, so v_x is constant the ENTIRE flight — at launch, at peak, coming down — it never changes. Vertical: a_y=−9.8 m/s² always, pure free fall. Time is the only shared quantity. Standard approach: (1) find t from the vertical equation, (2) use that t in the horizontal equation. Never mix horizontal and vertical variables in the same equation.'},
+     {h:'Graph Interpretation',p:'x-t graph: slope=velocity. Curved=acceleration exists. Parabola=constant acceleration. v-t graph: slope=acceleration, area under curve=displacement (negative area if below the axis). a-t graph: area=change in velocity. The AP exam regularly gives a graph with no numbers and asks you to extract information from it. Practicing reading slopes and areas from graphs is not optional — it appears in nearly every FRQ.'},
    ],
    formulas:[
-     {f:'v = v₀ + at',d:'Finds v; has v₀,a,t'},
-     {f:'Δx = v₀t + ½at²',d:'Finds Δx; has v₀,a,t'},
-     {f:'v² = v₀² + 2aΔx',d:'No time variable'},
-     {f:'Δx = ½(v₀+v)t',d:'No acceleration variable'},
+     {f:'v = v₀ + at',d:'Use when you have v₀, a, t — missing Δx'},
+     {f:'Δx = v₀t + ½at²',d:'Use when missing final velocity v'},
+     {f:'v² = v₀² + 2aΔx',d:'Most useful — no time variable'},
+     {f:'Δx = ½(v₀+v)t',d:'Use when missing acceleration a'},
    ],
    traps:[
-     {l:'"Slowing" ≠ negative a',t:'Ball thrown up: v+, a=−g. At peak: v=0 but a=−9.8 still. NEVER zero in free fall.'},
-     {l:'Δx ≠ distance',t:'U-turn→Δx=0, distance>0. Find turning point (v=0), split.'},
-     {l:'Peak of projectile',t:'v_y=0 but v_x unchanged. Velocity at peak is purely horizontal.'},
+     {l:'Slowing down ≠ negative acceleration',t:'A ball thrown up slows down but has constant downward acceleration of 9.8 m/s² the entire time. At the peak v=0 but a=−9.8 STILL. Never say acceleration is zero at the peak of a throw.'},
+     {l:'Displacement ≠ distance when direction reverses',t:'Object changes direction? Find the turning point where v=0, split trip into two legs, add distances. Displacement is simply x_f−x_i regardless of path taken.'},
+     {l:'Projectile horizontal velocity never changes',t:'v_x is constant from launch to landing. It does not slow at the peak or anywhere else. Only v_y changes (due to gravity).'},
    ],
-   tips:['Decision tree: Have v₀,a,t? → v=v₀+at. No t? → v²=v₀²+2aΔx.','Proportional: double v₀→stop distance ×4.','FRQ "Derive": start from v=v₀+at, show algebra.'],
-   strategy:'Sketch axes. List knowns, circle unknowns. Pick equation with one unknown. Watch signs.'},
+   tips:['List 5 kinematic variables. Circle 3 knowns. The missing one tells you which equation to use.','Projectile: solve vertical for time t first, then use t in horizontal.','Graph slopes: x-t slope=v, v-t slope=a, a-t area=Δv, v-t area=Δx.'],
+   strategy:'List knowns, circle unknown, pick equation. Projectile: split into x and y, solve y for time, use t in x equation.'},
+
   {num:'2',title:'Forces & Newton\'s Laws',pct:'18–23%',color:'#f5a623',
-   desc:'How forces change motion. FBDs are essential for every dynamics problem.',
-   cheatSheet:{
-     decision:'Need a, T, N, or f? → Use Forces.\nNeed speed and path doesn\'t matter? → Use Energy.\nCircular motion: ΣF_inward = mv²/r.',
-     prop:'FBD checklist: mg↓, N⊥surface, T along rope, f∥surface opposing motion.'
-   },
+   desc:'WHY things move the way they do. Free body diagrams, Newton\'s 3 laws, friction, inclines, circular motion.',
+   cheatSheet:{decision:'Need a, T, N, or friction force? → Forces (ΣF=ma).\nNeed speed or height? → Energy.\nCircular? → F_c=mv²/r is the NET inward force.\nEquilibrium? → ΣF=0 in EVERY direction.',prop:'Double speed in circle → need 4x centripetal force (F_c∝v²). Gravity between objects: triple distance → force ÷9.'},
+   realWorld:[
+     {title:'🪂 Skydiver and Terminal Velocity',body:'A skydiver jumps and accelerates downward (gravity > drag). As speed increases, air resistance grows until drag = gravity → ΣF=0 → zero acceleration → constant speed (terminal velocity ≈55 m/s). Opening the parachute dramatically increases drag area → drag > gravity → decelerates to safe landing speed. Newton\'s 2nd law governs the entire jump from start to landing.'},
+     {title:'🛗 Elevator Scale Reading',body:'Stand on a scale in an elevator. Accelerating up: scale reads MORE (N=m(g+a)). Constant speed: scale reads exactly your weight. Decelerating to stop: scale reads LESS (N=m(g-a)). In free fall: scale reads zero — weightlessness! Astronauts feel weightless not because gravity is zero in orbit, but because they are in continuous free fall around Earth.'},
+     {title:'🌀 Car Turning a Corner',body:'When your car turns left, you feel pushed right. That is NOT a real force — it is inertia. The car door pushes you LEFT (centripetal force) and that is what makes you actually turn. On a banked racetrack, the normal force provides centripetal force so no friction is needed to turn. F_c=mv²/r: faster or tighter turn = more force needed.'},
+     {title:'🏋️ Why Seatbelts Work',body:'In a crash the car decelerates at maybe 200 m/s² (20g). Without a seatbelt, nothing applies force to you — you keep moving until you hit the windshield with enormous force over a tiny time. The seatbelt applies force over a longer time interval, making the force survivable. Newton\'s 1st law: objects keep moving unless a net force acts. The seatbelt IS that force.'},
+   ],
    topics:[
-     {h:'Newton\'s 1st Law',p:'Objects resist change in motion (inertia). Net F=0→constant velocity.'},
-     {h:'Newton\'s 2nd Law',p:'ΣF=ma. Apply separately in each direction. Draw FBD first.'},
-     {h:'Newton\'s 3rd Law',p:'Equal, opposite, on DIFFERENT objects. Never cancel.'},
-     {h:'Friction',p:'Static: f_s≤μ_sN (adjusts). Kinetic: f_k=μ_kN (constant). μ_s>μ_k.'},
-     {h:'Inclines',p:'Tilt axes: ∥→mg sinθ−f=ma. ⊥→N=mg cosθ.'},
-     {h:'Circular Motion',p:'F_c=mv²/r is NET inward force. Not a new force.'},
+     {h:'Newton\'s First Law — Inertia',p:'An object at rest stays at rest, and an object in motion stays in motion at constant velocity, UNLESS acted on by a net external force. This is inertia. The heavier the object, the more inertia it has — harder to start and harder to stop. On Earth, friction always acts, so we incorrectly think objects naturally slow down. In space with no friction, a pushed object truly moves forever at constant velocity.'},
+     {h:'Newton\'s Second Law',p:'ΣF=ma — the most important equation in all of mechanics. NET force (sum of ALL forces with signs) equals mass times acceleration. Apply it separately in EACH direction: ΣF_x=ma_x and ΣF_y=ma_y independently. Always draw a Free Body Diagram first — every force as an arrow on the object. This habit earns partial credit on FRQs even when the rest of your work has errors.'},
+     {h:'Newton\'s Third Law',p:'For every force there is an equal and opposite reaction force on a DIFFERENT object. When you push a wall right, the wall pushes you left with the same magnitude. These forces NEVER cancel — they act on different objects. The classic trap: weight and normal force on a book look like a pair but are NOT (both act on same object, different force types). The real N3L pair for the book\'s weight: Earth pulls book down AND book pulls Earth up with equal force.'},
+     {h:'Friction',p:'Static friction (f_s ≤ μ_sN) adjusts automatically to prevent motion — from zero up to a maximum of μ_sN. Once sliding begins, kinetic friction (f_k=μ_kN) is constant and always opposes the direction of motion. μ_s > μ_k always — it takes more force to start sliding than to keep sliding. The normal force N is NOT always mg. On inclines N=mg cosθ. In accelerating elevators N changes. Always derive N from ΣF_y=0 (or ma if accelerating).'},
+     {h:'Inclined Planes',p:'The key technique: tilt your coordinate axes to align parallel and perpendicular to the surface. Along the incline (parallel): mg sinθ pulls the object down the slope, friction acts opposite to motion. Perpendicular to incline: N=mg cosθ since there is no acceleration into the surface. This axis tilt makes Newton\'s 2nd law much cleaner. θ is measured from horizontal — steeper ramp means larger mg sinθ component pulling down.'},
+     {h:'Circular Motion',p:'Circular motion at any speed requires a centripetal (center-pointing) force at all times. F_c=mv²/r is NOT a new force — it is the NET inward force provided by existing real forces (friction on a flat curve, normal force + gravity in a loop, tension in a rope). At the top of a loop: N and mg both point inward, so F_c=N+mg. At the bottom: N points up, mg down, so F_c=N−mg. Identify which real force(s) point inward — that is your centripetal force.'},
    ],
    formulas:[
      {f:'ΣF = ma',d:'Net force in any direction'},
-     {f:'f_k = μ_k N',d:'Kinetic friction'},
-     {f:'f_s ≤ μ_s N',d:'Static friction (max=μ_sN)'},
-     {f:'N = mg cosθ',d:'Normal on incline'},
-     {f:'F_c = mv²/r',d:'Net centripetal force'},
+     {f:'f_k = μ_k N',d:'Kinetic friction — constant once sliding'},
+     {f:'f_s ≤ μ_s N',d:'Static friction — adjusts up to max'},
+     {f:'N = mg cosθ',d:'Normal force on incline'},
+     {f:'F_c = mv²/r',d:'Net centripetal force (inward)'},
    ],
    traps:[
-     {l:'N ≠ always mg',t:'Ramp: N=mg cosθ. Elevator up: N=m(g+a). Free fall: N=0.'},
-     {l:'Atwood: separate FBDs',t:'m₁g−T=m₁a (heavier). T−m₂g=m₂a (lighter). Add to find a.'},
-     {l:'Circular motion: a≠0 at constant speed',t:'Direction changes→centripetal acceleration toward center always exists.'},
+     {l:'Normal force ≠ always mg',t:'On ramps N=mg cosθ. In elevator accelerating up N=m(g+a). Free fall N=0. Derive N from ΣF_y=0 every time.'},
+     {l:'N3L pairs act on DIFFERENT objects',t:'Weight and normal force on a book are NOT an N3L pair. They both act on the book and are different force types. Real pair: Earth pulls book down, book pulls Earth up.'},
+     {l:'Centripetal force is not a separate arrow on FBD',t:'Never draw a centripetal force arrow. It is the label for the NET real force pointing inward. Identify which real force(s) provide it.'},
    ],
-   tips:['FBD: mg↓, N⊥, T along rope, f opposing motion.','Connected objects: a=ΣF_net/m_total, backsolve tensions.','Forces→a/T/N/f. Energy→speed.'],
-   strategy:'Draw FBD. ΣF=ma in each direction. Two directions if 2D.'},
+   tips:['Draw FBD before writing any equation. Label every force with what object exerts it.','On inclines: tilt axes. Parallel component: mg sinθ. Perpendicular: N=mg cosθ.','Connected objects: a=ΣF_net/m_total for whole system, then isolate one object for tensions.'],
+   strategy:'FBD first. ΣF=ma in each direction separately. Two objects? Write equations for each, solve the system.'},
+
   {num:'3',title:'Work, Energy & Power',pct:'18–23%',color:'#22d3a0',
-   desc:'Energy is scalar — often faster than force methods. Master conservation and when friction breaks it.',
-   cheatSheet:{
-     decision:'No friction: KE_i+PE_i=KE_f+PE_f\nWith friction: add E_lost\nNeed speed→Energy. Need a/T→Forces.\nW=Fd cosθ; if θ=90°, W=0.',
-     prop:'v doubles → KE×4. A doubles → PE_spring×4. Stopping distance ∝v².'
-   },
+   desc:'Energy is a scalar — often faster than force methods. Conservation of energy, work-energy theorem, power.',
+   cheatSheet:{decision:'Need speed or height? → Energy conservation.\nNeed force, tension, or acceleration? → Newton\'s laws.\nFriction present? → Subtract E_lost=f_k×d.\nW=Fd cosθ — perpendicular force does zero work.',prop:'Double v → KE×4. Double spring compression → PE×4. Stopping distance ∝ v².'},
+   realWorld:[
+     {title:'🎿 Skier on a Slope',body:'Skier starts at rest at top of a 50 m hill. No friction: mgh=½mv² → v=√(2×9.8×50)=31 m/s. With friction doing -5000 J of work: ½mv²=mgh−5000. Every ski run is an energy bookkeeping problem. Steeper slope = more PE = faster at bottom. Moguls add bumps that absorb energy each hit — by the bottom you are slower than a smooth run of the same height.'},
+     {title:'💥 Car Crash Crumple Zones',body:'A 1500 kg car at 30 m/s has KE=675,000 J. That energy must go somewhere in a crash — into crumpling metal, heat, sound. Modern cars have crumple zones: W=F×d. Same energy absorbed over longer distance d → smaller average force F → more survivable. Older rigid cars stopped suddenly (small d, huge F). Physics literally engineered into the car\'s shape saves your life.'},
+     {title:'🚀 Rocket Engine Power',body:'A rocket producing 1 million N of thrust at 500 m/s has power P=Fv=500 MW. Enough to power 400,000 homes. Power = rate of doing work. A small engine can do the same total work as a massive engine — just takes longer. That is why your car can reach highway speed with a modest engine, just not instantly.'},
+     {title:'🎸 Guitar String',body:'Plucking a string does work on it (W=Fd). That work becomes elastic PE stored in the bent string. Released, PE converts to KE as it snaps back, overshoots (SHM!), and energy radiates as sound waves. Energy chain: your finger → string PE → string KE → air pressure waves (sound) → your eardrum. Conservation of energy connects the whole musical experience.'},
+   ],
    topics:[
-     {h:'Work',p:'W=Fd cosθ. θ between F and displacement. Perpendicular F→W=0.'},
-     {h:'Kinetic Energy',p:'KE=½mv². Double v→KE×4.'},
-     {h:'Gravitational PE',p:'PE=mgh. Choose h=0 anywhere. Only Δh matters.'},
-     {h:'Spring PE',p:'PE_s=½kx². x from equilibrium, NOT natural length.'},
-     {h:'Conservation',p:'KE_i+PE_i=KE_f+PE_f (no friction). Add E_lost with friction.'},
+     {h:'Work',p:'Work = Force × displacement × cos(angle between them). W=Fd cosθ. The angle is critical: a force perpendicular to motion does ZERO work (normal force on a sliding box, centripetal force in circular motion). Negative work means the force opposes motion (friction, braking). Work is a scalar — no direction. The net work done on an object equals its change in kinetic energy: W_net=ΔKE. This is the work-energy theorem.'},
+     {h:'Kinetic Energy',p:'KE=½mv². Quadratic in velocity — double the speed means 4× the kinetic energy, not 2×. This explains why crashes at 60 mph are catastrophically worse than at 30 mph (4× the energy to absorb). KE is always positive or zero. When net work is positive, KE increases. When net work is negative, KE decreases. The work-energy theorem connects the two: every joule of work done becomes joules of kinetic energy change.'},
+     {h:'Gravitational Potential Energy',p:'PE=mgh where h is measured from a reference height you choose (pick wherever makes the math cleanest — usually the lowest point). Only the CHANGE in h matters, not the absolute height. A ball rolled down a ramp and a ball dropped straight down reach the same speed from the same height — path does not matter for conservative forces like gravity. This path-independence is what makes energy methods so powerful.'},
+     {h:'Spring Potential Energy',p:'PE_s=½kx² where x is displacement from equilibrium — NOT from the natural length. This is quadratic: double the compression means 4× stored energy. k is the spring constant (higher k = stiffer spring). At maximum compression or extension, ALL energy is PE. At equilibrium position, ALL energy is KE. Total energy E=½kA² where A is the amplitude of oscillation.'},
+     {h:'Conservation of Energy',p:'Total mechanical energy (KE + PE) is conserved when ONLY conservative forces (gravity, springs) act. With friction: KE_i+PE_i=KE_f+PE_f+E_lost where E_lost=f_k×d (always positive, always reduces mechanical energy). Method: draw initial and final snapshots, list every type of energy at each snapshot, set them equal (subtracting losses). This is one of the most powerful problem-solving tools in all of physics.'},
+     {h:'Power',p:'Power = rate of doing work. P=W/t=Fv (at constant speed). Units: watts (W=J/s). A powerful engine does work FASTER, not necessarily more total work. P=Fv is especially useful when something moves at constant velocity under a known force — just multiply. A 60 W lightbulb uses 60 joules per second. In one hour: E=Pt=60×3600=216,000 J.'},
    ],
    formulas:[
-     {f:'W = Fd cosθ',d:'θ between F and displacement'},
-     {f:'KE = ½mv²',d:'Kinetic energy'},
-     {f:'PE = mgh',d:'Gravitational PE'},
-     {f:'PE_s = ½kx²',d:'Spring PE; x from equilibrium'},
+     {f:'W = Fd cosθ',d:'θ between force and displacement'},
+     {f:'KE = ½mv²',d:'Quadratic in v — double v means ×4'},
+     {f:'PE = mgh',d:'Choose h=0 anywhere — only Δh matters'},
+     {f:'PE_s = ½kx²',d:'x from equilibrium, quadratic in x'},
      {f:'W_net = ΔKE',d:'Work-energy theorem'},
-     {f:'P = W/t = Fv',d:'Power'},
+     {f:'P = W/t = Fv',d:'Power in watts (J/s)'},
    ],
    traps:[
-     {l:'v doubles → KE×4',t:'Stopping distance ∝v². Halving friction→2× stopping distance.'},
-     {l:'Spring PE: x from equilibrium',t:'Hanging spring equilibrium shifts mg/k. Include both PE_spring and PE_gravity.'},
-     {l:'Friction: irreversible',t:'Energy lost to friction cannot be recovered. Longer path→more loss.'},
+     {l:'Perpendicular force does zero work',t:'Normal force, centripetal force — these do zero work. Force and displacement must have a component along each other for work to occur.'},
+     {l:'Spring x is measured from equilibrium',t:'For a hanging spring with a mass attached, equilibrium is already stretched. Measure x from that new equilibrium, not from the natural (unstretched) length.'},
+     {l:'Friction converts energy — does not destroy it',t:'Friction converts mechanical energy to thermal energy (heat). Total energy is still conserved. Mechanical energy is not. The formula is KE_i+PE_i=KE_f+PE_f+f_k×d.'},
    ],
-   tips:['Energy bar charts: KE, PE_grav, PE_spring, E_friction.','Use energy when you need speed and don\'t care about path.','P=Fv useful at constant speed.'],
-   strategy:'Forces→a/T/N/f. Energy→speed/height. Most FRQs need both sequentially.'},
+   tips:['Energy bar charts: draw KE, PE_grav, PE_spring, E_friction bars at start and end. This visualizes the conservation equation.','If only height changes and no friction: mgh=½mv². Simplest form of energy conservation.','P=Fv is fastest when object moves at constant speed under known force.'],
+   strategy:'Snapshot initial and final states. List all energy types at each. Set equal, subtract friction losses. Solve for unknown.'},
+
   {num:'4',title:'Momentum & Impulse',pct:'10–15%',color:'#f472b6',
-   desc:'Momentum is a vector. Conserved in all closed-system collisions.',
-   cheatSheet:{
-     decision:'Collision/explosion? → Use momentum.\n2D? → Conserve p_x AND p_y separately.\nBallistic pendulum: momentum (collision) THEN energy (swing).',
-     prop:'m×2→p×2. v×2→p×2. Longer contact→smaller avg force (same Δp).'
-   },
+   desc:'Momentum is a vector conserved in all closed-system collisions. Impulse connects force and time to momentum change.',
+   cheatSheet:{decision:'Collision or explosion? → Momentum conservation.\n2D? → Conserve p_x AND p_y separately.\nBallistic pendulum → momentum (collision) THEN energy (swing).\nNeed collision force? → F=Δp/Δt.',prop:'Bouncing gives larger Δp than sticking (direction reverses). Longer contact → smaller average force for same Δp.'},
+   realWorld:[
+     {title:'🤜 Airbags and Impulse',body:'In a 30 m/s crash, Δp=m×30 is fixed — you MUST lose that momentum. Without airbag: stops in 0.01s → F=Δp/0.01 = enormous, fatal. With airbag: stops in 0.1s → F 10× smaller, survivable. Same impulse (same Δp), spread over 10× more time. J=FΔt=Δp is literally the physics of why airbags save lives.'},
+     {title:'🔫 Gun Recoil',body:'Before firing: gun+bullet at rest, total p=0. After: bullet flies forward at 400 m/s (0.01 kg). By conservation: 0=0.01×400 + m_gun×v_gun → 0.5 kg gun recoils at 8 m/s backward. The explosion is internal — no external horizontal force — so total momentum stays exactly zero. This is conservation of momentum in its purest form.'},
+     {title:'🎱 Billiards Equal-Mass Collision',body:'The cue ball hits an identical ball head-on. In an elastic collision between equal masses, the moving object stops completely and the stationary one takes the full velocity. That is why the cue ball nearly stops on a perfect straight shot — all momentum transfers. This is not a coincidence — it is a mathematical result of momentum AND energy both being conserved simultaneously.'},
+     {title:'🚀 Rocket Propulsion',body:'A rocket in space has no ground to push from. Instead it pushes exhaust backward at extreme speed — by Newton\'s 3rd law the exhaust pushes the rocket forward with equal force. By momentum conservation: rocket gains forward momentum equal to the exhaust momentum backward. As fuel burns, rocket mass decreases, so the same thrust causes greater acceleration. This is why rockets are mostly fuel at launch.'},
+   ],
    topics:[
-     {h:'Momentum',p:'p=mv. Vector—direction matters. Opposite directions=opposite signs.'},
-     {h:'Impulse',p:'J=FΔt=Δp. Area under F-t graph.'},
-     {h:'Conservation',p:'p_before=p_after when no external net force. For collisions AND explosions.'},
-     {h:'Elastic',p:'p AND KE conserved. Ideal bouncing.'},
-     {h:'Perfectly Inelastic',p:'Objects stick. Only p conserved. KE decreases.'},
+     {h:'Momentum',p:'p=mv. Momentum is a vector — direction matters and opposite directions get opposite signs. Total momentum of a system = Σ(mv) for all objects WITH signs. Momentum is conserved when there is no net external force on the system. During a collision, internal forces (the collision forces themselves) are enormous but act for a very short time — external forces like ground friction have negligible impulse. So momentum is conserved during the collision even if friction exists.'},
+     {h:'Impulse',p:'Impulse J=FΔt=Δp. The impulse equals the change in momentum. This is Newton\'s 2nd law in a different form: F=ma=m(Δv/Δt)=Δp/Δt. On a Force-vs-time graph, area under the curve = impulse = Δp. This lets you handle variable forces without calculus — just estimate the area. Impulse is also a vector. Two objects in a collision exert equal and opposite impulses on each other (Newton\'s 3rd law + impulse).'},
+     {h:'Conservation of Momentum',p:'Total p_before = total p_after when no net external force acts on the system. Works for ALL collision types and explosions. Formula: m₁v₁ᵢ + m₂v₂ᵢ = m₁v₁f + m₂v₂f. Signs are critical — objects moving toward each other have opposite sign velocities. For 2D problems: write two SEPARATE equations, one for x-components and one for y-components.'},
+     {h:'Collision Types',p:'Elastic: momentum AND kinetic energy both conserved. Ideal bouncing (billiard balls approximate this). Inelastic: momentum conserved, KE not (some lost to heat/sound/deformation). Most real collisions. Perfectly inelastic: objects stick together, maximum KE loss (still conserve momentum). Explosion: objects start at rest or together, fly apart. Total p=0 initially so final momenta are equal and opposite.'},
    ],
    formulas:[
-     {f:'p = mv',d:'Momentum (vector, kg·m/s)'},
-     {f:'J = FΔt = Δp',d:'Impulse=change in momentum'},
+     {f:'p = mv',d:'Momentum (vector) — kg·m/s'},
+     {f:'J = FΔt = Δp',d:'Impulse = change in momentum'},
      {f:'m₁v₁+m₂v₂ = m₁v₁f+m₂v₂f',d:'Conservation of momentum'},
    ],
    traps:[
-     {l:'SIGNS!',t:'Opposite directions=opposite signs. NEVER add magnitudes for opposite-direction objects.'},
-     {l:'Recoil',t:'Light object moves much faster (v∝1/m). Explosion from rest: m₁v₁=−m₂v₂.'},
-     {l:'Ballistic pendulum=2 steps',t:'Momentum during collision. Energy during swing. Cannot combine.'},
+     {l:'Signs are everything',t:'Objects moving in opposite directions have opposite sign velocities. Set a positive direction FIRST. Never add magnitudes for objects heading toward each other.'},
+     {l:'Bouncing gives larger impulse than sticking',t:'Ball bounces off wall: Δp=m(v−(−v))=2mv. Ball sticks: Δp=mv. Bouncing reverses direction so Δp is larger — wall must exert more force (impulse) to reverse the ball than to just stop it.'},
+     {l:'Ballistic pendulum uses TWO separate principles',t:'Step 1: momentum conservation for the collision (inelastic — bullet embeds). Step 2: energy conservation for the swing upward. You CANNOT use energy during the collision itself — KE is lost when bullet embeds.'},
    ],
-   tips:['Impulse=area under F-t graph. Triangle: J=½F_max·Δt.','Longer collision→smaller average force. Airbags.','2D: conserve p_x and p_y SEPARATELY.'],
-   strategy:'Momentum for collisions/explosions. Energy for speed/height. Many problems need both.'},
+   tips:['Set your positive direction before writing any momentum equation — and stick to it.','For explosions from rest: m₁v₁=−m₂v₂ (equal and opposite momenta).','Area under F-t graph = impulse = Δp. Triangle shape: J=½×F_max×Δt.'],
+   strategy:'Identify collision type. Apply momentum conservation with signs. For ballistic pendulum: momentum first, then energy. For 2D: separate x and y equations.'},
+
   {num:'5',title:'Torque & Rotation',pct:'10–15%',color:'#9b72ff',
-   desc:'Rotational analogs of all linear quantities. Στ=Iα is the rotational F=ma.',
-   cheatSheet:{
-     decision:'Equilibrium: ΣF=0 AND Στ=0 (both!).\nRolling: use mgh=½mv²(1+I/mr²).\nShape factor fastest→slowest: solid sphere→solid cylinder→hollow sphere→hoop.',
-     prop:'Rolling race: shape alone determines speed. Mass and radius cancel!'
-   },
+   desc:'Rotational analogs of linear mechanics. Every linear equation has a rotational twin. Στ=Iα is the rotational F=ma.',
+   cheatSheet:{decision:'Equilibrium: ΣF=0 AND Στ=0 (need BOTH).\nRolling: KE_total=½mv²(1+I/mr²).\nPivot at unknown force → its torque=0 (smart pivot).\nRolling race fastest to slowest: solid sphere → solid cylinder → hollow sphere → hoop.',prop:'Rolling race: only shape (I/mr² ratio) determines winner. Mass and radius cancel completely.'},
+   realWorld:[
+     {title:'🔧 Wrench Leverage',body:'Torque=rF sinθ. A 0.3 m wrench applying 50 N perpendicularly: τ=15 N·m. Double the wrench length: τ=30 N·m — same force, double the torque. This is why breaker bars exist for stuck bolts and why doors have handles far from the hinges. The perpendicular distance from pivot to force line (moment arm) is everything. Maximum torque when force is exactly perpendicular to the wrench.'},
+     {title:'🎡 Seesaw Balance',body:'For balance Στ=0 about the pivot. 60 kg child at 1 m from pivot = 30 kg child at 2 m: 60×1=30×2=60 N·m each side. This is how to solve ALL static equilibrium problems — place pivot at an unknown force to eliminate it, write Στ=0. Lever, balance scale, bridge support — all the same approach. The smart pivot choice is the key skill.'},
+     {title:'⛸️ Figure Skater Spin',body:'Skater with arms out (I=2 kg·m², ω=5 rad/s, L=10). Pulls arms in: I drops to 0.5 kg·m². L=Iω conserved: ω=L/I=10/0.5=20 rad/s — 4× faster! KE goes from ½(2)(25)=25 J to ½(0.5)(400)=100 J. The skater did 75 J of work pulling arms in against centrifugal effect. Angular momentum conserved. Kinetic energy NOT conserved — muscles added energy.'},
+     {title:'🎳 Rolling Race Physics',body:'Drop a solid ball and a hollow ball (same mass, radius) from the same ramp height. At the bottom, solid ball wins every time. Both start with same PE=mgh. Rolling converts PE into translational KE (½mv²) AND rotational KE (½Iω²). Hollow ball has I=mr² vs solid ball I=⅖mr² — more energy locked in rotation, less in forward motion. The I/mr² ratio is the only thing that matters. Mass and radius cancel out.'},
+   ],
    topics:[
-     {h:'Torque',p:'τ=rF sinθ. CCW=+, CW=−. r_perp=perpendicular distance to force line.'},
-     {h:'Moment of Inertia',p:'I=Σmr². Sphere=⅖mr². Disk=½mr². Hoop=mr². Rod(end)=⅓mL².'},
-     {h:'Rotational Newton\'s 2nd',p:'Στ=Iα. Same approach as ΣF=ma.'},
-     {h:'Static Equilibrium',p:'BOTH ΣF=0 AND Στ=0 required. Choose pivot at unknown force.'},
-     {h:'Rolling',p:'v_cm=rω. Total KE=½mv²+½Iω²=½mv²(1+I/mr²).'},
+     {h:'Torque',p:'Torque τ=rF sinθ where r is the distance from the pivot to the point where force is applied, F is the force magnitude, and θ is the angle between the r vector and F vector. Maximum torque when θ=90° (force perpendicular to lever arm). An equivalent view: τ = F × (perpendicular distance from pivot to line of force) = F × r_perp. CCW torques are positive, CW are negative by convention. Torque is the rotational equivalent of force — it causes angular acceleration.'},
+     {h:'Moment of Inertia',p:'I=Σmr² — the sum of (mass × distance²) for every piece of the object. It is the rotational equivalent of mass — resistance to angular acceleration. Mass farther from the axis contributes much more (r² dependence). Common values: solid sphere=⅖mr², solid disk/cylinder=½mr², hollow cylinder/hoop=mr², thin rod about center=1/12 mL², thin rod about end=⅓mL². Parallel axis theorem: I=I_cm+Md² (shifts rotation axis distance d from center of mass).'},
+     {h:'Rotational Newton\'s 2nd Law',p:'Στ=Iα. Same structure as ΣF=ma. Net torque = moment of inertia × angular acceleration. Apply it exactly like the linear version: identify all torques with signs, sum them, set equal to Iα. For rolling objects, use BOTH ΣF=ma (translational) AND Στ=Iα (rotational) simultaneously, connected by the no-slip constraint a=rα.'},
+     {h:'Static Equilibrium',p:'Two conditions BOTH required: (1) ΣF=0 in every direction — no net force, no translational acceleration. (2) Στ=0 about ANY chosen point — no net torque, no rotational acceleration. The pivot point for the torque equation is YOUR choice. The smart choice: put the pivot where an unknown force acts — that force then has zero moment arm and drops out of the torque equation. This is the key skill for ladder, beam, and bridge problems.'},
+     {h:'Rolling Without Slipping',p:'The contact point between the rolling object and ground is momentarily at rest. This gives: v_cm=rω and a_cm=rα (no-slip constraint). Total KE = ½mv²_cm + ½Iω² = ½mv²(1 + I/mr²). The factor (1+I/mr²) determines the speed — lower factor means more energy goes to translation, less to rotation, faster. Solid sphere: factor=1.4. Hoop: factor=2. The solid sphere always wins rolling races.'},
    ],
    formulas:[
-     {f:'τ = rF sinθ',d:'Torque'},
-     {f:'Στ = Iα',d:'Rotational Newton\'s 2nd'},
+     {f:'τ = rF sinθ',d:'Torque — θ between r and F vectors'},
+     {f:'Στ = Iα',d:'Rotational Newton\'s 2nd law'},
      {f:'I_sphere = ⅖mr²',d:'Solid sphere'},
-     {f:'I_disk = ½mr²',d:'Solid cylinder/disk'},
-     {f:'I_hoop = mr²',d:'Hollow cylinder/hoop'},
+     {f:'I_disk = ½mr²',d:'Solid cylinder or disk'},
+     {f:'I_hoop = mr²',d:'Hollow cylinder or hoop'},
      {f:'I = I_cm + Md²',d:'Parallel axis theorem'},
      {f:'v_cm = rω',d:'Rolling no-slip constraint'},
    ],
    traps:[
-     {l:'Smart pivot',t:'Put pivot at unknown force→its torque=0. Ladder: pivot at wall→wall force torque=0.'},
-     {l:'Both equilibrium conditions',t:'ΣF=0 alone insufficient. Must also have Στ=0.'},
-     {l:'Rolling race',t:'Solid sphere wins. Shape (I/mr² ratio) determines speed. Mass cancels.'},
+     {l:'Equilibrium requires BOTH ΣF=0 AND Στ=0',t:'ΣF=0 alone just means no translational acceleration. The object could still be spinning up. Both conditions must be satisfied simultaneously.'},
+     {l:'Smart pivot placement is the key skill',t:'Put pivot at the unknown force to eliminate it. Ladder problem: if you do not know the wall force, put pivot at the wall — its torque is zero and it disappears.'},
+     {l:'Rolling race: only shape matters',t:'Solid sphere (I/mr²=2/5) always beats solid cylinder (1/2) which always beats hoop (1). Mass and radius cancel completely. Do not let different masses or sizes confuse you.'},
    ],
-   tips:['Rotational kinematics: identical forms to linear (θ↔x, ω↔v, α↔a).','Rolling FRQ: mgh=½mv²(1+I/mr²). Plug in I/mr².','Static equilibrium: pick pivot at one unknown force, write Στ=0.'],
-   strategy:'Equilibrium: ΣF=0 then Στ=0 with smart pivot. Rolling: energy with rolling KE formula.'},
+   tips:['Rotational kinematics: θ↔Δx, ω↔v, α↔a. Identical equations, just different symbols.','For rolling FRQ: write mgh=½mv²(1+I/mr²), substitute I/mr² for the given shape.','Static equilibrium: use Στ=0 about the smart pivot to find the unknown force, then ΣF=0 to find the other unknowns.'],
+   strategy:'Equilibrium: smart pivot → Στ=0 first → ΣF=0 for remaining unknowns. Rolling: energy with rotational term included.'},
+
   {num:'6',title:'Angular Momentum',pct:'5–8%',color:'#22d3ee',
-   desc:'L=Iω conserved when net external torque is zero.',
-   cheatSheet:{
-     decision:'Check Στ_ext=0 first. If yes: I_iω_i=I_fω_f.\nKE=L²/(2I)—use when L is conserved and I changes.',
-     prop:'I doubles and ω halves → KE stays same. Skater pulls arms in: I↓, ω↑, KE↑ (muscles do work).'
-   },
+   desc:'L=Iω conserved when net external torque is zero. The rotational version of momentum conservation.',
+   cheatSheet:{decision:'Check Στ_ext=0 first — if yes: I_iω_i=I_fω_f.\nKE=L²/(2I) — best when L is constant but I changes.\nAngular impulse: τΔt=ΔL.',prop:'I halves → ω doubles (L constant). KE doubles too (KE=L²/2I, I halves). Skater spins up: both ω and KE increase.'},
+   realWorld:[
+     {title:'⛸️ Skater Spin-Up',body:'Skater arms out: I=2 kg·m², ω=3 rad/s, L=6 kg·m²/s. Arms pulled in: I=0.5 kg·m². New ω=L/I=12 rad/s — 4× faster! KE before: ½(2)(9)=9 J. KE after: ½(0.5)(144)=36 J. The skater did 27 J of work pulling arms in. Angular momentum L is conserved. Kinetic energy is NOT — muscles added energy to the system.'},
+     {title:'🌍 Planets and Kepler\'s 2nd Law',body:'A comet falling toward the Sun conserves angular momentum (gravity is a central force — creates no torque about the Sun). L=mvr=constant. Closer to Sun (smaller r) → must have larger v to keep L constant. Planets move FASTEST at perihelion (closest to Sun) and SLOWEST at aphelion (farthest). This is Kepler\'s 2nd law — equal areas in equal times — which is just conservation of angular momentum.'},
+     {title:'🏏 Gyroscopic Stability',body:'A spinning top has large angular momentum L pointing upward. Gravity creates a torque perpendicular to L. Instead of tipping over, the top precesses — slowly rotating about the vertical axis. Large L resists direction changes. This is the gyroscopic effect. Gyroscopes stabilize aircraft, ships, satellites, and smartphones (your phone\'s accelerometer uses gyroscopic principles). Larger angular momentum = more stability.'},
+   ],
    topics:[
-     {h:'Angular Momentum',p:'L=Iω. Units: kg·m²/s. Conserved when Στ_ext=0.'},
-     {h:'Conservation',p:'I_i·ω_i=I_f·ω_f when Στ_ext=0.'},
-     {h:'Ice Skater',p:'Arms in→I↓→ω↑. L constant but KE increases (muscles do work).'},
-     {h:'Rotational Collision',p:'Two disks stick: L₁+L₂=(I₁+I₂)ω_f. KE not conserved.'},
+     {h:'Angular Momentum',p:'L=Iω for extended rotating objects. L=mvr for a point mass (r is the perpendicular distance from the axis to the velocity vector — called the moment arm). Like linear momentum, angular momentum is a vector. It is conserved when the net external torque on the system is zero (Στ_ext=0). Check this condition first before applying conservation. If any external agent exerts a torque, L changes.'},
+     {h:'Conservation of Angular Momentum',p:'When Στ_ext=0: I_iω_i=I_fω_f. This is the key equation of this unit. Classic application: a system changes shape (skater pulls arms in, diver tucks, star collapses into neutron star), I changes, so ω must change to keep L constant. Neutron stars spin hundreds of times per second because they are incredibly small (tiny I) but formed from huge stars with lots of L. The mathematics is the same as the skater.'},
+     {h:'Angular Momentum and Energy',p:'KE_rot=½Iω²=L²/(2I). The second form is powerful when L is conserved but I changes — find KE at any moment without knowing ω. If I halves and L is constant: KE doubles (from L²/2I — I in denominator halves → KE doubles). The extra energy comes from the work done by internal forces pulling the system inward. Conservation of angular momentum never implies conservation of kinetic energy.'},
    ],
    formulas:[
-     {f:'L = Iω',d:'Angular momentum'},
-     {f:'L = mvr',d:'Point mass in circular motion'},
-     {f:'I_i·ω_i = I_f·ω_f',d:'Conservation (Στ_ext=0)'},
-     {f:'KE_rot = L²/(2I)',d:'Use when L conserved'},
+     {f:'L = Iω',d:'Angular momentum of extended object'},
+     {f:'L = mvr',d:'Point mass — r is perpendicular distance'},
+     {f:'I_i·ω_i = I_f·ω_f',d:'Conservation when Στ_ext=0'},
+     {f:'KE = L²/(2I)',d:'Use when L is conserved, I changes'},
    ],
    traps:[
-     {l:'Skater KE increases',t:'Even with L constant, muscles do work pulling arms in. KE=L²/2I→smaller I→larger KE.'},
-     {l:'Check Στ_ext first',t:'If any external torque acts, L is NOT conserved.'},
+     {l:'KE increases when skater spins up',t:'Even with L conserved, KE=L²/(2I). Smaller I → larger KE. Muscles do positive work pulling arms in against the outward tendency. Both ω and KE increase.'},
+     {l:'Check Στ_ext=0 FIRST',t:'If any external torque acts — friction, a rope, gravity on asymmetric object — then L is NOT conserved and you cannot use I_iω_i=I_fω_f.'},
+     {l:'I doubles → ω halves → KE halves',t:'KE=L²/(2I). Double I with same L → KE halves. The extra energy went somewhere (e.g., friction slowing a spinning disk that expanded).'},
    ],
-   tips:['I doubles ω halves→KE stays same.','KE=½Iω²=L²/(2I). Use 2nd form when L is conserved.'],
-   strategy:'Check Στ_ext=0 first. Apply I_iω_i=I_fω_f. Calculate ΔKE separately.'},
+   tips:['Always verify Στ_ext=0 before applying angular momentum conservation.','Use KE=L²/(2I) when L is constant and I changes — avoids needing to know ω explicitly.','Diver tucks → small I → fast spin. Opens up → large I → slow rotation. Same L throughout.'],
+   strategy:'Check Στ_ext=0. If yes: I_iω_i=I_fω_f. Calculate ΔKE separately using KE=L²/(2I). Explain the energy difference.'},
+
   {num:'7',title:'Simple Harmonic Motion',pct:'5–8%',color:'#f5a623',
-   desc:'Period depends only on restoring constant and mass — NOT amplitude.',
-   cheatSheet:{
-     decision:'Spring: T=2π√(m/k). Pendulum: T=2π√(L/g).\nNeither mass (pendulum) nor amplitude affects T.\nE=½kA². Double A→E×4. v_max=Aω.',
-     prop:'Half spring length→k doubles→T÷√2. On Moon: lower g→longer T for pendulum.'
-   },
+   desc:'Oscillating systems where restoring force ∝ displacement. Period depends only on system properties — NEVER on amplitude.',
+   cheatSheet:{decision:'Spring: T=2π√(m/k). Pendulum: T=2π√(L/g).\nAmplitude does NOT affect T — ever.\nE=½kA². Double A → E×4. v_max=Aω at equilibrium.\nAt x=0: max KE, zero PE. At x=±A: zero KE, max PE.',prop:'Spring on Moon: T unchanged (no g in formula). Pendulum on Moon: T longer (lower g → larger T).'},
+   realWorld:[
+     {title:'⏰ Grandfather Clock',body:'A grandfather clock has a pendulum of precise length so T=2π√(L/g)=2 seconds exactly. On a mountain where g is slightly smaller, the period gets longer and the clock runs slow. Historically, physicists measured g at different locations by bringing a calibrated pendulum and timing it. Key: mass and amplitude do not matter. Only L and g determine the period. This is SHM\'s most counterintuitive and most tested property.'},
+     {title:'🌉 Resonance and Bridge Collapse',body:'The Tacoma Narrows Bridge collapsed in 1940 because wind drove it at its natural resonant frequency — the frequency at which it naturally oscillates (f=1/T). When a driving force matches the natural frequency, energy is added efficiently each cycle and amplitude grows. In SHM, every system has a specific natural frequency. Driving it at that frequency causes resonance. Engineers must design bridges, buildings, and machines to avoid resonance with expected vibration sources.'},
+     {title:'🎵 Guitar String Tuning',body:'Each guitar string is a mass-spring analog. Tightening increases tension (effectively k) → higher frequency → higher pitch. Heavier strings have more mass → lower frequency → lower pitch. The frequency f=1/(2π)×√(k/m). Guitarists adjust k (tuning pegs) and use different m (string gauges) to hit exact musical frequencies. The mathematical relationship between SHM and music is exact, not approximate.'},
+     {title:'🏥 MRI Machine',body:'MRI exploits the natural resonant frequency of hydrogen atoms (protons) in a magnetic field — which is in the radio frequency range and depends on the field strength. The machine pulses radio waves at exactly this frequency (resonance), then detects energy emitted as protons relax back. Different tissues have different environments → different relaxation → image contrast. Medical imaging = quantum mechanical SHM, the same mathematics at the atomic scale.'},
+   ],
    topics:[
-     {h:'Spring-Mass',p:'F=−kx. T=2π√(m/k). Amplitude does NOT affect T.'},
-     {h:'Pendulum',p:'T=2π√(L/g). Small angles only. Mass does NOT affect T.'},
-     {h:'Energy in SHM',p:'At x=0: max KE, zero PE. At x=±A: zero KE, max PE. E=½kA².'},
-     {h:'Position Function',p:'x=A cos(ωt+φ). v_max=Aω=A√(k/m). a_max=Aω².'},
+     {h:'Restoring Force and Hooke\'s Law',p:'SHM occurs when the restoring force is proportional to displacement from equilibrium: F=−kx. The negative sign is crucial — the force always points TOWARD equilibrium. Pull right, force pushes left. Push left, force pushes right. The further you go, the harder the restoring force pulls back. This linear relationship produces the sinusoidal (sine wave) oscillation. If the force did not grow linearly with displacement, you would get a different kind of oscillation.'},
+     {h:'Period and Frequency',p:'Period T = time for one complete cycle. Frequency f = cycles per second = 1/T. Angular frequency ω=2πf=2π/T. Spring-mass: T=2π√(m/k). Pendulum: T=2π√(L/g). The defining property of SHM: period is INDEPENDENT of amplitude. A pendulum swinging 5° or 30° takes the same time per swing (approximately, for small angles). This seems wrong but is experimentally true and follows mathematically from the linear restoring force.'},
+     {h:'Energy in SHM',p:'Total energy E=½kA² where A is the amplitude. This is fixed for a given oscillation and depends on A squared. At equilibrium (x=0): all energy is kinetic, KE=½mv²=½kA² → v_max=A√(k/m). At the turning points (x=±A): all energy is potential, KE=0. At any intermediate position x: KE=½k(A²−x²), PE=½kx², KE+PE=½kA² always. When asked "where is KE=PE?": each is ½E, so ½kx²=¼kA² → x=A/√2.'},
+     {h:'Position, Velocity, and Acceleration',p:'x(t)=A cos(ωt) starting from maximum displacement. v(t)=−Aω sin(ωt). a(t)=−ω²x. Key: acceleration is always opposite to displacement (that is what makes it restoring). The three quantities are out of phase — when displacement is maximum, velocity is zero and acceleration is maximum magnitude. When displacement is zero (equilibrium), velocity is maximum and acceleration is zero.'},
    ],
    formulas:[
-     {f:'F = −kx',d:'Hooke\'s Law (restoring)'},
-     {f:'T_spring = 2π√(m/k)',d:'Spring period (not amplitude!)'},
-     {f:'T_pendulum = 2π√(L/g)',d:'Pendulum (small angle only)'},
-     {f:'E = ½kA²',d:'Total energy (∝ A²)'},
-     {f:'v_max = Aω = A√(k/m)',d:'Max speed at equilibrium'},
+     {f:'F = −kx',d:'Hooke\'s Law — restoring force'},
+     {f:'T_spring = 2π√(m/k)',d:'Spring period — no amplitude dependence'},
+     {f:'T_pendulum = 2π√(L/g)',d:'Pendulum — no mass or amplitude'},
+     {f:'E = ½kA²',d:'Total energy — proportional to A squared'},
+     {f:'v_max = Aω = A√(k/m)',d:'Max speed at equilibrium position'},
    ],
    traps:[
-     {l:'Period independent of amplitude',t:'This is SHM\'s defining property. Same T wide or narrow.'},
-     {l:'Double A → E×4',t:'E∝A². Doubling A quadruples energy. v_max doubles. T unchanged.'},
-     {l:'Pendulum on Moon',t:'Lower g→longer T. T∝1/√g.'},
+     {l:'Period is independent of amplitude',t:'This is the defining property of SHM. Wide swing and narrow swing take identical time. The AP exam tests this with "what happens to T when amplitude doubles?" Answer: nothing.'},
+     {l:'Double amplitude → energy ×4 but period unchanged',t:'E=½kA² (quadratic in A). Double A → ×4 energy and ×2 v_max. Period T is completely unchanged because T does not depend on A at all.'},
+     {l:'Spring on Moon: same T. Pendulum on Moon: longer T.',t:'T_spring=2π√(m/k) has no g — identical on Moon. T_pendulum=2π√(L/g) has g — smaller g on Moon means LONGER period.'},
    ],
-   tips:['At x=0: KE max, PE=0. At x=±A: KE=0, PE max.','Series springs: 1/k_eff=Σ1/kᵢ. Parallel: k_eff=Σkᵢ.'],
-   strategy:'Identify what controls T. Draw energy bars at x=0 and x=±A.'},
+   tips:['At x=0: KE max, PE=0. At x=±A: KE=0, PE max. Memorize these two snapshots cold.','v_max=Aω is the fastest way to find maximum speed.','KE=PE when x=A/√2 ≈ 0.707A — not at A/2.'],
+   strategy:'Identify if spring or pendulum. Calculate T. Use E=½kA² for energy questions. Use KE+PE=E for speed at any position.'},
+
   {num:'8',title:'Waves, Sound & Circuits',pct:'25–33%',color:'#f05e5e',
-   desc:'Wave properties, standing waves, Doppler effect, and DC circuit analysis.',
-   cheatSheet:{
-     decision:'Waves: draw pattern, count half-wavelengths.\nCircuits: simplify (combine series/parallel), find I, backsolve.\nOpen-closed pipe: ODD harmonics only (n=1,3,5).',
-     prop:'Series: same I, largest R→most ΔV. Parallel: same V, smallest R→most I.'
-   },
+   desc:'Biggest unit by exam weight. Mechanical waves, standing waves, Doppler effect, and DC circuit analysis.',
+   cheatSheet:{decision:'Waves: draw the standing wave, count half-wavelengths fitting in L.\nCircuits: simplify completely first, then find I_total, then backsolve.\nOpen-closed: ODD harmonics ONLY (n=1,3,5).\nSeries: same I everywhere. Parallel: same V everywhere.',prop:'Series: largest R → most voltage. Parallel: smallest R → most current. Doubling f → half λ when v is constant.'},
+   realWorld:[
+     {title:'🎸 Guitar Harmonics',body:'Press a string at the 12th fret (exactly halfway) and pluck lightly: you hear one octave higher (double frequency). That is the 2nd harmonic — two half-wavelengths fit instead of one. fn=nv/2L: f₂=2f₁. Guitarists create harmonics by touching nodes (points of zero displacement). The physics of every musical instrument is standing waves. The fret positions on a guitar encode the mathematics of harmonics in physical space.'},
+     {title:'🚑 Doppler Effect in Medicine',body:'An ambulance approaching at 30 m/s makes its siren sound about 10% higher pitched: f_obs=f×v/(v−v_s)=f×340/310≈1.1f. The moment it passes, pitch drops noticeably. Medical ultrasound uses the same principle — sound bouncing off moving blood cells is Doppler-shifted. The frequency shift tells doctors the blood velocity. Speed guns for cars and baseballs use radar (electromagnetic Doppler). Same physics, different wave.'},
+     {title:'💡 Why Houses Are Wired in Parallel',body:'Christmas lights used to be series — one bulb burns out, all go dark (same current path, break it anywhere). Modern lights and your entire house: parallel — one bulb or outlet goes out, the rest work (each has its own path to the power source). Series: same current everywhere, voltage splits. Parallel: same voltage everywhere (120V at every outlet), current splits. Parallel wiring keeps every device at full voltage regardless of what else is plugged in.'},
+     {title:'🔊 Speaker Cabinet Design',body:'A speaker cabinet is not just a box — it is a tuned acoustic resonator. The port (hole) length is calculated so standing waves form at specific frequencies to boost bass response. This is an open-closed resonator: L=λ/4 for the fundamental. Longer port → lower resonant frequency → deeper bass. Audio engineers use f=v/(4L) to design ports. Your phone speaker is also tuned — the small cavity behind the speaker affects sound quality through resonance.'},
+   ],
    topics:[
-     {h:'Wave Basics',p:'v=fλ. Transverse: displacement⊥motion. Longitudinal: ∥ (sound).'},
-     {h:'Standing Waves: Strings',p:'Both ends fixed=nodes. fn=nv/2L; n=1,2,3...'},
-     {h:'Standing Waves: Pipes',p:'Open-open: same as strings. Open-closed: fn=nv/4L; n=1,3,5 (odd only!).'},
-     {h:'Doppler Effect',p:'Source approaching→higher f. Receding→lower f.'},
-     {h:'DC Circuits',p:'V=IR. Series: same I, R_total=ΣRᵢ. Parallel: same V, 1/R=Σ1/Rᵢ.'},
+     {h:'Wave Properties',p:'All waves carry energy without transporting matter. Wave speed v=fλ. Frequency is set by the source and stays constant when a wave moves between media. Wavelength changes when speed changes (different medium) but frequency does not. Transverse waves: particles vibrate perpendicular to wave direction (light, water surface waves, guitar string). Longitudinal waves: particles vibrate parallel to wave direction (sound, a pushed slinky). Sound is longitudinal — the air compresses and expands along the direction of travel.'},
+     {h:'Standing Waves on Strings',p:'A wave reflecting between two fixed ends creates a standing wave by interference. Fixed ends = nodes (zero displacement) always. The wavelength and frequency at which standing waves form are the resonant frequencies. For fixed-fixed: fn=nv/2L, n=1,2,3... Fundamental (n=1): L=λ/2, one antinode. 2nd harmonic (n=2): L=λ, two antinodes. Strategy: draw the wave pattern, count how many half-wavelengths fit, read off n, apply formula.'},
+     {h:'Standing Waves in Pipes',p:'Open end = antinode (air free to move). Closed end = node (air cannot move at wall). Open-open pipe: both ends antinodes, same formula as fixed-fixed string: fn=nv/2L, n=1,2,3. Open-closed pipe: must have node at closed end and antinode at open end. Only ODD harmonics fit: fn=nv/4L, n=1,3,5 only. There is no 2nd or 4th harmonic for an open-closed pipe — they cannot satisfy both boundary conditions simultaneously.'},
+     {h:'Doppler Effect',p:'Relative motion between source and observer shifts the observed frequency. Source approaching: sound waves bunch together in front → shorter λ → higher frequency. Source receding: waves stretch → longer λ → lower frequency. Formula: f_obs=f_s×v/(v∓v_s) where − is used when source approaches and + when receding. Moving toward each other → higher frequency always. Separating → lower frequency always. The frequency change is NOT symmetric for source vs observer motion — but for AP Physics 1, you mainly need the qualitative reasoning and the source-moving formula.'},
+     {h:'Ohm\'s Law and Circuit Analysis',p:'V=IR. Voltage V (volts) is electrical pressure. Current I (amperes) is flow of charge. Resistance R (ohms) opposes flow. Power P=IV=I²R=V²/R. SERIES: one path only — same current I flows through every element. Total resistance R_total=ΣRᵢ. Voltage splits proportionally to resistance (V=IR, same I, different R → different V). PARALLEL: multiple paths — same voltage V across every branch. Total resistance: 1/R=Σ(1/Rᵢ). Current splits: I=V/R, same V, different R → different I.'},
+     {h:'Circuit Analysis Strategy',p:'Step 1: Simplify — combine all series groups (add R values) and parallel groups (use reciprocal formula), repeating until one equivalent resistance R_total remains. Step 2: Find total current — I_total=V_battery/R_total. Step 3: Backsolve — for series elements, current is same I_total everywhere, use V=IR to find voltage drops. For parallel branches, voltage is same as across the parallel combination, use I=V/R to find each branch current. Track what is shared (series→share I, parallel→share V).'},
    ],
    formulas:[
-     {f:'v = fλ',d:'Wave speed'},
-     {f:'fn = nv/2L',d:'String or open-open; n=1,2,3...'},
-     {f:'fn = nv/4L',d:'Open-closed; n=1,3,5 (odd only!)'},
+     {f:'v = fλ',d:'Wave speed = frequency × wavelength'},
+     {f:'fn = nv/2L',d:'Fixed-fixed string or open-open pipe (n=1,2,3...)'},
+     {f:'fn = nv/4L',d:'Open-closed pipe — ODD n only (1,3,5...)'},
      {f:'V = IR',d:'Ohm\'s Law'},
-     {f:'P = IV = I²R = V²/R',d:'Power in resistor'},
-     {f:'R_series = R₁+R₂+...',d:'Series resistance'},
-     {f:'1/R_par = 1/R₁+1/R₂+...',d:'Parallel resistance'},
+     {f:'P = IV = I²R = V²/R',d:'Power — three equivalent forms'},
+     {f:'R_series = R₁+R₂+...',d:'Series resistance adds directly'},
+     {f:'1/R_par = 1/R₁+1/R₂+...',d:'Parallel — always less than smallest R'},
    ],
    traps:[
-     {l:'Open-closed: odd harmonics only',t:'fn=nv/4L with n=1,3,5 only. 2nd harmonic does NOT exist.'},
-     {l:'Open end=antinode, closed=node',t:'Determines wave shape inside and which harmonics exist.'},
-     {l:'Adding parallel R always decreases R_total',t:'R_total<any individual R in parallel.'},
+     {l:'Open-closed pipe: ODD harmonics only',t:'n=1,3,5 only in fn=nv/4L. The 2nd harmonic cannot exist for an open-closed pipe — it cannot satisfy node at closed end AND antinode at open end simultaneously with an even harmonic.'},
+     {l:'Parallel R is always less than the smallest individual R',t:'Adding ANY resistor in parallel ALWAYS lowers total resistance. If your calculated R_total is higher than the smallest branch R, you made an arithmetic error.'},
+     {l:'Open end = antinode, closed end = node',t:'Mixing these up gives completely wrong wave patterns and wrong harmonic numbers. Fixed rule: open/free end = antinode. Fixed/closed end = node.'},
    ],
-   tips:['Draw wave pattern. Count nodes/antinodes to find harmonic.','Series: same I, largest R→most V. Parallel: same V, smallest R→most I.'],
-   strategy:'Waves: draw pattern, count half-wavelengths. Circuits: simplify step-by-step.'},
+   tips:['Draw the wave pattern inside the pipe or string. Count half-wavelengths that fit. That gives you n and then f.','Circuit: simplify FIRST before finding any current or voltage.','Series = same I, voltage splits. Parallel = same V, current splits. Write this on your scratch paper at the start of every circuit problem.'],
+   strategy:'Waves: draw pattern, count, apply formula. Circuits: simplify → I_total=V/R_total → backsolve using V=IR and I=V/R.'},
 ];
 
 const CARDS_BASE=[
@@ -1636,6 +1827,7 @@ function nav(id,btn){
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('on'));
   document.getElementById('p-'+id).classList.add('on');
   if(btn)btn.classList.add('on');
+  if(id==='tutor')buildTutorPicker();
   if(id==='flashcards')initFC();
   if(id==='dashboard')refreshDash();
   if(id==='wronglog')renderWrongLog();
@@ -1651,11 +1843,26 @@ function buildNotes(){
   const con=document.getElementById('unitsList');
   UNITS.forEach((u,ui)=>{
     const id=`uc${ui}`;
-    const topics=u.topics.map(t=>`<div class="tc"><h4>${t.h}</h4><p>${t.p}</p></div>`).join('');
-    const formulas=u.formulas.map(f=>`<div class="fi"><code class="fcode" style="border-color:${u.color}">${f.f}</code><span class="fdesc">${f.d}</span></div>`).join('');
-    const traps=u.traps.map(t=>`<div class="trap-box"><div class="tl">⚠ ${t.l}</div><p>${t.t}</p></div>`).join('');
-    const tips=u.tips.map(t=>`<div class="tip-box">${t}</div>`).join('');
-    const strat=u.strategy?`<div class="strat-box"><div class="sl">✓ FRQ Strategy</div><p>${u.strategy}</p></div>`:'';
+    const topics=u.topics.map(t=>`<div class="tc">
+      <h4>${t.h} <button class="gid-btn" onclick="goInDepth('topic','${t.h.replace(/'/g,"\\'")}','${u.title}')">🔍 Go In Depth</button></h4>
+      <p>${t.p}</p>
+    </div>`).join('');
+    const formulas=u.formulas.map(f=>`<div class="fi">
+      <code class="fcode" style="border-color:${u.color}">${f.f}</code>
+      <span class="fdesc">${f.d}</span>
+      <button class="gid-btn" onclick="goInDepth('formula','${f.f.replace(/'/g,"\\'")}','${u.title}')">🔍 Go In Depth</button>
+    </div>`).join('');
+    const traps=u.traps.map(t=>`<div class="trap-box">
+      <div class="tl">⚠ ${t.l} <button class="gid-btn" onclick="goInDepth('trap','${t.l.replace(/'/g,"\\'")}','${u.title}')">🔍 Go In Depth</button></div>
+      <p>${t.t}</p>
+    </div>`).join('');
+    const tips=u.tips.map(t=>`<div class="tip-box">${t} <button class="gid-btn" onclick="goInDepth('tip','${t.slice(0,50).replace(/'/g,"\\'")}','${u.title}')">🔍 Go In Depth</button></div>`).join('');
+    const strat=u.strategy?`<div class="strat-box"><div class="sl">✓ FRQ Strategy <button class="gid-btn" onclick="goInDepth('strategy','FRQ Strategy','${u.title}')">🔍 Go In Depth</button></div><p>${u.strategy}</p></div>`:'';
+    const rwCards=(u.realWorld||[]).map(rw=>`<div class="rw-card">
+      <div class="rw-title">${rw.title}</div>
+      <div class="rw-body">${rw.body}</div>
+      <button class="gid-btn" style="margin-top:.6rem" onclick="goInDepth('realworld','${rw.title.replace(/'/g,"\\'")}','${u.title}')">🔍 Go In Depth</button>
+    </div>`).join('');
     const notesKey=`notes_${id}`;
     const savedNotes=S[notesKey]||[];
     const notesList=savedNotes.map((n,ni)=>`<div class="note-item"><span class="note-body">${n}</span><button class="note-del" onclick="deleteNote('${id}',${ni})">✕</button></div>`).join('');
@@ -1664,6 +1871,7 @@ function buildNotes(){
         <span class="unum" style="color:${u.color};background:${u.color}18;border:1px solid ${u.color}33">Unit ${u.num}</span>
         <span class="utitle">${u.title}</span>
         <span class="upct">${u.pct}</span>
+        <button class="gid-btn" onclick="event.stopPropagation();goInDepth('unit','${u.title}','${u.title}')" style="margin-right:.5rem">🔍 Go In Depth</button>
         <span class="uchev">▾</span>
       </div>
       <div class="ucard-body">
@@ -1675,12 +1883,14 @@ function buildNotes(){
         </div>
         <div class="stab-row">
           <button class="stab on" onclick="showStab('${id}','topics',this)">Topics</button>
+          <button class="stab" onclick="showStab('${id}','realworld',this)">🌍 Real World</button>
           <button class="stab" onclick="showStab('${id}','formulas',this)">Formulas</button>
           <button class="stab" onclick="showStab('${id}','traps',this)">⚠ Traps</button>
           <button class="stab" onclick="showStab('${id}','tips',this)">Tips</button>
           <button class="stab" onclick="showStab('${id}','mynotes',this)">📝 My Notes</button>
         </div>
         <div class="stab-panel on" id="${id}-topics"><div class="topics-grid">${topics}</div></div>
+        <div class="stab-panel" id="${id}-realworld"><div class="rw-grid">${rwCards}</div></div>
         <div class="stab-panel" id="${id}-formulas"><div class="formulas-col">${formulas}</div></div>
         <div class="stab-panel" id="${id}-traps"><div class="traps-col">${traps}</div></div>
         <div class="stab-panel" id="${id}-tips"><div class="tips-col">${tips}</div>${strat}</div>
@@ -1699,7 +1909,7 @@ function buildNotes(){
 
 function toggleUnit(id){document.getElementById(id).classList.toggle('open');}
 function showStab(uid,tab,btn){
-  ['topics','formulas','traps','tips','mynotes'].forEach(t=>{document.getElementById(`${uid}-${t}`)?.classList.remove('on');});
+  ['topics','realworld','formulas','traps','tips','mynotes'].forEach(t=>{document.getElementById(`${uid}-${t}`)?.classList.remove('on');});
   document.getElementById(`${uid}-${tab}`)?.classList.add('on');
   btn.closest('.stab-row').querySelectorAll('.stab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
@@ -2576,8 +2786,473 @@ function updatePomoDots(){
 }
 
 // ═══════════════════════════════════════════
-// QUICK REVIEW / NIGHT BEFORE
+// AI TUTOR MODE
 // ═══════════════════════════════════════════
+let tutorUnit=null, tutorPhase=0, tutorProbIdx=0, tutorProblems=[], tutorHistory=[];
+const TUTOR_PHASES=['learn','formulas','guided','practice','apply'];
+
+function buildTutorPicker(){
+  const grid=document.getElementById('tutorUnitGrid');
+  grid.innerHTML=UNITS.map((u,i)=>`
+    <div class="tutor-unit-card" onclick="startTutor(${i})" style="border-top:3px solid ${u.color}">
+      <div class="tuc-num" style="color:${u.color}">Unit ${u.num}</div>
+      <div class="tuc-title">${u.title}</div>
+      <div class="tuc-desc">${u.desc.slice(0,80)}...</div>
+      <div class="tuc-pct" style="color:${u.color}">${u.pct} of exam</div>
+    </div>`).join('');
+}
+
+function startTutor(unitIdx){
+  tutorUnit=UNITS[unitIdx];
+  tutorPhase=0; tutorProbIdx=0; tutorProblems=[]; tutorHistory=[];
+  document.getElementById('tutorPicker').style.display='none';
+  document.getElementById('tutorSession').style.display='block';
+  document.getElementById('tutorUnitLabel').textContent=`Unit ${tutorUnit.num}: ${tutorUnit.title}`;
+  updateTutorSteps();
+  runPhase();
+}
+
+function resetTutor(){
+  document.getElementById('tutorPicker').style.display='block';
+  document.getElementById('tutorSession').style.display='none';
+  tutorUnit=null; tutorPhase=0; tutorHistory=[];
+}
+
+function updateTutorSteps(){
+  TUTOR_PHASES.forEach((_,i)=>{
+    const el=document.getElementById(`ts${i}`);
+    if(!el)return;
+    el.className='tb-step'+(i===tutorPhase?' active':i<tutorPhase?' done':'');
+  });
+}
+
+async function runPhase(){
+  updateTutorSteps();
+  document.getElementById('tutorInputArea').style.display='none';
+  document.getElementById('tutorNav').innerHTML='';
+  document.getElementById('tutorContent').innerHTML='';
+
+  if(tutorPhase===0) await phaseLearn();
+  else if(tutorPhase===1) await phaseFormulas();
+  else if(tutorPhase===2) await phaseGuided();
+  else if(tutorPhase===3) await phasePractice();
+  else if(tutorPhase===4) await phaseApply();
+}
+
+function showTutorLoading(msg='Your tutor is preparing this section...'){
+  document.getElementById('tutorContent').innerHTML=`
+    <div class="tutor-loading">
+      <div class="gid-dot"></div><div class="gid-dot"></div><div class="gid-dot"></div>
+      <span>${msg}</span>
+    </div>`;
+}
+
+function renderTutorText(raw){
+  return raw
+    .replace(/###\s*(.+)/g,'<h3>$1</h3>')
+    .replace(/##\s*(.+)/g,'<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/`([^`]+)`/g,'<code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-family:Geist Mono,monospace">$1</code>')
+    .replace(/\[KEY\](.+?)\[\/KEY\]/g,'<div class="key-box">$1</div>')
+    .replace(/\[WARN\](.+?)\[\/WARN\]/g,'<div class="warn-box">$1</div>')
+    .replace(/\[EX\](.+?)\[\/EX\]/gs,'<div class="ex-box">$1</div>')
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/\n/g,'<br>');
+}
+
+async function callTutor(systemPrompt, userPrompt){
+  const messages=[...tutorHistory,{role:'user',content:userPrompt}];
+  const res=await fetch('https://phyisicsos-api.werw8087.workers.dev',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      system:systemPrompt,
+      messages
+    })
+  });
+  const data=await res.json();
+  const text=data.content?.map(c=>c.text||'').join('')||'Error loading content.';
+  tutorHistory.push({role:'user',content:userPrompt});
+  tutorHistory.push({role:'assistant',content:text});
+  return text;
+}
+
+const TUTOR_SYSTEM=`You are PhysicsOS Tutor — a warm, patient, expert AP Physics 1 teacher for a high school student in Salinas, CA. 
+Your style: clear, encouraging, never condescending. You explain like a great teacher, not a textbook.
+Use these tags in your responses for formatting:
+[KEY]important insight here[/KEY] for key takeaways
+[WARN]common mistake here[/WARN] for traps  
+[EX]worked example here[/EX] for examples with numbers
+Use ### for section headers, ** for bold key terms.
+Never assume prior knowledge. Always build intuition BEFORE showing formulas.
+Keep responses focused and under 500 words per section.`;
+
+async function phaseLearn(){
+  document.getElementById('tutorContent').innerHTML=`
+    <div class="phase-intro">
+      <div class="pi-ic">📖</div>
+      <h2>Let's learn ${tutorUnit.title}</h2>
+      <p>I'm going to explain this entire unit from scratch — like you've never seen it before. No assumed knowledge, no skipped steps.</p>
+      <button class="btn pri" onclick="startLearnPhase()">Let's go →</button>
+    </div>`;
+}
+
+async function startLearnPhase(){
+  showTutorLoading('Building your personalized lesson...');
+  const prompt=`Teach me Unit ${tutorUnit.num}: ${tutorUnit.title} (${tutorUnit.pct} of AP Physics 1 exam) completely from scratch.
+
+Here are the key topics in this unit: ${tutorUnit.topics.map(t=>t.h).join(', ')}.
+
+Structure your teaching EXACTLY like this:
+1. Start with THE BIG PICTURE — what is this unit really about? Use a relatable analogy or real-life situation I already understand. Make me care about it.
+2. Explain the CORE CONCEPTS one by one. For each: simple definition in plain English, then build to the physics meaning.
+3. Show real-world examples that make each concept click.
+4. End with: "Here is what this all connects to" — tie the ideas together.
+
+Rules: No formulas yet (those come next). Build intuition first. Talk to me like a real teacher, not a textbook. Be specific, not vague.`;
+
+  try{
+    const text=await callTutor(TUTOR_SYSTEM, prompt);
+    document.getElementById('tutorContent').innerHTML=`
+      <div class="tutor-bubble ai">
+        <div class="tutor-txt"><p>${renderTutorText(text)}</p></div>
+      </div>`;
+    document.getElementById('tutorNav').innerHTML=`
+      <button class="btn pri" onclick="nextPhase()">I understand — show me the formulas →</button>
+      <button class="btn" onclick="tutorAsk('Can you explain the big picture again in a different way? I want to make sure I really get it.')">Explain it differently</button>`;
+    addAct('🎓',`Tutoring: ${tutorUnit.title} — Learn phase`);
+  }catch(e){
+    document.getElementById('tutorContent').innerHTML=`<div class="tutor-bubble wrong"><div class="tutor-txt">Could not connect. Check internet and try again.</div></div>`;
+  }
+}
+
+async function phaseFormulas(){
+  document.getElementById('tutorContent').innerHTML=`
+    <div class="phase-intro">
+      <div class="pi-ic">🔢</div>
+      <h2>The Formulas</h2>
+      <p>Now that you understand the concepts, let's look at every important formula — what it means, when to use it, and a worked example for each.</p>
+      <button class="btn pri" onclick="startFormulasPhase()">Show me the formulas →</button>
+    </div>`;
+}
+
+async function startFormulasPhase(){
+  showTutorLoading('Preparing formula breakdowns...');
+  const formulaList=tutorUnit.formulas.map(f=>`${f.f} — ${f.d}`).join('\n');
+  const prompt=`Now teach me all the important formulas for ${tutorUnit.title}.
+
+The formulas are:
+${formulaList}
+
+For EACH formula, follow this exact structure:
+### [Formula]
+**What it means in plain English:** (explain the physical meaning, not just the math)
+**Each variable:** (break down every letter/symbol)
+**When to use it:** (be specific — what type of problem, what do you already know)
+**When NOT to use it:** (common mistakes)
+[EX]
+Worked example with real numbers — show EVERY step. Explain each step as you go.
+[/EX]
+[KEY]The most important thing to remember about this formula[/KEY]
+
+Teach them in order of importance. Be thorough — do not skip any formula.`;
+
+  try{
+    const text=await callTutor(TUTOR_SYSTEM, prompt);
+    document.getElementById('tutorContent').innerHTML=`
+      <div class="tutor-bubble ai">
+        <div class="tutor-txt"><p>${renderTutorText(text)}</p></div>
+      </div>`;
+    document.getElementById('tutorNav').innerHTML=`
+      <button class="btn pri" onclick="nextPhase()">Got it — let's practice with guidance →</button>
+      <button class="btn" onclick="tutorAsk('Can you pick the most important formula and do another worked example, going even slower this time?')">Another example, slower</button>
+      <button class="btn" onclick="tutorAsk('How do I know which formula to use when I see a problem?')">How do I pick the right formula?</button>`;
+  }catch(e){
+    document.getElementById('tutorContent').innerHTML=`<div class="tutor-bubble wrong"><div class="tutor-txt">Connection error. Try again.</div></div>`;
+  }
+}
+
+async function phaseGuided(){
+  document.getElementById('tutorContent').innerHTML=`
+    <div class="phase-intro">
+      <div class="pi-ic">🧩</div>
+      <h2>Guided Practice</h2>
+      <p>I'll give you problems and walk you through how to solve them together — easy ones first, then harder. I'll show you my thinking at every step.</p>
+      <button class="btn pri" onclick="startGuidedPhase()">Start guided practice →</button>
+    </div>`;
+}
+
+async function startGuidedPhase(){
+  showTutorLoading('Preparing guided problems...');
+  const prompt=`Give me 3 guided practice problems for ${tutorUnit.title}, starting easy and getting harder.
+
+For each problem:
+**Problem [number] — [Easy/Medium/Hard]**
+State the problem clearly with all given information.
+
+Then immediately solve it completely:
+"Here is how I think through this:"
+Step 1: [what to identify/set up]
+Step 2: [what formula to choose and why]  
+Step 3: [plug in numbers]
+Step 4: [solve and check units]
+[KEY]What this problem teaches you[/KEY]
+
+Then say: "Notice what I did there — [one key insight about the approach]"
+
+Space the 3 problems out clearly. Make them realistic AP Physics 1 style problems with real numbers.`;
+
+  try{
+    const text=await callTutor(TUTOR_SYSTEM, prompt);
+    document.getElementById('tutorContent').innerHTML=`
+      <div class="tutor-bubble ai">
+        <div class="tutor-txt"><p>${renderTutorText(text)}</p></div>
+      </div>`;
+    document.getElementById('tutorNav').innerHTML=`
+      <button class="btn pri" onclick="nextPhase()">I'm ready to try on my own →</button>
+      <button class="btn" onclick="tutorAsk('Can you give me one more guided example? I want to see the process one more time before I try alone.')">One more guided example</button>`;
+    addXP(10);
+  }catch(e){
+    document.getElementById('tutorContent').innerHTML=`<div class="tutor-bubble wrong"><div class="tutor-txt">Connection error. Try again.</div></div>`;
+  }
+}
+
+async function phasePractice(){
+  document.getElementById('tutorContent').innerHTML=`
+    <div class="phase-intro">
+      <div class="pi-ic">✏️</div>
+      <h2>Your Turn</h2>
+      <p>Now try problems on your own. I won't show the answer until you submit. Show your work — I'll check it and explain any mistakes.</p>
+      <button class="btn pri" onclick="startPracticePhase()">Give me a problem →</button>
+    </div>`;
+}
+
+async function startPracticePhase(){
+  await generatePracticeProb('easy');
+}
+
+async function generatePracticeProb(difficulty){
+  showTutorLoading(`Generating a ${difficulty} problem...`);
+  const doneCount=tutorProbIdx;
+  const prompt=`Give me ONE ${difficulty} independent practice problem for ${tutorUnit.title}.
+
+Rules:
+- AP Physics 1 style with real numbers
+- Difficulty: ${difficulty}
+- Problem number ${doneCount+1}
+- ONLY give the problem — NO hints, NO solution, NO answer
+- End with exactly: "Show me your work and I will check it."
+- Make it different from any previous problems in this session`;
+
+  try{
+    const text=await callTutor(TUTOR_SYSTEM, prompt);
+    document.getElementById('tutorContent').innerHTML=`
+      <div class="prob-card">
+        <div class="prob-label">Problem ${tutorProbIdx+1} <span class="prob-diff ${difficulty}">${difficulty}</span></div>
+        <div class="prob-q">${renderTutorText(text)}</div>
+      </div>`;
+    document.getElementById('tutorInputArea').style.display='block';
+    document.getElementById('tutorAnswer').value='';
+    document.getElementById('tutorAnswer').focus();
+    document.getElementById('tutorNav').innerHTML='';
+    window._currentProbDifficulty=difficulty;
+  }catch(e){
+    document.getElementById('tutorContent').innerHTML=`<div class="tutor-bubble wrong"><div class="tutor-txt">Connection error. Try again.</div></div>`;
+  }
+}
+
+async function submitTutorAnswer(){
+  const answer=document.getElementById('tutorAnswer').value.trim();
+  if(!answer){showToast('Write something first — even a guess!');return;}
+  document.getElementById('tutorInputArea').style.display='none';
+  showTutorLoading('Checking your work...');
+
+  const prompt=`The student submitted this answer to the practice problem:
+
+"${answer}"
+
+Check their work thoroughly:
+1. Is the answer correct? (yes/no)
+2. If correct: celebrate it, explain what they did right, highlight the best part of their reasoning
+3. If incorrect or incomplete: 
+   - Tell them specifically what was right (find something positive)
+   - Explain exactly where the mistake happened and WHY it is a mistake
+   - Walk through the complete correct solution step by step
+   - End with a memory tip so they don't make this mistake again
+[KEY]The key takeaway from this problem[/KEY]
+
+Be encouraging no matter what. If they got it wrong, make them feel like they can absolutely get the next one.`;
+
+  try{
+    const text=await callTutor(TUTOR_SYSTEM, prompt);
+    const isCorrect=text.toLowerCase().includes('correct')&&!text.toLowerCase().includes('not correct')&&!text.toLowerCase().includes('incorrect');
+    tutorProbIdx++;
+    document.getElementById('tutorContent').innerHTML=`
+      <div class="tutor-bubble ${isCorrect?'correct':'wrong'}">
+        <div class="tutor-txt"><p>${renderTutorText(text)}</p></div>
+      </div>`;
+    if(isCorrect)addXP(15);else addXP(5);
+    // nav: next problem
+    const diff=window._currentProbDifficulty;
+    const nextDiff=tutorProbIdx===1?'medium':tutorProbIdx===2?'hard':'hard';
+    document.getElementById('tutorNav').innerHTML=`
+      ${tutorProbIdx<4?`<button class="btn pri" onclick="generatePracticeProb('${nextDiff}')">Next problem (${nextDiff}) →</button>`:''}
+      ${tutorProbIdx>=3?`<button class="btn pri" onclick="nextPhase()">I'm done practicing — show me real-world problems →</button>`:''}
+      <button class="btn" onclick="generatePracticeProb('${diff}')">Try another ${diff} problem</button>`;
+  }catch(e){
+    document.getElementById('tutorContent').innerHTML=`<div class="tutor-bubble wrong"><div class="tutor-txt">Connection error. Try again.</div></div>`;
+  }
+}
+
+async function tutorHint(){
+  showTutorLoading('Getting you a hint...');
+  try{
+    const text=await callTutor(TUTOR_SYSTEM,`Give me a hint for the current practice problem — just a small nudge in the right direction. Do NOT give away the answer or the full method. Just help me figure out what the first step should be. Be encouraging.`);
+    const existing=document.getElementById('tutorContent').innerHTML;
+    document.getElementById('tutorContent').innerHTML=existing+`
+      <div class="tutor-bubble hint">
+        <div class="tutor-txt">💡 <strong>Hint:</strong> ${renderTutorText(text)}</div>
+      </div>`;
+    document.getElementById('tutorInputArea').style.display='block';
+  }catch(e){}
+}
+
+async function tutorSkip(){
+  showTutorLoading('Getting the solution...');
+  try{
+    const text=await callTutor(TUTOR_SYSTEM,`The student wants to skip this problem and see the full solution. Walk through the complete solution step by step, explaining every step clearly. Then give them a tip so they can solve similar problems next time. Be encouraging — skipping is okay, learning from the solution is the goal.`);
+    tutorProbIdx++;
+    document.getElementById('tutorContent').innerHTML=`
+      <div class="tutor-bubble ai">
+        <div class="tutor-txt"><p>${renderTutorText(text)}</p></div>
+      </div>`;
+    document.getElementById('tutorInputArea').style.display='none';
+    const nextDiff=tutorProbIdx===1?'medium':tutorProbIdx===2?'hard':'hard';
+    document.getElementById('tutorNav').innerHTML=`
+      ${tutorProbIdx<4?`<button class="btn pri" onclick="generatePracticeProb('${nextDiff}')">Next problem →</button>`:''}
+      ${tutorProbIdx>=3?`<button class="btn pri" onclick="nextPhase()">Move to real-world problems →</button>`:''}`;
+  }catch(e){}
+}
+
+async function phaseApply(){
+  document.getElementById('tutorContent').innerHTML=`
+    <div class="phase-intro">
+      <div class="pi-ic">🌍</div>
+      <h2>Real-World Application</h2>
+      <p>Final phase — apply what you learned to messy, real-world problems. These are the hardest and most rewarding. This is where the physics really clicks.</p>
+      <button class="btn pri" onclick="startApplyPhase()">Show me real-world problems →</button>
+    </div>`;
+}
+
+async function startApplyPhase(){
+  showTutorLoading('Preparing real-world problems...');
+  const prompt=`Give me 2 real-world application problems for ${tutorUnit.title}. These should feel like something that actually happens in the real world — not textbook setups.
+
+For EACH problem:
+**Real-World Problem [n]: [Vivid title]**
+Set the scene with a real situation (car, sports, space, engineering, etc.)
+Give all the numbers needed
+Ask 2 specific questions about it
+
+Then provide the complete solution:
+"Here is how to think through this:"
+[Full step-by-step solution for both questions]
+[KEY]What makes this a real-world vs textbook problem[/KEY]
+
+End the whole session with:
+### 🎉 You finished Unit ${tutorUnit.num}: ${tutorUnit.title}!
+Give them genuine encouragement. Tell them the 3 most important things to remember from this unit for the AP exam. Tell them what to do next (flashcards, quiz, etc.).`;
+
+  try{
+    const text=await callTutor(TUTOR_SYSTEM, prompt);
+    document.getElementById('tutorContent').innerHTML=`
+      <div class="tutor-bubble ai">
+        <div class="tutor-txt"><p>${renderTutorText(text)}</p></div>
+      </div>`;
+    document.getElementById('tutorNav').innerHTML=`
+      <button class="btn pri" onclick="resetTutor()">Study another unit</button>
+      <button class="btn grn" onclick="nav('flashcards',document.querySelector('.sb-btn[onclick*=flashcards]'))">Practice flashcards for this unit</button>
+      <button class="btn" onclick="nav('quiz',document.querySelector('.sb-btn[onclick*=quiz]'))">Take a quiz on this unit</button>`;
+    addXP(25);
+    addAct('🎓',`Completed full tutor session: ${tutorUnit.title}`);
+    showToast('🎉 Tutor session complete! +25 XP');
+  }catch(e){
+    document.getElementById('tutorContent').innerHTML=`<div class="tutor-bubble wrong"><div class="tutor-txt">Connection error. Try again.</div></div>`;
+  }
+}
+
+async function tutorAsk(question){
+  showTutorLoading('Thinking...');
+  try{
+    const text=await callTutor(TUTOR_SYSTEM, question);
+    const existing=document.getElementById('tutorContent').innerHTML;
+    document.getElementById('tutorContent').innerHTML=existing+`
+      <div class="tutor-bubble ai" style="margin-top:.75rem">
+        <div class="tutor-txt"><p>${renderTutorText(text)}</p></div>
+      </div>`;
+    document.getElementById('tutorContent').scrollIntoView({behavior:'smooth',block:'end'});
+  }catch(e){}
+}
+
+function nextPhase(){
+  tutorPhase++;
+  if(tutorPhase>=TUTOR_PHASES.length){tutorPhase=TUTOR_PHASES.length-1;return;}
+  runPhase();
+}
+
+
+async function goInDepth(type, item, unit){
+  document.getElementById('gidModal').classList.add('show');
+  const labels={unit:'Unit Overview',topic:'Topic',formula:'Formula',trap:'Common Trap',tip:'Study Tip',strategy:'FRQ Strategy',realworld:'Real World Example'};
+  document.getElementById('gidTitle').textContent=`🔍 Go In Depth: ${item}`;
+  document.getElementById('gidContext').textContent=`${labels[type]||type} · Unit: ${unit} · AP Physics 1`;
+  document.getElementById('gidBody').innerHTML=`<div class="gid-loading"><div class="gid-dot"></div><div class="gid-dot"></div><div class="gid-dot"></div><span>Your tutor is thinking...</span></div>`;
+
+  const prompts={
+    unit:`You are an expert AP Physics 1 tutor explaining the unit "${item}" to a high school student studying for the AP exam. Give a thorough, engaging explanation covering: (1) The big picture — what this unit is really about and why it matters in physics, (2) The core ideas and how they connect to each other, (3) Two or three vivid real-world examples that make the concepts click, (4) The most important things to understand for the AP exam specifically, (5) The single most common mistake students make in this unit and how to avoid it. Be conversational, clear, and encouraging. Use analogies. Make it feel like a real tutor explaining it, not a textbook.`,
+    topic:`You are an expert AP Physics 1 tutor. A student wants to deeply understand the topic "${item}" in the unit "${unit}". Explain it thoroughly covering: (1) What this concept actually means in plain language — build the intuition first, (2) Why it works the way it does — the underlying physics reason, not just the rule, (3) A concrete worked example showing how to use it in a problem, (4) A vivid real-world analogy that makes it stick, (5) How the AP exam typically tests this topic and what to watch out for. Be like a great teacher — clear, patient, specific.`,
+    formula:`You are an expert AP Physics 1 tutor. Explain the formula "${item}" from the unit "${unit}" in complete depth: (1) What each variable means physically — not just the letter, but what it represents in the real world, (2) Where this formula comes from — the physical reasoning or derivation behind it, (3) Exactly when to use it vs when NOT to use it, (4) A full worked example using real numbers, showing every step, (5) The most common mistakes students make with this formula and how to avoid them, (6) How to recognize on the AP exam that this formula is the right one to use.`,
+    trap:`You are an expert AP Physics 1 tutor. A student keeps making the mistake: "${item}" in the unit "${unit}". Help them understand this trap deeply: (1) Explain WHY students make this mistake — what seems logical about the wrong thinking, (2) Explain clearly what the correct understanding is and why it's right, (3) Give a specific example that illustrates the difference between the wrong and right approach, (4) Give them a memory trick or mental check to catch themselves before making this error, (5) Show how the AP exam might word a question designed to trigger this exact trap.`,
+    tip:`You are an expert AP Physics 1 tutor. Expand on this study tip for "${unit}": "${item}". Explain: (1) Why this tip is so valuable — the deeper reason it works, (2) How to actually apply it step by step in a real problem, (3) A specific example showing the tip in action, (4) A variation or extension of the tip that makes it even more powerful, (5) Common situations where this tip is especially important on the AP exam.`,
+    realworld:`You are an expert AP Physics 1 tutor. The student is looking at this real-world example: "${item}" from the unit "${unit}". Go deeper: (1) Walk through the complete physics analysis of this scenario step by step, (2) Show the actual calculation with reasonable real-world numbers, (3) Explain which AP Physics 1 equations and concepts are directly involved, (4) Describe what would change physically if you altered one variable (faster speed, more mass, etc.), (5) Explain how this exact scenario or something very similar might appear on the AP exam.`,
+    strategy:`You are an expert AP Physics 1 tutor. Give a comprehensive FRQ strategy for "${unit}": (1) The exact step-by-step approach to tackle any FRQ from this unit — what to do first, second, third, (2) What graders specifically look for in a top-scoring response — what earns points and what loses them, (3) A mini worked example showing the strategy applied to a typical question, (4) The most common FRQ mistakes for this unit and how to avoid each, (5) How to earn partial credit even when you are stuck.`,
+  };
+
+  const prompt=prompts[type]||prompts.topic;
+
+  try{
+    const res=await fetch('https://phyisicsos-api.werw8087.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'You are an expert AP Physics 1 tutor helping a high school student in Salinas, CA study for the AP exam. Be warm, clear, and encouraging. Use concrete examples. Format your response with clear sections using simple headings like "### The Big Idea" etc. Keep the total response under 600 words — be thorough but concise. Use plain text, no markdown bold or lists — use natural paragraph breaks.',
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content?.map(c=>c.text||'').join('')||'Could not load explanation. Please try again.';
+    // format the response nicely
+    const formatted=text
+      .replace(/###\s*(.+)/g,'<h3>$1</h3>')
+      .replace(/##\s*(.+)/g,'<h3>$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\n\n/g,'</p><p>')
+      .replace(/\n/g,' ');
+    document.getElementById('gidBody').innerHTML=`<p>${formatted}</p>`;
+    addAct('🔍',`Went in depth on: ${item} (${unit})`);
+  }catch(e){
+    document.getElementById('gidBody').innerHTML=`<div class="trap">Could not connect to AI. Check your internet connection and try again.</div>`;
+  }
+}
+
+function closeGID(){document.getElementById('gidModal').classList.remove('show');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGID();});
+
+
 function buildQuickReview(){
   const con=document.getElementById('qrContent');
   let html='';
