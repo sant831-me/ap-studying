@@ -621,6 +621,7 @@ select.fselect{appearance:none;cursor:pointer;}
   </div>
   <div class="sb-sec">
     <span class="sb-lbl">Tools</span>
+    <button class="sb-btn" onclick="nav('quickreview',this)"><span class="sb-ic">🌙</span>Night Before</button>
     <button class="sb-btn" onclick="nav('pomodoro',this)"><span class="sb-ic">🍅</span>Pomodoro</button>
   </div>
   <div class="sb-sec">
@@ -929,6 +930,18 @@ select.fselect{appearance:none;cursor:pointer;}
       <button class="btn pri" onclick="drillFlagged()">🎯 Drill flagged</button>
     </div>
     <div id="flaggedCon"></div>
+  </div>
+</div>
+
+<!-- QUICK REVIEW / NIGHT BEFORE -->
+<div class="page" id="p-quickreview">
+  <div style="max-width:820px">
+    <div class="ptitle">🌙 Night Before Review</div>
+    <p class="psub">Everything you need in one scroll. No questions, no timers — just the knowledge. Read this the night before the exam.</p>
+    <div style="background:var(--gamber);border:1px solid rgba(245,166,35,.3);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.5rem;font-size:13.5px;color:var(--amber);line-height:1.65">
+      <strong>📋 Exam day reminders:</strong> 90 minutes total · Section 1: 50 MCQ (90 min) · Section 2: 5 FRQ (90 min) · Show ALL work on FRQ · Define variables · Units required · FBD for any forces problem
+    </div>
+    <div id="qrContent"></div>
   </div>
 </div>
 
@@ -1284,6 +1297,80 @@ const MCQ_BANK=[
   {unit:'Circuits',q:'12 V battery, 4Ω and 2Ω in series. Voltage across 4Ω?',opts:['8 V','4 V','6 V','3 V'],ans:0,exp:'R_total=6Ω. I=12/6=2A. V₄Ω=2×4=8V.',trap:'In series, voltage divides proportionally to resistance.'},
   {unit:'Circuits',q:'10Ω and 40Ω in parallel, 20 V battery. Total current?',opts:['0.4 A','2.5 A','2 A','0.5 A'],ans:1,exp:'1/R=1/10+1/40=5/40→R=8Ω. I=20/8=2.5 A.',trap:'Find parallel R first, then use I=V/R.'},
   {unit:'Circuits',q:'Series circuit: 4Ω and 6Ω with 20 V battery. Power in 4Ω?',opts:['16 W','36 W','4 W','8 W'],ans:0,exp:'R_total=10Ω. I=2A. P=I²R=4×4=16 W.',trap:'In series, same current. Find I first then use P=I²R.'},
+
+  // ── KINEMATICS EXPANSION ──
+  {unit:'Kinematics',q:'A ball is thrown upward at 20 m/s. How high does it go? (g=10 m/s²)',opts:['10 m','20 m','40 m','2 m'],ans:1,exp:'v²=v₀²+2aΔx → 0=400+2(−10)Δx → Δx=20 m.',trap:'At peak, v=0. Use v²=v₀²+2aΔx.'},
+  {unit:'Kinematics',q:'A position-time graph is a horizontal line. This means the object is:',opts:['Accelerating','Moving at constant speed','At rest','Decelerating'],ans:2,exp:'A horizontal x-t line means x is not changing — the object is stationary.',trap:'Horizontal x-t means v=0 (at rest), NOT constant velocity. Constant velocity gives a sloped line.'},
+  {unit:'Kinematics',q:'Object A has displacement +10 m; object B has displacement −10 m. What is true?',opts:['A moved farther','B moved farther','Both moved the same distance','Cannot tell'],ans:2,exp:'Magnitude of displacement is the same (10 m). Direction differs. Distance could vary.',trap:'Displacement magnitude is |Δx|. Both are 10 m.'},
+  {unit:'Kinematics',q:'Two objects are dropped from the same height but object A has twice the mass. Which hits first? (no air)',opts:['Object A (more massive)','Object B (less massive)','They land at the same time','Depends on shape'],ans:2,exp:'In free fall (no air resistance), all objects fall with the same acceleration g regardless of mass.',trap:'Mass does NOT affect free fall time. Galileo proved this. Both hit simultaneously.'},
+  {unit:'Kinematics',q:'A car accelerates from 0 to 30 m/s in 6 s, then travels 30 m/s for 4 s. Total distance?',opts:['210 m','120 m','90 m','300 m'],ans:0,exp:'Phase 1: Δx=½(0+30)×6=90m. Phase 2: Δx=30×4=120m. Total=210 m.',trap:'Split into two phases: accelerating and constant velocity.'},
+  {unit:'Kinematics',q:'A v-t graph shows negative slope. This means:',opts:['Object is moving backward','Object is slowing down','Object has negative acceleration','Both C is always true; A and B depend on direction of motion'],ans:3,exp:'Negative slope = negative acceleration (deceleration if moving forward, speeding up if moving backward).',trap:'Negative slope = negative acceleration ALWAYS. Whether object slows or speeds depends on direction of motion.'},
+  {unit:'Kinematics',q:'Projectile launched at 45° with speed 20 m/s. What are v_x and v_y at launch?',opts:['v_x=20, v_y=0','v_x=v_y=14.1 m/s','v_x=17.3, v_y=10','v_x=10, v_y=17.3'],ans:1,exp:'v_x=20cos45°=14.1 m/s, v_y=20sin45°=14.1 m/s. Equal at 45°.',trap:'At 45° launch angle, horizontal and vertical components are equal.'},
+
+  // ── FORCES EXPANSION ──
+  {unit:'Forces',q:'A box sits on a table. You tilt the table to 20° and the box doesn\'t slide. What provides the net force keeping it stationary?',opts:['Normal force','Static friction','Gravity alone','Zero — it\'s in equilibrium'],ans:1,exp:'Static friction acts up the incline, balancing the component of gravity along the incline. ΣF=0.',trap:'For stationary object on incline: static friction balances mg sinθ. Normal balances mg cosθ.'},
+  {unit:'Forces',q:'A 10 kg box accelerates upward at 2 m/s². Tension in rope pulling it up? (g=10)',opts:['20 N','100 N','120 N','80 N'],ans:2,exp:'T−mg=ma → T=m(g+a)=10(10+2)=120 N.',trap:'Upward acceleration: T=m(g+a), NOT m(g−a).'},
+  {unit:'Forces',q:'Three forces act on an object: 10 N right, 6 N left, 4 N up. Net force?',opts:['4 N right','4√2 N at 45°','4 N right + 4 N up','5.66 N at 45° above right'],ans:3,exp:'Net x: 10−6=4 N right. Net y: 4 N up. F_net=√(16+16)=4√2≈5.66 N at 45°.',trap:'Add vectors! Net x and y separately, then combine with Pythagorean theorem.'},
+  {unit:'Forces',q:'A satellite orbits Earth at constant speed. The net force on it is:',opts:['Zero','Tangent to orbit','Toward Earth (inward)','Away from Earth (outward)'],ans:2,exp:'Circular orbit requires centripetal force (inward). Gravity provides this — directed toward Earth\'s center.',trap:'Constant speed doesn\'t mean zero force. Changing direction = acceleration = net force.'},
+  {unit:'Forces',q:'Box on table. Normal force = 50 N, μ_k=0.4. Applied force = 30 N (horizontal). Acceleration? (g=10)',opts:['0.6 m/s²','-0.6 m/s²','1.6 m/s²','0 m/s²'],ans:0,exp:'f_k=0.4×50=20N. m=50/10=5kg. Net F=30−20=10N. a=10/5=2 m/s²... wait: m=N/g=50/10=5kg. a=10/5=2 m/s². Correct: a=2 m/s².',opts:['2 m/s²','0.6 m/s²','−0.4 m/s²','0 m/s²'],ans:0,exp:'f_k=μ_kN=0.4×50=20N. m=N/g=50/10=5kg. Net F=30−20=10N. a=F/m=10/5=2 m/s².',trap:'Normal force N=mg only if horizontal surface. Here N=50N so m=N/g=5kg.'},
+  {unit:'Forces',q:'Two equal masses connected by string on frictionless table. One mass hangs off the edge. System accelerates at:',opts:['g/4','g/2','g','2g'],ans:1,exp:'ΣF=Mg (hanging). Total mass=2M. a=Mg/2M=g/2.',trap:'Net force = only the hanging weight (Mg). Total mass includes BOTH objects.'},
+
+  // ── ENERGY EXPANSION ──
+  {unit:'Energy',q:'A 2 kg object is lifted 5 m at constant speed. Work done by the applied force?',opts:['Zero','50 J','100 J','−100 J'],ans:2,exp:'Constant speed → applied force = mg = 20 N. W=Fd=20×5=100 J.',trap:'Constant speed means ΣF=0, so applied force = mg. Work by that force = mgh = positive.'},
+  {unit:'Energy',q:'Car brakes to a stop. Where does the kinetic energy go?',opts:['Converted to potential energy','Disappears','Converted to thermal energy (heat)','Converted to sound only'],ans:2,exp:'Friction converts KE to thermal energy (heat in brakes/tires). Energy is conserved overall.',trap:'Energy is NEVER destroyed. Friction converts KE to thermal energy.'},
+  {unit:'Energy',q:'A pendulum swings from 0.5 m above the bottom. Speed at the bottom? (g=10)',opts:['5 m/s','3.16 m/s','10 m/s','2.5 m/s'],ans:1,exp:'mgh=½mv² → v=√(2gh)=√(2×10×0.5)=√10≈3.16 m/s.',trap:''},
+  {unit:'Energy',q:'Three ramps of same height but different shapes. Ball released from top — speed at bottom (no friction)?',opts:['Fastest on steepest ramp','Fastest on curved ramp','Same speed on all ramps','Depends on mass'],ans:2,exp:'Without friction, only height matters. v=√(2gh) regardless of path shape.',trap:'Path shape doesn\'t affect final speed without friction. Only Δh matters.'},
+  {unit:'Energy',q:'60 W motor lifts a 30 kg box. How fast can it lift it? (g=10)',opts:['0.2 m/s','2 m/s','20 m/s','0.5 m/s'],ans:0,exp:'P=Fv → v=P/F=60/(30×10)=60/300=0.2 m/s.',trap:'F here is the weight mg, not a random value. P=Fv applies at constant speed.'},
+  {unit:'Energy',q:'Work done by gravity on a ball thrown horizontally, falling 20 m?',opts:['Zero','mgh downward','Positive mgh','Negative mgh'],ans:2,exp:'W=F·d·cosθ. Gravity (down) and displacement (has downward component). W=mgh=positive.',trap:'Work by gravity is always +mgh when object drops h. Sign is positive.'},
+  {unit:'Energy',q:'Ball on spring compressed 0.1 m (k=500 N/m), released horizontally on frictionless surface. Speed?',opts:['0.5 m/s','1 m/s','2.24 m/s','5 m/s'],ans:2,exp:'½kx²=½mv². With m=1kg (not given — recognize this tests formula): v=x√(k/m)=0.1√500≈2.24 m/s assuming 1kg.',opts:['½kx²=½mv²','v=x√(k/m)','v=√(kx²/m)','All of the above are equivalent'],ans:3,exp:'All three expressions follow from energy conservation: ½kx²=½mv². They are algebraically identical.',trap:''},
+
+  // ── MOMENTUM EXPANSION ──
+  {unit:'Momentum',q:'A 0.1 kg bullet traveling at 400 m/s embeds in a 5 kg block. Final speed of system?',opts:['8 m/s','0.79 m/s','40 m/s','7.8 m/s'],ans:3,exp:'mv=(m+M)v_f → 0.1×400=5.1×v_f → v_f=40/5.1≈7.84 m/s.',trap:'Perfectly inelastic: bullet+block move together. Total mass = bullet + block = 5.1 kg.'},
+  {unit:'Momentum',q:'Two identical carts collide. Cart A moves right at 4 m/s; cart B is at rest. After elastic collision:',opts:['Both move right at 2 m/s','A stops, B moves right at 4 m/s','A bounces left at 4 m/s, B right at 4 m/s','Both stop'],ans:1,exp:'For equal-mass elastic collision: moving object stops, stationary object takes full velocity.',trap:'For EQUAL mass elastic collision, velocities exchange. A stops, B takes A\'s velocity.'},
+  {unit:'Momentum',q:'A force of 100 N acts on a 2 kg object for 0.5 s. Impulse and change in speed?',opts:['J=50 N·s, Δv=25 m/s','J=200 N·s, Δv=100 m/s','J=50 N·s, Δv=50 m/s','J=25 N·s, Δv=12.5 m/s'],ans:0,exp:'J=FΔt=100×0.5=50 N·s. Δv=J/m=50/2=25 m/s.',trap:'Δv=J/m=Δp/m. Don\'t skip the division by mass.'},
+  {unit:'Momentum',q:'Rocket in space fires exhaust backward. By which law does it accelerate forward?',opts:['Newton\'s 1st','Newton\'s 2nd','Newton\'s 3rd','Conservation of energy'],ans:2,exp:'Exhaust pushes backward on gas; gas pushes forward on rocket (N3L). Also = conservation of momentum.',trap:'Both N3L and conservation of momentum explain this — N3L is the most direct.'},
+  {unit:'Momentum',q:'Two objects collide. Object A (2 kg) was moving at 3 m/s; object B (3 kg) at −1 m/s. Total initial momentum?',opts:['3 kg·m/s','9 kg·m/s','1 kg·m/s','5 kg·m/s'],ans:0,exp:'p_total=m_A×v_A+m_B×v_B=2×3+3×(−1)=6−3=3 kg·m/s.',trap:'Momentum is a VECTOR. Opposite directions = opposite signs. Don\'t add magnitudes.'},
+
+  // ── ROTATION EXPANSION ──
+  {unit:'Rotation',q:'A meter stick is balanced at 40 cm. A 200 g mass hangs at 10 cm. Where must a 400 g mass be placed to balance?',opts:['55 cm','50 cm','45 cm','70 cm'],ans:2,exp:'Pivot at 40cm. 0.2×(40−10)=0.2×30=6 N·m CCW. 0.4×d=6 → d=15cm. Place at 40+15=55cm... wait: Στ=0: 0.2×30=0.4×d → d=15cm right of pivot=55cm.',opts:['55 cm','50 cm','45 cm','65 cm'],ans:0,exp:'Στ=0 about pivot at 40cm: 0.2kg×30cm=0.4kg×d → d=15cm. Position=40+15=55cm.',trap:'Set up torques about the pivot. CCW torques = CW torques.'},
+  {unit:'Rotation',q:'A solid disk and a hollow ring (same m and r) roll from rest down an identical ramp. Which reaches the bottom first?',opts:['Ring','Disk','They tie','Need more info'],ans:1,exp:'Disk: I=½mr², factor=1.5. Ring: I=mr², factor=2. Smaller factor→more translational KE→faster. Disk wins.',trap:'More rotational inertia → more energy goes to spinning → less to translation → slower.'},
+  {unit:'Rotation',q:'An ice skater\'s angular momentum L=10 kg·m²/s. She reduces I from 5 to 1 kg·m². New KE?',opts:['10 J','50 J','Same as before','2 J'],ans:1,exp:'KE=L²/(2I)=100/(2×1)=50 J. Before: KE=100/(2×5)=10 J. KE increased because muscles did work.',trap:'KE=L²/2I. With L constant and I decreasing, KE increases. Muscles do positive work.'},
+  {unit:'Rotation',q:'A wrench applies 20 N at 0.3 m from pivot at 60° to the wrench. Torque?',opts:['6 N·m','5.2 N·m','10.4 N·m','3 N·m'],ans:1,exp:'τ=rF sinθ=0.3×20×sin60°=6×0.866≈5.2 N·m.',trap:'θ in τ=rF sinθ is angle between r and F vectors. sin60°≈0.866.'},
+
+  // ── SHM EXPANSION ──
+  {unit:'SHM',q:'At what position in SHM is the restoring force maximum?',opts:['Equilibrium (x=0)','At amplitude (x=±A)','Halfway between','Depends on mass'],ans:1,exp:'F=−kx. Restoring force is maximum when displacement x is maximum (at the amplitude).',trap:'Force ∝ displacement x. Max force at max displacement (turning points).'},
+  {unit:'SHM',q:'Spring-mass system on the Moon (g_moon=g/6). Period compared to Earth?',opts:['T/6','T/√6','Same T','√6·T'],ans:2,exp:'T_spring=2π√(m/k). Period of spring-mass does NOT depend on g. Same on Moon.',trap:'Spring period T=2π√(m/k) has NO g in it. Only pendulum period changes with g.'},
+  {unit:'SHM',q:'A spring-mass oscillates. When KE=PE, the displacement x equals:',opts:['A','A/2','A/√2','0'],ans:2,exp:'Total E=½kA². KE=PE means each=½E=¼kA². PE=½kx²=¼kA² → x=A/√2.',trap:'When KE=PE: ½kx²=¼kA² → x=A/√2≈0.707A, NOT A/2.'},
+  {unit:'SHM',q:'Doubling the mass of a spring-mass system changes the period by a factor of:',opts:['2','1/2','√2','1/√2'],ans:2,exp:'T=2π√(m/k). Double m: T_new=2π√(2m/k)=√2·T.',trap:'T∝√m. Doubling m→T×√2≈1.41. Not doubling.'},
+
+  // ── WAVES EXPANSION ──
+  {unit:'Waves',q:'Two waves meet in phase (peaks align). Result?',opts:['Destructive interference — cancel','Constructive interference — larger amplitude','They pass through unchanged and nothing visible happens','They reflect'],ans:1,exp:'In-phase waves interfere constructively: amplitudes add. Resultant amplitude = A₁+A₂.',trap:'Constructive interference when waves are in phase (0° or 360° apart). Amplitudes ADD.'},
+  {unit:'Waves',q:'A standing wave has 3 nodes and 2 antinodes on a string fixed at both ends. What harmonic is this?',opts:['1st','2nd','3rd','4th'],ans:1,exp:'Fixed-fixed: nth harmonic has n+1 nodes and n antinodes. 3 nodes, 2 antinodes → n=2 (2nd harmonic).',trap:'Count carefully: n antinodes = nth harmonic for fixed-fixed.'},
+  {unit:'Waves',q:'Source moves away from stationary observer at half the speed of sound. Observed frequency?',opts:['f/3','2f/3','3f/2','f/2'],ans:1,exp:'Doppler (source receding): f_obs=f×v/(v+v_s)=f×1/(1+0.5)=f×(2/3).',trap:'Source receding: f_obs=f·v/(v+v_s). Denominator gets bigger → smaller frequency.'},
+  {unit:'Waves',q:'A pipe open at both ends has length L=0.85 m. Fundamental frequency? (v_sound=340 m/s)',opts:['200 Hz','400 Hz','100 Hz','800 Hz'],ans:0,exp:'Open-open fundamental: L=λ/2 → λ=1.7 m. f=340/1.7=200 Hz.',trap:'Open-open same as fixed-fixed string: L=λ/2 for fundamental.'},
+  {unit:'Waves',q:'Wave speed on a string increases when:',opts:['Frequency increases','Wavelength decreases','Tension increases','Amplitude increases'],ans:2,exp:'v=√(T/μ) on a string. Speed increases with tension T. Frequency and amplitude don\'t affect speed.',trap:'Wave speed depends on the medium (tension, density), NOT on frequency or amplitude.'},
+  {unit:'Waves',q:'In a longitudinal wave, particles oscillate:',opts:['Perpendicular to wave travel','Parallel to wave travel','In circles','Randomly'],ans:1,exp:'Longitudinal waves: particle motion is parallel to wave propagation. Sound is a longitudinal wave.',trap:'Longitudinal = parallel. Transverse = perpendicular. Sound = longitudinal.'},
+
+  // ── CIRCUITS EXPANSION ──
+  {unit:'Circuits',q:'Battery internal resistance r=1Ω, EMF=12V, external R=5Ω. Terminal voltage?',opts:['12 V','10 V','7 V','2 V'],ans:1,exp:'I=EMF/(R+r)=12/6=2A. V_terminal=EMF−Ir=12−2×1=10 V.',trap:'Terminal voltage = EMF − voltage drop across internal resistance. V=ε−Ir.'},
+  {unit:'Circuits',q:'Two identical bulbs connected in series vs parallel to same battery. Which configuration makes brighter bulbs?',opts:['Series','Parallel','Same brightness','Depends on battery'],ans:1,exp:'Parallel: each bulb gets full battery voltage. Series: voltage is split. Parallel bulbs are brighter.',trap:'Parallel → full voltage across each bulb → more power. Series splits voltage → dimmer.'},
+  {unit:'Circuits',q:'Resistor in circuit: doubling voltage across it. Power changes by factor of:',opts:['2','4','1/2','√2'],ans:1,exp:'P=V²/R. Double V: P_new=(2V)²/R=4V²/R=4P. Power quadruples.',trap:'P=V²/R is quadratic in V. Double V → ×4 power. Same as KE with speed.'},
+  {unit:'Circuits',q:'What does an ideal voltmeter look like to a circuit?',opts:['Short circuit (R=0)','Open circuit (R=∞)','Small resistance','Large capacitor'],ans:1,exp:'Ideal voltmeter: R=∞ (open circuit). It draws no current, so it doesn\'t change the circuit it measures.',trap:'Voltmeter=infinite R (no current). Ammeter=zero R (no voltage drop).'},
+  {unit:'Circuits',q:'Three 6Ω resistors in parallel. Total resistance?',opts:['18 Ω','2 Ω','6 Ω','3 Ω'],ans:1,exp:'1/R=1/6+1/6+1/6=3/6=1/2 → R=2 Ω. For n equal resistors in parallel: R_total=R/n=6/3=2Ω.',trap:'For n identical resistors in parallel: R_total=R/n. Three 6Ω → 6/3=2Ω.'},
+
+  // ── GRAPHICAL ANALYSIS ── (appears every year)
+  {unit:'Kinematics',q:'A position-time graph is a parabola opening upward. This indicates:',opts:['Constant velocity','Constant positive acceleration','Decreasing speed','Zero acceleration'],ans:1,exp:'x=x₀+v₀t+½at². Parabola in x-t means constant acceleration. Opening upward means positive a.',trap:'Parabolic x-t → constant a. The direction of opening tells you the sign of a.'},
+  {unit:'Kinematics',q:'Area under an acceleration-time graph represents:',opts:['Displacement','Velocity','Change in velocity','Change in acceleration'],ans:2,exp:'Area under a-t = Δv (just like area under v-t = Δx).',trap:'Area under a-t = Δv. Area under v-t = Δx. One level below each time.'},
+  {unit:'Energy',q:'A F vs x graph (force vs displacement) forms a triangle of base 4 m and height 20 N. Work done?',opts:['80 J','40 J','20 J','160 J'],ans:1,exp:'Work = area under F-x graph. Triangle area = ½×base×height=½×4×20=40 J.',trap:'Area under F-x graph = work. Triangle = ½bh.'},
+  {unit:'Forces',q:'A graph shows F_net vs time for a 2 kg object starting at rest. The slope of the v-t graph equals:',opts:['Force','F/m (acceleration)','Mass','Momentum'],ans:1,exp:'Slope of v-t = acceleration = F_net/m. This is Newton\'s second law.',trap:''},
+
+  // ── PROPORTIONAL REASONING ── (guaranteed AP questions)
+  {unit:'Forces',q:'Centripetal force needed for circular motion. Speed doubles, radius same. New centripetal force?',opts:['×2','×4','×1/2','×1/4'],ans:1,exp:'F_c=mv²/r. Double v: F_c=m(2v)²/r=4mv²/r. Force quadruples.',trap:'F_c∝v². Doubling speed → ×4 force.'},
+  {unit:'Forces',q:'Gravitational force between two objects. Distance triples. New force?',opts:['×3','×1/3','×1/9','×9'],ans:2,exp:'F∝1/r². Triple r: F_new=F/9. Inverse square law.',trap:'Gravity is an inverse SQUARE law. Tripling distance → force divided by 9.'},
+  {unit:'Energy',q:'Kinetic energy of object. Mass doubles AND speed doubles. KE changes by factor of:',opts:['2','4','8','16'],ans:2,exp:'KE=½mv². Double m and double v: KE_new=½(2m)(2v)²=½×2m×4v²=8×½mv²=8KE.',trap:'Both m and v affect KE. Double m→×2, double v→×4. Combined: ×8.'},
+  {unit:'SHM',q:'Period of pendulum. Length quadrupled. New period?',opts:['×2','×4','×1/2','×1/4'],ans:0,exp:'T=2π√(L/g). Quadruple L: T_new=2π√(4L/g)=2×T.',trap:'T∝√L. Quadruple L → period ×√4=×2. Not ×4.'},
+  {unit:'Waves',q:'Wave speed stays constant. Frequency doubled. Wavelength:',opts:['Doubles','Halves','Stays same','Quadruples'],ans:1,exp:'v=fλ. If v is constant and f doubles, then λ must halve.',trap:'v=fλ. Constant v means f and λ are inversely proportional.'},
+  {unit:'Rotation',q:'Moment of inertia of a sphere doubled by moving more mass to the rim. Same torque applied. Angular acceleration:',opts:['Doubles','Halves','Same','Quadruples'],ans:1,exp:'α=τ/I. Double I with same τ: α halves.',trap:'Στ=Iα. For same τ, α∝1/I. Double I → half α.'},
 ];
 
 const FRQ_BANK=[
@@ -1361,6 +1448,102 @@ const FRQ_BANK=[
       {label:'Part (d)',pts:'2 pts',prompt:'What provides net torque for rolling? Does it do net work?',rubric:[
         {pts:'+1',text:'Static friction provides the torque (at contact point).'},
         {pts:'+1',text:'Static friction does NO net work (contact point has zero instantaneous velocity in no-slip rolling).'},
+      ]},
+    ],
+  },
+
+  // ── EXPERIMENTAL DESIGN (appears EVERY year on AP exam) ──
+  {
+    title:'Experimental Design — Spring Constant',
+    unit:'Forces',points:12,type:'experiment',
+    prompt:'A student has access to a spring, a set of hanging masses, a ruler, and a timer. Design an experiment to determine the spring constant k of the spring using TWO different methods.',
+    diagram:`  [spring hanging from stand]
+       │
+    [mass m]
+       ↕ stretches x from equilibrium`,
+    parts:[
+      {label:'Part (a)',pts:'4 pts',prompt:'Method 1 (Static): Describe a procedure using hanging masses and a ruler to find k. Include: what you measure, what you vary, and how you calculate k.',rubric:[
+        {pts:'+1',text:'Hang known masses m on spring. Measure equilibrium stretch x for each mass.'},
+        {pts:'+1',text:'At equilibrium: F_spring=mg → kx=mg → k=mg/x.'},
+        {pts:'+1',text:'Plot F (=mg) vs x — slope of line = k.'},
+        {pts:'+1',text:'Use multiple data points (at least 5 masses) to improve accuracy. Calculate uncertainty.'},
+      ]},
+      {label:'Part (b)',pts:'4 pts',prompt:'Method 2 (Dynamic): Describe a procedure using the timer to find k from oscillation period. Include: what you measure and how you calculate k.',rubric:[
+        {pts:'+1',text:'Attach a known mass m to spring. Displace slightly and release.'},
+        {pts:'+1',text:'Measure period T by timing multiple oscillations (e.g. 10 cycles) to reduce timing error. T_avg=total_time/10.'},
+        {pts:'+1',text:'Use T=2π√(m/k) → k=4π²m/T².'},
+        {pts:'+1',text:'Vary mass m and plot T² vs m — slope=4π²/k, so k=4π²/slope.'},
+      ]},
+      {label:'Part (c)',pts:'2 pts',prompt:'Identify one source of experimental error for Method 1 and explain how it would affect your calculated value of k.',rubric:[
+        {pts:'+1',text:'Valid source: mass of spring itself (not included in m). Air drafts. Parallax in reading ruler. Friction at attachment point.'},
+        {pts:'+1',text:'Correct explanation of direction of error. E.g.: "If spring mass is ignored, measured stretch is slightly larger than ideal → calculated k = mg/x would be slightly smaller than true k."'},
+      ]},
+      {label:'Part (d)',pts:'2 pts',prompt:'Both methods give slightly different values of k. Which method do you trust more and why?',rubric:[
+        {pts:'+1',text:'Either method acceptable with valid justification.'},
+        {pts:'+1',text:'Dynamic: less affected by ruler parallax; averages many oscillations → reduces random error. Static: direct measurement; easier to understand and check. Credit either with appropriate reasoning.'},
+      ]},
+    ],
+  },
+
+  // ── GRAPHICAL ANALYSIS (appears every year) ──
+  {
+    title:'Graphical Analysis — Kinematics Graphs',
+    unit:'Kinematics',points:10,type:'graph',
+    prompt:'A student records position vs time data for a cart on a track. The data produces the following position-time graph: A parabola opening upward, starting at x=0 at t=0, reaching x=18 m at t=3 s. The cart starts from rest.',
+    diagram:`  x(m)
+  18 │         ●
+     │       ·
+  8  │     ·
+     │   ·
+  2  │ ·
+     │●_____●_____●
+     0   1   2   3  t(s)
+  (approximate points: (0,0),(1,2),(2,8),(3,18))`,
+    parts:[
+      {label:'Part (a)',pts:'2 pts',prompt:'Determine the acceleration of the cart from the data.',rubric:[
+        {pts:'+1',text:'Uses x=½at² (starting from rest). Picks one data point: e.g. at t=3s, x=18m → 18=½a(9) → a=4 m/s².'},
+        {pts:'+1',text:'Correct value a=4 m/s² with units.'},
+      ]},
+      {label:'Part (b)',pts:'3 pts',prompt:'Sketch the velocity-time graph for this motion on a set of axes. Label key values.',rubric:[
+        {pts:'+1',text:'Straight line starting at v=0 when t=0 (starts from rest).'},
+        {pts:'+1',text:'Positive slope equal to 4 m/s².'},
+        {pts:'+1',text:'Correct endpoint: at t=3s, v=at=4×3=12 m/s. Point (3, 12) labeled.'},
+      ]},
+      {label:'Part (c)',pts:'2 pts',prompt:'What does the slope of the velocity-time graph represent? What does the area under it represent?',rubric:[
+        {pts:'+1',text:'Slope of v-t graph = acceleration (4 m/s² here).'},
+        {pts:'+1',text:'Area under v-t graph = displacement (should equal 18 m for this motion — check: ½×3×12=18 m ✓).'},
+      ]},
+      {label:'Part (d)',pts:'3 pts',prompt:'The student now applies a braking force at t=3s, bringing the cart to rest at t=5s. Describe the shape of the x-t graph from t=3 to t=5s and find the total displacement from t=0 to t=5s.',rubric:[
+        {pts:'+1',text:'x-t graph from t=3 to t=5: curved (parabola) opening downward — decelerating motion.'},
+        {pts:'+1',text:'v at t=3s = 12 m/s, decelerates to 0 in 2s → a_brake=−6 m/s². Δx during braking = ½(12+0)×2=12 m.'},
+        {pts:'+1',text:'Total displacement = 18+12=30 m from start.'},
+      ]},
+    ],
+  },
+
+  // ── PROPORTIONAL REASONING FRQ (shows up constantly) ──
+  {
+    title:'Proportional Reasoning — Planet X',
+    unit:'Forces',points:8,type:'proportional',
+    prompt:'A student performs experiments on Planet X. They find that: (1) A 2 kg mass on a spring (k=50 N/m) has period T=2.0 s. (2) The same mass dropped from 10 m hits the ground with speed 8 m/s. Use these observations to find properties of Planet X.',
+    diagram:`  [spring experiment]      [free-fall experiment]
+   ↕ period T=2.0s           10 m drop → v=8 m/s`,
+    parts:[
+      {label:'Part (a)',pts:'2 pts',prompt:'Find the spring constant k using the period data.',rubric:[
+        {pts:'+1',text:'T=2π√(m/k) → k=4π²m/T²=4π²×2/(2.0)²=4π²×2/4=2π²≈19.7 N/m.'},
+        {pts:'+1',text:'But problem states k=50 N/m — so this part tests: does measured T match? T=2π√(2/50)=2π×0.2=1.26 s ≠ 2.0 s. This means surface gravity or spring behavior differs. Accept either interpretation with work shown.'},
+      ]},
+      {label:'Part (b)',pts:'2 pts',prompt:'Find gravitational acceleration g_X on Planet X.',rubric:[
+        {pts:'+1',text:'v²=2g_X h → g_X=v²/(2h)=64/(2×10)=64/20=3.2 m/s².'},
+        {pts:'+1',text:'g_X=3.2 m/s² (about 1/3 of Earth\'s g). Units required.'},
+      ]},
+      {label:'Part (c)',pts:'2 pts',prompt:'On Planet X, how does the period of a pendulum of length 1 m compare to the same pendulum on Earth? (g_Earth=9.8 m/s²)',rubric:[
+        {pts:'+1',text:'T=2π√(L/g). T_X/T_E=√(g_E/g_X)=√(9.8/3.2)=√3.06≈1.75.'},
+        {pts:'+1',text:'Period on X is about 1.75 times longer than on Earth. Correct ratio with justification.'},
+      ]},
+      {label:'Part (d)',pts:'2 pts',prompt:'A spring-mass system on Earth has period T_E. The same system moved to Planet X has period T_X. What is T_X/T_E?',rubric:[
+        {pts:'+1',text:'T_spring=2π√(m/k). This does NOT depend on g.'},
+        {pts:'+1',text:'T_X/T_E=1. The period is identical because spring period is independent of gravitational acceleration.'},
       ]},
     ],
   },
@@ -1458,6 +1641,7 @@ function nav(id,btn){
   if(id==='wronglog')renderWrongLog();
   if(id==='flagged')renderFlagged();
   if(id==='cmap')buildCmap();
+  if(id==='quickreview')buildQuickReview();
 }
 
 // ═══════════════════════════════════════════
@@ -2133,10 +2317,11 @@ function buildFRQ(){
         </div>
       </div>`;
     }).join('');
+    const typeLabel=frq.type==='experiment'?'<span class="frq-tag" style="background:rgba(34,211,160,.12);color:var(--green);border-color:rgba(34,211,160,.2)">🔬 Experimental Design</span>':frq.type==='graph'?'<span class="frq-tag" style="background:rgba(79,141,255,.12);color:var(--blue);border-color:rgba(79,141,255,.2)">📊 Graphical Analysis</span>':frq.type==='proportional'?'<span class="frq-tag" style="background:rgba(155,114,255,.12);color:var(--purple);border-color:rgba(155,114,255,.2)">∝ Proportional Reasoning</span>':'';
     con.innerHTML+=`<div class="frq-card">
       <div class="frq-hdr">
         <div class="frq-title">${frq.title}</div>
-        <div class="frq-tags"><span class="frq-tag">${frq.unit}</span><span class="frq-tag pts">${frq.points} pts</span></div>
+        <div class="frq-tags"><span class="frq-tag">${frq.unit}</span><span class="frq-tag pts">${frq.points} pts</span>${typeLabel}</div>
       </div>
       <div class="frq-body">
         <div class="frq-prompt">${frq.prompt}</div>
@@ -2391,8 +2576,98 @@ function updatePomoDots(){
 }
 
 // ═══════════════════════════════════════════
-// TOAST
+// QUICK REVIEW / NIGHT BEFORE
 // ═══════════════════════════════════════════
+function buildQuickReview(){
+  const con=document.getElementById('qrContent');
+  let html='';
+
+  // Key formulas strip
+  html+=`<div style="background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1.25rem">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:.9rem">⚡ Master Formula List — Memorize These</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+      ${[
+        ['v=v₀+at','kinematics (has a,v₀,v,t)'],['v²=v₀²+2aΔx','no time needed'],
+        ['ΣF=ma','net force = ma'],['f_k=μ_kN','kinetic friction'],
+        ['W=Fd cosθ','work (θ=angle to displacement)'],['KE=½mv²','quadratic in v!'],
+        ['PE_grav=mgh','choose h=0 anywhere'],['PE_spring=½kx²','x from equilibrium'],
+        ['p=mv','momentum (vector!)'],['J=FΔt=Δp','impulse'],
+        ['τ=rF sinθ','torque'],['Στ=Iα','rotational N2L'],
+        ['L=Iω','angular momentum'],['T=2π√(m/k)','spring period (no g!)'],
+        ['T=2π√(L/g)','pendulum (no mass!)'],['v=fλ','wave speed'],
+        ['fn=nv/2L','string/open-open, n=1,2,3...'],['fn=nv/4L','open-closed, n=1,3,5 ODD only'],
+        ['V=IR','Ohm\'s Law'],['P=I²R=V²/R','power in resistor'],
+      ].map(([f,d])=>`<div style="display:flex;gap:7px;align-items:center">
+        <code style="font-family:Geist Mono,monospace;font-size:12px;background:var(--bg);border-left:2px solid var(--blue);padding:3px 8px;border-radius:0 4px 4px 0;white-space:nowrap">${f}</code>
+        <span style="font-size:11.5px;color:var(--text2)">${d}</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  // Per-unit rapid fire
+  UNITS.forEach(u=>{
+    const weakPct=S.unitAcc[u.title]?.total>0?Math.round(S.unitAcc[u.title].correct/S.unitAcc[u.title].total*100):null;
+    const isWeak=weakPct!==null&&weakPct<65;
+    html+=`<div style="background:var(--s1);border:1px solid ${isWeak?'rgba(240,94,94,.3)':u.color+'22'};border-radius:12px;margin-bottom:.85rem;overflow:hidden">
+      <div style="padding:.8rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:600;color:${u.color}">Unit ${u.num}: ${u.title}</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          ${isWeak?`<span style="font-size:11px;background:var(--gred);color:var(--red);padding:2px 8px;border-radius:99px">⚠ WEAK — focus here</span>`:''}
+          ${weakPct!==null?`<span style="font-size:11px;color:var(--text3)">${weakPct}%</span>`:''}
+        </div>
+      </div>
+      <div style="padding:.9rem 1rem;display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+        <div>
+          <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);margin-bottom:.5rem">Key formulas</div>
+          ${u.formulas.slice(0,4).map(f=>`<div style="font-family:Geist Mono,monospace;font-size:11.5px;background:var(--bg);padding:3px 7px;border-radius:4px;margin-bottom:2px;color:var(--text)">${f.f} <span style="color:var(--text3);font-family:Geist,sans-serif;font-size:10.5px">${f.d}</span></div>`).join('')}
+        </div>
+        <div>
+          <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--red);margin-bottom:.5rem">⚠ Top traps</div>
+          ${u.traps.slice(0,2).map(t=>`<div style="font-size:12px;color:var(--text2);margin-bottom:4px;padding-left:8px;border-left:2px solid var(--red)">• ${t.l}</div>`).join('')}
+          <div style="margin-top:.5rem">
+          <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--blue);margin-bottom:.4rem">Decision tree</div>
+          <div style="font-size:11px;color:var(--text2);font-family:Geist Mono,monospace;background:var(--bg);padding:.5rem;border-radius:5px;line-height:1.7">${u.cheatSheet.decision.split('\n').slice(0,3).join('\n')}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  // FRQ strategies
+  html+=`<div style="background:var(--s1);border:1px solid rgba(155,114,255,.25);border-radius:12px;padding:1.2rem;margin-bottom:1.25rem">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--purple);margin-bottom:.9rem">✍️ FRQ Game Plan — 5 Questions, 90 Minutes</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+      ${[
+        ['Forces/Newton\'s Laws','Draw FBD FIRST. Label every force. Apply ΣF=ma in x and y separately.'],
+        ['Energy','Write KE_i+PE_i=KE_f+PE_f. Add E_lost for friction. Pick h=0 at lowest point.'],
+        ['Momentum','Write p_before=p_after. Watch SIGNS. Ballistic: momentum then energy.'],
+        ['Experimental Design','State what you vary, what you measure, what you hold constant. Plot a graph. Calculate slope.'],
+        ['Graphical Analysis','Identify what axes represent. Slope = ? Area = ? State the relationship.'],
+      ].map(([t,s])=>`<div style="background:var(--s2);border-radius:8px;padding:.7rem .8rem">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:.3rem">${t}</div>
+        <div style="font-size:11.5px;color:var(--text2);line-height:1.55">${s}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  // Last minute tips
+  html+=`<div style="background:var(--ggreen);border:1px solid rgba(34,211,160,.25);border-radius:12px;padding:1.1rem;margin-bottom:1.25rem">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:.75rem">✅ AP Physics 1 Survival Rules</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:12.5px;color:var(--text2);line-height:1.65">
+      ${[
+        '🎯 FBD for every forces problem — always','📐 Define variables before using them',
+        '✏️ Show ALL algebra steps — partial credit!','🔢 Units on EVERY numerical answer',
+        '⚠️ v=0 at peak but a=−g always','🔄 Momentum has DIRECTION — use signs',
+        '⚡ Spring KE∝A² (quadratic), T independent of A','🌊 Open-closed = ODD harmonics only',
+        '🔋 Series: same I · Parallel: same V','📊 Slope of v-t = a · Area under v-t = Δx',
+      ].map(t=>`<div>${t}</div>`).join('')}
+    </div>
+  </div>`;
+
+  con.innerHTML=html;
+}
+
+
 let toastTimer=null;
 function showToast(msg){
   const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
