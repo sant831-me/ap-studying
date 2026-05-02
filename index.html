@@ -3,912 +3,1558 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AP Physics 1 — Study Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>PhysicsOS — AP Physics 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
 :root {
-  --bg: #080b12;
-  --bg2: #0e1320;
-  --surface: #13192a;
-  --surface2: #1a2235;
-  --surface3: #202a40;
-  --border: rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.12);
-  --text: #dde3f0;
-  --muted: #7a85a0;
-  --dim: #444e65;
-  --blue: #4f8bff;
-  --blue-glow: rgba(79,139,255,0.18);
-  --green: #34d399;
-  --red: #f87171;
-  --amber: #fbbf24;
-  --purple: #a78bfa;
+  --bg:      #07090f;
+  --bg1:     #0c0f1a;
+  --bg2:     #111827;
+  --s1:      #161d2e;
+  --s2:      #1c2438;
+  --s3:      #222c42;
+  --border:  rgba(255,255,255,0.055);
+  --border2: rgba(255,255,255,0.11);
+  --border3: rgba(255,255,255,0.18);
+  --text:    #dce3f0;
+  --text2:   #98a3bc;
+  --text3:   #5a6580;
+  --blue:    #4f8dff;
+  --blue2:   #2563eb;
+  --green:   #22d3a0;
+  --red:     #f05e5e;
+  --amber:   #f5a623;
+  --purple:  #9b72ff;
+  --pink:    #f472b6;
+  --cyan:    #22d3ee;
+  --gblue:   rgba(79,141,255,0.12);
+  --ggreen:  rgba(34,211,160,0.12);
+  --gred:    rgba(240,94,94,0.12);
+  --gamber:  rgba(245,166,35,0.12);
+  --gpurp:   rgba(155,114,255,0.12);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
+/* ═══════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Geist', sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  background-image:
-    radial-gradient(ellipse 60% 40% at 70% 0%, rgba(79,139,255,0.07) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 10% 80%, rgba(167,139,250,0.05) 0%, transparent 60%);
+  overflow-x: hidden;
+}
+button { cursor: pointer; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════
+   LAYOUT SHELL
+═══════════════════════════════════════════ */
+.shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 56px 1fr;
+  min-height: 100vh;
 }
 
-/* ═══════════════ HEADER ═══════════════ */
-header {
+/* ═══════════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════════ */
+.topbar {
+  grid-column: 1 / -1;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 2rem; height: 60px;
+  padding: 0 1.5rem;
   border-bottom: 1px solid var(--border);
-  background: rgba(8,11,18,0.8);
-  backdrop-filter: blur(16px);
+  background: rgba(7,9,15,0.92);
+  backdrop-filter: blur(20px);
   position: sticky; top: 0; z-index: 100;
 }
-.logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800; font-size: 1.1rem;
-  letter-spacing: 2px; text-transform: uppercase;
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.wordmark {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.2rem; letter-spacing: -.3px;
+  color: var(--text);
+}
+.wordmark em { color: var(--blue); font-style: italic; }
+.subject-pill {
+  font-size: 11px; font-weight: 600; letter-spacing: .8px;
+  text-transform: uppercase; color: var(--blue);
+  background: var(--gblue); border: 1px solid rgba(79,141,255,.2);
+  padding: 3px 10px; border-radius: 99px;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.streak-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600;
+  padding: 5px 12px; border-radius: 99px;
+  background: var(--gamber); border: 1px solid rgba(245,166,35,.25);
+  color: var(--amber);
+}
+.xp-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600;
+  padding: 5px 12px; border-radius: 99px;
+  background: var(--gpurp); border: 1px solid rgba(155,114,255,.25);
+  color: var(--purple);
+}
+
+/* ═══════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════ */
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 1.25rem .75rem;
+  overflow-y: auto;
+  background: var(--bg1);
+  position: sticky; top: 56px; height: calc(100vh - 56px);
+}
+.sb-section { margin-bottom: 1.5rem; }
+.sb-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text3);
+  padding: 0 .6rem; margin-bottom: .5rem; display: block;
+}
+.sb-item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 8px 10px; border-radius: 8px;
+  border: none; background: transparent; color: var(--text2);
+  font-size: 13px; font-weight: 400; text-align: left;
+  transition: all .15s; position: relative;
+}
+.sb-item:hover { background: var(--s1); color: var(--text); }
+.sb-item.active { background: var(--s2); color: var(--text); font-weight: 500; }
+.sb-item.active::before {
+  content: '';
+  position: absolute; left: 0; top: 20%; height: 60%;
+  width: 2px; background: var(--blue); border-radius: 0 2px 2px 0;
+}
+.sb-icon { font-size: 15px; width: 20px; text-align: center; }
+.sb-badge {
+  margin-left: auto; font-size: 10px; font-weight: 600;
+  padding: 1px 7px; border-radius: 99px;
+  background: var(--gblue); color: var(--blue);
+}
+.sb-progress-wrap { padding: .25rem .6rem; }
+.sb-prog-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; display: flex; justify-content: space-between; }
+.sb-prog { height: 3px; background: var(--s3); border-radius: 99px; overflow: hidden; }
+.sb-prog-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--purple)); border-radius: 99px; transition: width .5s; }
+
+/* ═══════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════ */
+.main { overflow-y: auto; background: var(--bg); }
+.page { display: none; padding: 2rem; max-width: 900px; }
+.page.active { display: block; }
+
+/* page headers */
+.page-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.9rem; font-weight: 400; margin-bottom: .35rem;
+  color: var(--text);
+}
+.page-sub { font-size: 13.5px; color: var(--text2); margin-bottom: 1.75rem; line-height: 1.6; }
+
+/* ═══════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════ */
+.dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin-bottom: 1.75rem; }
+.dash-stat {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 13px; padding: 1.1rem 1.2rem;
+  position: relative; overflow: hidden;
+}
+.dash-stat::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  opacity: .4;
+}
+.dash-stat-val { font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.dash-stat-label { font-size: 12px; color: var(--text2); }
+.dash-stat-icon { position: absolute; right: 1rem; top: 1rem; font-size: 1.6rem; opacity: .35; }
+
+.dash-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.75rem; }
+.dash-card {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 13px; padding: 1.2rem;
+}
+.dash-card h3 { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 1rem; }
+.unit-bars { display: flex; flex-direction: column; gap: 8px; }
+.unit-bar-row { display: flex; align-items: center; gap: 8px; }
+.unit-bar-name { font-size: 12px; color: var(--text2); width: 90px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.unit-bar-track { flex: 1; height: 6px; background: var(--s3); border-radius: 99px; overflow: hidden; }
+.unit-bar-fill { height: 100%; border-radius: 99px; transition: width .6s; }
+.unit-bar-pct { font-size: 11px; color: var(--text3); width: 28px; text-align: right; }
+
+.activity-list { display: flex; flex-direction: column; gap: 6px; }
+.activity-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.activity-item:last-child { border-bottom: none; }
+.activity-icon { font-size: 16px; width: 28px; text-align: center; }
+.activity-text { flex: 1; font-size: 12.5px; color: var(--text2); }
+.activity-time { font-size: 11px; color: var(--text3); }
+
+.weak-units { display: flex; flex-direction: column; gap: 6px; }
+.weak-chip {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; background: var(--gred); border: 1px solid rgba(240,94,94,.18);
+  border-radius: 8px;
+}
+.weak-chip .wname { font-size: 13px; }
+.weak-chip .wpct { font-size: 12px; color: var(--red); font-weight: 600; }
+
+/* ═══════════════════════════════════════════
+   UNIT NOTES
+═══════════════════════════════════════════ */
+.units-list { display: flex; flex-direction: column; gap: 8px; }
+.ucard {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 13px; overflow: hidden; transition: border-color .15s;
+}
+.ucard:hover { border-color: var(--border2); }
+.ucard-hdr {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; cursor: pointer; user-select: none;
+}
+.ucard-hdr:hover { background: var(--s2); }
+.unum {
+  font-family: 'Geist Mono', monospace; font-size: 10.5px;
+  color: var(--blue); background: var(--gblue); border: 1px solid rgba(79,141,255,.2);
+  padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+}
+.utitle { flex: 1; font-size: 14.5px; font-weight: 500; }
+.upct { font-size: 11px; color: var(--text3); background: var(--s2); padding: 2px 8px; border-radius: 99px; }
+.uchev { color: var(--text3); font-size: 13px; transition: transform .22s; }
+.ucard.open .uchev { transform: rotate(180deg); }
+.ucard-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border); }
+.ucard.open .ucard-body { display: block; }
+.udesc { font-size: 13.5px; color: var(--text2); line-height: 1.72; padding: 13px 0 10px; }
+
+.stab-row { display: flex; gap: 4px; margin-bottom: 13px; flex-wrap: wrap; }
+.stab {
+  padding: 5px 13px; border-radius: 6px; border: 1px solid var(--border);
+  background: transparent; color: var(--text3); font-size: 12px;
+  transition: all .15s;
+}
+.stab:hover { color: var(--text); background: var(--s2); }
+.stab.on { background: var(--s2); color: var(--text); border-color: var(--border2); }
+.stab-panel { display: none; }
+.stab-panel.on { display: block; }
+
+.topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px,1fr)); gap: 7px; }
+.t-chip { background: var(--s2); border: 1px solid var(--border); border-radius: 9px; padding: 9px 11px; }
+.t-chip h4 { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+.t-chip p { font-size: 11.5px; color: var(--text2); line-height: 1.55; }
+
+.formulas-col { display: flex; flex-direction: column; gap: 5px; }
+.formula-item { display: flex; gap: 10px; align-items: center; }
+.fcode {
+  font-family: 'Geist Mono', monospace; font-size: 12.5px;
+  background: var(--bg); border-left: 2px solid var(--blue);
+  padding: 6px 11px; border-radius: 0 6px 6px 0; color: var(--text);
+  min-width: 195px; flex-shrink: 0;
+}
+.fdesc { font-size: 12px; color: var(--text2); }
+
+.traps-col { display: flex; flex-direction: column; gap: 7px; }
+.trap-box {
+  background: var(--gred); border: 1px solid rgba(240,94,94,.18);
+  border-radius: 9px; padding: 9px 12px;
+}
+.trap-box .tlabel { font-size: 10.5px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+.trap-box p { font-size: 12.5px; color: var(--text2); line-height: 1.6; }
+
+.tips-col { display: flex; flex-direction: column; gap: 6px; }
+.tip-box {
+  background: var(--gblue); border-left: 2px solid var(--blue);
+  border-radius: 0 8px 8px 0; padding: 7px 11px;
+  font-size: 13px; color: var(--text2); line-height: 1.6;
+}
+.strat-box {
+  margin-top: 10px; background: var(--ggreen);
+  border: 1px solid rgba(34,211,160,.18); border-radius: 9px; padding: 9px 12px;
+}
+.strat-box .slabel { font-size: 10.5px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+.strat-box p { font-size: 12.5px; color: var(--text2); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════
+   FLASHCARDS
+═══════════════════════════════════════════ */
+.fc-layout { max-width: 580px; }
+.fc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
+.fc-header h2 { font-family: 'Instrument Serif', serif; font-size: 1.5rem; }
+.btn-row { display: flex; gap: 7px; flex-wrap: wrap; }
+
+.btn {
+  padding: 7px 15px; border-radius: 8px; border: 1px solid var(--border2);
+  background: var(--s1); color: var(--text); font-size: 13px; font-weight: 500;
+  transition: all .15s;
+}
+.btn:hover { background: var(--s2); border-color: var(--border3); }
+.btn.primary { background: var(--blue2); border-color: var(--blue2); color: #fff; }
+.btn.primary:hover { background: var(--blue); border-color: var(--blue); }
+.btn.danger { background: var(--gred); border-color: rgba(240,94,94,.3); color: var(--red); }
+.btn.danger:hover { background: rgba(240,94,94,.18); }
+.btn.success { background: var(--ggreen); border-color: rgba(34,211,160,.3); color: var(--green); }
+.btn.success:hover { background: rgba(34,211,160,.18); }
+
+.filter-strip { display: flex; gap: 5px; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.ftag {
+  padding: 4px 12px; border-radius: 99px; border: 1px solid var(--border);
+  background: transparent; color: var(--text3); font-size: 12px;
+  transition: all .15s;
+}
+.ftag:hover { color: var(--text); border-color: var(--border2); }
+.ftag.on { background: var(--blue2); border-color: var(--blue2); color: #fff; }
+
+/* progress */
+.prog-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+.pbar { flex: 1; height: 4px; background: var(--s3); border-radius: 99px; overflow: hidden; }
+.pbar-fill { height: 100%; background: linear-gradient(90deg,var(--blue),var(--purple)); border-radius: 99px; transition: width .3s; }
+.pcnt { font-size: 12px; color: var(--text3); white-space: nowrap; }
+
+.score-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+.sc-chip { padding: 5px 12px; border-radius: 7px; font-size: 13px; font-weight: 500; }
+.sc-chip.g { background: var(--ggreen); color: var(--green); border: 1px solid rgba(34,211,160,.2); }
+.sc-chip.m { background: var(--gred); color: var(--red); border: 1px solid rgba(240,94,94,.2); }
+
+/* 3D card */
+.card-scene { perspective: 1200px; margin-bottom: 1.2rem; cursor: pointer; }
+.card-3d {
+  width: 100%; min-height: 200px; position: relative;
+  transform-style: preserve-3d;
+  transition: transform .48s cubic-bezier(.4,0,.2,1);
+  border-radius: 16px;
+}
+.card-3d.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0; border-radius: 16px;
+  backface-visibility: hidden; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 1.75rem; min-height: 200px;
+  border: 1px solid var(--border2);
+}
+.card-front {
+  background: linear-gradient(145deg, var(--s1), var(--s2));
+}
+.card-back {
+  background: linear-gradient(145deg, var(--s2), var(--s3));
+  transform: rotateY(180deg);
+}
+.card-q { font-size: 16.5px; font-weight: 500; text-align: center; line-height: 1.55; }
+.card-a { font-family: 'Geist Mono', monospace; font-size: 13.5px; text-align: center; line-height: 1.65; }
+.card-tag { font-size: 10.5px; color: var(--text3); margin-top: .7rem; text-transform: uppercase; letter-spacing: .8px; }
+.card-hint { font-size: 11.5px; color: var(--text3); margin-top: .5rem; }
+
+/* SRS indicator */
+.srs-indicator {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; color: var(--text3); margin-bottom: .75rem;
+}
+.srs-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+.card-actions { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+.ca {
+  flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--s1); color: var(--text); font-size: 13.5px; font-weight: 500;
+  transition: all .15s;
+}
+.ca:hover { background: var(--s2); }
+.ca.got { border-color: rgba(34,211,160,.3); color: var(--green); }
+.ca.got:hover { background: var(--ggreen); }
+.ca.hard { border-color: rgba(245,166,35,.3); color: var(--amber); }
+.ca.hard:hover { background: var(--gamber); }
+.ca.miss { border-color: rgba(240,94,94,.3); color: var(--red); }
+.ca.miss:hover { background: var(--gred); }
+
+/* keyboard shortcut hints */
+.kb-hints { display: flex; gap: 14px; font-size: 11px; color: var(--text3); flex-wrap: wrap; margin-bottom: 1.5rem; }
+.kb { display: inline-flex; align-items: center; gap: 5px; }
+.kbd { background: var(--s2); border: 1px solid var(--border2); border-radius: 4px; padding: 1px 6px; font-family: 'Geist Mono', monospace; font-size: 10px; }
+
+/* done screen */
+.done-screen { display: none; text-align: center; padding: 2.5rem 1rem; }
+.done-screen.show { display: block; }
+.done-pct {
+  font-family: 'Instrument Serif', serif;
+  font-size: 5rem; line-height: 1;
   background: linear-gradient(135deg, var(--blue), var(--purple));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.header-badge {
-  font-size: 11px; padding: 4px 10px; border-radius: 99px;
-  background: rgba(79,139,255,0.1); border: 1px solid rgba(79,139,255,0.2);
-  color: var(--blue); font-weight: 500;
+.done-msg { font-size: 14px; color: var(--text2); margin: .5rem 0 1.5rem; }
+.xp-earned {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 600; color: var(--purple);
+  background: var(--gpurp); border: 1px solid rgba(155,114,255,.25);
+  padding: 7px 16px; border-radius: 99px; margin-bottom: 1.5rem;
 }
 
-/* ═══════════════ NAV ═══════════════ */
-nav {
-  display: flex; gap: 6px; padding: 1.25rem 2rem 0;
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-}
-nav::-webkit-scrollbar { display: none; }
-.nav-btn {
-  padding: 8px 20px; border-radius: 8px 8px 0 0;
-  border: 1px solid transparent; border-bottom: none;
-  background: transparent; color: var(--muted);
-  font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 500;
-  cursor: pointer; transition: all .2s; white-space: nowrap;
-  position: relative; bottom: -1px;
-}
-.nav-btn:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
-.nav-btn.active {
-  color: var(--text); background: var(--bg2);
-  border-color: var(--border2); border-bottom-color: var(--bg2);
-}
-.nav-btn .nav-icon { margin-right: 6px; }
-
-/* ═══════════════ SECTIONS ═══════════════ */
-.section { display: none; min-height: calc(100vh - 112px); padding: 2rem; }
-.section.active { display: block; }
-
-/* ═══════════════ NOTES ═══════════════ */
-.unit-grid { display: flex; flex-direction: column; gap: 10px; max-width: 860px; margin: 0 auto; }
-
-.unit-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 14px; overflow: hidden;
-}
-.unit-header {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 18px; cursor: pointer; user-select: none;
-  transition: background .15s;
-}
-.unit-header:hover { background: var(--surface2); }
-.unit-num {
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 11px;
-  color: var(--blue); text-transform: uppercase; letter-spacing: 1px;
-  background: var(--blue-glow); border: 1px solid rgba(79,139,255,0.2);
-  padding: 3px 8px; border-radius: 5px; white-space: nowrap;
-}
-.unit-title { font-weight: 600; font-size: 15px; flex: 1; }
-.unit-pct {
-  font-size: 11px; color: var(--muted); background: var(--surface2);
-  padding: 3px 9px; border-radius: 99px; border: 1px solid var(--border);
-}
-.unit-arrow { color: var(--dim); font-size: 13px; transition: transform .25s; }
-.unit-card.open .unit-arrow { transform: rotate(180deg); }
-
-.unit-body {
-  display: none; padding: 0 18px 18px;
+/* ═══════════════════════════════════════════
+   CUSTOM CARDS
+═══════════════════════════════════════════ */
+.custom-section {
+  margin-top: 2rem; padding-top: 1.5rem;
   border-top: 1px solid var(--border);
 }
-.unit-card.open .unit-body { display: block; }
-
-.unit-desc { font-size: 13.5px; color: var(--muted); line-height: 1.7; padding: 14px 0 10px; }
-
-/* sub-tabs */
-.stabs { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; }
-.stab {
-  padding: 5px 13px; border-radius: 6px;
-  border: 1px solid var(--border); background: transparent;
-  color: var(--dim); font-size: 12px; cursor: pointer; transition: .15s;
+.custom-section h3 { font-size: 13.5px; font-weight: 600; margin-bottom: 1rem; color: var(--text2); }
+.custom-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 1rem; max-height: 200px; overflow-y: auto; }
+.custom-item {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--s2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px;
 }
-.stab.on { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+.ci-q { flex: 1; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ci-unit { font-size: 10.5px; color: var(--text3); background: var(--s3); padding: 2px 7px; border-radius: 99px; white-space: nowrap; }
+.ci-btn { background: transparent; border: none; color: var(--text3); font-size: 13px; padding: 0 3px; transition: color .15s; }
+.ci-btn:hover { color: var(--red); }
+.ci-edit:hover { color: var(--blue) !important; }
 
-.spanel { display: none; }
-.spanel.on { display: block; }
-
-.topics-g {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr));
-  gap: 8px;
+.add-form {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 11px; padding: 1rem;
 }
-.topic {
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 9px; padding: 10px 12px;
+.add-form textarea, .add-form input, .add-form select {
+  width: 100%; background: var(--s2); border: 1px solid var(--border2);
+  border-radius: 7px; color: var(--text); padding: 8px 10px; font-size: 13px;
+  margin-bottom: 7px; outline: none; transition: border-color .15s;
 }
-.topic h4 { font-size: 12.5px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
-.topic p { font-size: 12px; color: var(--muted); line-height: 1.55; }
+.add-form textarea { resize: vertical; min-height: 50px; }
+.add-form textarea:focus, .add-form input:focus, .add-form select:focus { border-color: var(--blue); }
+.add-form textarea::placeholder, .add-form input::placeholder { color: var(--text3); }
+.form-row { display: flex; gap: 7px; align-items: center; }
+.form-row input, .form-row select { margin-bottom: 0; flex: 1; }
 
-.formulas-g { display: flex; flex-direction: column; gap: 6px; }
-.formula-row { display: flex; gap: 10px; align-items: center; }
-.fml {
-  font-family: 'DM Mono', monospace; font-size: 13px;
-  background: var(--bg); border-left: 2px solid var(--blue);
-  border-radius: 0 6px 6px 0; padding: 7px 12px; color: var(--text);
-  min-width: 200px;
-}
-.fml-d { font-size: 12.5px; color: var(--muted); }
-
-.traps-g { display: flex; flex-direction: column; gap: 8px; }
-.trap-item {
-  background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18);
-  border-radius: 9px; padding: 10px 13px;
-}
-.trap-item .tl { font-size: 11px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px; }
-.trap-item p { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
-
-.tips-g { display: flex; flex-direction: column; gap: 6px; }
-.tip-item {
-  background: rgba(79,139,255,0.06); border-left: 2px solid var(--blue);
-  border-radius: 0 8px 8px 0; padding: 8px 12px;
-  font-size: 13px; color: var(--muted); line-height: 1.6;
-}
-.strat {
-  margin-top: 10px; background: rgba(52,211,153,0.06);
-  border: 1px solid rgba(52,211,153,0.18); border-radius: 9px; padding: 10px 13px;
-}
-.strat .sl { font-size: 11px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
-.strat p { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
-
-/* ═══════════════ FLASHCARDS ═══════════════ */
-.fc-layout { max-width: 620px; margin: 0 auto; }
-
-.fc-topbar {
+/* ═══════════════════════════════════════════
+   QUIZ
+═══════════════════════════════════════════ */
+.quiz-layout { max-width: 650px; }
+.quiz-topbar {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;
 }
-.fc-topbar h2 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
-.fc-controls { display: flex; gap: 8px; flex-wrap: wrap; }
-.ctrl-btn {
-  padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border2);
-  background: var(--surface2); color: var(--text); font-size: 13px; cursor: pointer;
-  transition: .15s;
-}
-.ctrl-btn:hover { background: var(--surface3); }
-.ctrl-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-.ctrl-btn.primary:hover { opacity: .88; }
-
-.fc-filter {
-  display: flex; gap: 6px; margin-bottom: 1.25rem; flex-wrap: wrap;
-}
-.filter-btn {
-  padding: 5px 13px; border-radius: 99px; border: 1px solid var(--border);
-  background: transparent; color: var(--muted); font-size: 12px; cursor: pointer; transition: .15s;
-}
-.filter-btn.on { background: var(--blue); border-color: var(--blue); color: #fff; }
-
-/* progress */
-.fc-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
-.pbar { flex: 1; height: 5px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
-.pbar-fill { height: 100%; background: var(--blue); border-radius: 99px; transition: width .3s; }
-.pcount { font-size: 12px; color: var(--muted); white-space: nowrap; }
-
-/* scores */
-.fc-scores { display: flex; gap: 10px; margin-bottom: 1.2rem; }
-.sc { padding: 6px 14px; border-radius: 8px; font-size: 13px; }
-.sc.g { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
-.sc.m { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
-
-/* card */
-.fc-scene { perspective: 1200px; margin-bottom: 1.25rem; }
-.fc-card {
-  width: 100%; min-height: 210px; position: relative;
-  transform-style: preserve-3d; transition: transform .5s cubic-bezier(.4,0,.2,1);
-  cursor: pointer; border-radius: 16px;
-}
-.fc-card.flipped { transform: rotateY(180deg); }
-.fc-face {
-  position: absolute; inset: 0; border-radius: 16px; border: 1px solid var(--border2);
-  backface-visibility: hidden; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; padding: 2rem; min-height: 210px;
-}
-.fc-front {
-  background: linear-gradient(135deg, var(--surface), var(--surface2));
-}
-.fc-back {
-  background: linear-gradient(135deg, var(--surface2), var(--surface3));
-  transform: rotateY(180deg);
-}
-.fc-q { font-size: 17px; font-weight: 500; text-align: center; line-height: 1.5; }
-.fc-a { font-family: 'DM Mono', monospace; font-size: 14px; text-align: center; line-height: 1.6; color: var(--text); }
-.fc-unit-label { font-size: 11px; color: var(--dim); margin-top: .75rem; }
-.fc-hint { font-size: 11.5px; color: var(--dim); margin-top: .6rem; letter-spacing: .3px; }
-
-.fc-actions { display: flex; gap: 10px; }
-.fca {
-  flex: 1; padding: 11px; border-radius: 11px; border: 1px solid var(--border);
-  background: var(--surface); color: var(--text); font-size: 14px; font-weight: 500;
-  cursor: pointer; transition: all .15s;
-}
-.fca:hover { background: var(--surface2); }
-.fca.got { border-color: rgba(52,211,153,0.35); color: var(--green); }
-.fca.got:hover { background: rgba(52,211,153,0.08); }
-.fca.miss { border-color: rgba(248,113,113,0.35); color: var(--red); }
-.fca.miss:hover { background: rgba(248,113,113,0.08); }
-
-/* done screen */
-.done-screen {
-  text-align: center; padding: 3rem 1rem;
-  display: none;
-}
-.done-screen.show { display: block; }
-.done-score {
-  font-family: 'Syne', sans-serif; font-size: 4rem; font-weight: 800;
-  background: linear-gradient(135deg, var(--blue), var(--purple));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.done-label { font-size: 14px; color: var(--muted); margin-bottom: 1.5rem; }
-
-/* ═══════════════ QUIZ ═══════════════ */
-.quiz-layout { max-width: 640px; margin: 0 auto; }
-.quiz-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: gap; gap: 10px; }
-.quiz-topbar h2 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
-.quiz-score-display {
-  display: flex; gap: 12px; align-items: center;
-  font-size: 13px; color: var(--muted);
-}
-.quiz-score-display strong { color: var(--text); }
+.quiz-meta { display: flex; gap: 14px; font-size: 13px; color: var(--text2); flex-wrap: wrap; }
+.quiz-meta strong { color: var(--text); }
 
 .qcard {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 1.6rem; margin-bottom: 1rem;
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.5rem; margin-bottom: .9rem;
 }
-.q-unit-tag {
-  font-size: 11px; color: var(--muted); margin-bottom: .75rem;
-  font-style: italic;
-}
-.q-text { font-size: 15.5px; line-height: 1.65; margin-bottom: 1.25rem; font-weight: 500; }
-.q-opts { display: flex; flex-direction: column; gap: 8px; }
+.q-unit { font-size: 11px; color: var(--text3); margin-bottom: .7rem; text-transform: uppercase; letter-spacing: .7px; }
+.q-text { font-size: 15px; font-weight: 500; line-height: 1.65; margin-bottom: 1.2rem; }
+.q-opts { display: flex; flex-direction: column; gap: 7px; }
 .qopt {
-  padding: 12px 16px; border-radius: 11px; border: 1px solid var(--border);
-  background: var(--surface2); color: var(--text); font-size: 14px;
-  text-align: left; cursor: pointer; transition: all .15s;
+  padding: 11px 15px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--s2); color: var(--text); font-size: 13.5px;
+  text-align: left; transition: all .15s; position: relative;
 }
-.qopt:hover:not(:disabled) { border-color: var(--border2); background: var(--surface3); }
-.qopt.correct { border-color: var(--green); background: rgba(52,211,153,0.1); color: var(--green); }
-.qopt.wrong { border-color: var(--red); background: rgba(248,113,113,0.1); color: var(--red); }
+.qopt:hover:not(:disabled) { border-color: var(--border2); background: var(--s3); }
+.qopt.correct { border-color: var(--green); background: var(--ggreen); color: var(--green); }
+.qopt.wrong { border-color: var(--red); background: var(--gred); color: var(--red); }
 .q-exp {
-  display: none; margin-top: 1rem; padding: .9rem 1.1rem;
-  background: var(--surface2); border-radius: 10px;
-  font-size: 13px; color: var(--muted); line-height: 1.65;
+  display: none; margin-top: .9rem; padding: .9rem 1rem;
+  background: var(--s2); border-radius: 10px;
+  font-size: 13px; color: var(--text2); line-height: 1.65;
   border-left: 2px solid var(--blue);
 }
 .q-exp.show { display: block; }
 .q-trap {
-  display: none; margin-top: .6rem; padding: .75rem .9rem;
-  background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18);
-  border-radius: 9px; font-size: 12.5px; color: var(--muted); line-height: 1.55;
+  display: none; margin-top: .6rem; padding: .7rem .9rem;
+  background: var(--gred); border: 1px solid rgba(240,94,94,.18);
+  border-radius: 9px; font-size: 12.5px; color: var(--text2); line-height: 1.55;
 }
 .q-trap.show { display: block; }
-.q-trap strong { color: var(--red); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+.q-trap strong { color: var(--red); font-size: 10.5px; text-transform: uppercase; letter-spacing: .6px; }
 .next-btn {
-  display: none; padding: 11px 26px; border-radius: 11px; border: 1px solid var(--border2);
-  background: var(--surface); color: var(--text); font-size: 14px; font-weight: 500;
-  cursor: pointer; transition: .15s; margin-top: .75rem;
+  display: none; padding: 10px 24px; border-radius: 9px;
+  border: 1px solid var(--border2); background: var(--s1);
+  color: var(--text); font-size: 13.5px; font-weight: 500;
+  transition: all .15s; margin-top: .75rem;
 }
 .next-btn.show { display: inline-block; }
-.next-btn:hover { background: var(--surface2); }
+.next-btn:hover { background: var(--s2); }
 
-.filter-select {
-  padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border2);
-  background: var(--surface2); color: var(--text); font-size: 13px;
+/* wrong answer log */
+.wrong-log { max-width: 650px; }
+.wlog-empty { text-align: center; padding: 3rem; color: var(--text3); font-size: 14px; }
+.wlog-item {
+  background: var(--s1); border: 1px solid var(--border);
+  border-left: 3px solid var(--red); border-radius: 10px;
+  padding: 1rem 1.1rem; margin-bottom: 8px;
 }
+.wlog-q { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.wlog-ans { font-size: 12.5px; color: var(--text2); }
+.wlog-ans .wr { color: var(--red); }
+.wlog-ans .wc { color: var(--green); }
+.wlog-drill { margin-top: .75rem; }
 
-/* ═══════════════ EXAM MODE ═══════════════ */
-.exam-layout { max-width: 680px; margin: 0 auto; }
+/* ═══════════════════════════════════════════
+   FRQ
+═══════════════════════════════════════════ */
+.frq-layout { max-width: 720px; }
+.frq-card {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; margin-bottom: 1rem;
+}
+.frq-hdr { padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.frq-title { font-size: 14px; font-weight: 600; }
+.frq-meta { display: flex; gap: 8px; }
+.frq-tag {
+  font-size: 11px; padding: 3px 9px; border-radius: 99px;
+  background: var(--s2); color: var(--text2); border: 1px solid var(--border);
+}
+.frq-tag.pts { background: var(--gpurp); color: var(--purple); border-color: rgba(155,114,255,.2); }
+.frq-body { padding: 1.3rem; }
+.frq-prompt {
+  font-size: 14px; color: var(--text2); line-height: 1.75;
+  margin-bottom: 1rem; padding: 1rem; background: var(--s2);
+  border-radius: 9px; border: 1px solid var(--border);
+}
+.frq-diagram {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 9px; padding: 1rem; margin-bottom: 1rem;
+  font-family: 'Geist Mono', monospace; font-size: 12px;
+  color: var(--text2); line-height: 1.8; text-align: center;
+}
+.frq-parts { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1rem; }
+.frq-part { background: var(--s2); border-radius: 9px; padding: 1rem; }
+.frq-part label { font-size: 12px; font-weight: 600; color: var(--text2); display: block; margin-bottom: .4rem; }
+.frq-part .pp { font-size: 12.5px; color: var(--text2); margin-bottom: 8px; line-height: 1.6; }
+.frq-part textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2);
+  border-radius: 7px; color: var(--text); padding: 8px 10px; font-size: 13px;
+  resize: vertical; min-height: 80px; outline: none; transition: border-color .15s;
+}
+.frq-part textarea:focus { border-color: var(--blue); }
+.frq-part textarea::placeholder { color: var(--text3); }
+.frq-rubric {
+  display: none; margin-top: .75rem; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 8px; padding: .9rem;
+}
+.frq-rubric.show { display: block; }
+.frq-rubric h4 { font-size: 12px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .8px; margin-bottom: .5rem; }
+.rubric-point {
+  display: flex; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--border);
+  font-size: 12.5px; color: var(--text2); line-height: 1.5;
+}
+.rubric-point:last-child { border-bottom: none; }
+.rp-pts { color: var(--green); font-weight: 600; flex-shrink: 0; font-family: 'Geist Mono', monospace; font-size: 11.5px; }
+.frq-actions { display: flex; gap: 8px; margin-top: .75rem; }
 
-/* setup screen */
-.exam-setup {
-  text-align: center; padding: 3rem 1rem;
+/* ═══════════════════════════════════════════
+   EXAM MODE
+═══════════════════════════════════════════ */
+.exam-layout { max-width: 700px; }
+.exam-setup-screen { text-align: center; padding: 2rem 1rem; }
+.exam-setup-screen h2 { font-family: 'Instrument Serif', serif; font-size: 2.2rem; margin-bottom: .4rem; }
+.exam-setup-screen p { color: var(--text2); font-size: 13.5px; line-height: 1.7; max-width: 440px; margin: 0 auto 2rem; }
+.setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 420px; margin: 0 auto 2rem; text-align: left; }
+.setup-field label { font-size: 11.5px; color: var(--text3); display: block; margin-bottom: 4px; font-weight: 500; }
+.setup-field select, .setup-field input {
+  width: 100%; background: var(--s2); border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text); padding: 8px 11px; font-size: 13px; outline: none;
 }
-.exam-setup h2 {
-  font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: .5rem;
-}
-.exam-setup p { color: var(--muted); font-size: 14px; margin-bottom: 2rem; line-height: 1.7; }
-.setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 400px; margin: 0 auto 2rem; text-align: left; }
-.setup-item label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px; }
-.setup-item select, .setup-item input {
-  width: 100%; padding: 8px 11px; border-radius: 8px; border: 1px solid var(--border2);
-  background: var(--surface2); color: var(--text); font-size: 13px;
-}
-.start-exam-btn {
+.start-btn {
   padding: 13px 36px; border-radius: 12px; border: none;
-  background: linear-gradient(135deg, var(--blue), var(--purple));
-  color: #fff; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
-  cursor: pointer; transition: .2s; letter-spacing: .5px;
+  background: linear-gradient(135deg, var(--blue2), var(--purple));
+  color: #fff; font-family: 'Geist', sans-serif; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all .2s; letter-spacing: .3px;
 }
-.start-exam-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(79,139,255,0.3); }
+.start-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(79,141,255,.25); }
 
-/* exam in-progress */
-.exam-progress-bar {
-  width: 100%; margin-bottom: 1.5rem;
-}
-.exam-meta {
+.exam-hud {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: .5rem; font-size: 13px;
+  margin-bottom: .75rem;
 }
-.exam-meta .timer-display {
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem;
+.timer-disp {
+  font-family: 'Geist Mono', monospace; font-size: 1.4rem; font-weight: 600;
   color: var(--text); transition: color .3s;
 }
-.exam-meta .timer-display.warn { color: var(--amber); }
-.exam-meta .timer-display.danger { color: var(--red); }
-.ebar { height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
-.ebar-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--purple)); border-radius: 99px; transition: width .3s; }
+.timer-disp.warn { color: var(--amber); }
+.timer-disp.danger { color: var(--red); animation: pulse .6s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+.exam-pbar { height: 5px; background: var(--s2); border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.exam-pbar-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--purple)); border-radius: 99px; transition: width .3s; }
 
-/* results screen */
-.exam-results { display: none; text-align: center; padding: 2rem 1rem; }
-.exam-results.show { display: block; }
-.result-score {
-  font-family: 'Syne', sans-serif; font-size: 5rem; font-weight: 800;
-  line-height: 1;
+/* results */
+.result-screen { display: none; text-align: center; padding: 2rem 1rem; }
+.result-screen.show { display: block; }
+.result-pct {
+  font-family: 'Instrument Serif', serif; font-size: 5.5rem; line-height: 1;
 }
-.result-label { font-size: 14px; color: var(--muted); margin-bottom: .5rem; }
+.result-label { font-size: 13.5px; color: var(--text2); margin: .4rem 0; }
 .result-grade {
-  display: inline-block; font-family: 'Syne', sans-serif; font-size: 1.3rem;
-  font-weight: 700; padding: 6px 20px; border-radius: 99px; margin-bottom: 2rem;
-  margin-top: .5rem;
+  display: inline-block; font-size: 1.1rem; font-weight: 700;
+  padding: 6px 20px; border-radius: 99px; margin: .75rem 0 1.75rem;
 }
-.results-review { margin-top: 1.5rem; text-align: left; }
-.review-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 8px;
+.review-list { text-align: left; }
+.rv-item {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 11px; padding: .9rem 1rem; margin-bottom: 7px;
 }
-.review-item.r { border-color: rgba(52,211,153,0.25); }
-.review-item.w { border-color: rgba(248,113,113,0.25); }
-.review-item .ri-status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px; }
-.review-item.r .ri-status { color: var(--green); }
-.review-item.w .ri-status { color: var(--red); }
-.review-item .ri-q { font-size: 13.5px; font-weight: 500; margin-bottom: 4px; }
-.review-item .ri-ans { font-size: 12.5px; color: var(--muted); }
+.rv-item.r { border-left: 3px solid var(--green); }
+.rv-item.w { border-left: 3px solid var(--red); }
+.rv-status { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; margin-bottom: 3px; }
+.rv-item.r .rv-status { color: var(--green); }
+.rv-item.w .rv-status { color: var(--red); }
+.rv-q { font-size: 13.5px; font-weight: 500; margin-bottom: 3px; }
+.rv-ans { font-size: 12.5px; color: var(--text2); }
 
-/* ═══════════════ MISC ═══════════════ */
-.sec-title {
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem;
-  margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px;
+/* ═══════════════════════════════════════════
+   FORMULA SHEET
+═══════════════════════════════════════════ */
+.fsheet { max-width: 800px; }
+.fsheet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fs-section {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.1rem; break-inside: avoid;
 }
-.sec-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; }
+.fs-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--blue); margin-bottom: .8rem; display: flex; align-items: center; gap: 7px;
+}
+.fs-title::after { content: ''; flex: 1; height: 1px; background: rgba(79,141,255,.15); }
+.fs-formula {
+  font-family: 'Geist Mono', monospace; font-size: 12px;
+  background: var(--bg); border-left: 2px solid var(--blue);
+  padding: 5px 9px; border-radius: 0 5px 5px 0;
+  color: var(--text); margin-bottom: 4px; display: flex;
+  justify-content: space-between; align-items: center;
+}
+.fs-formula span { font-size: 11px; color: var(--text3); font-family: 'Geist', sans-serif; }
+@media print {
+  .topbar, .sidebar { display: none !important; }
+  .shell { grid-template-columns: 1fr; }
+  body { background: white; color: black; }
+  .fs-formula { border-color: #333; background: #f5f5f5; color: black; }
+}
 
-/* scrollbar */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+/* ═══════════════════════════════════════════
+   POMODORO
+═══════════════════════════════════════════ */
+.pomo-layout { max-width: 420px; text-align: center; padding: 1rem; }
+.pomo-ring {
+  width: 200px; height: 200px; border-radius: 50%;
+  margin: 1.5rem auto;
+  background: conic-gradient(var(--blue) var(--pct, 100%), var(--s2) 0);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.pomo-ring::before {
+  content: ''; position: absolute; inset: 12px;
+  background: var(--bg); border-radius: 50%;
+}
+.pomo-time {
+  font-family: 'Geist Mono', monospace; font-size: 2.5rem; font-weight: 600;
+  position: relative; z-index: 1;
+}
+.pomo-label { font-size: 12px; color: var(--text3); position: relative; z-index: 1; margin-top: 4px; }
+.pomo-btns { display: flex; gap: 10px; justify-content: center; margin: 1rem 0; }
+.pomo-mode-btns { display: flex; gap: 6px; justify-content: center; margin-bottom: 1.25rem; }
+.pomo-mode-btn {
+  padding: 5px 14px; border-radius: 99px; border: 1px solid var(--border);
+  background: transparent; color: var(--text3); font-size: 12px; transition: all .15s;
+}
+.pomo-mode-btn.on { background: var(--s2); color: var(--text); border-color: var(--border2); }
+.pomo-sessions { font-size: 13px; color: var(--text2); }
+.pomo-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--s3); margin: 0 2px; }
+.pomo-dot.done { background: var(--blue); }
 
-@media (max-width: 600px) {
-  .section { padding: 1rem; }
-  .fc-q { font-size: 15px; }
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .shell { grid-template-columns: 1fr; grid-template-rows: 56px auto 1fr; }
+  .sidebar { display: none; }
+  .fsheet-grid { grid-template-columns: 1fr; }
+  .dash-row { grid-template-columns: 1fr; }
   .setup-grid { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+  background: var(--s2); border: 1px solid var(--border2);
+  border-radius: 11px; padding: .75rem 1.1rem;
+  font-size: 13.5px; font-weight: 500; color: var(--text);
+  transform: translateY(20px); opacity: 0;
+  transition: all .3s; pointer-events: none;
+  display: flex; align-items: center; gap: 9px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ═══════════════════════════════════════════
+   SELECT / INPUT RESETS
+═══════════════════════════════════════════ */
+select { appearance: none; cursor: pointer; }
+input[type=range] { width: 100%; accent-color: var(--blue); }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">⚡ AP PHYSICS 1</div>
-  <span class="header-badge">Complete Study Hub</span>
+<div class="shell">
+
+<!-- ── TOPBAR ── -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="wordmark">Physics<em>OS</em></div>
+    <span class="subject-pill">AP Physics 1</span>
+  </div>
+  <div class="topbar-right">
+    <div class="streak-badge" id="streakBadge">🔥 <span id="streakCount">0</span> day streak</div>
+    <div class="xp-badge">⚡ <span id="xpCount">0</span> XP</div>
+  </div>
 </header>
 
-<nav>
-  <button class="nav-btn active" onclick="showSection('notes',this)"><span class="nav-icon">📚</span>Unit Notes</button>
-  <button class="nav-btn" onclick="showSection('flash',this)"><span class="nav-icon">🧠</span>Flashcards</button>
-  <button class="nav-btn" onclick="showSection('quiz',this)"><span class="nav-icon">🎯</span>Quiz</button>
-  <button class="nav-btn" onclick="showSection('exam',this)"><span class="nav-icon">⏱️</span>Exam Mode</button>
-</nav>
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sb-section">
+    <span class="sb-label">Overview</span>
+    <button class="sb-item active" onclick="nav('dashboard',this)"><span class="sb-icon">🏠</span>Dashboard</button>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Study</span>
+    <button class="sb-item" onclick="nav('notes',this)"><span class="sb-icon">📚</span>Unit Notes</button>
+    <button class="sb-item" onclick="nav('flashcards',this)"><span class="sb-icon">🧠</span>Flashcards <span class="sb-badge" id="sbDueCount">0</span></button>
+    <button class="sb-item" onclick="nav('frq',this)"><span class="sb-icon">✍️</span>FRQ Practice</button>
+    <button class="sb-item" onclick="nav('formulas',this)"><span class="sb-icon">📐</span>Formula Sheet</button>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Practice</span>
+    <button class="sb-item" onclick="nav('quiz',this)"><span class="sb-icon">🎯</span>Quiz</button>
+    <button class="sb-item" onclick="nav('wronglog',this)"><span class="sb-icon">❌</span>Wrong Log <span class="sb-badge" id="sbWrongCount">0</span></button>
+    <button class="sb-item" onclick="nav('exam',this)"><span class="sb-icon">⏱️</span>Exam Mode</button>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Tools</span>
+    <button class="sb-item" onclick="nav('pomodoro',this)"><span class="sb-icon">🍅</span>Pomodoro</button>
+  </div>
+  <div class="sb-section">
+    <div class="sb-progress-wrap">
+      <div class="sb-prog-label"><span>Overall mastery</span><span id="masteryPct">0%</span></div>
+      <div class="sb-prog"><div class="sb-prog-fill" id="masteryBar" style="width:0%"></div></div>
+    </div>
+  </div>
+</aside>
 
-<!-- ════════════════════════════════════════════
-     NOTES
-════════════════════════════════════════════ -->
-<div id="notes" class="section active">
-  <div class="sec-title">📚 Unit Notes</div>
-  <p class="sec-subtitle">Click any unit to expand. Dive into Topics, Formulas, Common Traps, and Tips.</p>
-  <div class="unit-grid" id="unitGrid"></div>
+<!-- ── MAIN ── -->
+<main class="main" id="mainArea">
+
+<!-- DASHBOARD -->
+<div class="page active" id="p-dashboard">
+  <div class="page-title">Good to see you 👋</div>
+  <p class="page-sub">Here's your AP Physics 1 progress. Keep the streak going — consistent daily study is the #1 predictor of a 5.</p>
+  <div class="dash-grid">
+    <div class="dash-stat">
+      <div class="dash-stat-val" id="d-cards" style="color:var(--blue)">0</div>
+      <div class="dash-stat-label">Cards studied today</div>
+      <div class="dash-stat-icon">🧠</div>
+    </div>
+    <div class="dash-stat">
+      <div class="dash-stat-val" id="d-correct" style="color:var(--green)">0%</div>
+      <div class="dash-stat-label">Today's accuracy</div>
+      <div class="dash-stat-icon">✅</div>
+    </div>
+    <div class="dash-stat">
+      <div class="dash-stat-val" id="d-streak" style="color:var(--amber)">0</div>
+      <div class="dash-stat-label">Day streak</div>
+      <div class="dash-stat-icon">🔥</div>
+    </div>
+    <div class="dash-stat">
+      <div class="dash-stat-val" id="d-xp" style="color:var(--purple)">0</div>
+      <div class="dash-stat-label">Total XP earned</div>
+      <div class="dash-stat-icon">⚡</div>
+    </div>
+  </div>
+  <div class="dash-row">
+    <div class="dash-card">
+      <h3>Unit mastery</h3>
+      <div class="unit-bars" id="unitBars"></div>
+    </div>
+    <div class="dash-card">
+      <h3>Focus here first</h3>
+      <div class="weak-units" id="weakUnits">
+        <div style="font-size:13px;color:var(--text3)">Complete some quizzes to see weak spots.</div>
+      </div>
+    </div>
+  </div>
+  <div class="dash-card">
+    <h3>Recent activity</h3>
+    <div class="activity-list" id="activityList">
+      <div class="activity-item">
+        <span class="activity-icon">👋</span>
+        <span class="activity-text">Welcome to PhysicsOS! Start studying to see your activity here.</span>
+        <span class="activity-time">now</span>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- ════════════════════════════════════════════
-     FLASHCARDS
-════════════════════════════════════════════ -->
-<div id="flash" class="section">
+<!-- NOTES -->
+<div class="page" id="p-notes">
+  <div class="page-title">Unit Notes</div>
+  <p class="page-sub">All 8 units — tap any unit to expand. Each has Topics, Formulas, ⚠ Traps, and Tips tabs.</p>
+  <div class="units-list" id="unitsList"></div>
+</div>
+
+<!-- FLASHCARDS -->
+<div class="page" id="p-flashcards">
   <div class="fc-layout">
-    <div class="fc-topbar">
-      <div class="sec-title" style="margin:0">🧠 Flashcards</div>
-      <div class="fc-controls">
-        <button class="ctrl-btn" onclick="shuffleCards()">⇄ Shuffle</button>
-        <button class="ctrl-btn" onclick="resetDeck()">↺ Reset</button>
+    <div class="fc-header">
+      <h2 class="page-title" style="margin:0">Flashcards</h2>
+      <div class="btn-row">
+        <button class="btn" onclick="shuffleFC()">⇄ Shuffle</button>
+        <button class="btn" onclick="resetFC()">↺ Reset</button>
       </div>
     </div>
-    <div class="fc-filter" id="fcFilter"></div>
-    <div class="fc-progress">
-      <div class="pbar"><div class="pbar-fill" id="pbarFill" style="width:0%"></div></div>
-      <span class="pcount" id="pcount">1 / 40</span>
+    <div class="filter-strip" id="fcFilterStrip"></div>
+    <div class="srs-indicator" id="srsInfo">
+      <span class="srs-dot" style="background:var(--red)"></span>
+      <span id="srsDue">0 due now</span> &nbsp;·&nbsp;
+      <span class="srs-dot" style="background:var(--amber)"></span>
+      <span id="srsHard">0 hard</span> &nbsp;·&nbsp;
+      <span class="srs-dot" style="background:var(--green)"></span>
+      <span id="srsKnown">0 known</span>
     </div>
-    <div class="fc-scores">
-      <span class="sc g" id="scGot">✓ 0 got it</span>
-      <span class="sc m" id="scMiss">✗ 0 missed</span>
+    <div class="prog-row">
+      <div class="pbar"><div class="pbar-fill" id="fcPbar" style="width:0%"></div></div>
+      <span class="pcnt" id="fcCnt">0 / 0</span>
     </div>
-    <div class="fc-scene">
-      <div class="fc-card" id="fcCard" onclick="flipCard()">
-        <div class="fc-face fc-front">
-          <p class="fc-q" id="fcQ">Loading...</p>
-          <span class="fc-unit-label" id="fcUL"></span>
-          <span class="fc-hint">tap to reveal answer</span>
+    <div class="score-row">
+      <span class="sc-chip g" id="fcGot">✓ 0 got it</span>
+      <span class="sc-chip m" id="fcMiss">✗ 0 missed</span>
+    </div>
+    <div class="card-scene" onclick="flipCard()">
+      <div class="card-3d" id="theCard">
+        <div class="card-face card-front">
+          <p class="card-q" id="cardQ">Loading your deck...</p>
+          <span class="card-tag" id="cardTag"></span>
+          <span class="card-hint">space or tap to flip</span>
         </div>
-        <div class="fc-face fc-back">
-          <p class="fc-a" id="fcA">—</p>
-          <span class="fc-hint">tap to flip back</span>
+        <div class="card-face card-back">
+          <p class="card-a" id="cardA">—</p>
+          <span class="card-hint">rate yourself below</span>
         </div>
       </div>
     </div>
-    <div class="fc-actions">
-      <button class="fca miss" onclick="markCard(false)">✗ Missed it</button>
-      <button class="fca" onclick="prevCard()">← Prev</button>
-      <button class="fca got" onclick="markCard(true)">✓ Got it</button>
+    <div class="card-actions">
+      <button class="ca miss" onclick="rateCard(0)">✗<br><span style="font-size:10px">Again</span></button>
+      <button class="ca hard" onclick="rateCard(1)">△<br><span style="font-size:10px">Hard</span></button>
+      <button class="ca" onclick="prevCard()">←<br><span style="font-size:10px">Prev</span></button>
+      <button class="ca got" onclick="rateCard(3)">✓<br><span style="font-size:10px">Easy</span></button>
+    </div>
+    <div class="kb-hints">
+      <span class="kb"><kbd class="kbd">Space</kbd> flip</span>
+      <span class="kb"><kbd class="kbd">←</kbd> prev</span>
+      <span class="kb"><kbd class="kbd">1</kbd> again &nbsp;<kbd class="kbd">2</kbd> hard &nbsp;<kbd class="kbd">3</kbd> easy</span>
     </div>
     <div class="done-screen" id="fcDone">
-      <div class="done-score" id="doneScore">0%</div>
-      <div class="done-label" id="doneLabel">—</div>
-      <button class="ctrl-btn primary" onclick="resetDeck()" style="margin-top:1rem">Study again</button>
+      <div class="done-pct" id="donePct">—</div>
+      <div class="done-msg" id="doneMsg">—</div>
+      <div class="xp-earned" id="doneXP">⚡ +0 XP earned</div>
+      <button class="btn primary" onclick="resetFC()">Study again</button>
+    </div>
+
+    <div class="custom-section">
+      <h3>📝 Your custom cards (<span id="customCount">0</span>)</h3>
+      <div class="custom-list" id="customList"></div>
+      <div class="add-form">
+        <textarea id="newQ" placeholder="Question..."></textarea>
+        <textarea id="newA" placeholder="Answer..."></textarea>
+        <div class="form-row">
+          <input id="newUnit" placeholder="Unit (e.g. Kinematics)" type="text">
+          <button class="btn primary" onclick="addCustomCard()">+ Add Card</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════════
-     QUIZ
-════════════════════════════════════════════ -->
-<div id="quiz" class="section">
+<!-- FRQ -->
+<div class="page" id="p-frq">
+  <div class="frq-layout">
+    <div class="page-title">FRQ Practice</div>
+    <p class="page-sub">Free Response Questions — worth 50% of your AP score. Write your answer, then reveal the rubric. Each point matters.</p>
+    <div id="frqList"></div>
+  </div>
+</div>
+
+<!-- FORMULA SHEET -->
+<div class="page" id="p-formulas">
+  <div class="fsheet">
+    <div class="page-title">Formula Sheet</div>
+    <p class="page-sub">Every formula you need, organized by unit. <button class="btn" onclick="window.print()" style="display:inline-flex;padding:4px 12px;font-size:12px">🖨️ Print</button></p>
+    <div class="fsheet-grid" id="fsheetGrid"></div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="page" id="p-quiz">
   <div class="quiz-layout">
     <div class="quiz-topbar">
-      <div class="sec-title" style="margin:0">🎯 Practice Quiz</div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <select class="filter-select" id="quizFilter" onchange="filterQuiz(this.value)"></select>
-        <button class="ctrl-btn" onclick="restartQuiz()">↺ Restart</button>
+      <div class="page-title" style="margin:0;font-size:1.6rem">Quiz</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <select class="add-form" style="padding:6px 11px;font-size:13px;border-radius:8px;background:var(--s1);border:1px solid var(--border2);color:var(--text);width:auto;margin:0" id="quizUnitFilter" onchange="setQuizFilter(this.value)"></select>
+        <button class="btn" onclick="restartQuiz()">↺ Restart</button>
       </div>
     </div>
-    <div class="quiz-score-display" style="margin-bottom:1.25rem">
-      Score: <strong id="qScore">0</strong> / <strong id="qTotal">0</strong> &nbsp;·&nbsp;
-      Question <strong id="qNum">1</strong>
+    <div class="quiz-meta">
+      Score: <strong id="qzScore">0</strong> / <strong id="qzTotal">0</strong> &nbsp;·&nbsp;
+      Q <strong id="qzNum">1</strong> &nbsp;·&nbsp;
+      Accuracy: <strong id="qzAcc">—</strong>
     </div>
-    <div id="quizContainer"></div>
+    <div id="quizArea" style="margin-top:1.25rem"></div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════════
-     EXAM MODE
-════════════════════════════════════════════ -->
-<div id="exam" class="section">
-  <div class="exam-layout">
+<!-- WRONG LOG -->
+<div class="page" id="p-wronglog">
+  <div class="wrong-log">
+    <div class="page-title">Wrong Answer Log</div>
+    <p class="page-sub">Every question you've gotten wrong. Re-drill these until you nail them.</p>
+    <div style="display:flex;gap:8px;margin-bottom:1.5rem">
+      <button class="btn danger" onclick="clearWrongLog()">🗑 Clear log</button>
+      <button class="btn primary" onclick="drillWrongLog()">🎯 Drill all wrong answers</button>
+    </div>
+    <div id="wrongLogContainer"></div>
+  </div>
+</div>
 
-    <!-- setup -->
-    <div class="exam-setup" id="examSetup">
+<!-- EXAM -->
+<div class="page" id="p-exam">
+  <div class="exam-layout">
+    <div class="exam-setup-screen" id="examSetup">
       <div style="font-size:3rem;margin-bottom:.75rem">⏱️</div>
       <h2>Exam Mode</h2>
-      <p>Simulate a real AP Physics 1 MCQ section.<br>Choose your settings and go — no hints, timed conditions.</p>
+      <p>Simulate AP Physics 1 MCQ conditions. Timed, no hints. Review every answer at the end.</p>
       <div class="setup-grid">
-        <div class="setup-item">
-          <label>Questions</label>
-          <select id="examCount"><option value="5">5 questions</option><option value="10" selected>10 questions</option><option value="15">15 questions</option><option value="20">20 questions</option></select>
+        <div class="setup-field"><label>Questions</label>
+          <select id="exCount"><option value="5">5 questions</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20 (full)</option></select>
         </div>
-        <div class="setup-item">
-          <label>Time limit</label>
-          <select id="examTime"><option value="120">2 minutes</option><option value="300">5 minutes</option><option value="600" selected>10 minutes</option><option value="1200">20 minutes</option></select>
+        <div class="setup-field"><label>Time</label>
+          <select id="exTime"><option value="120">2 min</option><option value="300">5 min</option><option value="600" selected>10 min</option><option value="1200">20 min</option></select>
         </div>
-        <div class="setup-item">
-          <label>Unit</label>
-          <select id="examUnit"></select>
+        <div class="setup-field"><label>Unit focus</label>
+          <select id="exUnit"></select>
         </div>
-        <div class="setup-item">
-          <label>Difficulty</label>
-          <select id="examDiff"><option value="all">All</option><option value="easy">Easy</option><option value="hard">Hard</option></select>
+        <div class="setup-field"><label>Mode</label>
+          <select id="exMode"><option value="normal">Normal</option><option value="hard">Hard (no review)</option></select>
         </div>
       </div>
-      <button class="start-exam-btn" onclick="startExam()">Start Exam →</button>
+      <button class="start-btn" onclick="startExam()">Begin Exam →</button>
     </div>
-
-    <!-- in-progress -->
     <div id="examSession" style="display:none">
-      <div class="exam-progress-bar">
-        <div class="exam-meta">
-          <span id="examQLabel" style="color:var(--muted);font-size:13px">Q 1/10</span>
-          <span class="timer-display" id="timerDisplay">10:00</span>
-          <span style="color:var(--muted);font-size:13px">Score: <strong id="examScoreLabel" style="color:var(--text)">0</strong></span>
-        </div>
-        <div class="ebar"><div class="ebar-fill" id="ebarFill" style="width:0%"></div></div>
+      <div class="exam-hud">
+        <span style="font-size:13px;color:var(--text3)" id="exQLabel">Q 1/10</span>
+        <span class="timer-disp" id="timerDisp">10:00</span>
+        <span style="font-size:13px;color:var(--text3)">Score: <strong id="exScore" style="color:var(--text)">0</strong></span>
       </div>
-      <div id="examContainer"></div>
-      <button class="next-btn show" id="examNext" onclick="nextExamQ()" style="display:none">Next →</button>
+      <div class="exam-pbar"><div class="exam-pbar-fill" id="exBar" style="width:0%"></div></div>
+      <div id="examArea"></div>
+      <button class="next-btn" id="exNext" onclick="nextExamQ()" style="display:none">Next →</button>
     </div>
-
-    <!-- results -->
-    <div class="exam-results" id="examResults">
-      <div class="result-score" id="resScore"></div>
-      <div class="result-label">out of <span id="resTotal"></span> questions</div>
+    <div class="result-screen" id="examResults">
+      <div class="result-pct" id="resPct"></div>
+      <div class="result-label">out of <span id="resOf"></span> questions</div>
       <div class="result-grade" id="resGrade"></div>
-      <button class="ctrl-btn primary" onclick="resetExam()" style="margin-bottom:2rem">New Exam</button>
-      <div class="results-review" id="resReview"></div>
+      <button class="btn primary" onclick="resetExam()" style="margin-bottom:2rem">New Exam</button>
+      <div class="review-list" id="reviewList"></div>
     </div>
-
   </div>
 </div>
+
+<!-- POMODORO -->
+<div class="page" id="p-pomodoro">
+  <div class="pomo-layout">
+    <div class="page-title" style="text-align:center">🍅 Pomodoro Timer</div>
+    <p class="page-sub" style="text-align:center">25 min focused study → 5 min break. After 4 sessions, take a longer break. The most effective study rhythm.</p>
+    <div class="pomo-mode-btns">
+      <button class="pomo-mode-btn on" onclick="setPomoMode('focus',this)">Focus (25m)</button>
+      <button class="pomo-mode-btn" onclick="setPomoMode('short',this)">Short break (5m)</button>
+      <button class="pomo-mode-btn" onclick="setPomoMode('long',this)">Long break (15m)</button>
+    </div>
+    <div class="pomo-ring" id="pomoRing" style="--pct:100%">
+      <div>
+        <div class="pomo-time" id="pomoTime">25:00</div>
+        <div class="pomo-label" id="pomoLabel">Focus</div>
+      </div>
+    </div>
+    <div class="pomo-btns">
+      <button class="btn primary" id="pomoBtn" onclick="togglePomo()">▶ Start</button>
+      <button class="btn" onclick="resetPomo()">↺ Reset</button>
+    </div>
+    <div class="pomo-sessions">
+      Sessions today: &nbsp;
+      <span id="pomoDotsWrap"></span>
+      &nbsp; <span id="pomoSessionCount">0</span> / 4
+    </div>
+  </div>
+</div>
+
+</main><!-- /main -->
+</div><!-- /shell -->
+
+<div class="toast" id="toast"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  DATA
+//  FULL DATA
 // ═══════════════════════════════════════════════════════════
 
 const UNITS = [
   {
-    num:'1', title:'Kinematics', pct:'10–15%',
-    desc:'The study of motion without considering its causes. Describes position, velocity, and acceleration in 1D and 2D (projectile motion).',
+    num:'1', title:'Kinematics', pct:'10–15%', color:'#4f8dff',
+    desc:'The study of motion without considering causes. Covers 1D and 2D motion, graphs, and the four kinematic equations.',
     topics:[
-      {h:'Displacement & Velocity', p:'Δx = x_f − x_i (can be negative). Average v = Δx/Δt. Instantaneous v = slope of x-t graph at that point.'},
-      {h:'Acceleration', p:'a = Δv/Δt. Slope of v-t graph. Area under v-t graph = displacement. Constant a → straight v-t line.'},
-      {h:'The 4 Kinematic Equations', p:'Valid ONLY when acceleration is constant. Cannot apply during variable-a intervals.'},
-      {h:'Projectile Motion', p:'Split into independent x and y. a_x = 0 (v_x constant). a_y = −9.8 m/s². Solve y for time, then use time in x.'},
-      {h:'Graphical Analysis', p:'x-t: slope = v. v-t: slope = a, area = Δx. Curved x-t → nonzero a. Straight v-t → constant a.'},
+      {h:'Displacement & Velocity',p:'Δx = x_f − x_i (can be negative). Average v = Δx/Δt. Instantaneous v = slope of x-t graph.'},
+      {h:'Acceleration',p:'a = Δv/Δt. Slope of v-t graph. Area under v-t = displacement. Constant a → straight v-t.'},
+      {h:'Four Kinematic Equations',p:'Valid ONLY when acceleration is constant. Pick based on which variable is missing.'},
+      {h:'Projectile Motion',p:'Split x and y. a_x=0 (v_x constant). a_y=−9.8. Solve y for time, then use t in x equation.'},
+      {h:'Graph Reading',p:'x-t: slope=v. v-t: slope=a, area=Δx. Curved x-t → nonzero a. Straight v-t → constant a.'},
     ],
     formulas:[
-      {f:'v = v₀ + at', d:'Has: v₀, a, t. Finds: v'},
-      {f:'Δx = v₀t + ½at²', d:'Has: v₀, a, t. Finds: Δx'},
-      {f:'v² = v₀² + 2aΔx', d:'Has: v₀, a, Δx. No t'},
-      {f:'Δx = ½(v₀ + v)t', d:'Has: v₀, v, t. No a'},
-      {f:'v_x = v₀cosθ, v_y = v₀sinθ', d:'Initial component decomposition'},
+      {f:'v = v₀ + at',d:'Finds v; has v₀,a,t'},
+      {f:'Δx = v₀t + ½at²',d:'Finds Δx; has v₀,a,t'},
+      {f:'v² = v₀² + 2aΔx',d:'No time variable'},
+      {f:'Δx = ½(v₀+v)t',d:'No acceleration variable'},
+      {f:'v_x = v₀cosθ, v_y = v₀sinθ',d:'Component decomposition'},
     ],
     traps:[
-      {l:'"Slowing" ≠ negative a', t:'Ball thrown up: v is positive, a = −g (negative). At peak: v=0 but a = −9.8 still. Acceleration is NEVER zero during free fall.'},
-      {l:'Δx ≠ distance', t:'U-turn → Δx could be 0, distance > 0. Find turning point (v=0), split into two intervals.'},
-      {l:'Projectile peak', t:'At peak, v_y = 0 but v_x is UNCHANGED. The velocity at peak is purely horizontal.'},
+      {l:'"Slowing" ≠ negative a',t:'Ball thrown up: v positive, a=−g. At peak: v=0 but a=−9.8 still. Acceleration is NEVER zero in free fall.'},
+      {l:'Δx ≠ distance',t:'U-turn → Δx=0 but distance>0. Find turning point (v=0), split interval.'},
+      {l:'Projectile peak velocity',t:'At peak: v_y=0 but v_x is UNCHANGED. Velocity is purely horizontal at peak.'},
     ],
     tips:[
-      'Decision tree: Have v₀, a, t? → Use v=v₀+at or Δx=v₀t+½at². No t? → Use v²=v₀²+2aΔx.',
-      'Proportional reasoning: double v₀ → stopping distance ×4 (v² relation).',
-      'FRQ "Derive" means: start from v=v₀+at and show algebra steps.',
+      'Decision tree: Have v₀,a,t? → use v=v₀+at. No t? → use v²=v₀²+2aΔx.',
+      'Proportional: double v₀ → stopping distance ×4 (v² relation).',
+      '"Derive" on FRQ means: start from v=v₀+at and show algebra steps.',
     ],
-    strategy:'Sketch axes. List knowns, circle unknowns. Pick equation with only one unknown. Watch signs (Δ = final − initial).',
+    strategy:'Sketch axes. List knowns, circle unknowns. Pick equation with exactly one unknown. Watch signs.',
   },
   {
-    num:'2', title:'Forces & Newton\'s Laws', pct:'18–23%',
-    desc:'Newton\'s three laws govern how forces change motion. Free-body diagrams (FBDs) are the essential first step for every problem.',
+    num:'2', title:'Forces & Newton\'s Laws', pct:'18–23%', color:'#f5a623',
+    desc:'How forces cause changes in motion. Free-body diagrams are the essential first step for every dynamics problem.',
     topics:[
-      {h:'Newton\'s 1st Law', p:'Objects at rest stay at rest; moving objects stay moving — unless a NET force acts. Inertia resists change.'},
-      {h:'Newton\'s 2nd Law', p:'ΣF = ma. Net force in each direction separately. Draw FBD first, then sum forces.'},
-      {h:'Newton\'s 3rd Law', p:'Action-reaction pairs: equal magnitude, opposite direction, acting on DIFFERENT objects. They never cancel each other.'},
-      {h:'Static & Kinetic Friction', p:'Static: f_s ≤ μ_s·N (adjusts up to max). Kinetic: f_k = μ_k·N (constant while sliding). μ_s > μ_k always.'},
-      {h:'Inclines', p:'Tilt axes! Parallel to ramp: mg sinθ − f = ma. Perpendicular: N = mg cosθ.'},
-      {h:'Circular Motion', p:'Net inward force = mv²/r. NOT a new force — it\'s the net of existing forces pointing inward.'},
+      {h:'Newton\'s 1st Law',p:'Objects resist changes in motion (inertia). Net force = 0 → constant velocity (including rest).'},
+      {h:'Newton\'s 2nd Law',p:'ΣF = ma. Apply separately in each direction. Always draw FBD first.'},
+      {h:'Newton\'s 3rd Law',p:'Equal, opposite, on DIFFERENT objects. Pairs never cancel each other.'},
+      {h:'Friction',p:'Static: f_s ≤ μ_sN (adjusts). Kinetic: f_k = μ_kN (constant). μ_s > μ_k always.'},
+      {h:'Inclines',p:'Tilt axes: parallel→mg sinθ−f=ma. Perpendicular→N=mg cosθ.'},
+      {h:'Circular Motion',p:'F_c = mv²/r is the NET inward force. Not a new force — it\'s the sum of existing forces pointing inward.'},
     ],
     formulas:[
-      {f:'ΣF = ma', d:'Net force in any direction'},
-      {f:'f_k = μ_k · N', d:'Kinetic friction (constant)'},
-      {f:'f_s ≤ μ_s · N', d:'Static friction (adjusts up to max)'},
-      {f:'N = mg cosθ', d:'Normal force on incline'},
-      {f:'F_c = mv²/r', d:'Centripetal force (net inward)'},
-      {f:'g sinθ', d:'Acceleration down frictionless incline'},
+      {f:'ΣF = ma',d:'Net force in any direction'},
+      {f:'f_k = μ_k N',d:'Kinetic friction (constant once sliding)'},
+      {f:'f_s ≤ μ_s N',d:'Static friction (max = μ_sN)'},
+      {f:'N = mg cosθ',d:'Normal force on incline'},
+      {f:'F_c = mv²/r',d:'Net centripetal force'},
+      {f:'a_c = v²/r',d:'Centripetal acceleration'},
     ],
     traps:[
-      {l:'Normal force ≠ always mg', t:'On ramp: N=mg cosθ. Elevator up: N=m(g+a). Going down: N=m(g−a). Free fall: N=0. Loop top: N may be < mg.'},
-      {l:'Atwood machine', t:'Write ΣF=ma for EACH mass separately. m₁g−T=m₁a (heavier, down). T−m₂g=m₂a (lighter, up). Add to find a, then backsolve T.'},
-      {l:'Constant speed in circle ≠ zero acceleration', t:'Centripetal acceleration is present even when speed is constant. Direction of v changes → that IS acceleration.'},
+      {l:'N ≠ always mg',t:'Ramp: N=mg cosθ. Elevator up: N=m(g+a). Down: N=m(g−a). Free fall: N=0.'},
+      {l:'Atwood machine',t:'Write ΣF=ma for EACH mass. m₁g−T=m₁a (heavier). T−m₂g=m₂a (lighter). Add → a=(m₁−m₂)g/(m₁+m₂).'},
+      {l:'Circular motion ≠ zero acceleration',t:'Even at constant speed, direction changes → centripetal acceleration exists toward center.'},
     ],
     tips:[
-      'FBD checklist: Weight mg (down). Normal N (⊥ surface). Tension T (along rope, away). Friction f (parallel, opposes motion).',
-      'NEVER draw reaction forces from other objects on YOUR FBD.',
-      'Connected objects: total a = ΣF_total/m_total. Backsolve for internal tensions.',
+      'FBD: weight mg(↓), normal N(⊥surface), tension T(along rope↑), friction f(‖surface, opposes motion).',
+      'NEVER draw reaction forces from other objects on your FBD.',
+      'Connected objects: total a = ΣF_net/m_total. Then backsolve tensions.',
     ],
-    strategy:'Use FORCES when you need a, T, N, or f. Use ENERGY when you only need speed. Draw the FBD before writing any equation.',
+    strategy:'Forces when you need a, T, N, f. Energy when you need speed. Draw FBD before writing any equation.',
   },
   {
-    num:'3', title:'Work, Energy & Power', pct:'18–23%',
-    desc:'Energy is a scalar — much faster than force methods when path is complex. Master conservation of energy and when friction breaks it.',
+    num:'3', title:'Work, Energy & Power', pct:'18–23%', color:'#22d3a0',
+    desc:'Energy is a scalar — often faster than force methods. Master conservation of energy and when friction breaks it.',
     topics:[
-      {h:'Work', p:'W = Fd cosθ, where θ is between force and displacement. Perpendicular force → W = 0.'},
-      {h:'Kinetic Energy', p:'KE = ½mv². Double v → KE quadruples. Stopping distance ∝ v².'},
-      {h:'Gravitational PE', p:'PE = mgh. Choose h = 0 wherever convenient. Only Δh matters.'},
-      {h:'Spring PE', p:'PE_s = ½kx². x measured from equilibrium, NOT natural length.'},
-      {h:'Conservation of Energy', p:'KE_i + PE_i = KE_f + PE_f when no friction. With friction: add E_lost on right.'},
-      {h:'Power', p:'P = W/Δt = F·v. Units: watts (W = J/s).'},
+      {h:'Work',p:'W = Fd cosθ where θ is between F and displacement. Perpendicular force → W=0.'},
+      {h:'Kinetic Energy',p:'KE = ½mv². Double v → KE ×4. Stopping distance ∝ v².'},
+      {h:'Gravitational PE',p:'PE = mgh. Choose h=0 wherever convenient. Only Δh matters.'},
+      {h:'Spring PE',p:'PE_s = ½kx². x from equilibrium, NOT natural length.'},
+      {h:'Conservation',p:'KE_i+PE_i = KE_f+PE_f when no friction. With friction: add E_lost.'},
+      {h:'Power',p:'P = W/Δt = Fv. Watts = J/s.'},
     ],
     formulas:[
-      {f:'W = Fd cosθ', d:'Work; θ between F and displacement'},
-      {f:'KE = ½mv²', d:'Kinetic energy'},
-      {f:'PE_grav = mgh', d:'Gravitational potential energy'},
-      {f:'PE_spring = ½kx²', d:'Spring PE; x from equilibrium'},
-      {f:'W_net = ΔKE', d:'Work-energy theorem'},
-      {f:'W_f = −μNd', d:'Work done by friction (negative)'},
-      {f:'P = W/t = Fv', d:'Power'},
+      {f:'W = Fd cosθ',d:'θ between F and displacement'},
+      {f:'KE = ½mv²',d:'Kinetic energy'},
+      {f:'PE = mgh',d:'Gravitational PE'},
+      {f:'PE_s = ½kx²',d:'Spring PE; x from equilibrium'},
+      {f:'W_net = ΔKE',d:'Work-energy theorem'},
+      {f:'W_f = −μNd',d:'Work by friction (negative)'},
+      {f:'P = W/t = Fv',d:'Power'},
     ],
     traps:[
-      {l:'v doubles → KE ×4', t:'Stopping distance ∝ v². Halving friction → stopping distance doubles, not the same.'},
-      {l:'Spring + gravity both present', t:'Equilibrium shifts down by Δx=mg/k. Include BOTH PE_spring=½kx² and PE_gravity=mgh. Oscillates around NEW equilibrium.'},
-      {l:'Friction loses energy permanently', t:'Friction is irreversible. Longer path → more energy lost. Cannot be recovered.'},
+      {l:'v doubles → KE ×4',t:'Stopping distance ∝ v². Halving friction → stopping distance doubles.'},
+      {l:'Spring + gravity',t:'Hanging spring equilibrium shifts by Δx=mg/k. Include both PE_spring and PE_gravity.'},
+      {l:'Friction = irreversible',t:'Energy lost to friction cannot be recovered. Path-dependent; longer path → more loss.'},
     ],
     tips:[
-      'Use energy bar charts: columns for KE, PE_grav, PE_spring, E_friction_lost.',
-      'Conservation of energy is fastest when you need speed or height and path doesn\'t matter.',
-      'P = Fv is useful when an object moves at constant speed under an applied force.',
+      'Energy bar charts: columns for KE, PE_grav, PE_spring, E_friction.',
+      'Use energy when you need speed and don\'t care about path.',
+      'P = Fv useful when object moves at constant speed.',
     ],
-    strategy:'Forces method → use when you need a, T, N. Energy method → use when you need speed or height (usually faster). Many FRQs need both sequentially.',
+    strategy:'Forces → need a/T/N/f. Energy → need speed or height (usually faster). Most FRQs need both.',
   },
   {
-    num:'4', title:'Momentum & Impulse', pct:'10–15%',
+    num:'4', title:'Momentum & Impulse', pct:'10–15%', color:'#f472b6',
     desc:'Momentum is a vector. Conserved in all closed-system collisions — the most powerful conservation law in mechanics.',
     topics:[
-      {h:'Momentum', p:'p = mv. Vector — direction matters. Opposite directions = opposite signs. Never add magnitudes.'},
-      {h:'Impulse', p:'J = FΔt = Δp. Area under F-t graph. Longer collision → smaller average force (same Δp).'},
-      {h:'Conservation', p:'Total p before = total p after, when no external net force. Works for collisions AND explosions.'},
-      {h:'Elastic Collisions', p:'Both p AND KE conserved. Objects bounce with no energy loss.'},
-      {h:'Perfectly Inelastic', p:'Objects stick together → one final velocity. Only p conserved; KE decreases.'},
-      {h:'Explosions', p:'Initial p often = 0. Pieces go opposite directions. KE increases (internal energy released).'},
+      {h:'Momentum',p:'p = mv. Vector — direction matters. Opposite directions = opposite signs.'},
+      {h:'Impulse',p:'J = FΔt = Δp. Area under F-t graph. Longer collision → smaller force for same Δp.'},
+      {h:'Conservation',p:'p_before = p_after when no external net force. For collisions AND explosions.'},
+      {h:'Elastic',p:'Both p and KE conserved. Ideal bouncing.'},
+      {h:'Perfectly Inelastic',p:'Objects stick together. Only p conserved; KE decreases.'},
+      {h:'Explosions',p:'p_initial often = 0. Pieces go opposite directions. KE increases (internal energy released).'},
     ],
     formulas:[
-      {f:'p = mv', d:'Momentum (vector, kg·m/s)'},
-      {f:'J = FΔt = Δp', d:'Impulse = change in momentum'},
-      {f:'m₁v₁ᵢ + m₂v₂ᵢ = m₁v₁f + m₂v₂f', d:'Conservation of momentum'},
-      {f:'(m₁+m₂)v_f = m₁v₁ᵢ + m₂v₂ᵢ', d:'Perfectly inelastic collision'},
+      {f:'p = mv',d:'Momentum (vector, kg·m/s)'},
+      {f:'J = FΔt = Δp',d:'Impulse = change in momentum'},
+      {f:'m₁v₁ᵢ + m₂v₂ᵢ = m₁v₁f + m₂v₂f',d:'Conservation of momentum'},
+      {f:'(m₁+m₂)v_f = m₁v₁ᵢ+m₂v₂ᵢ',d:'Perfectly inelastic'},
     ],
     traps:[
-      {l:'SIGNS! Opposite directions = opposite signs', t:'If m₁ goes right (+), m₂ goes left (−). Write m₁v₁ + m₂(−v₂) = ... Never add magnitudes for opposite-direction objects.'},
-      {l:'Recoil: light object moves much faster', t:'Explosion from rest: m₁v₁ = −m₂v₂. Lighter object moves much faster (v ∝ 1/m).'},
-      {l:'Ballistic pendulum = 2 steps', t:'Step 1: momentum during collision. Step 2: energy during swing. You cannot combine them in one equation.'},
+      {l:'SIGNS!',t:'Opposite directions = opposite signs. NEVER add magnitudes for objects moving in opposite directions.'},
+      {l:'Recoil',t:'Light object moves much faster (v ∝ 1/m). Explosion from rest: m₁v₁ = −m₂v₂.'},
+      {l:'Ballistic pendulum = 2 steps',t:'Step 1: momentum (collision). Step 2: energy (swing). Cannot combine into one equation.'},
     ],
     tips:[
-      'Impulse = area under F-t graph. Triangle: J=½F_max·Δt. Constant F: J=F·Δt.',
-      'Longer contact time → smaller average force (same total impulse). Explains airbags.',
-      '2D collisions: conserve p_x AND p_y separately.',
+      'Impulse = area under F-t graph. Triangle: J = ½F_max·Δt.',
+      'Longer collision time → smaller average force. Explains airbags and crumple zones.',
+      '2D: conserve p_x and p_y SEPARATELY.',
     ],
-    strategy:'Momentum for collisions/explosions. Energy for speed/height. Many problems need momentum THEN energy (e.g., ballistic pendulum).',
+    strategy:'Momentum for collisions/explosions. Energy for speed/height. Many problems need momentum THEN energy.',
   },
   {
-    num:'5', title:'Torque & Rotational Motion', pct:'10–15%',
-    desc:'Rotational analogs of all linear quantities. Στ = Iα is the rotational F = ma. Requires FBDs plus torque diagrams.',
+    num:'5', title:'Torque & Rotation', pct:'10–15%', color:'#9b72ff',
+    desc:'Rotational analogs of all linear quantities. Στ = Iα is the rotational F = ma.',
     topics:[
-      {h:'Torque', p:'τ = rF sinθ. r_perp is perpendicular distance from pivot to line of force. CCW = +, CW = −.'},
-      {h:'Moment of Inertia', p:'I = Σmr². Farther from axis → larger I (∝ r²).'},
-      {h:'Rotational Newton\'s 2nd', p:'Στ = Iα. Same approach as ΣF=ma: sum torques, set equal to Iα.'},
-      {h:'Static Equilibrium', p:'BOTH ΣF=0 AND Στ=0 required. Choose pivot at unknown force to simplify.'},
-      {h:'Rolling Without Slipping', p:'v_cm = rω and a_cm = rα. These link translational and rotational motion.'},
+      {h:'Torque',p:'τ = rF sinθ. r_perp = perpendicular distance from pivot to force line. CCW=+, CW=−.'},
+      {h:'Moment of Inertia',p:'I = Σmr². Sphere=⅖mr². Disk=½mr². Hoop=mr². Rod(end)=⅓mL².'},
+      {h:'Rotational Newton\'s 2nd',p:'Στ = Iα. Sum torques about one axis, set equal to Iα.'},
+      {h:'Static Equilibrium',p:'BOTH ΣF=0 AND Στ=0 required. Choose pivot at unknown force to simplify.'},
+      {h:'Rolling',p:'v_cm=rω, a_cm=rα. Total KE = ½mv²+½Iω² = ½mv²(1+I/mr²).'},
     ],
     formulas:[
-      {f:'τ = rF sinθ', d:'Torque; θ between r and F'},
-      {f:'Στ = Iα', d:'Rotational Newton\'s 2nd Law'},
-      {f:'I_sphere = ⅖mr²', d:'Solid sphere about center'},
-      {f:'I_disk = ½mr²', d:'Solid disk/cylinder about axis'},
-      {f:'I_hoop = mr²', d:'Hollow cylinder/hoop about axis'},
-      {f:'I_rod_end = ⅓mL²', d:'Rod about one end'},
-      {f:'I_parallel = I_cm + Md²', d:'Parallel axis theorem'},
-      {f:'v_cm = rω', d:'Rolling constraint (no-slip)'},
+      {f:'τ = rF sinθ',d:'Torque; θ between r and F'},
+      {f:'Στ = Iα',d:'Rotational Newton\'s 2nd'},
+      {f:'I_sphere = ⅖mr²',d:'Solid sphere'},
+      {f:'I_disk = ½mr²',d:'Solid cylinder/disk'},
+      {f:'I_hoop = mr²',d:'Hollow cylinder/hoop'},
+      {f:'I_rod_end = ⅓mL²',d:'Rod about end'},
+      {f:'I = I_cm + Md²',d:'Parallel axis theorem'},
+      {f:'v_cm = rω',d:'Rolling no-slip constraint'},
     ],
     traps:[
-      {l:'Smart pivot choice', t:'Place pivot at an unknown force → its torque = 0, equation has one fewer unknown. Ladder problems: pivot at wall, wall force torque vanishes.'},
-      {l:'BOTH equilibrium conditions required', t:'ΣF=0 gives net support. Στ=0 gives distribution. One alone is insufficient.'},
-      {l:'Rolling race: shape determines speed', t:'Total KE = ½mv²(1+I/mr²). Solid sphere (1.4) beats solid cylinder (1.5) beats hollow sphere (1.67) beats hoop (2.0). Mass cancels!'},
+      {l:'Smart pivot',t:'Put pivot at unknown force → its torque = 0. Ladder problems: pivot at wall → wall force torque vanishes.'},
+      {l:'Both equilibrium conditions',t:'ΣF=0 alone is not enough. Must also have Στ=0.'},
+      {l:'Rolling race',t:'Shape determines speed. Solid sphere (1.4)> cylinder (1.5)> hollow sphere (1.67)> hoop (2.0). Mass cancels!'},
     ],
     tips:[
-      'Gravity acts at the center of mass — for uniform objects, CM = geometric center.',
-      'Rolling ramp FRQ: use mgh = ½mv²+½Iω² with v=rω substituted.',
-      'Rotational kinematics: same forms as linear. θ↔x, ω↔v, α↔a, I↔m, τ↔F.',
+      'Rotational kinematics: identical forms to linear. θ↔x, ω↔v, α↔a, I↔m, τ↔F.',
+      'Rolling FRQ: mgh = ½mv²(1+I/mr²). Plug in I/mr² for shape.',
+      'Static equilibrium: pick pivot at one of the unknown forces, write Στ=0.',
     ],
-    strategy:'Equilibrium: write ΣF=0 then Στ=0 with smart pivot. Rolling: use energy conservation with the rolling KE formula. Identify I/mr² for the shape first.',
+    strategy:'Equilibrium: ΣF=0 then Στ=0 with smart pivot. Rolling: energy with rolling KE formula.',
   },
   {
-    num:'6', title:'Angular Momentum', pct:'5–8%',
-    desc:'L = Iω is conserved when net external torque is zero. Key for spinning systems and rotational collisions.',
+    num:'6', title:'Angular Momentum', pct:'5–8%', color:'#22d3ee',
+    desc:'L = Iω is conserved when net external torque is zero. Key for ice skaters, collisions, and spinning systems.',
     topics:[
-      {h:'Angular Momentum', p:'L = Iω. Units: kg·m²/s. Conserved when Στ_ext = 0.'},
-      {h:'Conservation of L', p:'I_i·ω_i = I_f·ω_f when no external torque. Ice skater example.'},
-      {h:'Rotational Collisions', p:'Two disks collide and stick: I₁ω₁ + I₂ω₂ = (I₁+I₂)ω_f. KE not conserved (inelastic).'},
-      {h:'Connection to Linear', p:'L = r × p = mvr for a point mass in circular motion.'},
+      {h:'Angular Momentum',p:'L = Iω. Units: kg·m²/s. L = mvr for a point mass in circular motion.'},
+      {h:'Conservation',p:'I_i·ω_i = I_f·ω_f when Στ_ext = 0.'},
+      {h:'Ice Skater',p:'Arms in → I decreases → ω increases. L constant but KE increases (muscles do work).'},
+      {h:'Rotational Collision',p:'Two disks stick: L₁+L₂=(I₁+I₂)ω_f. KE not conserved.'},
     ],
     formulas:[
-      {f:'L = Iω', d:'Angular momentum'},
-      {f:'L = mvr', d:'For a point mass in circular motion'},
-      {f:'I_i·ω_i = I_f·ω_f', d:'Conservation (no external torque)'},
-      {f:'KE_rot = ½Iω² = L²/(2I)', d:'Use second form when L is conserved'},
+      {f:'L = Iω',d:'Angular momentum'},
+      {f:'L = mvr',d:'Point mass in circular motion'},
+      {f:'I_i·ω_i = I_f·ω_f',d:'Conservation (Στ_ext=0)'},
+      {f:'KE_rot = L²/(2I)',d:'Use when L is constant'},
     ],
     traps:[
-      {l:'Skater spins faster → KE increases', t:'Even though L is constant, pulling arms in does positive work. KE = L²/(2I) → smaller I → larger KE. Energy came from muscles.'},
-      {l:'Check Στ_ext first', t:'If any external torque acts (gravity on off-axis mass, friction), L is NOT conserved. Check before applying conservation.'},
+      {l:'Skater speeds up → KE increases',t:'Even with L constant, pulling arms in does positive work. KE = L²/2I → smaller I → larger KE.'},
+      {l:'Check Στ_ext first',t:'If any external torque acts, L is NOT conserved. Always check before applying conservation.'},
     ],
     tips:[
-      'If I doubles and ω halves → KE stays same (KE = L²/2I, L constant).',
-      'Turntable + person stepping on: total L conserved; angular momentum exchanges.',
+      'If I doubles and ω halves → KE stays same (KE = L²/2I, L conserved).',
+      'KE_rot = ½Iω² = L²/(2I). Use 2nd form when L is the conserved quantity.',
     ],
-    strategy:'Identify if Στ_ext = 0 (L conserved). If yes, apply I_i·ω_i = I_f·ω_f. Then calculate ΔKE separately if needed.',
+    strategy:'Check Στ_ext = 0 first. If yes: I_i·ω_i = I_f·ω_f. Then calculate ΔKE if needed.',
   },
   {
-    num:'7', title:'Simple Harmonic Motion', pct:'5–8%',
-    desc:'Oscillating systems follow predictable periodic motion. Period depends only on restoring force constant and mass — NOT amplitude.',
+    num:'7', title:'Simple Harmonic Motion', pct:'5–8%', color:'#f5a623',
+    desc:'Oscillating systems. Period depends only on restoring constant and mass — NOT amplitude.',
     topics:[
-      {h:'Spring-Mass System', p:'Restoring force F = −kx. Period T = 2π√(m/k). Double m → T×√2. Double k → T÷√2.'},
-      {h:'Simple Pendulum', p:'T = 2π√(L/g) for small angles (<15°). Mass does NOT affect period.'},
-      {h:'Energy in SHM', p:'At equilibrium: max KE, zero PE. At amplitude: zero KE, max PE. E_total = ½kA² (constant).'},
-      {h:'Position Function', p:'x = A·cos(ωt+φ). v_max = Aω = A√(k/m). a_max = Aω².'},
-      {h:'Vertical Spring', p:'Equilibrium shifts down by Δx = mg/k. Period T is UNCHANGED. PE = 0 at new equilibrium.'},
+      {h:'Spring-Mass',p:'F=−kx. T=2π√(m/k). Double m → T×√2. Double k → T÷√2. Amplitude does not affect T.'},
+      {h:'Pendulum',p:'T=2π√(L/g). Small angles only. Mass does NOT affect T.'},
+      {h:'Energy in SHM',p:'At x=0: max KE, zero PE. At x=±A: zero KE, max PE. E=½kA² (constant).'},
+      {h:'Position Function',p:'x=A cos(ωt+φ). v_max=Aω=A√(k/m). a_max=Aω².'},
+      {h:'Vertical Spring',p:'Equilibrium shifts by Δx=mg/k but T is UNCHANGED.'},
     ],
     formulas:[
-      {f:'F = −kx', d:'Hooke\'s Law (restoring force)'},
-      {f:'T_spring = 2π√(m/k)', d:'Spring period'},
-      {f:'T_pendulum = 2π√(L/g)', d:'Pendulum period (small angles)'},
-      {f:'E_total = ½kA²', d:'Total energy; ∝ A²'},
-      {f:'v_max = Aω = A√(k/m)', d:'Max speed at equilibrium'},
-      {f:'x(t) = A cos(ωt + φ)', d:'Position function'},
+      {f:'F = −kx',d:'Hooke\'s Law (restoring)'},
+      {f:'T_spring = 2π√(m/k)',d:'Spring period (not amplitude!)'},
+      {f:'T_pendulum = 2π√(L/g)',d:'Pendulum (small angle only)'},
+      {f:'E = ½kA²',d:'Total energy (∝ A²)'},
+      {f:'v_max = Aω = A√(k/m)',d:'Max speed at equilibrium'},
+      {f:'x(t) = A cos(ωt+φ)',d:'Position function'},
     ],
     traps:[
-      {l:'Period independent of amplitude', t:'This is the defining property of SHM. Same T whether swinging wide or narrow (small angles only for pendulum).'},
-      {l:'Double amplitude → E ×4, not ×2', t:'E ∝ A². Doubling A quadruples energy. v_max = Aω also doubles. But T is unchanged.'},
-      {l:'Pendulum on Moon', t:'Lower g → longer T (T ∝ 1/√g). Pendulum clock runs slower on Moon.'},
+      {l:'Period independent of amplitude',t:'This is SHM\'s defining property. Same T whether small or large oscillation (small angles for pendulum).'},
+      {l:'Double A → energy ×4',t:'E ∝ A². Doubling A quadruples total energy. v_max doubles. T unchanged.'},
+      {l:'Pendulum on Moon',t:'Lower g → longer T. T ∝ 1/√g. Clock runs slower on Moon.'},
     ],
     tips:[
-      'At x=0: KE max, PE zero, a=0. At x=±A: KE=0, PE max, a max.',
-      'Series springs: 1/k_eff = 1/k₁+1/k₂ (weaker). Parallel: k_eff=k₁+k₂ (stiffer).',
-      'Half spring length → k doubles → T decreases by √2.',
+      'At x=0: KE max, PE=0, a=0. At x=±A: KE=0, PE max, a=max.',
+      'Series springs: 1/k_eff=1/k₁+1/k₂ (weaker). Parallel: k_eff=k₁+k₂ (stiffer).',
+      'Half spring length → k doubles → T÷√2.',
     ],
-    strategy:'Identify what controls T (k and m for spring, L and g for pendulum). Amplitude does NOT affect T. Draw energy bar diagrams at x=0 and x=A.',
+    strategy:'Identify what controls T. Draw energy bar diagrams at x=0 and x=±A.',
   },
   {
-    num:'8', title:'Waves, Sound & Circuits', pct:'25–33% combined',
-    desc:'Wave properties, standing waves in strings and pipes, the Doppler effect, and DC circuit analysis.',
+    num:'8', title:'Waves, Sound & Circuits', pct:'25–33%', color:'#f05e5e',
+    desc:'Wave properties, standing waves, Doppler effect, and DC circuit analysis — all combined in the final exam block.',
     topics:[
-      {h:'Wave Basics', p:'v = fλ. Transverse: displacement ⊥ wave travel (string). Longitudinal: displacement ∥ (sound).'},
-      {h:'Standing Waves: Strings', p:'Both ends fixed = nodes. fn = nv/2L; n = 1,2,3...'},
-      {h:'Standing Waves: Pipes', p:'Open-open same as strings. Open-closed: fn = nv/4L; n = 1,3,5... (odd only).'},
-      {h:'Doppler Effect', p:'Source approaching observer → higher perceived frequency. Receding → lower.'},
-      {h:'DC Circuits', p:'V=IR. Series: same I, R_total=ΣRᵢ. Parallel: same V, 1/R_total=Σ1/Rᵢ. P=IV=I²R=V²/R.'},
+      {h:'Wave Basics',p:'v=fλ. Transverse: displacement ⊥ motion (string). Longitudinal: ∥ (sound).'},
+      {h:'Standing Waves: Strings',p:'Both ends fixed=nodes. fn=nv/2L; n=1,2,3...'},
+      {h:'Standing Waves: Pipes',p:'Open-open: same as strings. Open-closed: fn=nv/4L; n=1,3,5 (odd only).'},
+      {h:'Doppler Effect',p:'Source approaching → higher perceived f. Receding → lower.'},
+      {h:'DC Circuits',p:'V=IR. Series: same I, R_total=ΣRᵢ. Parallel: same V, 1/R=Σ1/Rᵢ. P=IV=I²R=V²/R.'},
     ],
     formulas:[
-      {f:'v = fλ', d:'Wave speed'},
-      {f:'fn = nv/2L', d:'String or open-open pipe; n=1,2,3...'},
-      {f:'fn = nv/4L', d:'Open-closed pipe; n=1,3,5 only'},
-      {f:'V = IR', d:'Ohm\'s Law'},
-      {f:'P = IV = I²R = V²/R', d:'Power in a resistor'},
-      {f:'R_series = R₁+R₂+...', d:'Series resistors'},
-      {f:'1/R_parallel = 1/R₁+1/R₂+...', d:'Parallel resistors'},
+      {f:'v = fλ',d:'Wave speed equation'},
+      {f:'fn = nv/2L',d:'String or open-open pipe; n=1,2,3...'},
+      {f:'fn = nv/4L',d:'Open-closed pipe; n=1,3,5 (odd only!)'},
+      {f:'V = IR',d:'Ohm\'s Law'},
+      {f:'P = IV = I²R = V²/R',d:'Power in a resistor'},
+      {f:'R_series = R₁+R₂+...',d:'Series resistance'},
+      {f:'1/R_par = 1/R₁+1/R₂+...',d:'Parallel resistance'},
     ],
     traps:[
-      {l:'Open-closed pipe: odd harmonics only', t:'fn = nv/4L with n = 1,3,5 only. The 2nd harmonic does NOT exist for open-closed pipes.'},
-      {l:'Open end = antinode; closed end = node', t:'This determines which harmonics exist and what the wave pattern looks like inside the pipe or on the string.'},
-      {l:'Adding parallel resistor always decreases R_total', t:'R_total < any individual R in parallel. More paths = easier for current to flow.'},
+      {l:'Open-closed: odd harmonics only',t:'fn=nv/4L with n=1,3,5 only. Second harmonic does NOT exist for open-closed pipes.'},
+      {l:'Open end=antinode, closed=node',t:'This determines the wave shape inside and which harmonics exist.'},
+      {l:'Adding parallel R always decreases total R',t:'R_total < any individual R in parallel. More paths = easier for current.'},
     ],
     tips:[
-      'Draw the standing wave pattern. Count nodes and antinodes to identify the harmonic.',
-      'Series circuit: same current everywhere. Largest R drops most voltage.',
-      'Parallel circuit: same voltage across all branches. Smallest R carries most current.',
+      'Draw the wave pattern first. Count nodes/antinodes to find the harmonic.',
+      'Series: same current, largest R drops most V. Parallel: same V, smallest R carries most I.',
+      'Ammeters in series (low R). Voltmeters in parallel (high R).',
     ],
-    strategy:'Waves: draw the pattern, count half-wavelengths. Circuits: simplify step-by-step (combine series/parallel), find total I, backsolve.',
+    strategy:'Waves: draw pattern, count half-wavelengths. Circuits: simplify step-by-step, find total I, backsolve.',
   },
 ];
 
-const FLASHCARDS = [
-  {unit:'Kinematics',q:'What does the slope of a position-time (x-t) graph represent?',a:'Velocity'},
-  {unit:'Kinematics',q:'What does the area under a velocity-time (v-t) graph represent?',a:'Displacement'},
-  {unit:'Kinematics',q:'At the peak of a projectile, what is the acceleration?',a:'Still −9.8 m/s² downward. Acceleration is NEVER zero during free fall.'},
+const CARDS_BASE = [
+  {unit:'Kinematics',q:'Slope of position-time (x-t) graph?',a:'Velocity'},
+  {unit:'Kinematics',q:'Area under velocity-time (v-t) graph?',a:'Displacement'},
+  {unit:'Kinematics',q:'Acceleration at the peak of a projectile?',a:'Still −9.8 m/s² downward. NEVER zero during free fall.'},
   {unit:'Kinematics',q:'Kinematic equation with no time variable.',a:'v² = v₀² + 2aΔx'},
-  {unit:'Kinematics',q:'If initial speed doubles, stopping distance changes by what factor?',a:'×4 (stopping distance ∝ v² — quadratic)'},
-  {unit:'Kinematics',q:'Horizontal velocity of a projectile in flight (no air resistance)?',a:'Constant — it never changes. a_x = 0.'},
-  {unit:'Forces',q:'State Newton\'s Second Law.',a:'ΣF = ma — net force equals mass × acceleration in that direction'},
-  {unit:'Forces',q:'Normal force on a 5 kg mass on a 30° frictionless ramp.',a:'N = mg cos30° ≈ 42.4 N — NOT equal to mg'},
-  {unit:'Forces',q:'Static vs kinetic friction — which is larger?',a:'Static (μ_s > μ_k always). Static adjusts; kinetic is constant once sliding.'},
-  {unit:'Forces',q:'Atwood machine (m₁ > m₂): acceleration formula.',a:'a = (m₁−m₂)g / (m₁+m₂). Write separate FBDs for each mass.'},
-  {unit:'Forces',q:'What is centripetal force?',a:'The NET inward force causing circular motion. NOT a new separate force. F_c = mv²/r'},
-  {unit:'Forces',q:'Normal force in an upward-accelerating elevator.',a:'N = m(g + a). Greater than weight.'},
-  {unit:'Energy',q:'Kinetic energy formula. How does it scale with velocity?',a:'KE = ½mv². Quadratic: double v → KE ×4.'},
-  {unit:'Energy',q:'Spring PE — what is x measured from?',a:'From equilibrium (natural length position), NOT from natural length.'},
-  {unit:'Energy',q:'When is mechanical energy conserved?',a:'When ONLY conservative forces act (gravity, springs). Friction and drag break conservation.'},
-  {unit:'Energy',q:'Work done by a force perpendicular to displacement.',a:'Zero. W = Fd cosθ; θ=90° → cos90°=0.'},
+  {unit:'Kinematics',q:'Initial speed doubles → stopping distance changes by?',a:'×4. Stopping distance ∝ v² (quadratic).'},
+  {unit:'Kinematics',q:'Horizontal velocity of projectile in flight?',a:'Constant. a_x = 0 in projectile motion.'},
+  {unit:'Kinematics',q:'What does a curved x-t graph indicate?',a:'Non-zero (changing) velocity — the slope is changing, meaning acceleration exists.'},
+  {unit:'Forces',q:'Newton\'s Second Law.',a:'ΣF = ma — net force equals mass × acceleration in that direction.'},
+  {unit:'Forces',q:'Normal force on 5 kg mass on 30° ramp.',a:'N = mg cos30° ≈ 42 N. NOT equal to mg on inclines!'},
+  {unit:'Forces',q:'Static vs kinetic friction — which is larger?',a:'Static (μ_s > μ_k always). Static adjusts; kinetic is constant.'},
+  {unit:'Forces',q:'Atwood machine with m₁ > m₂: acceleration?',a:'a = (m₁−m₂)g / (m₁+m₂). Write separate FBDs for each mass.'},
+  {unit:'Forces',q:'Centripetal force is...?',a:'The NET inward force causing circular motion. NOT a new separate force. F_c = mv²/r.'},
+  {unit:'Forces',q:'Normal force in upward-accelerating elevator?',a:'N = m(g+a). Greater than weight at rest.'},
+  {unit:'Energy',q:'KE formula and how it scales with v.',a:'KE = ½mv². Quadratic: double v → KE ×4.'},
+  {unit:'Energy',q:'What is x in PE_spring = ½kx²?',a:'Displacement from equilibrium (NOT from natural/unstretched length).'},
+  {unit:'Energy',q:'When is mechanical energy conserved?',a:'When ONLY conservative forces act (gravity, springs). Friction and drag break it.'},
+  {unit:'Energy',q:'Work by force perpendicular to displacement?',a:'Zero. W = Fd cosθ; θ=90° → cos90°=0.'},
   {unit:'Energy',q:'Work-energy theorem.',a:'W_net = ΔKE. Net work done on object = change in its kinetic energy.'},
-  {unit:'Momentum',q:'State conservation of momentum.',a:'p_before = p_after, when no external net force acts. A vector law — check signs.'},
-  {unit:'Momentum',q:'Elastic vs perfectly inelastic collision.',a:'Elastic: p AND KE conserved. Perfectly inelastic: objects stick, only p conserved.'},
-  {unit:'Momentum',q:'What is impulse?',a:'J = FΔt = Δp. Change in momentum. Area under F-t graph.'},
-  {unit:'Momentum',q:'Ballistic pendulum: what two principles are used?',a:'Step 1: conservation of momentum (collision). Step 2: conservation of energy (swing). Must be done in this order.'},
-  {unit:'Momentum',q:'In an explosion starting from rest, what is the total final momentum?',a:'Still zero. Pieces go in opposite directions with equal and opposite momenta.'},
-  {unit:'Rotation',q:'Rotational analog of Newton\'s 2nd Law.',a:'Στ = Iα — net torque = moment of inertia × angular acceleration'},
-  {unit:'Rotation',q:'Moment of inertia of a solid sphere.',a:'I = 2/5 mr²'},
-  {unit:'Rotation',q:'Moment of inertia of a solid cylinder/disk.',a:'I = 1/2 mr²'},
-  {unit:'Rotation',q:'Parallel Axis Theorem.',a:'I = I_cm + Md² — shifting axis away from CM always increases I'},
-  {unit:'Rotation',q:'Rolling without slipping: key constraint.',a:'v_cm = rω and a_cm = rα. These link translational and rotational motion.'},
-  {unit:'Rotation',q:'Rolling race: fastest shape down a ramp?',a:'Solid sphere (I/mr² = 2/5 is smallest). Least rotational inertia → most translational KE.'},
-  {unit:'Angular Momentum',q:'When is angular momentum conserved?',a:'When net external torque is zero (Στ_ext = 0).'},
-  {unit:'Angular Momentum',q:'Ice skater pulls arms in: what happens?',a:'I decreases → ω increases (L = Iω conserved). KE increases (muscles do work).'},
-  {unit:'SHM',q:'What determines the period of a spring-mass system?',a:'T = 2π√(m/k). Only m and k. Amplitude does NOT matter.'},
-  {unit:'SHM',q:'What determines the period of a simple pendulum?',a:'T = 2π√(L/g). Only length and gravity. Mass and amplitude do NOT matter.'},
-  {unit:'SHM',q:'Position and speed in SHM: where is speed maximum?',a:'At the equilibrium position (x = 0). That\'s where KE is maximum and PE is zero.'},
-  {unit:'SHM',q:'Double the amplitude in SHM: how does total energy change?',a:'E = ½kA² → energy quadruples (E ∝ A²). Period is UNCHANGED.'},
-  {unit:'Waves',q:'Wave speed equation.',a:'v = fλ — wave speed = frequency × wavelength'},
-  {unit:'Waves',q:'Standing wave harmonics for a string (both ends fixed).',a:'fn = nv/2L for n = 1,2,3,... Fundamental: L = λ/2'},
-  {unit:'Waves',q:'Open-closed pipe: which harmonics are allowed?',a:'Odd harmonics only: n = 1,3,5,... → fn = nv/4L'},
-  {unit:'Waves',q:'Open end of a pipe vs closed end: nodes or antinodes?',a:'Open end → antinode (particles free to move). Closed end → node (particles cannot move).'},
+  {unit:'Momentum',q:'Conservation of momentum stated.',a:'p_before = p_after when no external net force. Vector law — signs matter!'},
+  {unit:'Momentum',q:'Elastic vs perfectly inelastic collision.',a:'Elastic: p AND KE conserved. Perfectly inelastic: stick together, only p conserved.'},
+  {unit:'Momentum',q:'Impulse definition.',a:'J = FΔt = Δp. Change in momentum. Area under F-t graph.'},
+  {unit:'Momentum',q:'Ballistic pendulum — two principles used?',a:'Step 1: conservation of momentum (collision). Step 2: conservation of energy (swing). Must be in this order.'},
+  {unit:'Momentum',q:'In explosion from rest, total final momentum is?',a:'Still zero. Pieces go opposite directions with equal and opposite momenta.'},
+  {unit:'Rotation',q:'Rotational analog of Newton\'s 2nd Law.',a:'Στ = Iα — torque = moment of inertia × angular acceleration.'},
+  {unit:'Rotation',q:'Moment of inertia of solid sphere.',a:'I = ⅖mr²'},
+  {unit:'Rotation',q:'Moment of inertia of solid cylinder/disk.',a:'I = ½mr²'},
+  {unit:'Rotation',q:'Parallel Axis Theorem.',a:'I = I_cm + Md². Shifting axis away from CM always increases I.'},
+  {unit:'Rotation',q:'Rolling no-slip constraint.',a:'v_cm = rω and a_cm = rα. Links translational and rotational motion.'},
+  {unit:'Rotation',q:'Rolling race — which shape wins?',a:'Solid sphere (I/mr²=2/5 smallest). Least rotational inertia → most translational KE.'},
+  {unit:'Angular Momentum',q:'Angular momentum conserved when?',a:'When net external torque is zero (Στ_ext = 0).'},
+  {unit:'Angular Momentum',q:'Ice skater pulls arms in — what happens to ω and KE?',a:'ω increases (L = Iω conserved, I decreases). KE increases (muscles do work).'},
+  {unit:'SHM',q:'What determines period of spring-mass system?',a:'T = 2π√(m/k). Only m and k. Amplitude does NOT affect T.'},
+  {unit:'SHM',q:'What determines period of pendulum?',a:'T = 2π√(L/g). Only L and g. Mass and amplitude do NOT affect T.'},
+  {unit:'SHM',q:'Where is speed maximum in SHM?',a:'At equilibrium (x=0). That\'s where KE is maximum and PE is zero.'},
+  {unit:'SHM',q:'Double amplitude in SHM — energy change?',a:'E = ½kA² → energy ×4 (E ∝ A²). Period is UNCHANGED.'},
+  {unit:'Waves',q:'Wave speed equation.',a:'v = fλ — speed = frequency × wavelength.'},
+  {unit:'Waves',q:'String harmonics (both ends fixed).',a:'fn = nv/2L for n=1,2,3,... Fundamental (n=1): L=λ/2.'},
+  {unit:'Waves',q:'Open-closed pipe — which harmonics?',a:'Odd only: n=1,3,5,... → fn=nv/4L.'},
+  {unit:'Waves',q:'Open end vs closed end of pipe?',a:'Open end → antinode. Closed end → node.'},
   {unit:'Circuits',q:'Ohm\'s Law.',a:'V = IR'},
   {unit:'Circuits',q:'Three power formulas for a resistor.',a:'P = IV = I²R = V²/R'},
-  {unit:'Circuits',q:'Resistors in series vs. parallel: which has larger R_total?',a:'Series always gives larger R_total. Parallel always gives smaller R_total than any individual resistor.'},
+  {unit:'Circuits',q:'Resistors in series vs parallel — total R?',a:'Series: R_total=R₁+R₂+... (larger). Parallel: smaller than any individual R.'},
 ];
 
-const MCQ = [
-  {unit:'Kinematics',q:'A ball is thrown horizontally at 20 m/s from a cliff. It lands 3 s later. How far from the base of the cliff does it land?',opts:['30 m','45 m','60 m','90 m'],ans:2,exp:'a_x = 0, so x = v_x × t = 20 × 3 = 60 m. Horizontal velocity is constant in projectile motion.',trap:'Do NOT use kinematic equations with a in the horizontal direction — a_x = 0.'},
-  {unit:'Kinematics',q:'A car brakes from 30 m/s to rest. If it braked from 60 m/s instead (same deceleration), stopping distance would be:',opts:['Same','2× longer','4× longer','8× longer'],ans:2,exp:'v² = v₀² + 2aΔx → Δx ∝ v₀². Doubling v₀ → distance ×4.',trap:'Stopping distance is quadratic in v, not linear.'},
-  {unit:'Kinematics',q:'At the very top of a ball\'s trajectory (thrown upward), the acceleration is:',opts:['Zero','9.8 m/s² upward','9.8 m/s² downward','Depends on throw angle'],ans:2,exp:'Gravity acts continuously at 9.8 m/s² downward throughout free flight, even at the peak.',trap:'Speed is zero at the peak, but acceleration is NEVER zero during free fall.'},
-  {unit:'Forces',q:'A 10 kg box sits on a ramp angled at 30°. The normal force from the ramp is:',opts:['98 N','85 N','49 N','78 N'],ans:1,exp:'N = mg cosθ = 10 × 9.8 × cos30° = 98 × 0.866 ≈ 85 N.',trap:'N ≠ mg on an incline. Normal force is the perpendicular component only.'},
-  {unit:'Forces',q:'Two blocks connected by a string: m₁=6 kg, m₂=2 kg, frictionless Atwood. Acceleration is:',opts:['9.8 m/s²','2.45 m/s²','4.9 m/s²','19.6 m/s²'],ans:2,exp:'a = (m₁−m₂)g/(m₁+m₂) = (4)(9.8)/8 = 4.9 m/s²',trap:'Write separate FBDs for each mass. Tensions appear in both equations — add them to eliminate T.'},
-  {unit:'Forces',q:'A car rounds a flat circular curve. The centripetal force is provided by:',opts:['The engine force','Gravity','Static friction','The normal force'],ans:2,exp:'On a flat curve, static friction from the road provides the centripetal (inward) force.',trap:'Centripetal force is NOT a new force — it\'s whichever existing force points inward.'},
-  {unit:'Energy',q:'A 2 kg ball drops from rest from 5 m. Speed just before hitting the ground? (g=10)',opts:['5 m/s','7.1 m/s','10 m/s','50 m/s'],ans:2,exp:'mgh = ½mv² → v = √(2gh) = √(100) = 10 m/s',trap:''},
-  {unit:'Energy',q:'A spring (k=500 N/m) is compressed 0.2 m. A 0.5 kg ball is launched. What is its launch speed?',opts:['4 m/s','8 m/s','10 m/s','20 m/s'],ans:2,exp:'½kx² = ½mv² → v = x√(k/m) = 0.2×√(500/0.5) = 0.2×√1000 = 0.2×31.6 ≈ 6.3. Let me redo: v²=kx²/m=500×0.04/0.5=40 → v=√40≈6.3. Closest: use energy conservation ½(500)(0.04)=½(0.5)v² → 10=0.25v² → v²=40 → v≈6.3 m/s. None match exactly — answer is approximately 6.3 m/s; concept shown.',trap:'Use ½kx²=½mv². x is displacement from equilibrium.'},
-  {unit:'Energy',q:'Stopping distance is proportional to what power of initial speed?',opts:['v¹','v²','v³','v½'],ans:1,exp:'Using v²=v₀²+2aΔx with v=0: Δx = v₀²/(2a). Distance ∝ v₀².',trap:''},
-  {unit:'Momentum',q:'A 1500 kg car at 20 m/s collides and sticks with a 500 kg car at rest. Final speed:',opts:['15 m/s','10 m/s','20 m/s','5 m/s'],ans:0,exp:'m₁v₁ = (m₁+m₂)v_f → 1500×20 = 2000×v_f → v_f = 30000/2000 = 15 m/s',trap:'Perfectly inelastic — objects stick together. p conserved; KE is not.'},
-  {unit:'Momentum',q:'A 0.5 kg ball hits a wall at 10 m/s and bounces back at 8 m/s. Impulse magnitude from wall:',opts:['1 N·s','5 N·s','9 N·s','18 N·s'],ans:2,exp:'J = |Δp| = m|v_f − v_i| = 0.5|−8−(+10)| = 0.5×18 = 9 N·s.',trap:'Bouncing back means final velocity is negative. Δv = −8−(+10) = −18. Never just subtract magnitudes.'},
-  {unit:'Rotation',q:'A solid sphere and a hollow cylinder of equal mass and radius roll from rest down the same ramp. Which arrives first?',opts:['Hollow cylinder','Solid sphere','They tie','Impossible to determine'],ans:1,exp:'KE = ½mv²(1+I/mr²). Sphere: factor=1+2/5=1.4. Hollow cylinder: factor=1+1=2. Sphere has less rotational inertia → more translational speed.',trap:'Mass and radius cancel out! Only the shape (I/mr² ratio) determines the winner.'},
-  {unit:'Rotation',q:'A disk has I=0.4 kg·m². A torque of 8 N·m acts on it. Angular acceleration is:',opts:['20 rad/s²','3.2 rad/s²','0.05 rad/s²','4 rad/s²'],ans:0,exp:'Στ = Iα → α = τ/I = 8/0.4 = 20 rad/s²',trap:''},
-  {unit:'Angular Momentum',q:'A spinning skater (I=2 kg·m², ω=3 rad/s) pulls arms in, reducing I to 0.5 kg·m². New ω:',opts:['0.75 rad/s','6 rad/s','12 rad/s','3 rad/s'],ans:2,exp:'Conservation of L: I_i·ω_i = I_f·ω_f → 2×3 = 0.5×ω_f → ω_f = 6/0.5 = 12 rad/s',trap:'L=Iω is conserved. Smaller I → larger ω to keep L constant.'},
-  {unit:'SHM',q:'A spring-mass system has period T. The mass is quadrupled. New period:',opts:['T/2','T','2T','4T'],ans:2,exp:'T = 2π√(m/k). If m → 4m: T_new = 2π√(4m/k) = 2×2π√(m/k) = 2T.',trap:'T ∝ √m. Quadrupling m → multiplying T by √4 = 2.'},
-  {unit:'SHM',q:'A pendulum clock on Earth has T = 2 s. On a planet where g = 2.45 m/s², period is:',opts:['1 s','2 s','4 s','8 s'],ans:2,exp:'T ∝ 1/√g. g_planet = 2.45 = g_Earth/4. T_new = T × √(g_E/g_P) = 2 × √4 = 4 s.',trap:'T = 2π√(L/g). Lower g → longer period.'},
-  {unit:'Waves',q:'A string of length 1.2 m produces a fundamental frequency of 125 Hz. Wave speed in the string:',opts:['104 m/s','150 m/s','300 m/s','250 m/s'],ans:2,exp:'Fundamental: L = λ/2 → λ = 2L = 2.4 m. v = fλ = 125 × 2.4 = 300 m/s.',trap:'For a string fixed at both ends, the fundamental mode has L = λ/2, not L = λ.'},
-  {unit:'Waves',q:'An open-closed pipe of length 0.3 m. Fundamental frequency? (v_sound=340 m/s)',opts:['567 Hz','283 Hz','1133 Hz','170 Hz'],ans:1,exp:'Open-closed fundamental: L = λ/4 → λ = 4L = 1.2 m. f = v/λ = 340/1.2 ≈ 283 Hz.',trap:'Open-closed pipe: fundamental has L = λ/4 (one quarter wave), not L = λ/2.'},
-  {unit:'Circuits',q:'Two resistors (6Ω and 3Ω) in parallel. Total resistance:',opts:['9Ω','3Ω','4.5Ω','2Ω'],ans:3,exp:'1/R = 1/6 + 1/3 = 1/6 + 2/6 = 3/6 = 1/2 → R = 2Ω',trap:'Parallel resistance is always LESS than either individual resistor.'},
-  {unit:'Circuits',q:'A 12 V battery powers a 4Ω resistor in series with a 2Ω resistor. Voltage across the 4Ω:',opts:['8 V','4 V','6 V','12 V'],ans:0,exp:'Series: R_total=6Ω. I=V/R=12/6=2A. V₄=I×R=2×4=8V.',trap:'In series, voltage divides proportionally to resistance. Largest R drops most voltage.'},
+const MCQ_BANK = [
+  {unit:'Kinematics',q:'A ball thrown horizontally at 20 m/s from a cliff hits the ground 3 s later. Horizontal distance?',opts:['30 m','45 m','60 m','90 m'],ans:2,exp:'x = v_x × t = 20 × 3 = 60 m. a_x = 0 in projectile motion.',trap:'Do NOT use kinematic equations with a in the horizontal direction — a_x = 0.'},
+  {unit:'Kinematics',q:'A car brakes from 30 m/s to rest. If it had been going 60 m/s instead (same deceleration), stopping distance would be:',opts:['Same','2× longer','4× longer','8× longer'],ans:2,exp:'Δx ∝ v₀² (from v²=v₀²+2aΔx). Doubling v₀ → distance ×4.',trap:'Stopping distance is quadratic in v, not linear.'},
+  {unit:'Kinematics',q:'At the peak of a ball thrown upward, acceleration is:',opts:['Zero','9.8 m/s² upward','9.8 m/s² downward','Depends on angle'],ans:2,exp:'Gravity acts continuously at 9.8 m/s² downward throughout free flight.',trap:'Speed is zero at peak, but acceleration is NEVER zero during free fall.'},
+  {unit:'Forces',q:'10 kg box on a 30° ramp. Normal force?',opts:['98 N','85 N','49 N','56 N'],ans:1,exp:'N = mg cosθ = 10×9.8×cos30° ≈ 85 N.',trap:'N ≠ mg on an incline. Normal force is the perpendicular component only.'},
+  {unit:'Forces',q:'Atwood machine: m₁=6 kg, m₂=2 kg, frictionless. Acceleration?',opts:['9.8 m/s²','2.45 m/s²','4.9 m/s²','1.6 m/s²'],ans:2,exp:'a=(m₁−m₂)g/(m₁+m₂) = 4×9.8/8 = 4.9 m/s²',trap:'Write separate FBDs. Tensions appear in both equations.'},
+  {unit:'Forces',q:'Car on flat circular curve. Centripetal force provided by:',opts:['Engine force','Gravity','Static friction','Normal force'],ans:2,exp:'On a flat curve, static friction provides the centripetal (inward) force.',trap:'Centripetal force is not a new force — it\'s whichever existing force points inward.'},
+  {unit:'Energy',q:'2 kg ball drops 5 m from rest. Speed before hitting ground? (g=10)',opts:['5 m/s','7.1 m/s','10 m/s','14 m/s'],ans:2,exp:'mgh=½mv² → v=√(2gh)=√100=10 m/s.',trap:''},
+  {unit:'Energy',q:'Stopping distance is proportional to which power of initial speed?',opts:['v¹','v²','v³','v^0.5'],ans:1,exp:'From v²=v₀²+2aΔx with v=0: Δx=v₀²/2a. Distance ∝ v₀².',trap:''},
+  {unit:'Momentum',q:'1500 kg car at 20 m/s collides and sticks with 500 kg car at rest. Final speed?',opts:['15 m/s','10 m/s','20 m/s','5 m/s'],ans:0,exp:'m₁v₁=(m₁+m₂)v_f → 1500×20=2000×v_f → v_f=15 m/s.',trap:'Perfectly inelastic — objects stick. Only p conserved.'},
+  {unit:'Momentum',q:'0.5 kg ball hits wall at 10 m/s, bounces back at 8 m/s. Impulse magnitude?',opts:['1 N·s','5 N·s','9 N·s','18 N·s'],ans:2,exp:'J=|Δp|=m|v_f−v_i|=0.5×|−8−10|=0.5×18=9 N·s.',trap:'Bouncing means v_final is negative. Δv=−8−(+10)=−18. Never just subtract magnitudes.'},
+  {unit:'Rotation',q:'Solid sphere vs hollow cylinder (same m, r) roll down ramp. Which arrives first?',opts:['Hollow cylinder','Solid sphere','They tie','Cannot determine'],ans:1,exp:'KE=½mv²(1+I/mr²). Sphere: 1+2/5=1.4. Hollow cylinder: 1+1=2. Sphere has less rotational inertia → faster.',trap:'Mass and radius cancel. Only the shape (I/mr² ratio) determines the winner.'},
+  {unit:'Rotation',q:'Disk with I=0.4 kg·m², torque of 8 N·m. Angular acceleration?',opts:['20 rad/s²','3.2 rad/s²','0.05 rad/s²','4 rad/s²'],ans:0,exp:'Στ=Iα → α=τ/I=8/0.4=20 rad/s².',trap:''},
+  {unit:'Angular Momentum',q:'Spinning skater (I=2 kg·m², ω=3 rad/s) pulls arms in to I=0.5 kg·m². New ω?',opts:['0.75 rad/s','6 rad/s','12 rad/s','3 rad/s'],ans:2,exp:'L conserved: I_i·ω_i=I_f·ω_f → 2×3=0.5×ω_f → ω_f=12 rad/s.',trap:'L=Iω conserved. Smaller I → larger ω.'},
+  {unit:'SHM',q:'Spring-mass period T. Mass quadrupled. New period?',opts:['T/2','T','2T','4T'],ans:2,exp:'T=2π√(m/k). Quadrupling m: T_new=2π√(4m/k)=2T.',trap:'T ∝ √m. Quadrupling m → T×√4=T×2.'},
+  {unit:'SHM',q:'Pendulum clock on Earth T=2 s. On planet with g=2.45 m/s², period?',opts:['1 s','2 s','4 s','8 s'],ans:2,exp:'T∝1/√g. g_planet=g_Earth/4. T_new=T×√(g_E/g_P)=2×√4=4 s.',trap:'T=2π√(L/g). Lower g → longer T.'},
+  {unit:'Waves',q:'String 1.2 m long, fundamental frequency 125 Hz. Wave speed?',opts:['104 m/s','150 m/s','300 m/s','250 m/s'],ans:2,exp:'Fundamental: L=λ/2 → λ=2.4 m. v=fλ=125×2.4=300 m/s.',trap:'Fundamental has L=λ/2, not L=λ.'},
+  {unit:'Waves',q:'Open-closed pipe, L=0.3 m. Fundamental frequency? (v=340 m/s)',opts:['567 Hz','283 Hz','1133 Hz','170 Hz'],ans:1,exp:'Open-closed: L=λ/4 → λ=1.2 m. f=v/λ=340/1.2≈283 Hz.',trap:'Open-closed fundamental has L=λ/4.'},
+  {unit:'Circuits',q:'6Ω and 3Ω in parallel. Total resistance?',opts:['9Ω','3Ω','4.5Ω','2Ω'],ans:3,exp:'1/R=1/6+1/3=1/6+2/6=1/2 → R=2Ω.',trap:'Parallel R is always less than either individual resistor.'},
+  {unit:'Circuits',q:'12 V battery, 4Ω and 2Ω in series. Voltage across 4Ω resistor?',opts:['8 V','4 V','6 V','3 V'],ans:0,exp:'R_total=6Ω. I=12/6=2A. V₄Ω=2×4=8V.',trap:'In series, voltage divides proportionally to resistance.'},
+  {unit:'Kinematics',q:'Object at x=0 moving right, decelerating at 5 m/s² with initial speed 10 m/s. When does it stop?',opts:['1 s','2 s','0.5 s','5 s'],ans:1,exp:'v=v₀+at → 0=10+(−5)t → t=2 s.',trap:'Deceleration means a is opposite to v. Set v=0 and solve.'},
 ];
+
+const FRQ_BANK = [
+  {
+    title:'Block on Inclined Plane',
+    unit:'Forces',points:12,
+    prompt:'A 4.0 kg block rests on a frictionless inclined plane that makes a 30° angle with the horizontal. A light string attached to the block runs parallel to the incline, over a massless frictionless pulley at the top, and connects to a hanging mass m₂ = 1.5 kg.',
+    diagram:`     [m₁=4 kg]──────string──────[pulley]
+         ↑  (30° incline)                    │
+         │                               [m₂=1.5 kg]`,
+    parts:[
+      {label:'Part (a)',pts:'3 pts',prompt:'Draw and label free-body diagrams for BOTH the block on the incline AND the hanging mass. Show all forces.',rubric:[
+        {pts:'+1',text:'Block FBD shows: weight mg downward, normal force N perpendicular to incline, tension T up the incline.'},
+        {pts:'+1',text:'Hanging mass FBD shows: weight m₂g downward, tension T upward.'},
+        {pts:'+1',text:'Tension magnitudes labeled as equal in both diagrams (massless string over massless pulley).'},
+      ]},
+      {label:'Part (b)',pts:'4 pts',prompt:'Derive an expression for the acceleration of the system in terms of m₁, m₂, g, and θ.',rubric:[
+        {pts:'+1',text:'Correctly writes ΣF=ma for block on incline: T − m₁g sinθ = m₁a'},
+        {pts:'+1',text:'Correctly writes ΣF=ma for hanging mass: m₂g − T = m₂a'},
+        {pts:'+1',text:'Adds equations to eliminate T: m₂g − m₁g sinθ = (m₁+m₂)a'},
+        {pts:'+1',text:'Solves for a = (m₂ − m₁ sinθ)g / (m₁+m₂), or substitutes values: a = (1.5−4×0.5)(9.8)/5.5 ≈ −0.89 m/s² (block slides down)'},
+      ]},
+      {label:'Part (c)',pts:'3 pts',prompt:'Calculate the tension in the string.',rubric:[
+        {pts:'+1',text:'Uses T = m₂(g−a) with correct a value.'},
+        {pts:'+1',text:'Substitutes values correctly.'},
+        {pts:'+1',text:'Gets T ≈ m₂(g−a) = 1.5(9.8+0.89) ≈ 16.0 N (note: a is negative means block goes down, so tension increases)'},
+      ]},
+      {label:'Part (d)',pts:'2 pts',prompt:'Now suppose there is friction (μ_k = 0.20) between the block and incline. Would the magnitude of acceleration increase, decrease, or stay the same? Justify.',rubric:[
+        {pts:'+1',text:'States: acceleration magnitude decreases.'},
+        {pts:'+1',text:'Justification: friction force opposes motion, adding a term −μ_kN = −μ_k m₁g cosθ to the net force equation, reducing net force and hence acceleration.'},
+      ]},
+    ],
+  },
+  {
+    title:'Conservation of Energy — Roller Coaster',
+    unit:'Energy',points:10,
+    prompt:'A 500 kg roller coaster car starts from rest at point A (height h = 30 m above the ground). It travels along a frictionless track through points B (ground level) and C (height 12 m). Assume g = 10 m/s².',
+    diagram:`  A(h=30m) ──────────────── C(h=12m)
+      ↓                                  
+      └─────── B (ground, h=0) ──────────`,
+    parts:[
+      {label:'Part (a)',pts:'3 pts',prompt:'Find the speed of the car at point B (ground level).',rubric:[
+        {pts:'+1',text:'States conservation of energy: KE_A + PE_A = KE_B + PE_B'},
+        {pts:'+1',text:'Substitutes correctly: 0 + mgh_A = ½mv²_B + 0'},
+        {pts:'+1',text:'Solves: v_B = √(2gh) = √(2×10×30) = √600 ≈ 24.5 m/s'},
+      ]},
+      {label:'Part (b)',pts:'3 pts',prompt:'Find the speed of the car at point C (height 12 m).',rubric:[
+        {pts:'+1',text:'Applies conservation of energy from A to C (or B to C).'},
+        {pts:'+1',text:'mg h_A = ½mv²_C + mg h_C → v²_C = 2g(h_A − h_C) = 2×10×18 = 360'},
+        {pts:'+1',text:'v_C = √360 ≈ 19.0 m/s'},
+      ]},
+      {label:'Part (c)',pts:'2 pts',prompt:'If friction does −15,000 J of work on the car between A and B, find the speed at B.',rubric:[
+        {pts:'+1',text:'Applies work-energy theorem: KE_B = KE_A + PE_A + W_friction = mgh_A + W_f'},
+        {pts:'+1',text:'½mv²_B = 500×10×30 − 15000 = 150000 − 15000 = 135000 J → v_B = √(2×135000/500) = √540 ≈ 23.2 m/s'},
+      ]},
+      {label:'Part (d)',pts:'2 pts',prompt:'Explain why the car\'s speed at C (frictionless) is less than at B, even though both are found using conservation of energy from point A.',rubric:[
+        {pts:'+1',text:'At C, the car has gained gravitational PE (height 12 m) compared to B.'},
+        {pts:'+1',text:'Energy conservation requires: the increase in PE must come at the expense of KE, so speed at C < speed at B.'},
+      ]},
+    ],
+  },
+  {
+    title:'Rotational Motion — Rolling Cylinder',
+    unit:'Rotation',points:10,
+    prompt:'A solid cylinder (mass M = 2.0 kg, radius R = 0.15 m) starts from rest at the top of a ramp of height h = 0.80 m and rolls without slipping to the bottom.',
+    diagram:`      [cylinder, M=2kg, R=0.15m]
+        \\   h = 0.80 m
+         \\
+          \\_____ (bottom)`,
+    parts:[
+      {label:'Part (a)',pts:'3 pts',prompt:'Using energy conservation, find the speed of the cylinder\'s center of mass at the bottom of the ramp.',rubric:[
+        {pts:'+1',text:'States: mgh = ½mv² + ½Iω² (both translational and rotational KE)'},
+        {pts:'+1',text:'Substitutes I=½MR² and uses rolling constraint v=Rω → ω=v/R: mgh = ½mv² + ½(½MR²)(v/R)² = ½mv² + ¼mv² = ¾mv²'},
+        {pts:'+1',text:'Solves: v = √(4gh/3) = √(4×10×0.8/3) = √(10.67) ≈ 3.27 m/s'},
+      ]},
+      {label:'Part (b)',pts:'2 pts',prompt:'How would the answer change if the ramp were frictionless and the cylinder slid (did not roll)?',rubric:[
+        {pts:'+1',text:'States: all PE converts to translational KE only: mgh = ½mv² → v = √(2gh) = √16 = 4 m/s'},
+        {pts:'+1',text:'Speed would be greater when sliding (v=4 m/s vs 3.27 m/s) because none of the energy goes into rotational motion.'},
+      ]},
+      {label:'Part (c)',pts:'3 pts',prompt:'If a hollow cylinder (I=MR²) of the same mass and radius were used instead, predict without calculating whether it would reach the bottom faster, slower, or at the same speed as the solid cylinder. Justify.',rubric:[
+        {pts:'+1',text:'States: hollow cylinder would be SLOWER.'},
+        {pts:'+1',text:'Hollow cylinder has larger I (MR² vs ½MR²), so more energy goes into rotational KE for the same v.'},
+        {pts:'+1',text:'This means less translational KE and therefore lower v at the bottom. The rolling factor (1+I/mR²) is larger for hollow cylinder (=2 vs 1.5).'},
+      ]},
+      {label:'Part (d)',pts:'2 pts',prompt:'What provides the net torque that causes the cylinder to rotate as it rolls down the ramp? Does this force do net work on the cylinder?',rubric:[
+        {pts:'+1',text:'Static friction provides the torque (acts at the contact point, tangential to the cylinder).'},
+        {pts:'+1',text:'Static friction does NO net work on the system (in no-slip rolling, the contact point has zero instantaneous velocity, so the friction force acts over zero displacement — no net energy transfer).'},
+      ]},
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════════════
+//  STATE — stored in localStorage
+// ═══════════════════════════════════════════════════════════
+let STATE = {
+  xp: 0,
+  streak: 0,
+  lastStudyDate: null,
+  cardsSrsData: {}, // cardId -> {interval,easeFactor,dueDate,reps}
+  unitAccuracy: {}, // unit -> {correct, total}
+  wrongLog: [],
+  customCards: [],
+  activity: [],
+  todayCards: 0,
+  todayCorrect: 0,
+  todayTotal: 0,
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('physicsOS_v2');
+    if (s) STATE = { ...STATE, ...JSON.parse(s) };
+  } catch(e) {}
+  updateStreak();
+}
+
+function saveState() {
+  try { localStorage.setItem('physicsOS_v2', JSON.stringify(STATE)); } catch(e) {}
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (STATE.lastStudyDate === today) { /* already updated */ }
+  else if (STATE.lastStudyDate === yesterday) { /* will increment on study */ }
+  else if (STATE.lastStudyDate && STATE.lastStudyDate !== yesterday) {
+    STATE.streak = 0; saveState();
+  }
+}
+
+function recordStudyToday(correct) {
+  const today = new Date().toDateString();
+  if (STATE.lastStudyDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (STATE.lastStudyDate === yesterday) STATE.streak++;
+    else if (!STATE.lastStudyDate) STATE.streak = 1;
+    STATE.lastStudyDate = today;
+    STATE.todayCards = 0; STATE.todayCorrect = 0; STATE.todayTotal = 0;
+  }
+  STATE.todayCards++;
+  STATE.todayTotal++;
+  if (correct) STATE.todayCorrect++;
+  saveState();
+  updateTopbarStats();
+}
+
+function addXP(amount) {
+  STATE.xp += amount;
+  saveState();
+  updateTopbarStats();
+  showToast(`⚡ +${amount} XP!`);
+}
+
+function updateTopbarStats() {
+  document.getElementById('streakCount').textContent = STATE.streak;
+  document.getElementById('xpCount').textContent = STATE.xp;
+  document.getElementById('d-streak').textContent = STATE.streak;
+  document.getElementById('d-xp').textContent = STATE.xp;
+  document.getElementById('d-cards').textContent = STATE.todayCards || 0;
+  const acc = STATE.todayTotal > 0 ? Math.round(STATE.todayCorrect/STATE.todayTotal*100)+'%' : '—';
+  document.getElementById('d-correct').textContent = acc;
+
+  // mastery
+  let totalCorrect = 0, totalQ = 0;
+  Object.values(STATE.unitAccuracy).forEach(u => { totalCorrect += u.correct; totalQ += u.total; });
+  const mastery = totalQ > 0 ? Math.round(totalCorrect/totalQ*100) : 0;
+  document.getElementById('masteryPct').textContent = mastery+'%';
+  document.getElementById('masteryBar').style.width = mastery+'%';
+}
+
+function addActivity(icon, text) {
+  STATE.activity.unshift({ icon, text, time: Date.now() });
+  STATE.activity = STATE.activity.slice(0, 10);
+  saveState();
+  renderActivity();
+}
+
+function renderActivity() {
+  const el = document.getElementById('activityList');
+  if (!STATE.activity.length) return;
+  const timeAgo = (ts) => {
+    const d = Date.now() - ts;
+    if (d < 60000) return 'just now';
+    if (d < 3600000) return Math.floor(d/60000)+'m ago';
+    if (d < 86400000) return Math.floor(d/3600000)+'h ago';
+    return Math.floor(d/86400000)+'d ago';
+  };
+  el.innerHTML = STATE.activity.map(a =>
+    `<div class="activity-item"><span class="activity-icon">${a.icon}</span><span class="activity-text">${a.text}</span><span class="activity-time">${timeAgo(a.time)}</span></div>`
+  ).join('');
+}
 
 // ═══════════════════════════════════════════════════════════
 //  NAVIGATION
 // ═══════════════════════════════════════════════════════════
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function nav(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
   if (btn) btn.classList.add('active');
+  if (id === 'flashcards') initFC();
+  if (id === 'dashboard') refreshDashboard();
+  if (id === 'wronglog') renderWrongLog();
 }
 
 // ═══════════════════════════════════════════════════════════
-//  NOTES
+//  UNIT NOTES
 // ═══════════════════════════════════════════════════════════
 function buildNotes() {
-  const g = document.getElementById('unitGrid');
+  const container = document.getElementById('unitsList');
   UNITS.forEach((u, ui) => {
-    const uid = `u${ui}`;
-    const topicsHTML = u.topics.map(t => `<div class="topic"><h4>${t.h}</h4><p>${t.p}</p></div>`).join('');
-    const formulasHTML = u.formulas.map(f => `<div class="formula-row"><span class="fml">${f.f}</span><span class="fml-d">${f.d}</span></div>`).join('');
-    const trapsHTML = u.traps.map(t => `<div class="trap-item"><div class="tl">⚠ ${t.l}</div><p>${t.t}</p></div>`).join('');
-    const tipsHTML = u.tips.map(t => `<div class="tip-item">${t}</div>`).join('');
-    const stratHTML = u.strategy ? `<div class="strat"><div class="sl">✓ FRQ Strategy</div><p>${u.strategy}</p></div>` : '';
+    const id = `uc${ui}`;
+    const topics = u.topics.map(t => `<div class="t-chip"><h4>${t.h}</h4><p>${t.p}</p></div>`).join('');
+    const formulas = u.formulas.map(f => `<div class="formula-item"><code class="fcode">${f.f}</code><span class="fdesc">${f.d}</span></div>`).join('');
+    const traps = u.traps.map(t => `<div class="trap-box"><div class="tlabel">⚠ ${t.l}</div><p>${t.t}</p></div>`).join('');
+    const tips = u.tips.map(t => `<div class="tip-box">${t}</div>`).join('');
+    const strat = u.strategy ? `<div class="strat-box"><div class="slabel">✓ FRQ Strategy</div><p>${u.strategy}</p></div>` : '';
 
-    g.innerHTML += `<div class="unit-card" id="${uid}">
-      <div class="unit-header" onclick="toggleUnit('${uid}')">
-        <span class="unit-num">Unit ${u.num}</span>
-        <span class="unit-title">${u.title}</span>
-        <span class="unit-pct">${u.pct}</span>
-        <span class="unit-arrow">▾</span>
+    container.innerHTML += `<div class="ucard" id="${id}">
+      <div class="ucard-hdr" onclick="toggleUnit('${id}')">
+        <span class="unum" style="color:${u.color};background:${u.color}18;border-color:${u.color}33">Unit ${u.num}</span>
+        <span class="utitle">${u.title}</span>
+        <span class="upct">${u.pct}</span>
+        <span class="uchev">▾</span>
       </div>
-      <div class="unit-body">
-        <p class="unit-desc">${u.desc}</p>
-        <div class="stabs">
-          <button class="stab on" onclick="showStab('${uid}','topics',this)">Topics</button>
-          <button class="stab" onclick="showStab('${uid}','formulas',this)">Formulas</button>
-          <button class="stab" onclick="showStab('${uid}','traps',this)">⚠ Traps</button>
-          <button class="stab" onclick="showStab('${uid}','tips',this)">Tips</button>
+      <div class="ucard-body">
+        <p class="udesc">${u.desc}</p>
+        <div class="stab-row">
+          <button class="stab on" onclick="showStab('${id}','topics',this)">Topics</button>
+          <button class="stab" onclick="showStab('${id}','formulas',this)">Formulas</button>
+          <button class="stab" onclick="showStab('${id}','traps',this)">⚠ Traps</button>
+          <button class="stab" onclick="showStab('${id}','tips',this)">Tips</button>
         </div>
-        <div class="spanel on" id="${uid}-topics"><div class="topics-g">${topicsHTML}</div></div>
-        <div class="spanel" id="${uid}-formulas"><div class="formulas-g">${formulasHTML}</div></div>
-        <div class="spanel" id="${uid}-traps"><div class="traps-g">${trapsHTML}</div></div>
-        <div class="spanel" id="${uid}-tips"><div class="tips-g">${tipsHTML}</div>${stratHTML}</div>
+        <div class="stab-panel on" id="${id}-topics"><div class="topics-grid">${topics}</div></div>
+        <div class="stab-panel" id="${id}-formulas"><div class="formulas-col">${formulas}</div></div>
+        <div class="stab-panel" id="${id}-traps"><div class="traps-col">${traps}</div></div>
+        <div class="stab-panel" id="${id}-tips"><div class="tips-col">${tips}</div>${strat}</div>
       </div>
     </div>`;
   });
@@ -918,299 +1564,743 @@ function toggleUnit(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
-function showStab(unitId, tab, btn) {
+function showStab(uid, tab, btn) {
   ['topics','formulas','traps','tips'].forEach(t => {
-    document.getElementById(`${unitId}-${t}`)?.classList.remove('on');
+    document.getElementById(`${uid}-${t}`)?.classList.remove('on');
   });
-  document.getElementById(`${unitId}-${tab}`)?.classList.add('on');
-  btn.closest('.stabs').querySelectorAll('.stab').forEach(b => b.classList.remove('on'));
+  document.getElementById(`${uid}-${tab}`)?.classList.add('on');
+  btn.closest('.stab-row').querySelectorAll('.stab').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
 }
 
 // ═══════════════════════════════════════════════════════════
-//  FLASHCARDS
+//  SPACED REPETITION FLASHCARDS
 // ═══════════════════════════════════════════════════════════
-let fcDeck = [...FLASHCARDS];
-let fcIdx = 0, fcGot = 0, fcMiss = 0, fcFlipped = false, fcFilter = 'All';
+let fcDeck = [], fcIdx = 0, fcGotCount = 0, fcMissCount = 0, fcFlipped = false, fcFilter = 'All';
+
+function getAllCards() {
+  return [...CARDS_BASE, ...STATE.customCards.map(c => ({...c, custom:true}))];
+}
+
+function getSrsData(id) {
+  return STATE.cardsSrsData[id] || { interval:1, easeFactor:2.5, dueDate:0, reps:0 };
+}
+
+function setSrsData(id, data) {
+  STATE.cardsSrsData[id] = data;
+  saveState();
+}
+
+function getCardId(card) {
+  return (card.unit+card.q).replace(/\s/g,'').substring(0,40);
+}
+
+function initFC() {
+  fcFilter = 'All';
+  buildFCFilter();
+  buildCustomList();
+  resetFC();
+  updateSrsInfo();
+}
 
 function buildFCFilter() {
-  const units = ['All', ...new Set(FLASHCARDS.map(c => c.unit))];
-  const f = document.getElementById('fcFilter');
-  f.innerHTML = units.map(u => `<button class="filter-btn ${u==='All'?'on':''}" onclick="setFCFilter('${u}',this)">${u}</button>`).join('');
+  const units = ['All', ...new Set(getAllCards().map(c => c.unit))];
+  const strip = document.getElementById('fcFilterStrip');
+  strip.innerHTML = units.map(u =>
+    `<button class="ftag ${u==='All'?'on':''}" onclick="setFCFilter('${u}',this)">${u}</button>`
+  ).join('');
 }
 
 function setFCFilter(unit, btn) {
   fcFilter = unit;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.ftag').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
-  fcDeck = unit==='All' ? [...FLASHCARDS] : FLASHCARDS.filter(c => c.unit===unit);
-  fcIdx = 0; fcGot = 0; fcMiss = 0; fcFlipped = false;
-  updateFC(); updateFCScores();
-  document.getElementById('fcDone').classList.remove('show');
+  resetFC();
 }
 
-function updateFC() {
-  if (!fcDeck.length) return;
+function resetFC() {
+  const all = getAllCards();
+  fcDeck = fcFilter === 'All' ? [...all] : all.filter(c => c.unit === fcFilter);
+  fcIdx = 0; fcGotCount = 0; fcMissCount = 0; fcFlipped = false;
+  document.getElementById('fcDone').classList.remove('show');
+  document.getElementById('theCard').style.display = '';
+  document.querySelector('.card-actions').style.display = '';
+  updateFCDisplay();
+  updateFCScores();
+  updateSrsInfo();
+}
+
+function shuffleFC() {
+  fcDeck = fcDeck.sort(() => Math.random() - 0.5);
+  fcIdx = 0; fcGotCount = 0; fcMissCount = 0; fcFlipped = false;
+  document.getElementById('fcDone').classList.remove('show');
+  document.getElementById('theCard').style.display = '';
+  document.querySelector('.card-actions').style.display = '';
+  updateFCDisplay();
+  updateFCScores();
+}
+
+function updateFCDisplay() {
+  if (!fcDeck.length) {
+    document.getElementById('cardQ').textContent = 'No cards for this filter.';
+    document.getElementById('cardA').textContent = '—';
+    document.getElementById('fcPbar').style.width = '0%';
+    document.getElementById('fcCnt').textContent = '0 / 0';
+    return;
+  }
   const c = fcDeck[fcIdx];
-  document.getElementById('fcQ').textContent = c.q;
-  document.getElementById('fcA').textContent = c.a;
-  document.getElementById('fcUL').textContent = c.unit;
-  document.getElementById('pbarFill').style.width = ((fcIdx+1)/fcDeck.length*100)+'%';
-  document.getElementById('pcount').textContent = `${fcIdx+1} / ${fcDeck.length}`;
-  document.getElementById('fcCard').classList.remove('flipped');
+  const id = getCardId(c);
+  const srs = getSrsData(id);
+  document.getElementById('cardQ').textContent = c.q;
+  document.getElementById('cardA').textContent = c.a;
+  document.getElementById('cardTag').textContent = c.unit;
+  document.getElementById('theCard').classList.remove('flipped');
   fcFlipped = false;
+  const pct = Math.round((fcIdx+1)/fcDeck.length*100);
+  document.getElementById('fcPbar').style.width = pct+'%';
+  document.getElementById('fcCnt').textContent = `${fcIdx+1} / ${fcDeck.length}`;
 }
 
 function flipCard() {
+  if (!fcDeck.length) return;
   fcFlipped = !fcFlipped;
-  document.getElementById('fcCard').classList.toggle('flipped', fcFlipped);
+  document.getElementById('theCard').classList.toggle('flipped', fcFlipped);
 }
 
-function prevCard() { if (fcIdx > 0) { fcIdx--; updateFC(); } }
+function prevCard() {
+  if (fcIdx > 0) { fcIdx--; updateFCDisplay(); }
+}
 
-function markCard(got) {
-  if (got) fcGot++; else fcMiss++;
+function rateCard(rating) {
+  // 0=again, 1=hard, 3=easy
+  if (!fcDeck.length) return;
+  const c = fcDeck[fcIdx];
+  const id = getCardId(c);
+  const srs = getSrsData(id);
+  const now = Date.now();
+  const correct = rating >= 2;
+
+  // Simple SM-2 variant
+  let { interval, easeFactor, reps } = srs;
+  if (rating === 0) { interval = 1; reps = 0; }
+  else if (rating === 1) { interval = Math.max(1, interval * 0.6); reps++; }
+  else { // easy
+    if (reps === 0) interval = 1;
+    else if (reps === 1) interval = 3;
+    else interval = Math.round(interval * easeFactor);
+    easeFactor = Math.max(1.3, easeFactor + (0.1 - (3 - rating) * 0.1));
+    reps++;
+  }
+  setSrsData(id, { interval, easeFactor, dueDate: now + interval * 86400000, reps });
+
+  // track accuracy
+  const unit = c.unit;
+  if (!STATE.unitAccuracy[unit]) STATE.unitAccuracy[unit] = { correct: 0, total: 0 };
+  STATE.unitAccuracy[unit].total++;
+  if (correct) STATE.unitAccuracy[unit].correct++;
+  saveState();
+
+  if (correct) fcGotCount++; else fcMissCount++;
   updateFCScores();
-  if (fcIdx < fcDeck.length - 1) { fcIdx++; updateFC(); }
-  else { showFCDone(); }
+  recordStudyToday(correct);
+
+  if (fcIdx < fcDeck.length - 1) {
+    fcIdx++;
+    updateFCDisplay();
+  } else {
+    showFCDone();
+  }
+  updateSrsInfo();
 }
 
 function updateFCScores() {
-  document.getElementById('scGot').textContent = `✓ ${fcGot} got it`;
-  document.getElementById('scMiss').textContent = `✗ ${fcMiss} missed`;
+  document.getElementById('fcGot').textContent = `✓ ${fcGotCount} got it`;
+  document.getElementById('fcMiss').textContent = `✗ ${fcMissCount} missed`;
+}
+
+function updateSrsInfo() {
+  const all = getAllCards();
+  const now = Date.now();
+  let due = 0, hard = 0, known = 0;
+  all.forEach(c => {
+    const srs = getSrsData(getCardId(c));
+    if (srs.reps === 0) due++;
+    else if (srs.dueDate <= now) due++;
+    else if (srs.interval <= 3) hard++;
+    else known++;
+  });
+  document.getElementById('srsDue').textContent = due + ' due now';
+  document.getElementById('srsHard').textContent = hard + ' hard';
+  document.getElementById('srsKnown').textContent = known + ' known';
+  document.getElementById('sbDueCount').textContent = due;
 }
 
 function showFCDone() {
-  const pct = Math.round(fcGot / fcDeck.length * 100);
-  document.getElementById('doneScore').textContent = pct+'%';
-  document.getElementById('doneLabel').textContent = `${fcGot}/${fcDeck.length} correct — ${pct>=80?'Excellent!':pct>=60?'Keep practicing!':'More review needed.'}`;
+  const total = fcGotCount + fcMissCount;
+  const pct = total > 0 ? Math.round(fcGotCount/total*100) : 0;
+  const xpEarned = fcGotCount * 3;
+  document.getElementById('donePct').textContent = pct + '%';
+  document.getElementById('doneMsg').textContent = `${fcGotCount}/${total} correct — ${pct>=80?'Excellent! 🎉':pct>=60?'Good progress 💪':'Keep reviewing 📖'}`;
+  document.getElementById('doneXP').textContent = `⚡ +${xpEarned} XP earned`;
   document.getElementById('fcDone').classList.add('show');
-  document.getElementById('fcCard').style.display='none';
-  document.querySelector('.fc-actions').style.display='none';
+  document.getElementById('theCard').style.display = 'none';
+  document.querySelector('.card-actions').style.display = 'none';
+  addXP(xpEarned);
+  addActivity('🧠', `Studied ${total} flashcards — ${pct}% accuracy`);
 }
 
-function shuffleCards() {
-  fcDeck = fcDeck.sort(() => Math.random() - 0.5);
-  fcIdx = 0; fcGot = 0; fcMiss = 0;
-  document.getElementById('fcDone').classList.remove('show');
-  document.getElementById('fcCard').style.display='';
-  document.querySelector('.fc-actions').style.display='';
-  updateFC(); updateFCScores();
+// Custom cards
+function buildCustomList() {
+  const list = document.getElementById('customList');
+  document.getElementById('customCount').textContent = STATE.customCards.length;
+  if (!STATE.customCards.length) {
+    list.innerHTML = '<div style="font-size:12.5px;color:var(--text3);padding:.5rem">No custom cards yet. Add your first below!</div>';
+    return;
+  }
+  list.innerHTML = STATE.customCards.map((c,i) =>
+    `<div class="custom-item">
+      <span class="ci-q">${c.q}</span>
+      <span class="ci-unit">${c.unit}</span>
+      <button class="ci-btn ci-edit" onclick="editCustomCard(${i})" title="Edit">✏</button>
+      <button class="ci-btn" onclick="deleteCustomCard(${i})" title="Delete">✕</button>
+    </div>`
+  ).join('');
 }
 
-function resetDeck() {
-  fcDeck = fcFilter==='All' ? [...FLASHCARDS] : FLASHCARDS.filter(c=>c.unit===fcFilter);
-  fcIdx = 0; fcGot = 0; fcMiss = 0;
-  document.getElementById('fcDone').classList.remove('show');
-  document.getElementById('fcCard').style.display='';
-  document.querySelector('.fc-actions').style.display='';
-  updateFC(); updateFCScores();
+function addCustomCard() {
+  const q = document.getElementById('newQ').value.trim();
+  const a = document.getElementById('newA').value.trim();
+  const unit = document.getElementById('newUnit').value.trim() || 'Custom';
+  if (!q || !a) { showToast('Please enter both a question and answer.'); return; }
+  STATE.customCards.push({ q, a, unit });
+  saveState();
+  document.getElementById('newQ').value = '';
+  document.getElementById('newA').value = '';
+  document.getElementById('newUnit').value = '';
+  buildCustomList();
+  buildFCFilter();
+  resetFC();
+  addActivity('✏️', `Added custom flashcard: "${q.substring(0,40)}..."`);
+  showToast('✓ Card added!');
+  addXP(5);
 }
+
+function deleteCustomCard(i) {
+  STATE.customCards.splice(i, 1);
+  saveState();
+  buildCustomList();
+  buildFCFilter();
+  resetFC();
+}
+
+function editCustomCard(i) {
+  const c = STATE.customCards[i];
+  document.getElementById('newQ').value = c.q;
+  document.getElementById('newA').value = c.a;
+  document.getElementById('newUnit').value = c.unit;
+  deleteCustomCard(i);
+  document.getElementById('newQ').focus();
+}
+
+// Keyboard shortcuts for flashcards
+document.addEventListener('keydown', e => {
+  const page = document.getElementById('p-flashcards');
+  if (!page.classList.contains('active')) return;
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+  if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+  if (e.code === 'ArrowLeft') prevCard();
+  if (e.key === '1') rateCard(0);
+  if (e.key === '2') rateCard(1);
+  if (e.key === '3') rateCard(3);
+  if (e.code === 'ArrowRight') rateCard(3);
+});
 
 // ═══════════════════════════════════════════════════════════
 //  QUIZ
 // ═══════════════════════════════════════════════════════════
-let qQueue = [...MCQ], qIdx = 0, qScore = 0, qAnswered = false;
+let qzQueue = [...MCQ_BANK], qzIdx = 0, qzScore = 0, qzAnswered = false;
 
 function buildQuizFilter() {
-  const sel = document.getElementById('quizFilter');
-  const units = ['All', ...new Set(MCQ.map(q => q.unit))];
+  const sel = document.getElementById('quizUnitFilter');
+  const units = ['All', ...new Set(MCQ_BANK.map(q => q.unit))];
   sel.innerHTML = units.map(u => `<option value="${u}">${u}</option>`).join('');
 }
 
-function filterQuiz(unit) {
-  qQueue = unit==='All' ? [...MCQ] : MCQ.filter(q=>q.unit===unit);
-  qIdx = 0; qScore = 0; qAnswered = false;
-  document.getElementById('qScore').textContent = 0;
-  document.getElementById('qTotal').textContent = qQueue.length;
-  document.getElementById('qNum').textContent = 1;
-  renderQ();
+function setQuizFilter(unit) {
+  qzQueue = unit === 'All' ? [...MCQ_BANK] : MCQ_BANK.filter(q => q.unit === unit);
+  qzIdx = 0; qzScore = 0; qzAnswered = false;
+  document.getElementById('qzScore').textContent = 0;
+  document.getElementById('qzTotal').textContent = qzQueue.length;
+  document.getElementById('qzNum').textContent = 1;
+  document.getElementById('qzAcc').textContent = '—';
+  renderQuiz();
 }
 
 function restartQuiz() {
-  const unit = document.getElementById('quizFilter').value;
-  filterQuiz(unit);
+  const unit = document.getElementById('quizUnitFilter').value;
+  setQuizFilter(unit);
 }
 
-function renderQ() {
-  const con = document.getElementById('quizContainer');
-  if (qIdx >= qQueue.length) {
-    con.innerHTML = `<div style="text-align:center;padding:3rem"><div class="done-score">${Math.round(qScore/qQueue.length*100)}%</div><div class="done-label">${qScore}/${qQueue.length} correct</div><br><button class="ctrl-btn primary" onclick="restartQuiz()">Try Again</button></div>`;
+function renderQuiz() {
+  const con = document.getElementById('quizArea');
+  if (qzIdx >= qzQueue.length) {
+    const pct = Math.round(qzScore/qzQueue.length*100);
+    con.innerHTML = `<div style="text-align:center;padding:3rem">
+      <div style="font-family:'Instrument Serif',serif;font-size:4rem;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent">${pct}%</div>
+      <div style="color:var(--text2);font-size:14px;margin:.5rem 0 1.5rem">${qzScore}/${qzQueue.length} correct</div>
+      <button class="btn primary" onclick="restartQuiz()">Try Again</button>
+    </div>`;
+    addActivity('🎯', `Completed quiz — ${pct}% accuracy (${qzScore}/${qzQueue.length})`);
+    addXP(qzScore * 5);
     return;
   }
-  const q = qQueue[qIdx];
-  const optsHTML = q.opts.map((o,i)=>`<button class="qopt" onclick="answerQ(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('');
+  const q = qzQueue[qzIdx];
+  const opts = q.opts.map((o,i) =>
+    `<button class="qopt" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
   con.innerHTML = `<div class="qcard">
-    <div class="q-unit-tag">Unit: ${q.unit}</div>
+    <div class="q-unit">${q.unit}</div>
     <div class="q-text">${q.q}</div>
-    <div class="q-opts">${optsHTML}</div>
-    <div class="q-exp" id="qExp">${q.exp}</div>
-    ${q.trap?`<div class="q-trap" id="qTrap"><strong>⚠ TRAP:</strong> ${q.trap}</div>`:''}
+    <div class="q-opts">${opts}</div>
+    <div class="q-exp" id="qzExp">${q.exp}</div>
+    ${q.trap ? `<div class="q-trap" id="qzTrap"><strong>⚠ TRAP ALERT:</strong> ${q.trap}</div>` : ''}
   </div>
-  <button class="next-btn" id="qNext" onclick="nextQ()">Next question →</button>`;
-  qAnswered = false;
+  <button class="next-btn" id="qzNext" onclick="nextQuiz()">Next question →</button>`;
+  qzAnswered = false;
 }
 
-function answerQ(chosen) {
-  if (qAnswered) return;
-  qAnswered = true;
-  const q = qQueue[qIdx];
+function answerQuiz(chosen) {
+  if (qzAnswered) return;
+  qzAnswered = true;
+  const q = qzQueue[qzIdx];
+  const correct = chosen === q.ans;
+
   document.querySelectorAll('.qopt').forEach((b,i) => {
     b.disabled = true;
-    if (i===q.ans) b.classList.add('correct');
-    else if (i===chosen) b.classList.add('wrong');
+    if (i === q.ans) b.classList.add('correct');
+    else if (i === chosen) b.classList.add('wrong');
   });
-  if (chosen===q.ans) qScore++;
-  document.getElementById('qScore').textContent = qScore;
-  const exp = document.getElementById('qExp');
+
+  if (correct) qzScore++;
+  else {
+    // add to wrong log
+    const exists = STATE.wrongLog.find(w => w.q === q.q);
+    if (!exists) STATE.wrongLog.push({ ...q, chosenIdx: chosen, timestamp: Date.now() });
+    saveState();
+    document.getElementById('sbWrongCount').textContent = STATE.wrongLog.length;
+  }
+
+  const acc = Math.round(qzScore/(qzIdx+1)*100);
+  document.getElementById('qzScore').textContent = qzScore;
+  document.getElementById('qzAcc').textContent = acc + '%';
+
+  // update unit accuracy
+  if (!STATE.unitAccuracy[q.unit]) STATE.unitAccuracy[q.unit] = { correct:0, total:0 };
+  STATE.unitAccuracy[q.unit].total++;
+  if (correct) STATE.unitAccuracy[q.unit].correct++;
+  saveState();
+  recordStudyToday(correct);
+
+  const exp = document.getElementById('qzExp');
   exp.classList.add('show');
-  exp.style.borderColor = chosen===q.ans ? 'var(--green)' : 'var(--red)';
-  const trap = document.getElementById('qTrap');
+  exp.style.borderColor = correct ? 'var(--green)' : 'var(--red)';
+  const trap = document.getElementById('qzTrap');
   if (trap) trap.classList.add('show');
-  document.getElementById('qNext').classList.add('show');
+  document.getElementById('qzNext').classList.add('show');
 }
 
-function nextQ() {
-  qIdx++;
-  document.getElementById('qNum').textContent = Math.min(qIdx+1, qQueue.length);
-  renderQ();
+function nextQuiz() {
+  qzIdx++;
+  document.getElementById('qzNum').textContent = Math.min(qzIdx+1, qzQueue.length);
+  renderQuiz();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  WRONG LOG
+// ═══════════════════════════════════════════════════════════
+function renderWrongLog() {
+  const con = document.getElementById('wrongLogContainer');
+  document.getElementById('sbWrongCount').textContent = STATE.wrongLog.length;
+  if (!STATE.wrongLog.length) {
+    con.innerHTML = '<div class="wlog-empty">✅ No wrong answers logged yet. Complete some quizzes to see mistakes here.</div>';
+    return;
+  }
+  con.innerHTML = STATE.wrongLog.map((q, i) => `
+    <div class="wlog-item">
+      <div class="wlog-q">${q.q}</div>
+      <div class="wlog-ans">
+        Your answer: <span class="wr">${q.opts[q.chosenIdx]}</span> &nbsp;·&nbsp;
+        Correct: <span class="wc">${q.opts[q.ans]}</span>
+      </div>
+      <div style="font-size:12.5px;color:var(--text2);margin-top:6px;line-height:1.5">${q.exp}</div>
+      <div class="wlog-drill">
+        <button class="btn" style="font-size:12px;padding:5px 12px" onclick="removeWrongItem(${i})">✓ Got it now</button>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function clearWrongLog() {
+  STATE.wrongLog = []; saveState();
+  renderWrongLog();
+  showToast('Wrong log cleared!');
+}
+
+function removeWrongItem(i) {
+  STATE.wrongLog.splice(i, 1); saveState();
+  renderWrongLog();
+}
+
+function drillWrongLog() {
+  if (!STATE.wrongLog.length) { showToast('No wrong answers to drill!'); return; }
+  // inject wrong log questions into quiz queue and navigate
+  qzQueue = STATE.wrongLog.map(q => ({ ...q }));
+  qzIdx = 0; qzScore = 0; qzAnswered = false;
+  document.getElementById('qzScore').textContent = 0;
+  document.getElementById('qzTotal').textContent = qzQueue.length;
+  document.getElementById('qzNum').textContent = 1;
+  document.getElementById('qzAcc').textContent = '—';
+  nav('quiz', document.querySelector('.sb-item[onclick*="quiz"]'));
+  renderQuiz();
+  showToast('🎯 Drilling wrong answers!');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  FRQ PRACTICE
+// ═══════════════════════════════════════════════════════════
+function buildFRQ() {
+  const container = document.getElementById('frqList');
+  FRQ_BANK.forEach((frq, fi) => {
+    const partsHTML = frq.parts.map((p, pi) => {
+      const rubricHTML = p.rubric.map(r =>
+        `<div class="rubric-point"><span class="rp-pts">${r.pts}</span><span>${r.text}</span></div>`
+      ).join('');
+      return `<div class="frq-part">
+        <label>${p.label} <span style="color:var(--purple);font-size:11px">(${p.pts})</span></label>
+        <p class="pp">${p.prompt}</p>
+        <textarea placeholder="Write your answer here..." rows="4"></textarea>
+        <div class="frq-rubric" id="frq-rubric-${fi}-${pi}">
+          <h4>✓ Scoring Rubric</h4>
+          ${rubricHTML}
+        </div>
+        <div class="frq-actions">
+          <button class="btn" onclick="toggleRubric('frq-rubric-${fi}-${pi}',this)">Show Rubric</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    container.innerHTML += `<div class="frq-card">
+      <div class="frq-hdr">
+        <div class="frq-title">${frq.title}</div>
+        <div class="frq-meta">
+          <span class="frq-tag">${frq.unit}</span>
+          <span class="frq-tag pts">${frq.points} pts</span>
+        </div>
+      </div>
+      <div class="frq-body">
+        <div class="frq-prompt">${frq.prompt}</div>
+        <div class="frq-diagram">${frq.diagram.replace(/\n/g,'<br>')}</div>
+        <div class="frq-parts">${partsHTML}</div>
+      </div>
+    </div>`;
+  });
+}
+
+function toggleRubric(id, btn) {
+  const el = document.getElementById(id);
+  const showing = el.classList.toggle('show');
+  btn.textContent = showing ? 'Hide Rubric' : 'Show Rubric';
+  if (showing) addActivity('✍️', 'Reviewed FRQ rubric');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  FORMULA SHEET
+// ═══════════════════════════════════════════════════════════
+function buildFormulaSheet() {
+  const grid = document.getElementById('fsheetGrid');
+  UNITS.forEach(u => {
+    const formulas = u.formulas.map(f =>
+      `<div class="fs-formula" style="border-color:${u.color}">${f.f}<span>${f.d}</span></div>`
+    ).join('');
+    grid.innerHTML += `<div class="fs-section">
+      <div class="fs-title" style="color:${u.color}">Unit ${u.num}: ${u.title}</div>
+      ${formulas}
+    </div>`;
+  });
 }
 
 // ═══════════════════════════════════════════════════════════
 //  EXAM MODE
 // ═══════════════════════════════════════════════════════════
-let examQuestions = [], examIdx = 0, examScore = 0, examAnswered = false;
-let examResponses = [];
-let timerInterval = null, secondsLeft = 0;
+let examQ = [], exIdx = 0, exScore = 0, exAnswered = false, exResponses = [];
+let timerInterval = null, timerLeft = 0, exHardMode = false;
 
 function buildExamFilter() {
-  const sel = document.getElementById('examUnit');
-  const units = ['All', ...new Set(MCQ.map(q=>q.unit))];
-  sel.innerHTML = units.map(u=>`<option value="${u}">${u}</option>`).join('');
+  const sel = document.getElementById('exUnit');
+  const units = ['All', ...new Set(MCQ_BANK.map(q => q.unit))];
+  sel.innerHTML = units.map(u => `<option value="${u}">${u}</option>`).join('');
 }
 
 function startExam() {
-  const count = parseInt(document.getElementById('examCount').value);
-  const unit = document.getElementById('examUnit').value;
-  secondsLeft = parseInt(document.getElementById('examTime').value);
+  const count = parseInt(document.getElementById('exCount').value);
+  const unit = document.getElementById('exUnit').value;
+  timerLeft = parseInt(document.getElementById('exTime').value);
+  exHardMode = document.getElementById('exMode').value === 'hard';
 
-  let pool = unit==='All' ? [...MCQ] : MCQ.filter(q=>q.unit===unit);
-  pool = pool.sort(() => Math.random() - 0.5);
-  examQuestions = pool.slice(0, Math.min(count, pool.length));
-  examIdx = 0; examScore = 0; examAnswered = false; examResponses = [];
+  let pool = unit === 'All' ? [...MCQ_BANK] : MCQ_BANK.filter(q => q.unit === unit);
+  pool.sort(() => Math.random() - 0.5);
+  examQ = pool.slice(0, Math.min(count, pool.length));
+  exIdx = 0; exScore = 0; exAnswered = false; exResponses = [];
 
-  document.getElementById('examSetup').style.display='none';
+  document.getElementById('examSetup').style.display = 'none';
   document.getElementById('examResults').classList.remove('show');
-  document.getElementById('examSession').style.display='block';
-  document.getElementById('examNext').style.display='none';
-  document.getElementById('examScoreLabel').textContent = 0;
+  document.getElementById('examSession').style.display = 'block';
+  document.getElementById('exNext').style.display = 'none';
+  document.getElementById('exScore').textContent = 0;
 
-  startTimer();
-  renderExamQ();
-}
-
-function startTimer() {
   clearInterval(timerInterval);
   updateTimerDisplay();
   timerInterval = setInterval(() => {
-    secondsLeft--;
+    timerLeft--;
     updateTimerDisplay();
-    if (secondsLeft <= 0) { clearInterval(timerInterval); endExam(); }
+    if (timerLeft <= 0) { clearInterval(timerInterval); endExam(); }
   }, 1000);
+
+  renderExamQ();
 }
 
 function updateTimerDisplay() {
-  const m = Math.floor(secondsLeft/60);
-  const s = secondsLeft%60;
-  const el = document.getElementById('timerDisplay');
+  const m = Math.floor(timerLeft/60);
+  const s = timerLeft % 60;
+  const el = document.getElementById('timerDisp');
   el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
-  el.className = 'timer-display' + (secondsLeft<=30?' danger':secondsLeft<=60?' warn':'');
+  el.className = 'timer-disp' + (timerLeft<=30?' danger':timerLeft<=60?' warn':'');
 }
 
 function renderExamQ() {
-  if (examIdx >= examQuestions.length) { endExam(); return; }
-  const q = examQuestions[examIdx];
-  const total = examQuestions.length;
-  document.getElementById('examQLabel').textContent = `Q ${examIdx+1}/${total}`;
-  document.getElementById('ebarFill').style.width = ((examIdx/total)*100)+'%';
-  const optsHTML = q.opts.map((o,i)=>`<button class="qopt" onclick="answerExam(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('');
-  document.getElementById('examContainer').innerHTML = `<div class="qcard">
-    <div class="q-unit-tag">Unit: ${q.unit}</div>
+  if (exIdx >= examQ.length) { endExam(); return; }
+  const q = examQ[exIdx];
+  document.getElementById('exQLabel').textContent = `Q ${exIdx+1}/${examQ.length}`;
+  document.getElementById('exBar').style.width = (exIdx/examQ.length*100)+'%';
+  const opts = q.opts.map((o,i) =>
+    `<button class="qopt" onclick="answerExam(${i})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
+  document.getElementById('examArea').innerHTML = `<div class="qcard">
+    <div class="q-unit">${q.unit}</div>
     <div class="q-text">${q.q}</div>
-    <div class="q-opts">${optsHTML}</div>
-    <div class="q-exp" id="eExp" style="display:none">${q.exp}</div>
+    <div class="q-opts">${opts}</div>
+    ${!exHardMode ? `<div class="q-exp" id="exExp">${q.exp}</div>` : ''}
   </div>`;
-  examAnswered = false;
-  document.getElementById('examNext').style.display='none';
+  exAnswered = false;
+  document.getElementById('exNext').style.display = 'none';
 }
 
 function answerExam(chosen) {
-  if (examAnswered) return;
-  examAnswered = true;
-  const q = examQuestions[examIdx];
-  const correct = chosen===q.ans;
-  if (correct) examScore++;
-  examResponses.push({q:q.q, chosen, correct, correctAns:q.ans, opts:q.opts});
-  document.querySelectorAll('#examContainer .qopt').forEach((b,i) => {
-    b.disabled=true;
-    if(i===q.ans) b.classList.add('correct');
-    else if(i===chosen) b.classList.add('wrong');
+  if (exAnswered) return;
+  exAnswered = true;
+  const q = examQ[exIdx];
+  const correct = chosen === q.ans;
+  if (correct) exScore++;
+  exResponses.push({ q: q.q, chosen, correct, correctAns: q.ans, opts: q.opts });
+
+  document.querySelectorAll('#examArea .qopt').forEach((b,i) => {
+    b.disabled = true;
+    if (i === q.ans) b.classList.add('correct');
+    else if (i === chosen) b.classList.add('wrong');
   });
-  document.getElementById('examScoreLabel').textContent=examScore;
-  // show explanation briefly
-  const exp=document.getElementById('eExp');
-  if(exp){exp.style.display='block';exp.classList.add('show');exp.style.borderColor=correct?'var(--green)':'var(--red)';}
-  document.getElementById('examNext').style.display='inline-block';
+  document.getElementById('exScore').textContent = exScore;
+
+  if (!exHardMode) {
+    const exp = document.getElementById('exExp');
+    if (exp) { exp.classList.add('show'); exp.style.borderColor = correct ? 'var(--green)' : 'var(--red)'; }
+  }
+  document.getElementById('exNext').style.display = 'inline-block';
 }
 
 function nextExamQ() {
-  examIdx++;
-  if (examIdx >= examQuestions.length) { endExam(); }
-  else { renderExamQ(); }
+  exIdx++;
+  if (exIdx >= examQ.length) endExam();
+  else renderExamQ();
 }
 
 function endExam() {
   clearInterval(timerInterval);
-  document.getElementById('examSession').style.display='none';
+  document.getElementById('examSession').style.display = 'none';
   const res = document.getElementById('examResults');
   res.classList.add('show');
 
-  const pct = Math.round(examScore/examQuestions.length*100);
-  const el = document.getElementById('resScore');
-  el.textContent = pct+'%';
-  el.style.background = pct>=80?'linear-gradient(135deg,var(--green),#10b981)':pct>=60?'linear-gradient(135deg,var(--amber),#f59e0b)':'linear-gradient(135deg,var(--red),#dc2626)';
+  const pct = Math.round(exScore/examQ.length*100);
+  const el = document.getElementById('resPct');
+  el.textContent = pct + '%';
+  el.style.background = pct>=80?'linear-gradient(135deg,var(--green),#059669)':pct>=60?'linear-gradient(135deg,var(--amber),#d97706)':'linear-gradient(135deg,var(--red),#dc2626)';
   el.style['-webkit-background-clip']='text';
   el.style['-webkit-text-fill-color']='transparent';
 
-  document.getElementById('resTotal').textContent=examQuestions.length;
-  const grade=pct>=90?'5 — Excellent':pct>=75?'4 — Good':pct>=60?'3 — Passing':pct>=45?'2 — Needs Work':'1 — Keep Studying';
-  const gc=pct>=75?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
-  document.getElementById('resGrade').textContent=`AP Projected: ${grade}`;
-  document.getElementById('resGrade').style.cssText=`background:${gc}22;color:${gc};border:1px solid ${gc}44`;
+  document.getElementById('resOf').textContent = examQ.length;
 
-  const reviewHTML = examResponses.map(r=>`<div class="review-item ${r.correct?'r':'w'}">
-    <div class="ri-status">${r.correct?'✓ Correct':'✗ Incorrect'}</div>
-    <div class="ri-q">${r.q}</div>
-    <div class="ri-ans">Your answer: ${r.opts[r.chosen]}${r.correct?'':` — Correct: ${r.opts[r.correctAns]}`}</div>
-  </div>`).join('');
-  document.getElementById('resReview').innerHTML=`<h3 style="font-family:'Syne',sans-serif;font-size:1rem;margin-bottom:1rem">Question Review</h3>${reviewHTML}`;
+  const apScore = pct>=90?5:pct>=75?4:pct>=60?3:pct>=45?2:1;
+  const scoreColors = {5:'var(--green)',4:'var(--cyan)',3:'var(--amber)',2:'var(--red)',1:'var(--red)'};
+  const g = document.getElementById('resGrade');
+  g.textContent = `Projected AP Score: ${apScore} — ${['','Needs significant work','Study harder','Passing','Good — aim higher!','Excellent! Ready for 5'][apScore]}`;
+  g.style.cssText = `background:${scoreColors[apScore]}18;color:${scoreColors[apScore]};border:1px solid ${scoreColors[apScore]}33`;
+
+  const xpEarned = exScore * 8;
+  addXP(xpEarned);
+  addActivity('⏱️', `Exam: ${pct}% (${exScore}/${examQ.length}) — Projected AP ${apScore}`);
+
+  document.getElementById('reviewList').innerHTML = exResponses.map(r =>
+    `<div class="rv-item ${r.correct?'r':'w'}">
+      <div class="rv-status">${r.correct?'✓ Correct':'✗ Wrong'}</div>
+      <div class="rv-q">${r.q}</div>
+      <div class="rv-ans">Your answer: ${r.opts[r.chosen]}${r.correct?'':` — Correct: ${r.opts[r.correctAns]}`}</div>
+    </div>`
+  ).join('');
 }
 
 function resetExam() {
   clearInterval(timerInterval);
   document.getElementById('examResults').classList.remove('show');
-  document.getElementById('examSetup').style.display='block';
+  document.getElementById('examSetup').style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════════════════
+function refreshDashboard() {
+  updateTopbarStats();
+
+  // unit bars
+  const barsEl = document.getElementById('unitBars');
+  const colors = UNITS.map(u => u.color);
+  barsEl.innerHTML = UNITS.map((u, i) => {
+    const acc = STATE.unitAccuracy[u.title];
+    const pct = acc && acc.total > 0 ? Math.round(acc.correct/acc.total*100) : 0;
+    return `<div class="unit-bar-row">
+      <span class="unit-bar-name">${u.title}</span>
+      <div class="unit-bar-track"><div class="unit-bar-fill" style="width:${pct}%;background:${u.color}"></div></div>
+      <span class="unit-bar-pct">${pct}%</span>
+    </div>`;
+  }).join('');
+
+  // weak units
+  const weakEl = document.getElementById('weakUnits');
+  const scored = UNITS.filter(u => STATE.unitAccuracy[u.title]?.total > 0)
+    .sort((a,b) => {
+      const pa = STATE.unitAccuracy[a.title].correct/STATE.unitAccuracy[a.title].total;
+      const pb = STATE.unitAccuracy[b.title].correct/STATE.unitAccuracy[b.title].total;
+      return pa - pb;
+    }).slice(0, 3);
+  if (!scored.length) {
+    weakEl.innerHTML = '<div style="font-size:13px;color:var(--text3)">Complete quizzes to identify weak spots.</div>';
+  } else {
+    weakEl.innerHTML = scored.map(u => {
+      const acc = STATE.unitAccuracy[u.title];
+      const pct = Math.round(acc.correct/acc.total*100);
+      return `<div class="weak-chip"><span class="wname">${u.title}</span><span class="wpct">${pct}%</span></div>`;
+    }).join('');
+  }
+
+  renderActivity();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  POMODORO
+// ═══════════════════════════════════════════════════════════
+let pomoRunning = false, pomoInterval = null, pomoSecondsLeft = 25*60, pomoTotalSeconds = 25*60;
+let pomoSessions = 0, pomoMode = 'focus';
+const POMO_TIMES = { focus: 25*60, short: 5*60, long: 15*60 };
+const POMO_LABELS = { focus: 'Focus', short: 'Short Break', long: 'Long Break' };
+
+function setPomoMode(mode, btn) {
+  pomoMode = mode;
+  document.querySelectorAll('.pomo-mode-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  resetPomo();
+}
+
+function togglePomo() {
+  if (pomoRunning) {
+    clearInterval(pomoInterval);
+    pomoRunning = false;
+    document.getElementById('pomoBtn').textContent = '▶ Resume';
+  } else {
+    pomoRunning = true;
+    document.getElementById('pomoBtn').textContent = '⏸ Pause';
+    pomoInterval = setInterval(() => {
+      pomoSecondsLeft--;
+      updatePomoDisplay();
+      if (pomoSecondsLeft <= 0) {
+        clearInterval(pomoInterval);
+        pomoRunning = false;
+        document.getElementById('pomoBtn').textContent = '▶ Start';
+        if (pomoMode === 'focus') {
+          pomoSessions++;
+          addActivity('🍅', 'Completed a 25-minute focus session');
+          addXP(10);
+          showToast('🍅 Session complete! Take a break.');
+        }
+        updatePomoDots();
+      }
+    }, 1000);
+  }
+}
+
+function resetPomo() {
+  clearInterval(pomoInterval);
+  pomoRunning = false;
+  pomoSecondsLeft = POMO_TIMES[pomoMode];
+  pomoTotalSeconds = POMO_TIMES[pomoMode];
+  document.getElementById('pomoBtn').textContent = '▶ Start';
+  updatePomoDisplay();
+}
+
+function updatePomoDisplay() {
+  const m = Math.floor(pomoSecondsLeft/60);
+  const s = pomoSecondsLeft % 60;
+  document.getElementById('pomoTime').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  document.getElementById('pomoLabel').textContent = POMO_LABELS[pomoMode];
+  const pct = pomoSecondsLeft / pomoTotalSeconds;
+  document.getElementById('pomoRing').style.setProperty('--pct', `${pct*100}%`);
+  document.getElementById('pomoRing').style.background =
+    `conic-gradient(var(--blue) ${pct*360}deg, var(--s2) 0)`;
+}
+
+function updatePomoDots() {
+  document.getElementById('pomoSessionCount').textContent = Math.min(pomoSessions, 4);
+  const dots = document.getElementById('pomoDotsWrap');
+  dots.innerHTML = [0,1,2,3].map(i =>
+    `<span class="pomo-dot ${i < pomoSessions ? 'done' : ''}"></span>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
 // ═══════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════
+loadState();
 buildNotes();
 buildFCFilter();
-updateFC();
+updateFCDisplay();
 buildQuizFilter();
-filterQuiz('All');
+setQuizFilter('All');
 buildExamFilter();
+buildFRQ();
+buildFormulaSheet();
+updateTopbarStats();
+updatePomoDots();
+updatePomoDisplay();
+refreshDashboard();
 </script>
 </body>
 </html>
