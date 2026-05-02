@@ -4,23 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AP Physics Hub</title>
+<title>AP Physics Hub Ultimate</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
     --bg:#0b0f1a;
     --card:rgba(255,255,255,0.05);
-    --glass:rgba(255,255,255,0.08);
-    --text:#e5e7eb;
-    --muted:#94a3b8;
-    --accent:#3b82f6;
-    --accent2:#22d3ee;
     --border:rgba(255,255,255,0.1);
+    --text:#e5e7eb;
+    --accent:#3b82f6;
+    --good:#22c55e;
+    --bad:#ef4444;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
+
 body{
     font-family:'Inter',sans-serif;
     background:radial-gradient(circle at top,#111827,#020617);
@@ -29,137 +29,116 @@ body{
 
 /* HEADER */
 header{
+    padding:1rem 2rem;
+    border-bottom:1px solid var(--border);
     display:flex;
     justify-content:space-between;
-    padding:1.2rem 2rem;
-    backdrop-filter:blur(12px);
-    background:rgba(0,0,0,0.4);
-    border-bottom:1px solid var(--border);
-    position:sticky;top:0;
+    align-items:center;
 }
 
 .logo{
-    font-weight:700;
-    font-size:1.2rem;
-    background:linear-gradient(to right,var(--accent),var(--accent2));
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-/* HERO */
-.hero{
-    text-align:center;
-    padding:4rem 1rem;
-}
-
-.hero h1{
-    font-size:2.5rem;
-    margin-bottom:1rem;
-}
-
-.hero p{
-    color:var(--muted);
-}
-
-.btn{
-    margin-top:1.5rem;
-    padding:12px 20px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    background:linear-gradient(to right,var(--accent),var(--accent2));
-    color:white;
-    font-weight:600;
+    font-weight:800;
+    color:var(--accent);
 }
 
 /* NAV */
-.nav-tabs{
+.nav{
     display:flex;
     justify-content:center;
-    gap:1rem;
-    margin:2rem 0;
+    gap:10px;
+    margin:1.5rem;
 }
 
-.tab-btn{
-    padding:10px 18px;
+.btn{
+    padding:10px 16px;
     border-radius:10px;
     border:1px solid var(--border);
-    background:var(--glass);
+    background:var(--card);
     color:white;
     cursor:pointer;
 }
 
-.tab-btn.active{
+.btn.active{
     background:var(--accent);
 }
+
+/* SECTIONS */
+.section{display:none;padding:1rem;}
+.section.active{display:block;}
 
 /* GRID */
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:1.5rem;
-    padding:1rem;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:1rem;
 }
 
 /* CARD */
 .card{
+    padding:1.2rem;
+    border-radius:15px;
     background:var(--card);
-    padding:1.5rem;
-    border-radius:18px;
     border:1px solid var(--border);
-    backdrop-filter:blur(12px);
-    transition:0.3s;
 }
 
-.card:hover{
-    transform:translateY(-5px);
-    border-color:var(--accent);
-}
-
-.unit{
-    font-size:0.75rem;
-    color:var(--accent);
-    font-weight:700;
-}
-
-.formula{
-    background:#020617;
-    padding:10px;
-    margin:10px 0;
-    border-radius:8px;
-    color:var(--accent2);
-    font-family:monospace;
-}
-
-.trap{
-    font-size:0.8rem;
-    color:#f87171;
-}
-
-/* QUIZ */
-.quiz{
-    max-width:600px;
+/* FLASHCARD */
+.flashcard{
+    width:300px;
+    height:180px;
     margin:auto;
-    padding:2rem;
-}
-
-.option{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border-radius:10px;
-    background:var(--card);
-    border:1px solid var(--border);
+    perspective:1000px;
     cursor:pointer;
 }
 
-.option:hover{border-color:var(--accent);}
+.inner{
+    width:100%;
+    height:100%;
+    transition:0.6s;
+    transform-style:preserve-3d;
+    position:relative;
+}
 
-.correct{background:#22c55e;}
-.incorrect{background:#ef4444;}
+.flashcard.flip .inner{
+    transform:rotateY(180deg);
+}
 
-.section{display:none;}
-.section.active{display:block;}
+.front,.back{
+    position:absolute;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:15px;
+    backface-visibility:hidden;
+    padding:1rem;
+    text-align:center;
+}
+
+.back{transform:rotateY(180deg);}
+
+/* QUIZ */
+.option{
+    padding:12px;
+    margin:8px 0;
+    border-radius:10px;
+    background:var(--card);
+    cursor:pointer;
+    border:1px solid var(--border);
+}
+
+.correct{background:var(--good);}
+.incorrect{background:var(--bad);}
+
+.timer{
+    text-align:center;
+    font-size:1.3rem;
+    margin:1rem;
+}
+
+.center{text-align:center;}
 
 </style>
 </head>
@@ -167,18 +146,14 @@ header{
 <body>
 
 <header>
-<div class="logo">AP Physics Hub</div>
+<div class="logo">AP PHYSICS HUB</div>
 </header>
 
-<div class="hero">
-<h1>Study Smarter for AP Physics</h1>
-<p>Notes • Flashcards • Practice Tests</p>
-<button class="btn" onclick="switchTab('notes')">Start Studying</button>
-</div>
-
-<div class="nav-tabs">
-<button class="tab-btn active" onclick="switchTab('notes')">Notes</button>
-<button class="tab-btn" onclick="switchTab('quiz')">Quiz</button>
+<div class="nav">
+<button class="btn active" onclick="show('notes',this)">Notes</button>
+<button class="btn" onclick="show('flash',this)">Flashcards</button>
+<button class="btn" onclick="show('quiz',this)">Quiz</button>
+<button class="btn" onclick="startExam()">Exam Mode</button>
 </div>
 
 <!-- NOTES -->
@@ -186,71 +161,193 @@ header{
 <div class="grid">
 
 <div class="card">
-<div class="unit">Unit 1</div>
-<h3>Kinematics</h3>
-<div class="formula">v² = v₀² + 2aΔx</div>
-<p>Motion in 1D and 2D</p>
-<div class="trap">Trap: vertical velocity = 0 at peak</div>
+<h3>Unit 1: Kinematics</h3>
+<p>v² = v₀² + 2aΔx</p>
 </div>
 
 <div class="card">
-<div class="unit">Unit 2</div>
-<h3>Dynamics</h3>
-<div class="formula">ΣF = ma</div>
-<p>Forces & Newton’s Laws</p>
-<div class="trap">Trap: normal ≠ mg always</div>
+<h3>Unit 2: Dynamics</h3>
+<p>ΣF = ma</p>
 </div>
 
 <div class="card">
-<div class="unit">Unit 8</div>
-<h3>Electric Force</h3>
-<div class="formula">F = k(q1q2)/r²</div>
-<p>Charge interactions</p>
-<div class="trap">Trap: distance matters squared</div>
+<h3>Unit 3: Energy</h3>
+<p>K = ½mv²</p>
+</div>
+
+<div class="card">
+<h3>Unit 4: Momentum</h3>
+<p>p = mv</p>
+</div>
+
+<div class="card">
+<h3>Unit 5: Rotation</h3>
+<p>τ = rFsinθ</p>
+</div>
+
+<div class="card">
+<h3>Unit 8: Electric Force</h3>
+<p>F = k(q1q2)/r²</p>
 </div>
 
 </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="flash" class="section center">
+
+<div class="flashcard" onclick="flip(this)">
+<div class="inner">
+<div class="front" id="f">What is acceleration?</div>
+<div class="back" id="b">Change in velocity over time</div>
+</div>
+</div>
+
+<br>
+<button class="btn" onclick="nextCard()">Next</button>
+
 </div>
 
 <!-- QUIZ -->
-<div id="quiz" class="section">
-<div class="quiz">
+<div id="quiz" class="section center">
+
 <h2 id="q">Click Start</h2>
 <div id="answers"></div>
+<p>Score: <span id="score">0</span></p>
 <button class="btn" onclick="newQ()">New Question</button>
+
 </div>
+
+<!-- EXAM -->
+<div id="exam" class="section center">
+
+<div class="timer" id="time">Time: 60</div>
+<h2 id="eq"></h2>
+<div id="eans"></div>
+
+<button class="btn" onclick="nextExam()">Next</button>
+
 </div>
 
 <script>
-const questions=[
-{q:"Acceleration at peak?",a:["0","9.8 down","9.8 up"],c:1},
-{q:"Force if velocity constant?",a:["0",">0","<0"],c:0}
-];
 
-function switchTab(id){
+function show(id,btn){
 document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
 document.getElementById(id).classList.add('active');
 
-document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-event.target.classList.add('active');
+document.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
+if(btn) btn.classList.add('active');
 }
 
+/* FLASHCARDS */
+const cards=[
+["Acceleration?","Change in velocity/time"],
+["Newton 2nd law?","F = ma"],
+["Coulomb law?","F = k(q1q2)/r²"]
+];
+
+let i=0;
+
+function flip(el){
+el.classList.toggle('flip');
+}
+
+function nextCard(){
+i=(i+1)%cards.length;
+document.getElementById("f").innerText=cards[i][0];
+document.getElementById("b").innerText=cards[i][1];
+document.querySelector('.flashcard').classList.remove('flip');
+}
+
+/* QUIZ */
+let score=0;
+
+const qz=[
+{q:"Force constant velocity?",a:["0","not 0"],c:0},
+{q:"Acceleration at peak?",a:["0","9.8 down"],c:1}
+];
+
 function newQ(){
-const q=questions[Math.floor(Math.random()*questions.length)];
+let q=qz[Math.floor(Math.random()*qz.length)];
 document.getElementById("q").innerText=q.q;
 
 let html="";
-q.a.forEach((opt,i)=>{
-html+=`<div class="option" onclick="check(this,${i},${q.c})">${opt}</div>`;
+q.a.forEach((o,idx)=>{
+html+=`<div class="option" onclick="check(this,${idx},${q.c})">${o}</div>`;
 });
+
 document.getElementById("answers").innerHTML=html;
 }
 
 function check(el,i,c){
-document.querySelectorAll('.option').forEach(b=>b.onclick=null);
-if(i===c){el.classList.add('correct');}
-else{el.classList.add('incorrect');}
+document.querySelectorAll('.option').forEach(o=>o.onclick=null);
+
+if(i===c){
+el.classList.add('correct');
+score++;
+}else{
+el.classList.add('incorrect');
 }
+
+document.getElementById("score").innerText=score;
+}
+
+/* EXAM MODE */
+let examQ=[
+{q:"What is acceleration?",a:["v/t","change in v"],c:1},
+{q:"Force formula?",a:["F=ma","F=mv"],c:0}
+];
+
+let ex=0;
+let time=60;
+let timer;
+
+function startExam(){
+show('exam');
+ex=0;
+time=60;
+score=0;
+
+loadExam();
+
+timer=setInterval(()=>{
+time--;
+document.getElementById("time").innerText="Time: "+time;
+if(time<=0) endExam();
+},1000);
+}
+
+function loadExam(){
+let q=examQ[ex];
+document.getElementById("eq").innerText=q.q;
+
+let html="";
+q.a.forEach((o,i)=>{
+html+=`<div class="option" onclick="sel(this,${i},${q.c})">${o}</div>`;
+});
+
+document.getElementById("eans").innerHTML=html;
+}
+
+function sel(el,i,c){
+document.querySelectorAll('#eans .option').forEach(o=>o.onclick=null);
+
+if(i===c) score++;
+
+}
+
+function nextExam(){
+ex++;
+if(ex>=examQ.length) endExam();
+else loadExam();
+}
+
+function endExam(){
+clearInterval(timer);
+alert("Score: "+score+"/"+examQ.length);
+location.reload();
+}
+
 </script>
 
 </body>
