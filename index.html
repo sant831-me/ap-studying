@@ -1,229 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AP Physics & Science Hub | 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0f172a;
-    --surface: #1e293b;
-    --surface2: #334155;
-    --text: #f8fafc;
-    --muted: #94a3b8;
-    --accent: #38bdf8;
-    --border: rgba(255,255,255,0.1);
-    --border2: rgba(255,255,255,0.2);
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP Physics & Science Hub | 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface2: #334155;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --border: rgba(255,255,255,0.1);
+        }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'DM Sans', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6;
+        }
 
-  /* NAVIGATION */
-  header { 
-    height: 65px;
-    padding: 0 2rem; 
-    border-bottom: 1px solid var(--border); 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between;
-    background: rgba(15, 23, 42, 0.9);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-  }
-  .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
-  .logo span { color: var(--accent); }
-  
-  .layout { display: flex; height: calc(100vh - 65px); }
+        /* NAVIGATION */
+        header {
+            height: 65px;
+            padding: 0 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-  /* SIDEBAR */
-  .sidebar { 
-    width: 260px; 
-    background: var(--surface); 
-    border-right: 1px solid var(--border); 
-    padding: 1.5rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .sb-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; padding-left: 0.5rem; }
-  .nav-item { 
-    padding: 12px; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    transition: 0.2s; 
-    color: var(--muted); 
-    display: flex; 
-    align-items: center; 
-    gap: 12px;
-    font-size: 14px;
-  }
-  .nav-item:hover { background: var(--surface2); color: white; }
-  .nav-item.active { background: var(--accent); color: var(--bg); font-weight: 600; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+        .logo { font-weight: 700; font-size: 1.25rem; color: var(--accent); }
 
-  /* CONTENT AREA */
-  main { flex: 1; overflow-y: auto; padding: 2.5rem; }
+        /* LAYOUT */
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        
+        #hero { text-align: center; padding: 4rem 0; }
+        #hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+        
+        .search-container { margin-bottom: 3rem; text-align: center; }
+        #unitSearch {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        #unitSearch:focus { border-color: var(--accent); }
 
-  /* UNIT CARDS (ACCORDION) */
-  .unit-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; }
-  .unit-header { padding: 1.25rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-  .unit-header:hover { background: var(--surface2); }
-  .unit-info h3 { font-size: 16px; margin-bottom: 4px; }
-  .unit-info p { font-size: 12px; color: var(--muted); }
-  .unit-content { padding: 0 1.25rem 1.25rem; display: none; border-top: 1px solid var(--border); }
-  .unit-card.open .unit-content { display: block; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
 
-  /* PRACTICE AREA */
-  .tab-nav { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
-  .tab-link { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 15px; font-weight: 500; }
-  .tab-link.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
 
-  .flashcard { 
-    width: 100%; max-width: 500px; height: 300px; 
-    perspective: 1000px; margin: 2rem auto; cursor: pointer;
-  }
-  .fc-inner { 
-    position: relative; width: 100%; height: 100%; 
-    transition: transform 0.6s; transform-style: preserve-3d; 
-  }
-  .fc-inner.flipped { transform: rotateY(180deg); }
-  .fc-front, .fc-back {
-    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-    display: flex; align-items: center; justify-content: center; padding: 2rem;
-    border-radius: 20px; border: 1px solid var(--border2); text-align: center; font-size: 1.2rem;
-  }
-  .fc-front { background: var(--surface2); }
-  .fc-back { background: var(--accent); color: var(--bg); transform: rotateY(180deg); }
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+        .unit-tag { color: var(--accent); font-weight: 700; font-size: 0.75rem; }
+        .pct-tag { background: rgba(56,189,248,0.1); color: var(--accent); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; }
 
-  .mcq-box { background: var(--surface); padding: 2rem; border-radius: 15px; border: 1px solid var(--border); }
-  .opt { 
-    display: block; width: 100%; padding: 15px; margin: 10px 0; 
-    background: var(--surface2); border: 1px solid var(--border); 
-    border-radius: 8px; color: white; cursor: pointer; text-align: left;
-  }
-  .opt:hover { border-color: var(--accent); }
-  .opt.correct { background: #10b981; border-color: #10b981; }
-  .opt.wrong { background: #ef4444; border-color: #ef4444; }
+        h3 { margin-bottom: 0.5rem; font-size: 1.5rem; }
+        p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1rem; }
 
-  /* FORMULAS */
-  .formula-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
-  .formula-item { font-family: 'DM Mono', monospace; background: var(--bg); padding: 10px; border-radius: 6px; font-size: 13px; border-left: 3px solid var(--accent); }
+        .formula-box {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--accent);
+        }
 
-  @media (max-width: 900px) { .sidebar { display: none; } }
-</style>
+        .trap-box {
+            font-size: 0.85rem;
+            background: rgba(255,255,255,0.03);
+            padding: 0.75rem;
+            border-radius: 6px;
+            color: #cbd5e1;
+        }
+        .trap-box b { color: #f87171; } /* Red for trap warnings */
+
+        .btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">Physics<span>Hub</span></div>
-  <div id="course-title" style="font-weight: 500; color: var(--muted);">AP Physics 1</div>
-</header>
+    <header>
+        <div class="logo">AP PHYSICS HUB</div>
+        <nav style="display: flex; gap: 2rem; font-size: 0.9rem;">
+            <a href="#" style="color: var(--text); text-decoration: none;">Units</a>
+            <a href="#" style="color: var(--muted); text-decoration: none;">Formula Sheet</a>
+            <a href="#" style="color: var(--muted); text-decoration: none;">Practice</a>
+        </nav>
+    </header>
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sb-label">Study Materials</div>
-    <div class="nav-item active" onclick="switchCourse('phys1', this)"><div class="dot"></div> AP Physics 1</div>
-    <div class="nav-item" onclick="switchCourse('physc', this)"><div class="dot"></div> AP Physics C: Mech</div>
-    <div class="nav-item" onclick="switchCourse('bio', this)"><div class="dot"></div> AP Biology</div>
-    <div class="nav-item" onclick="switchCourse('chem', this)"><div class="dot"></div> AP Chemistry</div>
-    <div class="nav-item" onclick="switchCourse('calcab', this)"><div class="dot"></div> AP Calc AB</div>
-    <div class="nav-item" onclick="switchCourse('calcbc', this)"><div class="dot"></div> AP Calc BC</div>
-  </aside>
+    <main class="container">
+        <section id="hero">
+            <h1>The Ultimate Cheat Sheet</h1>
+            <p>Everything you need for the AP Physics 1 Exam (Units 1-8)</p>
+        </section>
 
-  <main>
-    <div class="tab-nav">
-      <button class="tab-link active" onclick="showSection('notes')">Unit Notes</button>
-      <button class="tab-link" onclick="showSection('cards')">Flashcards</button>
-      <button class="tab-link" onclick="showSection('quiz')">Practice Quiz</button>
-    </div>
-
-    <section id="notes-section"></section>
-
-    <section id="cards-section" style="display:none;">
-      <div class="flashcard" onclick="this.querySelector('.fc-inner').classList.toggle('flipped')">
-        <div class="fc-inner">
-          <div class="fc-front" id="card-q">Click to start flashcards</div>
-          <div class="fc-back" id="card-a">...</div>
+        <div class="search-container">
+            <input type="text" id="unitSearch" placeholder="Search topics, formulas, or units...">
         </div>
-      </div>
-      <div style="text-align:center;">
-        <button onclick="nextCard()" style="padding: 10px 30px; border-radius: 30px; background: var(--accent); border: none; cursor: pointer; font-weight: bold;">Next Card →</button>
-      </div>
-    </section>
 
-    <section id="quiz-section" style="display:none;">
-      <div class="mcq-box" id="quiz-container">
-        </div>
-    </section>
-  </main>
-</div>
+        <section id="resources" class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="unit-tag">UNIT 1</span>
+                    <span class="pct-tag">10-15%</span>
+                </div>
+                <h3>Kinematics</h3>
+                <p>Motion in 1D and 2D. Sketch axes → List knowns → Pick equation.</p>
+                <div class="formula-box">
+                    v = v₀ + at <br>
+                    Δx = v₀t + ½at² <br>
+                    v² = v₀² + 2aΔx
+                </div>
+                <div class="trap-box">
+                    <b>TRAP:</b> "Slowing down" ≠ negative acceleration. Check signs relative to velocity!
+                </div>
+            </div>
 
-<script>
-// Logic to handle course data and switching
-let currentCourse = 'phys1';
-let cardIdx = 0;
+            <div class="card">
+                <div class="card-header">
+                    <span class="unit-tag">UNIT 2</span>
+                    <span class="pct-tag">18-23%</span>
+                </div>
+                <h3>Dynamics</h3>
+                <p>Newton's Laws and Forces. Always draw FBDs first.</p>
+                <div class="formula-box">
+                    ΣF = ma <br>
+                    F_fric ≤ μF_n <br>
+                    F_g = mg
+                </div>
+                <div class="trap-box">
+                    <b>TRAP:</b> Normal Force (N) isn't always mg. On a ramp, N = mg cosθ.
+                </div>
+            </div>
 
-function switchCourse(courseId, el) {
-  currentCourse = courseId;
-  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('course-title').textContent = el.textContent;
-  renderNotes();
-  cardIdx = 0;
-  nextCard();
-}
+            <div class="card">
+                <div class="card-header">
+                    <span class="unit-tag">UNIT 3</span>
+                    <span class="pct-tag">18-23%</span>
+                </div>
+                <h3>Work & Energy</h3>
+                <p>Conservation of Energy and Power. Path irrelevant for gravity.</p>
+                <div class="formula-box">
+                    W = Fd cosθ <br>
+                    K = ½mv² <br>
+                    ΔE = W = ΔK + ΔU
+                </div>
+                <div class="trap-box">
+                    <b>TRAP:</b> If velocity doubles, KE quadruples (KE ∝ v²).
+                </div>
+            </div>
 
-function showSection(sect) {
-  document.getElementById('notes-section').style.display = sect === 'notes' ? 'block' : 'none';
-  document.getElementById('cards-section').style.display = sect === 'cards' ? 'block' : 'none';
-  document.getElementById('quiz-section').style.display = sect === 'quiz' ? 'block' : 'none';
-  document.querySelectorAll('.tab-link').forEach(btn => {
-    btn.classList.toggle('active', btn.textContent.toLowerCase().includes(sect));
-  });
-}
+            <div class="card">
+                <div class="card-header">
+                    <span class="unit-tag">UNIT 4</span>
+                    <span class="pct-tag">10-15%</span>
+                </div>
+                <h3>Linear Momentum</h3>
+                <p>Impulse and Collisions. Momentum is a VECTOR.</p>
+                <div class="formula-box">
+                    p = mv <br>
+                    J = FΔt = Δp <br>
+                    m₁v₁ + m₂v₂ = m₁v₁' + m₂v₂'
+                </div>
+                <div class="trap-box">
+                    <b>TRAP:</b> Opposite directions must have opposite signs (+ vs -).
+                </div>
+            </div>
 
-function renderNotes() {
-  const data = COURSES[currentCourse];
-  const container = document.getElementById('notes-section');
-  container.innerHTML = data.units.map((u, i) => `
-    <div class="unit-card">
-      <div class="unit-header" onclick="this.parentElement.classList.toggle('open')">
-        <div class="unit-info">
-          <h3>Unit ${u.num}: ${u.title}</h3>
-          <p>${u.pct} of Exam</p>
-        </div>
-        <span>▼</span>
-      </div>
-      <div class="unit-content">
-        <p style="color: var(--muted); margin-bottom: 1rem;">${u.desc}</p>
-        <div class="formula-grid">
-          ${u.formulas.map(f => `<div class="formula-item">${f}</div>`).join('')}
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
+            <div class="card">
+                <div class="card-header">
+                    <span class="unit-tag">UNIT 5</span>
+                    <span class="pct-tag">10-15%</span>
+                </div>
+                <h3>Torque & Rotation</h3>
+                <p>Rotational kinematics and inertia. CCW is positive.</p>
+                <div class="formula-box">
+                    τ = rF sinθ <br>
+                    L = Iω <br>
+                    Στ = Iα
+                </div>
+                <div class="trap-box">
+                    <b>TRAP:</b> Skater pulls arms in → I decreases → ω increases (L is conserved).
+                </div>
+            </div>
 
-function nextCard() {
-  const cards = COURSES[currentCourse].flashcards;
-  const card = cards[cardIdx];
-  document.querySelector('.fc-inner').classList.remove('flipped');
-  setTimeout(() => {
-    document.getElementById('card-q').textContent = card.q;
-    document.getElementById('card-a').textContent = card.a;
-    cardIdx = (cardIdx + 1) % cards.length;
-  }, 150);
-}
+            <div class="card">
+                <div class="card-header">
+                    <span class="unit-tag">UNIT 6</span>
+                    <span class="pct-tag">5-8%</span>
+                </div>
+                <h3>Oscillations</h3>
+                <p>Simple Harmonic Motion (SHM). Energy sloshing back/forth.</p>
+                <div class="formula-box">
+                    T_s = 2π√(m/k) <br>
+                    T_p = 2π√(L/g)
+                </div>
+                <div class="trap-box">
+                    <b>TRAP:</b> Period (T) is independent of amplitude. Mass doesn't affect pendulums!
+                </div>
+            </div>
 
-// Data object (COURSES) goes here - Same as provided in your previous prompt but expanded
-// (Including the full COURSES object you have in your JS section)
-// Initial Load
-window.onload = () => {
-  renderNotes();
-  nextCard();
-};
-</script>
+            <div class="card">
+                <div class="card-header">
+                    <span class="unit-tag">UNIT 7</span>
+                    <span class="pct-tag">7-12%</span>
+                </div>
+                <h3>Gravitation</h3>
+                <p>Newton's Law of Universal Gravitation and Orbits.</p>
+                <div class="formula-box">
+                    F_g = G(m₁m₂/r²) <br>
+                    g = G(M/r²)
+                </div>
+                <div class="trap-box">
+                    <b>TRAP:</b> Distance (r) is from center-to-center, not surface-to-surface.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="unit-tag">UNIT 8</span>
+                    <span class="pct-tag">10-15%</span>
+                </div>
+                <h3>Fluids</h3>
+                <p>Density, Pressure, Buoyancy, and Flow.</p>
+                <div class="formula-box">
+                    P = P₀ + ρgh <br>
+                    F_b = ρVg <br>
+                    A₁v₁ = A₂v₂
+                </div>
+                <div class="trap-box">
+                    <b>TRAP:</b> Faster flow = Lower pressure (Bernoulli's Principle).
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('unitSearch');
+        const cards = document.querySelectorAll('.card');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(term) ? 'block' : 'none';
+            });
+        });
+    </script>
 </body>
 </html>
