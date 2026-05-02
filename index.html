@@ -1,217 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AP Physics Pro | Study & Practice Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --surface2: #334155;
-            --text: #f8fafc;
-            --muted: #94a3b8;
-            --accent: #38bdf8;
-            --border: rgba(255,255,255,0.1);
-            --danger: #f87171;
-            --success: #4ade80;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+<title>AP Physics Hub</title>
 
-        header {
-            height: 65px; padding: 0 2rem; border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 100;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 
-        .logo { font-weight: 700; font-size: 1.25rem; color: var(--accent); }
-        .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
-        
-.nav-tabs { 
-        display: flex; 
-        gap: 1rem; 
-        margin-bottom: 2rem; 
-        justify-content: flex-end; /* This moves them to the right */
-        flex-wrap: wrap; 
-    }
-        .tab-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+<style>
+:root{
+    --bg:#0b0f1a;
+    --card:rgba(255,255,255,0.05);
+    --glass:rgba(255,255,255,0.08);
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --accent:#3b82f6;
+    --accent2:#22d3ee;
+    --border:rgba(255,255,255,0.1);
+}
 
-        .section-content { display: none; animation: fadeIn 0.3s ease; }
-        .section-content.active { display: block; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:'Inter',sans-serif;
+    background:radial-gradient(circle at top,#111827,#020617);
+    color:var(--text);
+}
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* HEADER */
+header{
+    display:flex;
+    justify-content:space-between;
+    padding:1.2rem 2rem;
+    backdrop-filter:blur(12px);
+    background:rgba(0,0,0,0.4);
+    border-bottom:1px solid var(--border);
+    position:sticky;top:0;
+}
 
-        /* STUDY CARDS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .card { background: var(--surface); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); }
-        .unit-num { color: var(--accent); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
-        .formula-box { background: var(--bg); padding: 12px; border-radius: 8px; color: var(--accent); font-family: monospace; margin: 12px 0; border-left: 3px solid var(--accent); }
-        .trap { font-size: 0.85rem; color: var(--danger); background: rgba(248, 113, 113, 0.1); padding: 8px; border-radius: 6px; margin-top: 10px; }
+.logo{
+    font-weight:700;
+    font-size:1.2rem;
+    background:linear-gradient(to right,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    color:transparent;
+}
 
-        /* QUIZ ENGINE */
-        .quiz-card { background: var(--surface); padding: 2.5rem; border-radius: 20px; border: 1px solid var(--border); max-width: 700px; margin: 0 auto; }
-        .option { 
-            display: block; width: 100%; padding: 15px; margin: 12px 0; 
-            background: var(--surface2); border: 1px solid var(--border); 
-            border-radius: 10px; cursor: pointer; color: white; text-align: left;
-            transition: 0.2s; font-size: 1rem;
-        }
-        .option:hover { border-color: var(--accent); background: #3f4e63; }
-        .option.correct { background: var(--success) !important; color: var(--bg); font-weight: 700; }
-        .option.incorrect { background: var(--danger) !important; }
-        
-        #score-board { text-align: center; font-size: 1.25rem; font-weight: 700; color: var(--accent); margin-bottom: 1rem; }
+/* HERO */
+.hero{
+    text-align:center;
+    padding:4rem 1rem;
+}
 
-        /* FRQ STYLES */
-        textarea { 
-            width: 100%; height: 200px; background: var(--bg); color: white; 
-            border: 1px solid var(--border); border-radius: 12px; padding: 15px; 
-            font-family: inherit; font-size: 1rem; margin: 1.5rem 0; resize: vertical;
-        }
-        .rubric { display: none; background: #064e3b; color: #ecfdf5; padding: 1.5rem; border-radius: 12px; margin-top: 1rem; }
-    </style>
+.hero h1{
+    font-size:2.5rem;
+    margin-bottom:1rem;
+}
+
+.hero p{
+    color:var(--muted);
+}
+
+.btn{
+    margin-top:1.5rem;
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:linear-gradient(to right,var(--accent),var(--accent2));
+    color:white;
+    font-weight:600;
+}
+
+/* NAV */
+.nav-tabs{
+    display:flex;
+    justify-content:center;
+    gap:1rem;
+    margin:2rem 0;
+}
+
+.tab-btn{
+    padding:10px 18px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--glass);
+    color:white;
+    cursor:pointer;
+}
+
+.tab-btn.active{
+    background:var(--accent);
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:1.5rem;
+    padding:1rem;
+}
+
+/* CARD */
+.card{
+    background:var(--card);
+    padding:1.5rem;
+    border-radius:18px;
+    border:1px solid var(--border);
+    backdrop-filter:blur(12px);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    border-color:var(--accent);
+}
+
+.unit{
+    font-size:0.75rem;
+    color:var(--accent);
+    font-weight:700;
+}
+
+.formula{
+    background:#020617;
+    padding:10px;
+    margin:10px 0;
+    border-radius:8px;
+    color:var(--accent2);
+    font-family:monospace;
+}
+
+.trap{
+    font-size:0.8rem;
+    color:#f87171;
+}
+
+/* QUIZ */
+.quiz{
+    max-width:600px;
+    margin:auto;
+    padding:2rem;
+}
+
+.option{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:10px;
+    background:var(--card);
+    border:1px solid var(--border);
+    cursor:pointer;
+}
+
+.option:hover{border-color:var(--accent);}
+
+.correct{background:#22c55e;}
+.incorrect{background:#ef4444;}
+
+.section{display:none;}
+.section.active{display:block;}
+
+</style>
 </head>
+
 <body>
 
-    <header>
-        <div class="logo">AP PHYSICS HUB</div>
-    </header>
+<header>
+<div class="logo">AP Physics Hub</div>
+</header>
 
-    <main class="container">
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('notes')">Unit Notes</button>
-            <button class="tab-btn" onclick="switchTab('quiz')">MCQ Quiz</button>
-            <button class="tab-btn" onclick="switchTab('frq')">FRQ Practice</button>
-        </div>
+<div class="hero">
+<h1>Study Smarter for AP Physics</h1>
+<p>Notes • Flashcards • Practice Tests</p>
+<button class="btn" onclick="switchTab('notes')">Start Studying</button>
+</div>
 
-        <div id="notes" class="section-content active">
-            <div class="grid">
-                <div class="card">
-                    <span class="unit-num">Unit 1</span>
-                    <h3>Kinematics</h3>
-                    <div class="formula-box">Δx = v₀t + ½at² <br> v² = v₀² + 2aΔx</div>
-                    <p>Focus on projectile motion independence (x and y).</p>
-                    <div class="trap"><b>Trap:</b> Peak velocity is NOT always 0; only v-vertical is 0.</div>
-                </div>
-                <div class="card">
-                    <span class="unit-num">Unit 2</span>
-                    <h3>Dynamics</h3>
-                    <div class="formula-box">ΣF = ma <br> F_f ≤ μF_n</div>
-                    <p>Newton's Laws and Free Body Diagrams.</p>
-                    <div class="trap"><b>Trap:</b> Normal force on a ramp is mg·cos(θ).</div>
-                </div>
-                <div class="card">
-                    <span class="unit-num">Unit 3</span>
-                    <h3>Energy & Power</h3>
-                    <div class="formula-box">K = ½mv² <br> U_g = mgh <br> W = Fd·cosθ</div>
-                    <p>Conservation of Mechanical Energy.</p>
-                    <div class="trap"><b>Trap:</b> Work is 0 if Force is perpendicular to motion.</div>
-                </div>
-                <div class="card">
-                    <span class="unit-num">Unit 4</span>
-                    <h3>Momentum</h3>
-                    <div class="formula-box">p = mv <br> J = FΔt = Δp</div>
-                    <p>Impulse and Collisions (Elastic vs Inelastic).</p>
-                    <div class="trap"><b>Trap:</b> Momentum is a vector—direction (+/-) matters!</div>
-                </div>
-                <div class="card">
-                    <span class="unit-num">Unit 5</span>
-                    <h3>Rotation</h3>
-                    <div class="formula-box">τ = rFsinθ <br> L = Iω <br> K_rot = ½Iω²</div>
-                    <p>Torque, Angular Momentum, and Rolling.</p>
-                    <div class="trap"><b>Trap:</b> Disk vs Hoop—Hoops are harder to start spinning.</div>
-                </div>
-                <div class="card">
-                    <span class="unit-num">Unit 8</span>
-                    <h3>Fluids</h3>
-                    <div class="formula-box">P = P₀ + ρgh <br> F_b = ρVg <br> A₁v₁ = A₂v₂</div>
-                    <p>Buoyancy and Bernoulli's Principle.</p>
-                    <div class="trap"><b>Trap:</b> Buoyant force depends on submerged volume, not weight.</div>
-                </div>
-            </div>
-        </div>
+<div class="nav-tabs">
+<button class="tab-btn active" onclick="switchTab('notes')">Notes</button>
+<button class="tab-btn" onclick="switchTab('quiz')">Quiz</button>
+</div>
 
-        <div id="quiz" class="section-content">
-            <div id="score-board">Current Score: 0</div>
-            <div class="quiz-card">
-                <h2 id="question">Click below to start your practice...</h2>
-                <div id="options"></div>
-                <button class="tab-btn" style="margin-top: 2rem; width: 100%; border-color: var(--accent);" onclick="loadQuestion()">Generate New Question</button>
-            </div>
-        </div>
+<!-- NOTES -->
+<div id="notes" class="section active">
+<div class="grid">
 
-        <div id="frq" class="section-content">
-            <div class="quiz-card" style="max-width: 100%;">
-                <span class="unit-num">Free Response Question</span>
-                <h2>The Elastic Collision</h2>
-                <p style="margin-top: 1rem;">A sphere of mass 2M moves with speed V toward a stationary sphere of mass M. After a perfectly elastic collision, the first sphere moves with speed V/3. <br><br><b>Task:</b> Derive the final speed of the second sphere and justify why Kinetic Energy is conserved.</p>
-                <textarea placeholder="Type your derivation and justification here..."></textarea>
-                <button class="tab-btn" onclick="document.getElementById('rubric').style.display='block'">Show Scoring Rubric</button>
-                
-                <div id="rubric" class="rubric">
-                    <h4>Scoring Rubric (4 Points Total)</h4>
-                    <ul>
-                        <li><b>1pt:</b> Statement of Conservation of Momentum (Σp_i = Σp_f).</li>
-                        <li><b>1pt:</b> Correct algebraic setup: (2M)(V) + 0 = (2M)(V/3) + (M)(v_f2).</li>
-                        <li><b>1pt:</b> Solving for v_f2 = 4/3 V.</li>
-                        <li><b>1pt:</b> Explaining that elastic collisions, by definition, conserve total system Kinetic Energy.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </main>
+<div class="card">
+<div class="unit">Unit 1</div>
+<h3>Kinematics</h3>
+<div class="formula">v² = v₀² + 2aΔx</div>
+<p>Motion in 1D and 2D</p>
+<div class="trap">Trap: vertical velocity = 0 at peak</div>
+</div>
 
-    <script>
-        // TAB LOGIC
-        function switchTab(tabId) {
-            document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+<div class="card">
+<div class="unit">Unit 2</div>
+<h3>Dynamics</h3>
+<div class="formula">ΣF = ma</div>
+<p>Forces & Newton’s Laws</p>
+<div class="trap">Trap: normal ≠ mg always</div>
+</div>
 
-        // QUIZ DATA
-        const questions = [
-            { q: "A ball is thrown straight up. At the peak of its flight, what is its acceleration?", a: ["0 m/s²", "9.8 m/s² downward", "9.8 m/s² upward", "Changing constantly"], correct: 1 },
-            { q: "Which of the following is conserved in an inelastic collision?", a: ["Kinetic Energy only", "Momentum only", "Both KE and Momentum", "Neither"], correct: 1 },
-            { q: "If the radius of a circular path is doubled while speed remains constant, the centripetal acceleration is...", a: ["Doubled", "Quadrupled", "Halved", "Unchanged"], correct: 2 },
-            { q: "An object is moving at constant velocity. What is the net force acting on it?", a: ["Greater than 0", "Less than 0", "Exactly 0", "Equal to its weight"], correct: 2 },
-            { q: "According to Bernoulli's principle, where the speed of a fluid is high, the pressure is...", a: ["High", "Low", "Zero", "Atmospheric"], correct: 1 },
-            { q: "The period of a simple pendulum depends only on which two variables?", a: ["Mass and Length", "Length and Gravity", "Mass and Amplitude", "Gravity and Amplitude"], correct: 1 }
-        ];
+<div class="card">
+<div class="unit">Unit 8</div>
+<h3>Electric Force</h3>
+<div class="formula">F = k(q1q2)/r²</div>
+<p>Charge interactions</p>
+<div class="trap">Trap: distance matters squared</div>
+</div>
 
-        let score = 0;
+</div>
+</div>
 
-        function loadQuestion() {
-            const qObj = questions[Math.floor(Math.random() * questions.length)];
-            document.getElementById('question').innerText = qObj.q;
-            const optionsDiv = document.getElementById('options');
-            optionsDiv.innerHTML = '';
-            
-            qObj.a.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'option';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    const allOptions = document.querySelectorAll('.option');
-                    allOptions.forEach(b => b.disabled = true); // Prevent double clicking
-                    
-                    if(i === qObj.correct) {
-                        btn.classList.add('correct');
-                        score++;
-                    } else {
-                        btn.classList.add('incorrect');
-                        allOptions[qObj.correct].classList.add('correct');
-                    }
-                    document.getElementById('score-board').innerText = `Current Score: ${score}`;
-                };
-                optionsDiv.appendChild(btn);
-            });
-        }
-    </script>
+<!-- QUIZ -->
+<div id="quiz" class="section">
+<div class="quiz">
+<h2 id="q">Click Start</h2>
+<div id="answers"></div>
+<button class="btn" onclick="newQ()">New Question</button>
+</div>
+</div>
+
+<script>
+const questions=[
+{q:"Acceleration at peak?",a:["0","9.8 down","9.8 up"],c:1},
+{q:"Force if velocity constant?",a:["0",">0","<0"],c:0}
+];
+
+function switchTab(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+
+document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+event.target.classList.add('active');
+}
+
+function newQ(){
+const q=questions[Math.floor(Math.random()*questions.length)];
+document.getElementById("q").innerText=q.q;
+
+let html="";
+q.a.forEach((opt,i)=>{
+html+=`<div class="option" onclick="check(this,${i},${q.c})">${opt}</div>`;
+});
+document.getElementById("answers").innerHTML=html;
+}
+
+function check(el,i,c){
+document.querySelectorAll('.option').forEach(b=>b.onclick=null);
+if(i===c){el.classList.add('correct');}
+else{el.classList.add('incorrect');}
+}
+</script>
+
 </body>
 </html>
