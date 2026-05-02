@@ -14,6 +14,7 @@
             --muted: #94a3b8;
             --accent: #38bdf8;
             --border: rgba(255,255,255,0.1);
+            --danger: #f87171;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +25,6 @@
             line-height: 1.6;
         }
 
-        /* NAVIGATION */
         header {
             height: 65px;
             padding: 0 2rem;
@@ -41,10 +41,9 @@
 
         .logo { font-weight: 700; font-size: 1.25rem; color: var(--accent); }
 
-        /* LAYOUT */
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         
-        #hero { text-align: center; padding: 4rem 0; }
+        #hero { text-align: center; padding: 3rem 0; }
         #hero h1 { font-size: 3rem; margin-bottom: 1rem; }
         
         .search-container { margin-bottom: 3rem; text-align: center; }
@@ -63,216 +62,215 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             gap: 2rem;
         }
 
-        /* CARDS */
         .card {
             background: var(--surface);
             padding: 1.5rem;
             border-radius: 16px;
             border: 1px solid var(--border);
             transition: all 0.3s ease;
+            height: fit-content;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .card:hover { border-color: var(--accent); }
 
         .card-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
         .unit-tag { color: var(--accent); font-weight: 700; font-size: 0.75rem; }
         .pct-tag { background: rgba(56,189,248,0.1); color: var(--accent); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; }
 
-        h3 { margin-bottom: 0.5rem; font-size: 1.5rem; }
-        p { color: var(--muted); font-size: 0.95rem; margin-bottom: 1rem; }
-
         .formula-box {
             background: var(--bg);
             padding: 1rem;
             border-radius: 8px;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: monospace;
             font-size: 0.9rem;
             color: var(--accent);
-            margin-bottom: 1rem;
+            margin: 1rem 0;
             border-left: 3px solid var(--accent);
         }
 
-        .trap-box {
-            font-size: 0.85rem;
-            background: rgba(255,255,255,0.03);
-            padding: 0.75rem;
-            border-radius: 6px;
-            color: #cbd5e1;
-        }
-        .trap-box b { color: #f87171; } /* Red for trap warnings */
+        .details { display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+        .details h4 { font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem; }
+        .details ul { padding-left: 1.2rem; margin-bottom: 1rem; }
+        .details li { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0.4rem; }
 
-        .btn {
-            display: inline-block;
-            margin-top: 1.5rem;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
+        .trap-box { 
+            font-size: 0.8rem; 
+            background: rgba(248, 113, 113, 0.1); 
+            padding: 0.8rem; 
+            border-radius: 6px; 
+            color: var(--danger); 
+            margin-top: 10px; 
         }
+
+        .toggle-btn {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: 0.2s;
+        }
+        .toggle-btn:hover { background: var(--accent); color: var(--bg); }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">AP PHYSICS HUB</div>
-        <nav style="display: flex; gap: 2rem; font-size: 0.9rem;">
-            <a href="#" style="color: var(--text); text-decoration: none;">Units</a>
-            <a href="#" style="color: var(--muted); text-decoration: none;">Formula Sheet</a>
-            <a href="#" style="color: var(--muted); text-decoration: none;">Practice</a>
+        <nav style="display: flex; gap: 1.5rem; font-size: 0.9rem;">
+            <a href="#" style="color: var(--text); text-decoration: none;">Cheat Sheet</a>
+            <a href="https://www.albert.io" style="color: var(--muted); text-decoration: none;">Albert.io</a>
         </nav>
     </header>
 
     <main class="container">
         <section id="hero">
-            <h1>The Ultimate Cheat Sheet</h1>
-            <p>Everything you need for the AP Physics 1 Exam (Units 1-8)</p>
+            <h1>Ultimate Study Guide</h1>
+            <p style="color: var(--muted)">Units 1-8 • In-Depth Notes • Common Traps</p>
         </section>
 
         <div class="search-container">
-            <input type="text" id="unitSearch" placeholder="Search topics, formulas, or units...">
+            <input type="text" id="unitSearch" placeholder="Search formulas or topics...">
         </div>
 
         <section id="resources" class="grid">
             <div class="card">
-                <div class="card-header">
-                    <span class="unit-tag">UNIT 1</span>
-                    <span class="pct-tag">10-15%</span>
-                </div>
+                <div class="card-header"><span class="unit-tag">UNIT 1</span><span class="pct-tag">10-15%</span></div>
                 <h3>Kinematics</h3>
-                <p>Motion in 1D and 2D. Sketch axes → List knowns → Pick equation.</p>
-                <div class="formula-box">
-                    v = v₀ + at <br>
-                    Δx = v₀t + ½at² <br>
-                    v² = v₀² + 2aΔx
-                </div>
-                <div class="trap-box">
-                    <b>TRAP:</b> "Slowing down" ≠ negative acceleration. Check signs relative to velocity!
+                <div class="formula-box">v = v₀ + at <br> Δx = v₀t + ½at² <br> v² = v₀² + 2aΔx</div>
+                <button class="toggle-btn" onclick="toggleDetails(this)">Open Deep Dive</button>
+                <div class="details">
+                    <h4>Core Concepts</h4>
+                    <ul>
+                        <li><b>Projectiles:</b> x-motion is constant velocity; y-motion is free fall.</li>
+                        <li><b>Graphs:</b> x-t slope = v; v-t slope = a; v-t area = Δx.</li>
+                    </ul>
+                    <div class="trap-box"><b>TRAP:</b> At peak height, vertical velocity is 0, but acceleration is STILL -9.8 m/s².</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <span class="unit-tag">UNIT 2</span>
-                    <span class="pct-tag">18-23%</span>
-                </div>
+                <div class="card-header"><span class="unit-tag">UNIT 2</span><span class="pct-tag">18-23%</span></div>
                 <h3>Dynamics</h3>
-                <p>Newton's Laws and Forces. Always draw FBDs first.</p>
-                <div class="formula-box">
-                    ΣF = ma <br>
-                    F_fric ≤ μF_n <br>
-                    F_g = mg
-                </div>
-                <div class="trap-box">
-                    <b>TRAP:</b> Normal Force (N) isn't always mg. On a ramp, N = mg cosθ.
+                <div class="formula-box">ΣF = ma <br> F_fric ≤ μF_n <br> N_ramp = mg cosθ</div>
+                <button class="toggle-btn" onclick="toggleDetails(this)">Open Deep Dive</button>
+                <div class="details">
+                    <h4>FBD & Forces</h4>
+                    <ul>
+                        <li><b>Newton's 3rd:</b> Action/Reaction pairs never act on the same object.</li>
+                        <li><b>Inclines:</b> Parallel force is mg sinθ; Perpendicular is mg cosθ.</li>
+                    </ul>
+                    <div class="trap-box"><b>TRAP:</b> Tension in a moving Atwood machine is NOT equal to the weight of the masses.</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <span class="unit-tag">UNIT 3</span>
-                    <span class="pct-tag">18-23%</span>
-                </div>
+                <div class="card-header"><span class="unit-tag">UNIT 3</span><span class="pct-tag">18-23%</span></div>
                 <h3>Work & Energy</h3>
-                <p>Conservation of Energy and Power. Path irrelevant for gravity.</p>
-                <div class="formula-box">
-                    W = Fd cosθ <br>
-                    K = ½mv² <br>
-                    ΔE = W = ΔK + ΔU
-                </div>
-                <div class="trap-box">
-                    <b>TRAP:</b> If velocity doubles, KE quadruples (KE ∝ v²).
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <span class="unit-tag">UNIT 4</span>
-                    <span class="pct-tag">10-15%</span>
-                </div>
-                <h3>Linear Momentum</h3>
-                <p>Impulse and Collisions. Momentum is a VECTOR.</p>
-                <div class="formula-box">
-                    p = mv <br>
-                    J = FΔt = Δp <br>
-                    m₁v₁ + m₂v₂ = m₁v₁' + m₂v₂'
-                </div>
-                <div class="trap-box">
-                    <b>TRAP:</b> Opposite directions must have opposite signs (+ vs -).
+                <div class="formula-box">W = Fd cosθ <br> K = ½mv² <br> U_s = ½kx²</div>
+                <button class="toggle-btn" onclick="toggleDetails(this)">Open Deep Dive</button>
+                <div class="details">
+                    <h4>Conservation</h4>
+                    <ul>
+                        <li><b>Work-Energy:</b> Net work equals change in Kinetic Energy.</li>
+                        <li><b>Power:</b> P = ΔE/Δt or P = Fv.</li>
+                    </ul>
+                    <div class="trap-box"><b>TRAP:</b> Force perpendicular to motion (like Centripetal Force) does ZERO work.</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <span class="unit-tag">UNIT 5</span>
-                    <span class="pct-tag">10-15%</span>
-                </div>
-                <h3>Torque & Rotation</h3>
-                <p>Rotational kinematics and inertia. CCW is positive.</p>
-                <div class="formula-box">
-                    τ = rF sinθ <br>
-                    L = Iω <br>
-                    Στ = Iα
-                </div>
-                <div class="trap-box">
-                    <b>TRAP:</b> Skater pulls arms in → I decreases → ω increases (L is conserved).
+                <div class="card-header"><span class="unit-tag">UNIT 4</span><span class="pct-tag">10-15%</span></div>
+                <h3>Momentum</h3>
+                <div class="formula-box">p = mv <br> J = FΔt = Δp <br> Σp_i = Σp_f</div>
+                <button class="toggle-btn" onclick="toggleDetails(this)">Open Deep Dive</button>
+                <div class="details">
+                    <h4>Impulse & Collisions</h4>
+                    <ul>
+                        <li><b>Elastic:</b> Both p and KE are conserved.</li>
+                        <li><b>Inelastic:</b> Objects stick or deform; KE is lost to heat.</li>
+                    </ul>
+                    <div class="trap-box"><b>TRAP:</b> Momentum is a vector! A bounce from -v to +v is a change of 2mv.</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <span class="unit-tag">UNIT 6</span>
-                    <span class="pct-tag">5-8%</span>
+                <div class="card-header"><span class="unit-tag">UNIT 5</span><span class="pct-tag">10-15%</span></div>
+                <h3>Rotation</h3>
+                <div class="formula-box">τ = rF sinθ <br> L = Iω <br> Στ = Iα</div>
+                <button class="toggle-btn" onclick="toggleDetails(this)">Open Deep Dive</button>
+                <div class="details">
+                    <h4>Torque & Inertia</h4>
+                    <ul>
+                        <li><b>Inertia (I):</b> Depends on mass distribution. Further mass = higher I.</li>
+                        <li><b>Rolling:</b> Total KE = Translation KE + Rotation KE.</li>
+                    </ul>
+                    <div class="trap-box"><b>TRAP:</b> Angular momentum is conserved unless an external Torque acts.</div>
                 </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="unit-tag">UNIT 6</span><span class="pct-tag">5-8%</span></div>
                 <h3>Oscillations</h3>
-                <p>Simple Harmonic Motion (SHM). Energy sloshing back/forth.</p>
-                <div class="formula-box">
-                    T_s = 2π√(m/k) <br>
-                    T_p = 2π√(L/g)
-                </div>
-                <div class="trap-box">
-                    <b>TRAP:</b> Period (T) is independent of amplitude. Mass doesn't affect pendulums!
+                <div class="formula-box">T_s = 2π√(m/k) <br> T_p = 2π√(L/g)</div>
+                <button class="toggle-btn" onclick="toggleDetails(this)">Open Deep Dive</button>
+                <div class="details">
+                    <h4>Simple Harmonic Motion</h4>
+                    <ul>
+                        <li><b>Amplitude:</b> Does NOT affect the period of a spring or pendulum.</li>
+                        <li><b>Energy:</b> Swaps between max PE at edges and max KE at center.</li>
+                    </ul>
+                    <div class="trap-box"><b>TRAP:</b> Pendulum period is independent of mass.</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <span class="unit-tag">UNIT 7</span>
-                    <span class="pct-tag">7-12%</span>
-                </div>
+                <div class="card-header"><span class="unit-tag">UNIT 7</span><span class="pct-tag">7-12%</span></div>
                 <h3>Gravitation</h3>
-                <p>Newton's Law of Universal Gravitation and Orbits.</p>
-                <div class="formula-box">
-                    F_g = G(m₁m₂/r²) <br>
-                    g = G(M/r²)
-                </div>
-                <div class="trap-box">
-                    <b>TRAP:</b> Distance (r) is from center-to-center, not surface-to-surface.
+                <div class="formula-box">F_g = G(m₁m₂/r²) <br> g = G(M/r²)</div>
+                <button class="toggle-btn" onclick="toggleDetails(this)">Open Deep Dive</button>
+                <div class="details">
+                    <h4>Orbits & Fields</h4>
+                    <ul>
+                        <li><b>Inverse Square:</b> Double the distance, Force becomes 1/4th.</li>
+                        <li><b>Weightlessness:</b> Occurs when in free fall, not because g is zero.</li>
+                    </ul>
+                    <div class="trap-box"><b>TRAP:</b> 'r' is distance from centers, not the surface of the planet.</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">
-                    <span class="unit-tag">UNIT 8</span>
-                    <span class="pct-tag">10-15%</span>
-                </div>
+                <div class="card-header"><span class="unit-tag">UNIT 8</span><span class="pct-tag">10-15%</span></div>
                 <h3>Fluids</h3>
-                <p>Density, Pressure, Buoyancy, and Flow.</p>
-                <div class="formula-box">
-                    P = P₀ + ρgh <br>
-                    F_b = ρVg <br>
-                    A₁v₁ = A₂v₂
-                </div>
-                <div class="trap-box">
-                    <b>TRAP:</b> Faster flow = Lower pressure (Bernoulli's Principle).
+                <div class="formula-box">P = P₀ + ρgh <br> F_b = ρVg <br> A₁v₁ = A₂v₂</div>
+                <button class="toggle-btn" onclick="toggleDetails(this)">Open Deep Dive</button>
+                <div class="details">
+                    <h4>Fluid Mechanics</h4>
+                    <ul>
+                        <li><b>Buoyancy:</b> Force equals the weight of the displaced fluid.</li>
+                        <li><b>Bernoulli:</b> High speed fluid = Low pressure.</li>
+                    </ul>
+                    <div class="trap-box"><b>TRAP:</b> Floating objects displace their own Weight; Sunk objects displace their Volume.</div>
                 </div>
             </div>
         </section>
     </main>
 
     <script>
+        function toggleDetails(btn) {
+            const details = btn.nextElementSibling;
+            const isVisible = details.style.display === "block";
+            details.style.display = isVisible ? "none" : "block";
+            btn.innerText = isVisible ? "Open Deep Dive" : "Close Deep Dive";
+        }
+
         const searchInput = document.getElementById('unitSearch');
         const cards = document.querySelectorAll('.card');
 
