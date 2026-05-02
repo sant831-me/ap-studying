@@ -1,726 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AP Study Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0f0f13;
-    --surface: #17171e;
-    --surface2: #1e1e28;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #e8e8f0;
-    --muted: #8888a0;
-    --accent-phys: #5b8fff;
-    --accent-bio: #4ecb8d;
-    --accent-calc: #f0a050;
-    --accent-chem: #e06b6b;
-    --accent-mech: #a87cff;
-    --accent-bc: #f06090;
-    --glow-phys: rgba(91,143,255,0.15);
-    --glow-bio: rgba(78,203,141,0.15);
-    --glow-calc: rgba(240,160,80,0.15);
-    --glow-chem: rgba(224,107,107,0.15);
-    --glow-mech: rgba(168,124,255,0.15);
-    --glow-bc: rgba(240,96,144,0.15);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP Physics 1 Hub | 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+            --text: #f8fafc; --accent: #38bdf8; --danger: #ef4444; --border: #334155;
+        }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 30px; color: var(--accent); }
+        .nav-item { padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; margin-bottom: 5px; color: #94a3b8; }
+        .nav-item:hover { background: var(--surface2); color: white; }
+        .nav-item.active { background: var(--accent); color: var(--bg); font-weight: bold; }
 
-  /* HEADER */
-  header { padding: 2rem 2rem 1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; background: rgba(15,15,19,0.95); backdrop-filter: blur(12px); z-index: 100; }
-  .logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--text); letter-spacing: -0.5px; }
-  .logo span { color: var(--accent-phys); }
-  .back-btn { display: none; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; transition: all 0.2s; }
-  .back-btn:hover { background: var(--surface2); color: var(--text); }
-  .breadcrumb { font-size: 13px; color: var(--muted); display: none; }
+        /* MAIN CONTENT */
+        main { flex: 1; padding: 40px; overflow-y: auto; }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .card { background: var(--surface); border: 1px solid var(--border); padding: 24px; border-radius: 16px; margin-bottom: 20px; }
+        
+        /* QUESTION BUILDER */
+        .input-group { display: flex; gap: 10px; margin-top: 15px; }
+        input { flex: 1; padding: 12px; background: var(--surface2); border: 1px solid var(--border); color: white; border-radius: 8px; outline: none; }
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; }
+        .btn-primary { background: var(--accent); color: var(--bg); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        
+        .q-item { background: var(--surface2); padding: 15px; border-radius: 10px; margin-top: 12px; display: flex; justify-content: space-between; }
+        .delete { color: var(--danger); cursor: pointer; padding: 0 10px; }
 
-  /* MAIN LAYOUT */
-  .layout { display: flex; min-height: calc(100vh - 65px); }
-  
-  /* SIDEBAR */
-  .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--border); padding: 1.5rem 1rem; position: sticky; top: 65px; height: calc(100vh - 65px); overflow-y: auto; }
-  .sidebar-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); padding: 0 0.5rem; margin-bottom: 0.75rem; margin-top: 1.25rem; }
-  .sidebar-label:first-child { margin-top: 0; }
-  .course-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border-radius: 8px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13.5px; text-align: left; transition: all 0.2s; }
-  .course-btn:hover { background: var(--surface2); color: var(--text); }
-  .course-btn.active { color: var(--text); background: var(--surface2); }
-  .course-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
-  /* MAIN CONTENT */
-  main { flex: 1; overflow-y: auto; }
-
-  /* HOME */
-  .home-view { padding: 3rem 2.5rem; }
-  .home-hero { margin-bottom: 3rem; }
-  .home-hero h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 600; line-height: 1.2; margin-bottom: 0.75rem; }
-  .home-hero p { font-size: 1rem; color: var(--muted); max-width: 520px; line-height: 1.7; }
-  .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-  .course-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
-  .course-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 14px 14px 0 0; }
-  .course-card:hover { border-color: var(--border2); transform: translateY(-2px); }
-  .course-card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
-  .course-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
-  .course-card p { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 1rem; }
-  .course-card-meta { display: flex; gap: 8px; flex-wrap: wrap; }
-  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
-
-  /* COURSE VIEW */
-  .course-view { display: none; padding: 2rem 2.5rem; }
-  .course-view.active { display: block; }
-  .course-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-  .course-header h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; }
-  .course-header p { color: var(--muted); font-size: 14px; line-height: 1.6; }
-  .course-stats { display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; }
-  .stat { font-size: 13px; color: var(--muted); }
-  .stat strong { color: var(--text); }
-
-  /* TABS */
-  .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; background: var(--surface); border-radius: 10px; padding: 4px; border: 1px solid var(--border); width: fit-content; }
-  .tab { padding: 7px 18px; border-radius: 7px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; transition: all 0.2s; }
-  .tab.active { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
-
-  /* UNIT ACCORDION */
-  .units-list { display: flex; flex-direction: column; gap: 8px; }
-  .unit { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.2s; }
-  .unit:hover { border-color: var(--border2); }
-  .unit-header { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; cursor: pointer; }
-  .unit-num { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); min-width: 32px; }
-  .unit-title { flex: 1; font-size: 15px; font-weight: 500; }
-  .unit-pct { font-size: 12px; padding: 3px 8px; border-radius: 99px; background: var(--surface2); color: var(--muted); }
-  .unit-toggle { color: var(--muted); font-size: 18px; transition: transform 0.2s; }
-  .unit.open .unit-toggle { transform: rotate(180deg); }
-  .unit-body { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--border); }
-  .unit.open .unit-body { display: block; }
-  .unit-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 1rem 0; }
-  .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 1rem; }
-  .topic-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
-  .topic-item h4 { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
-  .topic-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
-  .key-formulas { margin-top: 1rem; }
-  .key-formulas h4 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .formula-list { display: flex; flex-direction: column; gap: 6px; }
-  .formula { font-family: 'DM Mono', monospace; font-size: 13px; background: var(--bg); border-left: 2px solid; border-radius: 0 6px 6px 0; padding: 7px 12px; color: var(--text); }
-  .tips-box { margin-top: 1rem; background: var(--surface2); border-radius: 10px; padding: 1rem; border: 1px solid var(--border); }
-  .tips-box h4 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: var(--muted); }
-  .tip { font-size: 13px; color: var(--muted); line-height: 1.6; padding: 4px 0; padding-left: 14px; position: relative; }
-  .tip::before { content: '→'; position: absolute; left: 0; color: var(--muted); }
-
-  /* FLASHCARDS TAB */
-  .flashcard-area { max-width: 600px; }
-  .fc-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
-  .fc-unit-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; transition: all 0.2s; }
-  .fc-unit-btn.active { border-color: var(--border2); color: var(--text); background: var(--surface2); }
-  .fc-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
-  .fc-bar { flex: 1; height: 4px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
-  .fc-bar-fill { height: 100%; border-radius: 99px; transition: width 0.3s; }
-  .fc-count { font-size: 13px; color: var(--muted); white-space: nowrap; }
-  .flashcard-wrap { perspective: 1000px; margin-bottom: 1.5rem; }
-  .flashcard { min-height: 200px; border-radius: 14px; border: 1px solid var(--border); cursor: pointer; transition: transform 0.5s; transform-style: preserve-3d; position: relative; }
-  .flashcard.flipped { transform: rotateY(180deg); }
-  .fc-face { position: absolute; inset: 0; border-radius: 14px; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; min-height: 200px; }
-  .fc-front { background: var(--surface); }
-  .fc-back { background: var(--surface2); transform: rotateY(180deg); }
-  .fc-face p { font-size: 16px; text-align: center; line-height: 1.6; }
-  .fc-face .hint { font-size: 12px; color: var(--muted); margin-top: 0.75rem; }
-  .fc-actions { display: flex; gap: 10px; }
-  .fc-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; transition: all 0.2s; }
-  .fc-btn:hover { background: var(--surface2); }
-  .fc-btn.got { border-color: rgba(78,203,141,0.4); color: #4ecb8d; }
-  .fc-btn.got:hover { background: rgba(78,203,141,0.1); }
-  .fc-btn.missed { border-color: rgba(224,107,107,0.4); color: #e06b6b; }
-  .fc-btn.missed:hover { background: rgba(224,107,107,0.1); }
-  .fc-score { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
-  .score-chip { padding: 6px 14px; border-radius: 8px; font-size: 13px; }
-  .score-chip.c { background: rgba(78,203,141,0.1); color: #4ecb8d; border: 1px solid rgba(78,203,141,0.2); }
-  .score-chip.m { background: rgba(224,107,107,0.1); color: #e06b6b; border: 1px solid rgba(224,107,107,0.2); }
-
-  /* PRACTICE TAB */
-  .practice-area { max-width: 680px; }
-  .mcq-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 1rem; }
-  .mcq-q { font-size: 15px; line-height: 1.6; margin-bottom: 1.25rem; }
-  .mcq-opts { display: flex; flex-direction: column; gap: 8px; }
-  .mcq-opt { padding: 11px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; text-align: left; transition: all 0.2s; }
-  .mcq-opt:hover:not(:disabled) { border-color: var(--border2); }
-  .mcq-opt.correct { border-color: #4ecb8d; background: rgba(78,203,141,0.1); color: #4ecb8d; }
-  .mcq-opt.wrong { border-color: #e06b6b; background: rgba(224,107,107,0.1); color: #e06b6b; }
-  .mcq-explanation { margin-top: 1rem; padding: 1rem; background: var(--surface2); border-radius: 10px; font-size: 13px; color: var(--muted); line-height: 1.6; display: none; border-left: 2px solid; }
-  .mcq-explanation.show { display: block; }
-  .next-btn { padding: 10px 24px; border-radius: 10px; border: 1px solid var(--border2); background: transparent; color: var(--text); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; display: none; margin-top: 1rem; transition: all 0.2s; }
-  .next-btn.show { display: inline-block; }
-  .next-btn:hover { background: var(--surface2); }
-  .quiz-score { text-align: center; padding: 3rem; }
-  .quiz-score h3 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; }
-  .quiz-score p { color: var(--muted); margin-bottom: 1.5rem; }
-  .restart-btn { padding: 12px 28px; border-radius: 10px; border: 1px solid var(--border2); background: var(--surface2); color: var(--text); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .home-hero h1 { font-size: 2rem; }
-    .course-view { padding: 1.5rem; }
-    .home-view { padding: 1.5rem; }
-  }
-</style>
+        /* FORMULA MODAL */
+        #formulaModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; padding: 50px; }
+        .modal-content { background: var(--surface); max-width: 800px; margin: auto; padding: 30px; border-radius: 20px; max-height: 80vh; overflow-y: auto; position: relative; }
+        .formula-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .formula-box { background: var(--bg); padding: 10px; border-radius: 8px; border-left: 3px solid var(--accent); }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">AP <span>Study Hub</span></div>
-  <button class="back-btn" id="backBtn" onclick="showHome()">← All Courses</button>
-  <span class="breadcrumb" id="breadcrumb"></span>
-</header>
+<div class="sidebar">
+    <div class="logo">PhysicsHub 2026</div>
+    <div class="nav-item active" onclick="showUnit('dash')">📊 Dashboard</div>
+    <div class="nav-item" onclick="showUnit('1')">Unit 1: Kinematics</div>
+    <div class="nav-item" onclick="showUnit('2')">Unit 2: Force & Motion</div>
+    <div class="nav-item" onclick="showUnit('4')">Unit 4: Energy</div>
+    <div class="nav-item" onclick="showUnit('8')">Unit 8: Fluids (New!)</div>
+    <div style="margin-top: auto;">
+        <button class="btn btn-outline" style="width: 100%" onclick="toggleModal()">📜 Cheat Sheet</button>
+    </div>
+</div>
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-label">Courses</div>
-    <button class="course-btn" onclick="showCourse('phys1')" id="sb-phys1">
-      <span class="course-dot" style="background:#5b8fff"></span>AP Physics 1
-    </button>
-    <button class="course-btn" onclick="showCourse('bio')" id="sb-bio">
-      <span class="course-dot" style="background:#4ecb8d"></span>AP Biology
-    </button>
-    <button class="course-btn" onclick="showCourse('calcab')" id="sb-calcab">
-      <span class="course-dot" style="background:#f0a050"></span>AP Calc AB
-    </button>
-    <button class="course-btn" onclick="showCourse('calcbc')" id="sb-calcbc">
-      <span class="course-dot" style="background:#f06090"></span>AP Calc BC
-    </button>
-    <button class="course-btn" onclick="showCourse('chem')" id="sb-chem">
-      <span class="course-dot" style="background:#e06b6b"></span>AP Chemistry
-    </button>
-    <button class="course-btn" onclick="showCourse('physc')" id="sb-physc">
-      <span class="course-dot" style="background:#a87cff"></span>AP Physics C: Mech
-    </button>
-  </aside>
-
-  <main id="mainContent">
-    <!-- HOME -->
-    <div class="home-view" id="homeView">
-      <div class="home-hero">
-        <h1>Study smarter,<br>score higher.</h1>
-        <p>Comprehensive unit guides, flashcards, and practice questions for six AP courses — all in one place.</p>
-      </div>
-      <div class="course-grid">
-        <div class="course-card" onclick="showCourse('phys1')" style="--c:#5b8fff" onmouseover="this.style.boxShadow='0 8px 32px rgba(91,143,255,0.15)'" onmouseout="this.style.boxShadow='none'">
-          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#5b8fff;border-radius:14px 14px 0 0"></div>
-          <div class="course-card-icon">⚡</div>
-          <h3>AP Physics 1</h3>
-          <p>Algebra-based mechanics, waves, circuits — the foundational physics course.</p>
-          <div class="course-card-meta">
-            <span class="badge" style="background:rgba(91,143,255,0.15);color:#5b8fff">10 Units</span>
-            <span class="badge" style="background:var(--surface2);color:var(--muted)">Algebra-based</span>
-          </div>
-        </div>
-        <div class="course-card" onclick="showCourse('bio')" onmouseover="this.style.boxShadow='0 8px 32px rgba(78,203,141,0.15)'" onmouseout="this.style.boxShadow='none'">
-          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#4ecb8d;border-radius:14px 14px 0 0"></div>
-          <div class="course-card-icon">🧬</div>
-          <h3>AP Biology</h3>
-          <p>Evolution, genetics, ecology, biochemistry — life through a scientific lens.</p>
-          <div class="course-card-meta">
-            <span class="badge" style="background:rgba(78,203,141,0.15);color:#4ecb8d">8 Units</span>
-            <span class="badge" style="background:var(--surface2);color:var(--muted)">Lab-based</span>
-          </div>
-        </div>
-        <div class="course-card" onclick="showCourse('calcab')" onmouseover="this.style.boxShadow='0 8px 32px rgba(240,160,80,0.15)'" onmouseout="this.style.boxShadow='none'">
-          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#f0a050;border-radius:14px 14px 0 0"></div>
-          <div class="course-card-icon">∫</div>
-          <h3>AP Calculus AB</h3>
-          <p>Limits, derivatives, and integrals — single-variable calculus foundations.</p>
-          <div class="course-card-meta">
-            <span class="badge" style="background:rgba(240,160,80,0.15);color:#f0a050">8 Units</span>
-            <span class="badge" style="background:var(--surface2);color:var(--muted)">Math</span>
-          </div>
-        </div>
-        <div class="course-card" onclick="showCourse('calcbc')" onmouseover="this.style.boxShadow='0 8px 32px rgba(240,96,144,0.15)'" onmouseout="this.style.boxShadow='none'">
-          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#f06090;border-radius:14px 14px 0 0"></div>
-          <div class="course-card-icon">Σ</div>
-          <h3>AP Calculus BC</h3>
-          <p>Everything in AB plus series, parametric, polar, and advanced techniques.</p>
-          <div class="course-card-meta">
-            <span class="badge" style="background:rgba(240,96,144,0.15);color:#f06090">10 Units</span>
-            <span class="badge" style="background:var(--surface2);color:var(--muted)">Advanced</span>
-          </div>
-        </div>
-        <div class="course-card" onclick="showCourse('chem')" onmouseover="this.style.boxShadow='0 8px 32px rgba(224,107,107,0.15)'" onmouseout="this.style.boxShadow='none'">
-          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#e06b6b;border-radius:14px 14px 0 0"></div>
-          <div class="course-card-icon">⚗️</div>
-          <h3>AP Chemistry</h3>
-          <p>Atomic structure, bonding, kinetics, thermodynamics, and electrochemistry.</p>
-          <div class="course-card-meta">
-            <span class="badge" style="background:rgba(224,107,107,0.15);color:#e06b6b">9 Units</span>
-            <span class="badge" style="background:var(--surface2);color:var(--muted)">Lab-based</span>
-          </div>
-        </div>
-        <div class="course-card" onclick="showCourse('physc')" onmouseover="this.style.boxShadow='0 8px 32px rgba(168,124,255,0.15)'" onmouseout="this.style.boxShadow='none'">
-          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#a87cff;border-radius:14px 14px 0 0"></div>
-          <div class="course-card-icon">🔭</div>
-          <h3>AP Physics C: Mechanics</h3>
-          <p>Calculus-based mechanics — the rigorous physics for engineers and scientists.</p>
-          <div class="course-card-meta">
-            <span class="badge" style="background:rgba(168,124,255,0.15);color:#a87cff">7 Units</span>
-            <span class="badge" style="background:var(--surface2);color:var(--muted)">Calc-based</span>
-          </div>
-        </div>
-      </div>
+<main>
+    <div class="header-flex">
+        <h1 id="viewTitle">My Study Dashboard</h1>
     </div>
 
-    <!-- COURSE VIEWS (generated by JS) -->
-    <div id="courseViews"></div>
-  </main>
+    <div class="card">
+        <h3>Add Practice Question</h3>
+        <div class="input-group">
+            <input type="text" id="userQuestion" placeholder="e.g. Calculate net force on a 5kg block...">
+            <button class="btn btn-primary" onclick="addQuestion()">Add</button>
+        </div>
+        <div id="qList"></div>
+    </div>
+</main>
+
+<div id="formulaModal">
+    <div class="modal-content">
+        <span style="position:absolute; top:20px; right:20px; cursor:pointer;" onclick="toggleModal()">✕ Close</span>
+        <h2>Ultimate 2026 Cheat Sheet</h2>
+        <div class="formula-grid">
+            <div class="formula-box"><strong>Kinematics:</strong> v = v₀ + at</div>
+            <div class="formula-box"><strong>Forces:</strong> ΣF = ma</div>
+            <div class="formula-box"><strong>Energy:</strong> K = ½mv²</div>
+            <div class="formula-box"><strong>Springs:</strong> Uₛ = ½kx²</div>
+            <div class="formula-box"><strong>Momentum:</strong> p = mv</div>
+            <div class="formula-box"><strong>Gravity:</strong> Fg = G(m₁m₂/r²)</div>
+            <div class="formula-box"><strong>Fluids:</strong> P = P₀ + ρgh</div>
+            <div class="formula-box"><strong>Archimedes:</strong> Fᵦ = ρVg</div>
+        </div>
+    </div>
 </div>
 
 <script>
-const COURSES = {
-  phys1: {
-    name: 'AP Physics 1: Algebra-Based',
-    accent: '#5b8fff',
-    desc: 'Covers Newtonian mechanics, waves, sound, simple circuits, and rotational motion. Algebra-based — no calculus required.',
-    emoji: '⚡',
-    units: [
-      { num:'1', title:'Kinematics', pct:'12–18%', desc:'The study of motion without considering its causes. Covers position, velocity, acceleration, and how to describe motion in 1D and 2D (projectile motion).', topics:[{h:'Displacement & Velocity',p:'Average vs instantaneous velocity; position-time and velocity-time graphs'},{h:'Acceleration',p:'Constant acceleration; meaning of slope and area under graphs'},{h:'Kinematics Equations',p:'The four big kinematic equations for uniform acceleration'},{h:'Projectile Motion',p:'Independence of horizontal and vertical motion; parabolic trajectories'},{h:'Relative Motion',p:'Adding velocities in different reference frames'}], formulas:['v = v₀ + at','x = v₀t + ½at²','v² = v₀² + 2aΔx','x = ½(v + v₀)t'], tips:['Motion graphs are heavily tested — know what slope and area represent for each graph type.','In projectile motion, horizontal velocity is constant; vertical velocity changes at 9.8 m/s².','At the peak of a projectile, vᵧ = 0 but vₓ ≠ 0.'] },
-      { num:'2', title:'Forces & Newton\'s Laws', pct:'16–21%', desc:'Newton\'s three laws govern how forces cause changes in motion. Includes free-body diagrams, friction, gravity, and tension.', topics:[{h:'Newton\'s 1st Law',p:'Inertia: objects at rest stay at rest unless acted on by a net force'},{h:'Newton\'s 2nd Law',p:'ΣF = ma; the relationship between net force, mass, and acceleration'},{h:'Newton\'s 3rd Law',p:'Action-reaction pairs — equal magnitude, opposite direction, on different objects'},{h:'Friction',p:'Static (μₛN) and kinetic (μₖN) friction; direction always opposes motion'},{h:'Tension & Normal Force',p:'Forces in ropes and surfaces; always draw free-body diagrams'}], formulas:['ΣF = ma','fₛ ≤ μₛN','fₖ = μₖN','Fg = mg (g = 9.8 m/s²)'], tips:['Free-body diagrams are essential — draw one for every forces problem.','Normal force is NOT always equal to weight (e.g., on inclines or in elevators).','Identify Newton\'s 3rd law pairs carefully — they act on DIFFERENT objects.'] },
-      { num:'3', title:'Circular Motion & Gravitation', pct:'5–8%', desc:'Objects moving in circles experience centripetal acceleration directed toward the center. Universal gravitation explains orbital motion.', topics:[{h:'Centripetal Acceleration',p:'a = v²/r, always directed toward center of circle'},{h:'Centripetal Force',p:'Net force causing circular motion; can be tension, gravity, friction, or normal force'},{h:'Universal Gravitation',p:'F = Gm₁m₂/r²; decreases with square of distance'},{h:'Orbital Motion',p:'Gravity provides centripetal force for orbits'}], formulas:['aᶜ = v²/r','Fᶜ = mv²/r','Fg = Gm₁m₂/r²','T² ∝ r³ (Kepler\'s 3rd Law)'], tips:['Centripetal force is NOT a new force — it\'s the net force pointing inward.','At the top of a loop, both gravity and normal force can point downward.','Satellite speed decreases as orbital radius increases.'] },
-      { num:'4', title:'Energy', pct:'20–28%', desc:'Energy conservation is one of the most powerful tools in physics. Includes kinetic energy, potential energy, work, and power.', topics:[{h:'Work',p:'W = Fd cosθ; only the component of force along displacement does work'},{h:'Kinetic Energy',p:'KE = ½mv²; energy of motion'},{h:'Gravitational PE',p:'PE = mgh; energy stored due to height'},{h:'Spring PE',p:'PE = ½kx²; energy stored in compressed/stretched spring'},{h:'Conservation of Energy',p:'Total mechanical energy constant when no non-conservative forces act'},{h:'Power',p:'Rate of energy transfer: P = W/t = Fv'}], formulas:['W = Fd cosθ','KE = ½mv²','PEg = mgh','PEₛ = ½kx²','P = W/t','Wnet = ΔKE'], tips:['Energy is a scalar — much easier to use than force (a vector) in many problems.','When friction is present, energy is lost: W_friction = ΔKE + ΔPE.','Power problems often involve P = Fv for objects moving at constant speed.'] },
-      { num:'5', title:'Momentum', pct:'12–18%', desc:'Momentum and impulse describe collisions and explosions. The law of conservation of momentum applies in all closed systems.', topics:[{h:'Momentum',p:'p = mv; a vector quantity in the direction of velocity'},{h:'Impulse',p:'J = FΔt = Δp; area under a force-time graph'},{h:'Conservation of Momentum',p:'Total momentum conserved when no external net force acts'},{h:'Elastic Collisions',p:'Both momentum AND kinetic energy conserved'},{h:'Inelastic Collisions',p:'Momentum conserved; KE not conserved. Perfectly inelastic: objects stick together'}], formulas:['p = mv','J = FΔt = Δp','p₁ᵢ + p₂ᵢ = p₁f + p₂f','KE conserved (elastic): ½m₁v₁² + ½m₂v₂² = const'], tips:['In explosions, total initial momentum is zero — pieces fly in opposite directions.','Impulse = area under F-t graph, even if force varies.','Identify collision type: if objects stick → perfectly inelastic.'] },
-      { num:'6', title:'Simple Harmonic Motion', pct:'4–6%', desc:'Oscillating systems like springs and pendulums exhibit predictable periodic motion described by sinusoidal functions.', topics:[{h:'Spring-Mass Systems',p:'Restoring force F = −kx; period depends on mass and spring constant'},{h:'Pendulums',p:'Period depends on length and g, NOT mass or amplitude (for small angles)'},{h:'Energy in SHM',p:'Constant exchange between KE and PE; total energy constant'}], formulas:['F = −kx (Hooke\'s Law)','T = 2π√(m/k) (spring)','T = 2π√(L/g) (pendulum)','E = ½kA²'], tips:['Period of a spring INCREASES with more mass; period of a pendulum is independent of mass.','At equilibrium: max speed, zero PE. At amplitude: zero speed, max PE.','Amplitude does NOT affect period (for ideal springs and small-angle pendulums).'] },
-      { num:'7', title:'Torque & Rotational Motion', pct:'12–18%', desc:'Rotational analogs of Newton\'s laws. Torque causes angular acceleration; moment of inertia determines rotational resistance.', topics:[{h:'Torque',p:'τ = rF sinθ; rotational force; depends on lever arm'},{h:'Rotational Inertia',p:'I = Σmr²; resistance to rotational change; larger for mass farther from axis'},{h:'Rotational Newton\'s 2nd Law',p:'Στ = Iα; torque causes angular acceleration'},{h:'Angular Momentum',p:'L = Iω; conserved when net torque is zero'},{h:'Rolling Without Slipping',p:'v = rω; rotational and linear motion linked'}], formulas:['τ = rF sinθ','Στ = Iα','L = Iω','KE_rot = ½Iω²'], tips:['Static equilibrium requires BOTH ΣF = 0 and Στ = 0.','Choose a smart pivot point to eliminate unknown torques.','Conservation of angular momentum explains why spinning skaters speed up when pulling arms in.'] },
-      { num:'8', title:'Electric Charge & Electric Force', pct:'4–6%', desc:'Introduction to electrostatics — how charges interact through the Coulomb force.', topics:[{h:'Electric Charge',p:'Positive and negative charge; charge is conserved and quantized'},{h:'Coulomb\'s Law',p:'Electric force between point charges; inverse-square law'},{h:'Electric Field',p:'E = F/q; force per unit charge; created by source charges'}], formulas:['F = kq₁q₂/r²','E = kq/r²','k = 9×10⁹ N·m²/C²'], tips:['Like charges repel, opposite charges attract.','Electric field vectors point away from positive and toward negative charges.','Coulomb\'s law is analogous to universal gravitation.'] },
-      { num:'9', title:'DC Circuits', pct:'12–18%', desc:'Analysis of simple circuits using current, voltage, resistance, and power. Ohm\'s Law and Kirchhoff\'s rules.', topics:[{h:'Current & Resistance',p:'I = ΔQ/Δt; R = ρL/A; Ohm\'s Law: V = IR'},{h:'Series Circuits',p:'Same current everywhere; resistances add; voltage divides'},{h:'Parallel Circuits',p:'Same voltage across each branch; currents add; 1/R_total = Σ(1/Rᵢ)'},{h:'Power',p:'P = IV = I²R = V²/R'},{h:'Capacitors',p:'Store charge; C = Q/V; block DC, pass AC-like signals'}], formulas:['V = IR','P = IV = I²R = V²/R','Rseries = R₁ + R₂ + ...','1/Rparallel = 1/R₁ + 1/R₂ + ...'], tips:['Ammeters in series, voltmeters in parallel.','In series, the largest resistor has the largest voltage drop.','In parallel, the smallest resistor carries the most current.'] },
-      { num:'10', title:'Mechanical Waves & Sound', pct:'12–18%', desc:'Properties of waves, standing waves, wave interference, and the properties of sound including the Doppler effect.', topics:[{h:'Wave Properties',p:'Frequency, wavelength, amplitude, period, speed: v = fλ'},{h:'Transverse & Longitudinal',p:'Transverse: displacement perpendicular to wave travel (string). Longitudinal: parallel (sound)'},{h:'Superposition & Interference',p:'Constructive: amplitudes add. Destructive: amplitudes cancel'},{h:'Standing Waves',p:'Nodes (no displacement) and antinodes (max displacement) at fixed positions'},{h:'Doppler Effect',p:'Frequency shifts when source or observer is moving'}], formulas:['v = fλ','fn = nv/2L (string, both ends fixed)','fn = nv/4L (open-closed pipe)'], tips:['Closed ends are nodes; open ends are antinodes.','Strings fixed at both ends and open pipes have same standing wave pattern.','Doppler: source approaching → higher frequency; receding → lower frequency.'] },
-    ],
-    flashcards: [
-      {unit:'Kinematics',q:'What does the slope of a position-time graph represent?',a:'Velocity'},
-      {unit:'Kinematics',q:'What does the area under a velocity-time graph represent?',a:'Displacement'},
-      {unit:'Kinematics',q:'What is the vertical velocity of a projectile at its peak?',a:'Zero (vᵧ = 0)'},
-      {unit:'Kinematics',q:'Give the kinematic equation with no time variable.',a:'v² = v₀² + 2aΔx'},
-      {unit:'Forces',q:'State Newton\'s Second Law.',a:'ΣF = ma — net force equals mass times acceleration'},
-      {unit:'Forces',q:'What is the difference between static and kinetic friction?',a:'Static friction prevents motion (fₛ ≤ μₛN); kinetic friction opposes sliding motion (fₖ = μₖN)'},
-      {unit:'Forces',q:'Newton\'s 3rd Law — what\'s critical to remember?',a:'Action-reaction pairs act on DIFFERENT objects, not the same object'},
-      {unit:'Energy',q:'Formula for kinetic energy.',a:'KE = ½mv²'},
-      {unit:'Energy',q:'When is mechanical energy conserved?',a:'When only conservative forces do work (no friction or air resistance)'},
-      {unit:'Energy',q:'What does the work-energy theorem state?',a:'Net work done on an object = change in its kinetic energy: Wnet = ΔKE'},
-      {unit:'Momentum',q:'What is impulse?',a:'Impulse = FΔt = Δp (change in momentum)'},
-      {unit:'Momentum',q:'Difference between elastic and perfectly inelastic collisions?',a:'Elastic: KE conserved. Perfectly inelastic: objects stick together, KE not conserved'},
-      {unit:'Rotation',q:'Rotational analog of Newton\'s 2nd Law.',a:'Στ = Iα (net torque = moment of inertia × angular acceleration)'},
-      {unit:'Rotation',q:'When is angular momentum conserved?',a:'When net external torque is zero'},
-      {unit:'Waves',q:'Relationship between wave speed, frequency, and wavelength.',a:'v = fλ'},
-      {unit:'Circuits',q:'Ohm\'s Law.',a:'V = IR (Voltage = Current × Resistance)'},
-      {unit:'Circuits',q:'How do resistors add in series vs. parallel?',a:'Series: R_total = R₁ + R₂. Parallel: 1/R_total = 1/R₁ + 1/R₂'},
-    ],
-    mcq: [
-      {q:'A ball is thrown horizontally from a cliff with speed 20 m/s. If it takes 3 s to hit the ground, how far from the base of the cliff does it land?',opts:['30 m','60 m','90 m','45 m'],ans:1,exp:'Horizontal: x = vₓ × t = 20 × 3 = 60 m. Horizontal velocity is constant in projectile motion.'},
-      {q:'A 4 kg object accelerates from rest to 12 m/s in 6 seconds. What net force acted on it?',opts:['2 N','8 N','48 N','72 N'],ans:1,exp:'a = Δv/t = 12/6 = 2 m/s². F = ma = 4 × 2 = 8 N'},
-      {q:'A spring with k = 200 N/m is compressed 0.1 m. How much potential energy is stored?',opts:['1 J','2 J','10 J','20 J'],ans:0,exp:'PE = ½kx² = ½ × 200 × 0.01 = 1 J'},
-      {q:'Two carts collide and stick together (perfectly inelastic). Which quantity is conserved?',opts:['Kinetic energy only','Momentum only','Both KE and momentum','Neither'],ans:1,exp:'In any collision, momentum is conserved. In perfectly inelastic, KE is NOT conserved (energy is lost to heat/deformation).'},
-      {q:'A satellite orbits Earth at radius r with speed v. If it moves to radius 4r, what is its new orbital speed?',opts:['v/2','v/4','2v','4v'],ans:0,exp:'From GMm/r² = mv²/r → v = √(GM/r). Doubling r → v decreases by factor of √4 = 2. So new speed = v/2.'},
-    ]
-  },
+    function addQuestion() {
+        const input = document.getElementById('userQuestion');
+        const list = document.getElementById('qList');
+        if (!input.value.trim()) return;
 
-  bio: {
-    name: 'AP Biology',
-    accent: '#4ecb8d',
-    desc: 'Explores life at all scales — molecules, cells, organisms, and ecosystems. Lab investigations are central to this course.',
-    emoji: '🧬',
-    units: [
-      { num:'1', title:'Chemistry of Life', pct:'8–11%', desc:'The molecular foundation of biology. Water, macromolecules, and the chemistry that makes life possible.', topics:[{h:'Water & Properties',p:'Polarity, hydrogen bonding, cohesion, adhesion, high specific heat, solvent properties'},{h:'Biological Macromolecules',p:'Carbohydrates (energy/structure), lipids (membranes/energy), proteins (enzymes/structure), nucleic acids (information)'},{h:'Monomers & Polymers',p:'Condensation (dehydration) synthesis builds polymers; hydrolysis breaks them'},{h:'Enzymes',p:'Biological catalysts; lower activation energy; affected by temperature and pH'}], formulas:['pH = -log[H⁺]','Enzyme kinetics: substrate-enzyme → product'], tips:['Carbon\'s ability to form 4 bonds makes organic diversity possible.','R-group determines amino acid properties (acidic, basic, nonpolar, polar).','Enzymes are NOT consumed in reactions — they are reusable catalysts.'] },
-      { num:'2', title:'Cell Structure & Function', pct:'10–13%', desc:'Prokaryotic vs. eukaryotic cells, organelle functions, membrane structure, and how substances move in and out of cells.', topics:[{h:'Prokaryotes vs Eukaryotes',p:'Prokaryotes: no nucleus, no membrane organelles. Eukaryotes: membrane-bound nucleus, complex organelles'},{h:'Organelles',p:'Nucleus (DNA), mitochondria (ATP), ribosome (protein synthesis), ER (processing), Golgi (packaging/export)'},{h:'Cell Membrane',p:'Fluid mosaic model — phospholipid bilayer with embedded proteins'},{h:'Membrane Transport',p:'Passive (diffusion, osmosis, facilitated diffusion) and active transport (against gradient, requires ATP)'}], formulas:['Surface area to volume ratio determines cell size limits'], tips:['Mitochondria and chloroplasts have double membranes — evidence of endosymbiosis.','Water moves toward higher solute concentration (lower water potential) in osmosis.','In active transport, carrier proteins move substances against their concentration gradient.'] },
-      { num:'3', title:'Cell Energetics', pct:'12–16%', desc:'Photosynthesis and cellular respiration — how cells capture and use energy.', topics:[{h:'Photosynthesis: Light Reactions',p:'Occur in thylakoids; split water, produce ATP and NADPH, release O₂'},{h:'Photosynthesis: Calvin Cycle',p:'Occur in stroma; use ATP+NADPH to fix CO₂ into G3P (then glucose)'},{h:'Cellular Respiration: Glycolysis',p:'Cytoplasm; glucose → 2 pyruvate; net 2 ATP, 2 NADH'},{h:'Krebs Cycle',p:'Mitochondrial matrix; produces NADH, FADH₂, ATP, CO₂'},{h:'Electron Transport Chain',p:'Inner mitochondrial membrane; produces most ATP (~34); requires O₂'}], formulas:['Photosynthesis: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂','Respiration: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ~36-38 ATP'], tips:['O₂ is produced in the light reactions, not Calvin cycle.','CO₂ is fixed in the Calvin cycle, not light reactions.','Electron carriers (NADH, FADH₂) carry energy from respiration to ETC.'] },
-      { num:'4', title:'Cell Communication & Cell Cycle', pct:'10–15%', desc:'How cells receive and respond to signals, and how cells divide through mitosis and meiosis.', topics:[{h:'Cell Communication',p:'Signal transduction: ligand → receptor → transduction → response'},{h:'Mitosis',p:'PMAT: Prophase, Metaphase, Anaphase, Telophase; produces 2 identical diploid cells'},{h:'Meiosis',p:'Two rounds of division; produces 4 haploid genetically unique cells; crossing over in prophase I'},{h:'Regulation',p:'Checkpoints ensure proper cell division; proto-oncogenes and tumor suppressors regulate cycle'}], formulas:['Crossing over frequency ∝ distance between genes (genetic mapping)'], tips:['Meiosis I separates homologs; Meiosis II separates sister chromatids.','Crossing over in prophase I creates genetic variation.','Cancer = loss of cell cycle regulation.'] },
-      { num:'5', title:'Heredity', pct:'8–11%', desc:'Mendelian genetics, chromosomal inheritance, and patterns of heredity including linkage and sex-linked traits.', topics:[{h:'Mendelian Genetics',p:'Dominant/recessive alleles; law of segregation; law of independent assortment'},{h:'Dihybrid Crosses',p:'9:3:3:1 ratio for two independent traits'},{h:'Sex-Linked Traits',p:'X-linked traits more common in males (XY)'},{h:'Non-Mendelian',p:'Incomplete dominance, codominance, polygenic traits, epistasis'}], formulas:['Monohybrid: 3:1 (dominant:recessive)','Dihybrid: 9:3:3:1'], tips:['Punnett squares work for simple Mendelian traits.','Chi-square test determines if observed ratios match expected ratios.','Linked genes violate independent assortment — they tend to be inherited together.'] },
-      { num:'6', title:'Gene Expression & Regulation', pct:'12–16%', desc:'How DNA is transcribed into RNA and translated into protein, and how gene expression is controlled.', topics:[{h:'DNA Replication',p:'Semi-conservative; helicase unwinds, DNA polymerase adds nucleotides, ligase joins fragments'},{h:'Transcription',p:'DNA → mRNA; occurs in nucleus; RNA polymerase reads template strand 3\'→5\', builds 5\'→3\''},{h:'Translation',p:'mRNA → protein; ribosome reads codons; tRNA brings amino acids'},{h:'Gene Regulation',p:'Operons (prokaryotes); transcription factors and enhancers (eukaryotes); epigenetics'}], formulas:['Central Dogma: DNA → RNA → Protein'], tips:['DNA replication is semiconservative — each new cell gets one original strand.','Introns are spliced out; exons are expressed.','Start codon: AUG (methionine). Stop codons: UAA, UAG, UGA.'] },
-      { num:'7', title:'Natural Selection & Evolution', pct:'13–20%', desc:'The mechanisms of evolutionary change — natural selection, genetic drift, gene flow, and speciation.', topics:[{h:'Natural Selection',p:'Variation → differential reproductive success → heritable change in allele frequency'},{h:'Hardy-Weinberg Equilibrium',p:'Allele frequencies stable when no evolution occurring; 5 conditions needed'},{h:'Types of Selection',p:'Directional, stabilizing, disruptive; sexual selection'},{h:'Speciation',p:'Allopatric (geographic isolation) and sympatric speciation; reproductive isolation'}], formulas:['Hardy-Weinberg: p + q = 1; p² + 2pq + q² = 1'], tips:['Hardy-Weinberg is useful as a null hypothesis — deviation means evolution is occurring.','Genetic drift is most significant in small populations (bottleneck, founder effects).','Analogous vs homologous structures — only homologous structures indicate common ancestry.'] },
-      { num:'8', title:'Ecology', pct:'10–15%', desc:'Interactions between organisms and their environment at population, community, and ecosystem levels.', topics:[{h:'Population Ecology',p:'Logistic growth (S-curve) with carrying capacity K; exponential growth when resources unlimited'},{h:'Community Ecology',p:'Competition, predation, mutualism, commensalism, parasitism; ecological niches'},{h:'Ecosystem Ecology',p:'Energy flow through trophic levels (10% efficiency rule); nutrient cycling'},{h:'Biogeochemical Cycles',p:'Carbon, nitrogen, phosphorus, and water cycles; human impacts'}], formulas:['Logistic growth: dN/dt = rN(K-N)/K','10% energy transfer between trophic levels'], tips:['Only ~10% of energy transfers between trophic levels — most is lost as heat.','Keystone species have disproportionate impact on community structure.','Nitrogen fixation converts N₂ to NH₃ (only bacteria and archaea can do this).'] },
-    ],
-    flashcards: [
-      {unit:'Chemistry',q:'What four properties of water are essential for life?',a:'Cohesion, adhesion, high specific heat, and universal solvent properties (due to polarity and H-bonding)'},
-      {unit:'Chemistry',q:'What reaction builds polymers from monomers?',a:'Dehydration synthesis (condensation) — releases water'},
-      {unit:'Cell',q:'What organelle performs cellular respiration?',a:'Mitochondria (inner membrane has ETC)'},
-      {unit:'Energetics',q:'Where do light reactions occur in the chloroplast?',a:'Thylakoid membranes'},
-      {unit:'Energetics',q:'What are the products of the Calvin cycle?',a:'G3P (glyceraldehyde-3-phosphate), which becomes glucose; also ADP and NADP⁺'},
-      {unit:'Heredity',q:'What does Hardy-Weinberg p² + 2pq + q² represent?',a:'Genotype frequencies: p² = homozygous dominant, 2pq = heterozygous, q² = homozygous recessive'},
-      {unit:'Gene Expression',q:'What is the central dogma of molecular biology?',a:'DNA → RNA → Protein (transcription then translation)'},
-      {unit:'Evolution',q:'What are the 5 conditions for Hardy-Weinberg equilibrium?',a:'Large population, no mutation, random mating, no gene flow, no natural selection'},
-      {unit:'Ecology',q:'What is the 10% rule in ecology?',a:'Only ~10% of energy is transferred from one trophic level to the next; rest lost as heat'},
-    ],
-    mcq: [
-      {q:'Which of the following is true about enzymes?',opts:['They are consumed in the reaction','They lower the activation energy of a reaction','They change the thermodynamics of a reaction','They only work at high temperatures'],ans:1,exp:'Enzymes are biological catalysts — they lower activation energy but are not consumed and do not change ΔG of the overall reaction.'},
-      {q:'During which phase of meiosis does crossing over occur?',opts:['Prophase II','Anaphase I','Prophase I','Metaphase II'],ans:2,exp:'Crossing over (homologous recombination) occurs during Prophase I of meiosis, when homologous chromosomes pair up (synapsis).'},
-      {q:'A population of beetles has p = 0.6 for the dominant allele. What is the frequency of heterozygotes under Hardy-Weinberg?',opts:['0.36','0.48','0.16','0.24'],ans:1,exp:'2pq = 2(0.6)(0.4) = 0.48. Remember p + q = 1, so q = 0.4.'},
-      {q:'Which process produces the most ATP during cellular respiration?',opts:['Glycolysis','Krebs cycle','Electron transport chain','Fermentation'],ans:2,exp:'The ETC produces ~32-34 ATP via oxidative phosphorylation. Glycolysis nets 2 ATP; Krebs produces 2 ATP per glucose.'},
-    ]
-  },
+        const div = document.createElement('div');
+        div.className = 'q-item';
+        div.innerHTML = `<span>${input.value}</span> <span class="delete" onclick="this.parentElement.remove()">✕</span>`;
+        list.prepend(div);
+        input.value = "";
+    }
 
-  calcab: {
-    name: 'AP Calculus AB',
-    accent: '#f0a050',
-    desc: 'Covers limits, derivatives, and integrals of single-variable functions. Equivalent to one semester of college calculus.',
-    emoji: '∫',
-    units: [
-      { num:'1', title:'Limits & Continuity', pct:'10–12%', desc:'The foundation of calculus. Limits describe function behavior as x approaches a value; continuity means no breaks, holes, or jumps.', topics:[{h:'Limits',p:'lim f(x) as x→a; one-sided limits; limits at infinity'},{h:'Limit Laws',p:'Sum, product, quotient, power rules for limits'},{h:'Indeterminate Forms',p:'0/0 and ∞/∞ require special techniques (factoring, L\'Hôpital\'s)'},{h:'Continuity',p:'f is continuous at a if: f(a) exists, limit exists, and they are equal'},{h:'IVT & EVT',p:'Intermediate Value Theorem guarantees roots; Extreme Value Theorem guarantees extrema'}], formulas:['lim sin(x)/x = 1 as x→0','lim (1-cos x)/x = 0 as x→0'], tips:['Three conditions for continuity: limit exists, f(a) defined, they are equal.','L\'Hôpital\'s Rule: if 0/0 or ∞/∞, differentiate numerator and denominator separately.','Limits at infinity: highest degree terms dominate.'] },
-      { num:'2', title:'Differentiation: Definition & Rules', pct:'10–12%', desc:'The derivative measures instantaneous rate of change. Master all the differentiation rules — they\'re used constantly.', topics:[{h:'Definition of Derivative',p:'f\'(x) = lim[f(x+h)−f(x)]/h as h→0; slope of tangent line'},{h:'Power Rule',p:'d/dx[xⁿ] = nxⁿ⁻¹; works for all real n'},{h:'Product & Quotient Rules',p:'(fg)\' = f\'g + fg\'; (f/g)\' = (f\'g − fg\')/g²'},{h:'Chain Rule',p:'d/dx[f(g(x))] = f\'(g(x))·g\'(x); for composite functions'},{h:'Trig Derivatives',p:'sin\'=cos, cos\'=−sin, tan\'=sec², etc.'}], formulas:['d/dx[xⁿ] = nxⁿ⁻¹','d/dx[eˣ] = eˣ','d/dx[ln x] = 1/x','d/dx[sin x] = cos x','d/dx[cos x] = −sin x'], tips:['The chain rule is the most important rule — almost every complex derivative needs it.','Don\'t forget the chain rule when differentiating composite functions.','Practice implicit differentiation — common on FRQ.'] },
-      { num:'3', title:'Differentiation: Composite, Implicit & Inverse', pct:'9–13%', desc:'Advanced differentiation techniques including chain rule mastery, implicit differentiation, and derivatives of inverse functions.', topics:[{h:'Chain Rule (Advanced)',p:'Apply repeatedly for functions nested multiple levels deep'},{h:'Implicit Differentiation',p:'Differentiate both sides; treat y as function of x; collect dy/dx terms'},{h:'Inverse Functions',p:'If y = f⁻¹(x), then dy/dx = 1/f\'(y)'},{h:'Inverse Trig Derivatives',p:'d/dx[arcsin x] = 1/√(1−x²); d/dx[arctan x] = 1/(1+x²)'}], formulas:['d/dx[arcsin x] = 1/√(1−x²)','d/dx[arctan x] = 1/(1+x²)','d/dx[arccos x] = −1/√(1−x²)'], tips:['In implicit differentiation, every y-term gets a dy/dx multiplied after differentiating.','The derivative of an inverse function at a point is the reciprocal of the original derivative at the corresponding point.'] },
-      { num:'4', title:'Contextual Applications of Differentiation', pct:'10–15%', desc:'Using derivatives to solve real-world problems: related rates, linear approximation, and motion analysis.', topics:[{h:'Related Rates',p:'Multiple quantities changing with time; use chain rule; draw a diagram'},{h:'Linear Approximation',p:'L(x) = f(a) + f\'(a)(x−a); tangent line approximation'},{h:'Motion Problems',p:'Position → derivative → velocity → derivative → acceleration'},{h:'L\'Hôpital\'s Rule',p:'For indeterminate forms: lim f/g = lim f\'/g\' (if applicable)'}], formulas:['L(x) ≈ f(a) + f\'(a)(x−a)'], tips:['Related rates: identify all variables, find an equation relating them, differentiate implicitly with respect to time.','Speed = |velocity|; object at rest when v = 0; speeding up when v and a have same sign.'] },
-      { num:'5', title:'Analytical Applications of Differentiation', pct:'15–18%', desc:'Using derivatives to analyze function behavior: critical points, extrema, concavity, and curve sketching.', topics:[{h:'Mean Value Theorem',p:'If f continuous on [a,b] and differentiable on (a,b), then f\'(c) = [f(b)−f(a)]/(b−a) for some c'},{h:'Increasing/Decreasing',p:'f\'(x) > 0 → increasing; f\'(x) < 0 → decreasing'},{h:'First Derivative Test',p:'Local max if f\' changes + to −; local min if f\' changes − to +'},{h:'Concavity & Inflection',p:'f\'\'(x) > 0 → concave up; f\'\'(x) < 0 → concave down; inflection where concavity changes'},{h:'Optimization',p:'Find critical points; use first or second derivative test to confirm max/min'}], formulas:['MVT: f\'(c) = [f(b)−f(a)]/(b−a)'], tips:['First derivative test is more reliable than second derivative test (works even when f\'\'= 0).','Optimization: always check endpoints if given a closed interval.','Candidates test: check all critical points AND endpoints for absolute extrema.'] },
-      { num:'6', title:'Integration & Accumulation', pct:'17–20%', desc:'Antiderivatives, the Fundamental Theorem of Calculus, and basic integration techniques.', topics:[{h:'Antiderivatives',p:'Reverse of differentiation; + C for indefinite integrals'},{h:'Riemann Sums',p:'Approximate area using left, right, or midpoint rectangles'},{h:'FTC Part 1',p:'d/dx[∫ₐˣ f(t)dt] = f(x)'},{h:'FTC Part 2',p:'∫ₐᵇ f(x)dx = F(b) − F(a) where F\' = f'},{h:'u-Substitution',p:'Reverse of chain rule; substitute u = g(x), du = g\'(x)dx'}], formulas:['∫xⁿ dx = xⁿ⁺¹/(n+1) + C (n≠−1)','∫eˣ dx = eˣ + C','∫1/x dx = ln|x| + C','∫sin x dx = −cos x + C'], tips:['FTC Part 2 is the main tool for evaluating definite integrals.','For u-substitution, always change the limits of integration if working with definite integrals.','Net change theorem: ∫ₐᵇ f\'(x)dx = f(b) − f(a).'] },
-      { num:'7', title:'Differential Equations', pct:'6–12%', desc:'Setting up and solving simple differential equations, including slope fields and exponential models.', topics:[{h:'Slope Fields',p:'Visual representation of dy/dx at many points; solutions are curves that follow the slopes'},{h:'Separation of Variables',p:'Rewrite as f(y)dy = g(x)dx; integrate both sides'},{h:'Exponential Growth/Decay',p:'dy/dt = ky → y = y₀eᵏᵗ'}], formulas:['dy/dt = ky → y = Ce^(kt)'], tips:['In separation of variables, don\'t forget + C; always solve for C using initial conditions.','Slope fields: the slope at each point equals dy/dx evaluated at that (x,y) point.'] },
-      { num:'8', title:'Applications of Integration', pct:'10–15%', desc:'Using integrals to find area, volume, average value, and to solve motion and accumulation problems.', topics:[{h:'Area Between Curves',p:'∫[top − bottom]dx; find intersection points first'},{h:'Volume: Disk/Washer',p:'Revolution around x-axis: V = π∫[f(x)]²dx; washer: π∫([R(x)]²−[r(x)]²)dx'},{h:'Average Value',p:'f_avg = (1/(b−a))∫ₐᵇ f(x)dx'},{h:'Particle Motion',p:'Displacement = ∫v(t)dt; total distance = ∫|v(t)|dt'}], formulas:['Area = ∫ₐᵇ [f(x)−g(x)]dx','V_disk = π∫[f(x)]²dx','f_avg = (1/(b−a))∫ₐᵇ f(x)dx'], tips:['For area, always integrate (top − bottom) or (right − left).','Displacement ≠ total distance; split integral where v = 0 for total distance.','Accumulation problems: final value = initial value + ∫rate dt.'] },
-    ],
-    flashcards: [
-      {unit:'Limits',q:'State the three conditions for a function to be continuous at x = a.',a:'1) f(a) is defined, 2) lim f(x) as x→a exists, 3) lim f(x) = f(a)'},
-      {unit:'Derivatives',q:'What is the derivative of eˣ?',a:'eˣ (its own derivative)'},
-      {unit:'Derivatives',q:'State the chain rule.',a:'d/dx[f(g(x))] = f\'(g(x)) · g\'(x)'},
-      {unit:'Derivatives',q:'What does f\'\'(x) > 0 tell you about f?',a:'f is concave up at that point'},
-      {unit:'Integration',q:'State the Fundamental Theorem of Calculus Part 2.',a:'∫ₐᵇ f(x)dx = F(b) - F(a), where F\'= f'},
-      {unit:'Integration',q:'What is ∫xⁿ dx?',a:'xⁿ⁺¹/(n+1) + C, for n ≠ -1'},
-      {unit:'Applications',q:'Formula for average value of f on [a,b].',a:'(1/(b-a)) × ∫ₐᵇ f(x)dx'},
-      {unit:'Applications',q:'Difference between displacement and total distance?',a:'Displacement = ∫v(t)dt. Total distance = ∫|v(t)|dt (split where v = 0)'},
-    ],
-    mcq: [
-      {q:'If f(x) = x³ - 3x² + 5, find f\'(2).',opts:['0','1','−1','3'],ans:0,exp:'f\'(x) = 3x² - 6x. f\'(2) = 3(4) - 6(2) = 12 - 12 = 0.'},
-      {q:'What is lim (sin 3x)/x as x→0?',opts:['0','1','3','Does not exist'],ans:2,exp:'Use lim sin(kx)/x = k as x→0. So lim sin(3x)/x = 3.'},
-      {q:'Using the Fundamental Theorem, d/dx[∫₁ˣ sin(t²)dt] = ?',opts:['sin(x²)','cos(x²)','sin(x)','2x·sin(x²)'],ans:0,exp:'By FTC Part 1, d/dx[∫ₐˣ f(t)dt] = f(x). So the answer is sin(x²).'},
-      {q:'A particle has velocity v(t) = t² - 4. What is its displacement from t = 0 to t = 3?',opts:['−3','3','9','−9'],ans:0,exp:'∫₀³(t²-4)dt = [t³/3 - 4t]₀³ = (9 - 12) - 0 = −3'},
-    ]
-  },
+    function toggleModal() {
+        const m = document.getElementById('formulaModal');
+        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+    }
 
-  calcbc: {
-    name: 'AP Calculus BC',
-    accent: '#f06090',
-    desc: 'Covers everything in AB plus sequences/series, parametric equations, polar coordinates, and additional integration techniques.',
-    emoji: 'Σ',
-    units: [
-      { num:'1-5', title:'All AB Topics (Limits through Differential Equations)', pct:'~55%', desc:'All eight AB units are included in BC at the same depth. Master everything from Calculus AB first.', topics:[{h:'Limits & Continuity',p:'Same as AB: limit laws, continuity, IVT'},{h:'Derivatives',p:'All differentiation rules — power, product, quotient, chain, implicit, inverse'},{h:'Applications of Derivatives',p:'MVT, curve sketching, optimization, related rates'},{h:'Integration',p:'FTC, u-substitution, area/volume applications'},{h:'Differential Equations',p:'Slope fields, separation of variables, exponential growth/decay'}], formulas:['All AB formulas apply'], tips:['If you\'re weak on AB material, fix it first — BC builds directly on it.','Many BC exams retest AB content in more complex contexts.'] },
-      { num:'6', title:'Additional Integration Techniques', pct:'5–9%', desc:'More powerful methods for evaluating integrals: integration by parts, partial fractions, and improper integrals.', topics:[{h:'Integration by Parts',p:'∫u dv = uv − ∫v du; use LIATE to choose u'},{h:'Partial Fractions',p:'Decompose rational functions into simpler fractions before integrating'},{h:'Improper Integrals',p:'Limits of integration are ±∞ or integrand has vertical asymptote; evaluate as limits'}], formulas:['∫u dv = uv − ∫v du','∫1/(x²+a²)dx = (1/a)arctan(x/a) + C'], tips:['LIATE for integration by parts: Logarithmic, Inverse trig, Algebraic, Trig, Exponential — choose u first from left.','Improper integrals: write as limit of a definite integral, then evaluate.'] },
-      { num:'7', title:'Differential Equations (Advanced)', pct:'6–9%', desc:'Logistic growth, Euler\'s method, and more complex separable differential equations.', topics:[{h:'Euler\'s Method',p:'Numerical approximation: yₙ₊₁ = yₙ + f(xₙ,yₙ)·Δx'},{h:'Logistic Growth',p:'dP/dt = kP(1 − P/L); S-shaped curve approaching carrying capacity L'},{h:'Separable DEs',p:'More complex forms; partial fractions often needed'}], formulas:['Logistic: P(t) = L/(1 + Ae^(−kt))','Euler: yₙ₊₁ = yₙ + f\'(xₙ)·h'], tips:['Logistic growth starts exponential then slows; inflection at P = L/2.','Euler\'s method is an approximation — smaller step size → more accuracy.'] },
-      { num:'8', title:'Parametric Equations & Vector-Valued Functions', pct:'11–12%', desc:'Describe curves using a parameter t. Motion along curves in a plane.', topics:[{h:'Parametric Derivatives',p:'dy/dx = (dy/dt)/(dx/dt); d²y/dx² = (d/dt[dy/dx])/(dx/dt)'},{h:'Arc Length',p:'L = ∫√[(dx/dt)² + (dy/dt)²] dt'},{h:'Vector Functions',p:'Position, velocity, and acceleration as vector-valued functions of t'},{h:'Speed',p:'|v| = √[(dx/dt)² + (dy/dt)²]'}], formulas:['dy/dx = (dy/dt)/(dx/dt)','Arc length = ∫ₐᵇ √[(x\'(t))² + (y\'(t))²]dt'], tips:['Don\'t confuse dy/dx with dy/dt — they are different derivatives.','Speed is the magnitude of the velocity vector.'] },
-      { num:'9', title:'Polar Coordinates', pct:'11–12%', desc:'Representing points using distance r and angle θ. Area and arc length in polar form.', topics:[{h:'Polar to Rectangular',p:'x = r cosθ, y = r sinθ, r² = x² + y²'},{h:'Common Polar Curves',p:'Circles (r = a), rose curves (r = a sin nθ), cardioids (r = a + b cosθ), limaçons'},{h:'Area in Polar',p:'A = ½∫αᵝ [f(θ)]² dθ'},{h:'Slope in Polar',p:'dy/dx = (dr/dθ sinθ + r cosθ)/(dr/dθ cosθ − r sinθ)'}], formulas:['A = ½∫αᵝ r² dθ','Area between curves: ½∫(r₂² − r₁²)dθ'], tips:['For area between two polar curves, integrate ½(r_outer² - r_inner²) dθ.','Find intersection points by setting r₁ = r₂ (but check θ = 0 solution too!).'] },
-      { num:'10', title:'Infinite Sequences & Series', pct:'17–18%', desc:'The most challenging and heavily-tested unit in BC. Convergence tests, power series, and Taylor/Maclaurin series.', topics:[{h:'Sequences',p:'Limit of aₙ as n→∞; bounded and monotone sequences'},{h:'Series Convergence Tests',p:'Divergence test, integral test, p-series, comparison, limit comparison, alternating series, ratio test'},{h:'Power Series',p:'Σcₙ(x−a)ⁿ; find radius of convergence using ratio test'},{h:'Taylor & Maclaurin Series',p:'Represent functions as power series; error estimation with alternating series'},{h:'Key Maclaurin Series',p:'eˣ, sin x, cos x, 1/(1−x) — must memorize'}], formulas:['eˣ = Σxⁿ/n! = 1 + x + x²/2! + x³/3! + ...','sin x = Σ(−1)ⁿx^(2n+1)/(2n+1)! = x − x³/6 + x⁵/120 − ...','cos x = Σ(−1)ⁿx^(2n)/(2n)! = 1 − x²/2 + x⁴/24 − ...','1/(1−x) = Σxⁿ = 1 + x + x² + ... (|x|<1)'], tips:['Memorize the 4 Maclaurin series — they appear constantly.','Ratio test is most useful for power series (and most other series).','Alternating series error ≤ |first omitted term|.','Always check endpoints separately after finding radius of convergence!'] },
-    ],
-    flashcards: [
-      {unit:'Series',q:'State the Maclaurin series for eˣ.',a:'eˣ = Σxⁿ/n! = 1 + x + x²/2! + x³/3! + ...'},
-      {unit:'Series',q:'State the Maclaurin series for sin x.',a:'sin x = x - x³/3! + x⁵/5! - ... = Σ(-1)ⁿx^(2n+1)/(2n+1)!'},
-      {unit:'Series',q:'What does the ratio test say?',a:'If lim|aₙ₊₁/aₙ| < 1 → converges; > 1 → diverges; = 1 → inconclusive'},
-      {unit:'Parametric',q:'How do you find dy/dx for parametric equations?',a:'dy/dx = (dy/dt) ÷ (dx/dt)'},
-      {unit:'Polar',q:'Area formula for a polar region.',a:'A = ½∫[α to β] r² dθ'},
-      {unit:'Integration',q:'State the integration by parts formula.',a:'∫u dv = uv - ∫v du  (use LIATE to choose u)'},
-      {unit:'Series',q:'What is the alternating series error bound?',a:'Error ≤ |first omitted term| (the next term in the series)'},
-    ],
-    mcq: [
-      {q:'Which series converges?',opts:['Σ 1/n (harmonic series)','Σ 1/n² (p-series, p=2)','Σ n/(n+1)','Σ (-1)ⁿ n'],ans:1,exp:'p-series Σ1/nᵖ converges when p > 1. p=2 > 1 → converges. Harmonic (p=1) diverges. The other two fail the divergence test.'},
-      {q:'Find the radius of convergence of Σ xⁿ/n.',opts:['0','1','∞','2'],ans:1,exp:'Ratio test: |xⁿ⁺¹/(n+1)| / |xⁿ/n| = |x| · n/(n+1) → |x| as n→∞. Converges when |x| < 1, so R = 1.'},
-      {q:'For the parametric curve x = t², y = t³, find dy/dx at t = 2.',opts:['3','3/2','2','6'],ans:1,exp:'dy/dx = (dy/dt)/(dx/dt) = 3t²/2t = 3t/2. At t=2: 3(2)/2 = 3.'},
-    ]
-  },
-
-  chem: {
-    name: 'AP Chemistry',
-    accent: '#e06b6b',
-    desc: 'A rigorous course covering atomic structure, bonding, kinetics, thermodynamics, equilibrium, and electrochemistry.',
-    emoji: '⚗️',
-    units: [
-      { num:'1', title:'Atomic Structure & Properties', pct:'7–9%', desc:'The structure of atoms, periodic trends, and how electron configuration determines chemical behavior.', topics:[{h:'Atomic Structure',p:'Protons (mass, charge), neutrons (mass), electrons (charge); isotopes differ in neutrons'},{h:'Electron Configuration',p:'Aufbau principle, Hund\'s rule, Pauli exclusion; orbital notation'},{h:'Periodic Trends',p:'Atomic radius, ionization energy, electronegativity, electron affinity'},{h:'Photoelectron Spectroscopy',p:'Experimental evidence for electron shell structure'}], formulas:['E = hν (photon energy)','λν = c (wave-particle duality)'], tips:['Ionization energy increases across a period; decreases down a group (harder to remove electrons from smaller atoms with higher Zeff).','Exceptions: O has lower IE than N (paired vs. unpaired p electrons).','Electronegativity: F is highest; increases toward top-right of periodic table.'] },
-      { num:'2', title:'Molecular & Ionic Compound Structure', pct:'7–9%', desc:'Lewis structures, VSEPR theory, molecular geometry, polarity, and ionic compound properties.', topics:[{h:'Lewis Structures',p:'Dot structures showing valence electrons; formal charge minimization'},{h:'VSEPR Theory',p:'Electron geometry vs. molecular geometry; lone pairs count in geometry but not shape'},{h:'Molecular Polarity',p:'Bond polarity + geometry determines molecular dipole'},{h:'Ionic Compounds',p:'Lattice energy; properties of ionic solids'}], formulas:['Formal charge = valence e⁻ − lone pair e⁻ − ½(bonding e⁻)'], tips:['VSEPR: 2=linear, 3=trigonal planar, 4=tetrahedral, 5=trigonal bipyramidal, 6=octahedral.','Lone pairs compress bond angles (takes more space).','Resonance structures: average electron distribution, shorter bonds.'] },
-      { num:'3', title:'Intermolecular Forces & Properties', pct:'18–22%', desc:'The forces between molecules and how they determine physical properties like boiling point and solubility.', topics:[{h:'London Dispersion Forces',p:'Weakest; present in ALL molecules; larger/more polarizable → stronger'},{h:'Dipole-Dipole',p:'Polar molecules; stronger than LDF'},{h:'Hydrogen Bonding',p:'F, O, or N bonded to H; strongest intermolecular force; explains water\'s unique properties'},{h:'Properties',p:'Stronger IMF → higher boiling point, higher viscosity, lower vapor pressure'},{h:'Solubility',p:'"Like dissolves like"; polar dissolves polar; nonpolar dissolves nonpolar'}], formulas:['Vapor pressure ↑ as IMF ↓'], tips:['Hydrogen bonding requires H directly bonded to N, O, or F — not just nearby.','Compare boiling points: identify dominant IMF type first.','Capillary action = cohesion + adhesion; both from H-bonding in water.'] },
-      { num:'4', title:'Chemical Reactions', pct:'7–9%', desc:'Types of reactions, net ionic equations, and stoichiometry including limiting reagents and percent yield.', topics:[{h:'Reaction Types',p:'Synthesis, decomposition, single/double displacement, combustion, acid-base, redox'},{h:'Net Ionic Equations',p:'Remove spectator ions; only show species that change'},{h:'Stoichiometry',p:'Mole ratios from balanced equations; limiting reagent determines yield'},{h:'Solution Stoichiometry',p:'M = mol/L; dilution: M₁V₁ = M₂V₂'}], formulas:['M = n/V (molarity)','% yield = (actual/theoretical) × 100','M₁V₁ = M₂V₂'], tips:['Always balance equations before stoichiometry.','Net ionic equations: only include ions that participate in the reaction.','In redox: oxidation = lose electrons (LEO); reduction = gain electrons (GER).'] },
-      { num:'5', title:'Kinetics', pct:'7–9%', desc:'Reaction rates, rate laws, activation energy, and reaction mechanisms.', topics:[{h:'Rate Laws',p:'rate = k[A]ᵐ[B]ⁿ; determined experimentally (not from balanced equation!)'},{h:'Integrated Rate Laws',p:'Zero order: [A] = [A]₀ − kt. First order: ln[A] = ln[A]₀ − kt. Second order: 1/[A] = 1/[A]₀ + kt'},{h:'Half-Life',p:'First order: t½ = 0.693/k (constant); zero order: t½ = [A]₀/2k'},{h:'Activation Energy',p:'Arrhenius: k = Ae^(−Eₐ/RT); higher Eₐ → slower reaction'},{h:'Mechanisms',p:'Rate-determining step determines rate law; intermediates vs. catalysts'}], formulas:['rate = k[A]ᵐ[B]ⁿ','ln(k₂/k₁) = (Eₐ/R)(1/T₁ − 1/T₂)','First order half-life: t½ = 0.693/k'], tips:['Rate law orders must be determined from data — you CANNOT read them from the balanced equation.','If a plot of ln[A] vs. t is linear → first-order.','A catalyst lowers Eₐ and appears in the rate law; an intermediate does not.'] },
-      { num:'6', title:'Thermodynamics', pct:'7–9%', desc:'Energy changes in chemical reactions: enthalpy, entropy, Gibbs free energy, and thermochemical calculations.', topics:[{h:'Enthalpy (ΔH)',p:'ΔH < 0 = exothermic; ΔH > 0 = endothermic; Hess\'s Law: add reactions to find ΔH'},{h:'Entropy (ΔS)',p:'Measure of disorder; ΔS > 0 favored; gases > liquids > solids'},{h:'Gibbs Free Energy',p:'ΔG = ΔH − TΔS; if ΔG < 0 → spontaneous'},{h:'Thermochemistry',p:'q = mcΔT; calorimetry; bond energies'}], formulas:['ΔG = ΔH − TΔS','ΔG° = −RT ln K','ΔG° = −nFE°','q = mcΔT'], tips:['ΔG < 0 → spontaneous; ΔG > 0 → nonspontaneous; ΔG = 0 → equilibrium.','ΔH < 0 and ΔS > 0: always spontaneous. ΔH > 0 and ΔS < 0: never spontaneous.','Hess\'s Law: if you flip a reaction, flip the sign of ΔH; if you multiply, multiply ΔH.'] },
-      { num:'7', title:'Equilibrium', pct:'7–9%', desc:'Dynamic equilibrium, the equilibrium constant, Le Châtelier\'s principle, and acid-base equilibria.', topics:[{h:'Equilibrium Constant',p:'K = [products]/[reactants] (concentrations raised to stoichiometric powers; omit solids and liquids)'},{h:'ICE Tables',p:'Initial, Change, Equilibrium — systematic method for finding equilibrium concentrations'},{h:'Le Châtelier\'s Principle',p:'System shifts to oppose stress (concentration, pressure, temperature changes)'},{h:'Kₐ and Kᵦ',p:'Weak acid/base dissociation constants; pH = −log[H⁺]'},{h:'Buffer Systems',p:'Henderson-Hasselbalch: pH = pKₐ + log([A⁻]/[HA])'}], formulas:['Q vs K: if Q < K shift right; Q > K shift left','pH = −log[H⁺]','pH = pKₐ + log([A⁻]/[HA])'], tips:['Temperature changes K; other stresses only shift the reaction, not change K.','Strong acids/bases dissociate completely; weak ones use ICE tables.','Henderson-Hasselbalch only works for buffer systems (weak acid + conjugate base).'] },
-      { num:'8', title:'Acids & Bases', pct:'11–15%', desc:'Acid-base theories, pH calculations, buffer systems, and acid-base titrations.', topics:[{h:'Acid-Base Theories',p:'Arrhenius, Brønsted-Lowry (proton transfer), Lewis (electron pair acceptor/donor)'},{h:'Strong vs Weak',p:'Strong: complete dissociation. Weak: partial dissociation (use Kₐ)'},{h:'pH Calculations',p:'Strong acid: pH = −log[HA]. Weak acid: ICE table with Kₐ. Buffers: Henderson-Hasselbalch'},{h:'Titrations',p:'Equivalence point: moles acid = moles base. Indicators change color at endpoint'}], formulas:['Kw = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ at 25°C','pH + pOH = 14','pKₐ + pKᵦ = 14 (conjugate pair)'], tips:['At equivalence point of strong acid + strong base: pH = 7. Weak acid + strong base: pH > 7.','At half-equivalence point in a weak acid titration: pH = pKₐ.','Buffers resist pH change best when pH ≈ pKₐ.'] },
-      { num:'9', title:'Electrochemistry', pct:'7–9%', desc:'Galvanic and electrolytic cells, cell potential, and the quantitative relationships in electrochemistry.', topics:[{h:'Oxidation States',p:'Rules for assigning oxidation numbers; identify what is oxidized vs. reduced'},{h:'Galvanic Cells',p:'Spontaneous redox (ΔG < 0, E°cell > 0); anode (oxidation), cathode (reduction)'},{h:'Standard Cell Potential',p:'E°cell = E°cathode − E°anode; from standard reduction potentials'},{h:'Nernst Equation',p:'E = E° − (RT/nF)lnQ; accounts for nonstandard conditions'},{h:'Electrolytic Cells',p:'Non-spontaneous; requires external electrical energy; Faraday\'s law of electrolysis'}], formulas:['E°cell = E°cathode − E°anode','ΔG° = −nFE°','E = E° − (0.0592/n)log Q (at 25°C)','Faraday: charge = current × time = moles e⁻ × 96,485 C/mol'], tips:['At anode: oxidation (loses electrons). At cathode: reduction (gains electrons).','Positive E°cell → spontaneous → ΔG negative. Memorize this relationship.','Nernst equation: Q > 1 (more products than standard) → E decreases.'] },
-    ],
-    flashcards: [
-      {unit:'Kinetics',q:'How is reaction order determined?',a:'Experimentally — from rate data. Cannot be read from balanced equation coefficients.'},
-      {unit:'Equilibrium',q:'What does Le Châtelier\'s Principle state?',a:'When a system at equilibrium is disturbed, it shifts to partially undo the disturbance'},
-      {unit:'Thermodynamics',q:'What does ΔG < 0 mean?',a:'The reaction is spontaneous (thermodynamically favorable) at that temperature'},
-      {unit:'Acids/Bases',q:'Henderson-Hasselbalch equation.',a:'pH = pKₐ + log([A⁻]/[HA])'},
-      {unit:'Electrochemistry',q:'What happens at the anode vs. cathode?',a:'Anode: oxidation (loses e⁻). Cathode: reduction (gains e⁻). AN OX, RED CAT.'},
-      {unit:'Thermodynamics',q:'Conditions for a reaction to always be spontaneous.',a:'ΔH < 0 (exothermic) AND ΔS > 0 (increasing entropy) — ΔG will always be negative'},
-    ],
-    mcq: [
-      {q:'A reaction has rate = k[A][B]². If [B] is doubled while [A] stays constant, the rate:',opts:['doubles','triples','quadruples','stays the same'],ans:2,exp:'Rate is second order in B, so doubling [B] multiplies the rate by 2² = 4 (quadruples).'},
-      {q:'Which process always results in an increase in entropy?',opts:['Freezing water','Dissolving a gas in a liquid','A solid dissolving in water','Condensation'],ans:2,exp:'Dissolving a solid increases disorder (more particle arrangements possible in solution). ΔS > 0.'},
-      {q:'For a galvanic cell with E°cell = 1.2 V and n = 2, what is ΔG°?',opts:['+231.6 kJ','-231.6 kJ','+115.8 kJ','-115.8 kJ'],ans:1,exp:'ΔG° = -nFE° = -(2)(96485)(1.2) = -231,564 J ≈ -231.6 kJ. Positive E° → negative ΔG° (spontaneous).'},
-    ]
-  },
-
-  physc: {
-    name: 'AP Physics C: Mechanics',
-    accent: '#a87cff',
-    desc: 'Calculus-based mechanics covering kinematics through oscillations and gravitation. Equivalent to first semester college physics for engineers.',
-    emoji: '🔭',
-    units: [
-      { num:'1', title:'Kinematics', pct:'~14%', desc:'Motion described with calculus. Derivatives give velocity and acceleration; integrals give position from velocity.', topics:[{h:'Calculus-Based Kinematics',p:'v = dx/dt; a = dv/dt = d²x/dt²; x = ∫v dt'},{h:'2D Motion',p:'Projectile motion; position, velocity, and acceleration as vectors'},{h:'Relative Motion',p:'Vector addition of velocities in different frames'}], formulas:['v = dx/dt','a = dv/dt','x(t) = x₀ + ∫v dt'], tips:['Unlike Physics 1, use calculus to find instantaneous values.','Separate x and y components; they are independent.','Area under v-t graph = displacement; slope of v-t = acceleration.'] },
-      { num:'2', title:'Forces & Newton\'s Laws', pct:'~20%', desc:'Newton\'s laws applied with full vector calculus. Variable forces, friction, drag, and constraint systems.', topics:[{h:'Newton\'s Laws (Vector Form)',p:'ΣF⃗ = ma⃗; forces as vectors; direction matters'},{h:'Variable Forces',p:'F as a function of time, position, or velocity; requires integration'},{h:'Friction & Drag',p:'Static/kinetic friction; air resistance proportional to v or v²'},{h:'Systems of Particles',p:'Connected masses; Atwood machines; wedge problems'}], formulas:['ΣF⃗ = ma⃗','W = ∫F dx (variable force work)'], tips:['Free body diagrams are even more essential in Physics C — draw every force as a vector.','For variable forces, work = ∫F(x)dx.','For drag force F = -bv, solve the differential equation for v(t).'] },
-      { num:'3', title:'Work, Energy & Power', pct:'~14%', desc:'Work-energy theorem with calculus, conservative forces, potential energy functions, and energy conservation.', topics:[{h:'Work (Calculus Form)',p:'W = ∫F⃗·dr⃗ = ∫F cosθ dx; work done by variable force'},{h:'Conservative Forces',p:'Work independent of path; ΔU = −W; F = −dU/dx'},{h:'Potential Energy Functions',p:'U(x) = −∫F dx; equilibrium where dU/dx = 0'},{h:'Power',p:'P = dW/dt = F⃗·v⃗'}], formulas:['W = ∫F·dx','F = −dU/dx (conservative force from PE function)','P = F·v·cosθ'], tips:['The derivative of potential energy (with a negative sign) gives the force: F = -dU/dx.','Equilibrium: dU/dx = 0. Stable if d²U/dx² > 0 (concave up).','Non-conservative work = ΔKE + ΔPE.'] },
-      { num:'4', title:'Linear Momentum & Collisions', pct:'~12%', desc:'Impulse-momentum theorem, conservation of momentum, and collision analysis with calculus.', topics:[{h:'Impulse',p:'J⃗ = ∫F⃗ dt = Δp⃗; area under F-t curve'},{h:'Center of Mass',p:'x_cm = Σmᵢxᵢ/Σmᵢ; for continuous: x_cm = (1/M)∫x dm'},{h:'Collisions',p:'Elastic (KE and p conserved); inelastic (p conserved, KE not)'},{h:'Variable Mass',p:'Rocket equation: F = −v_ex(dm/dt) (thrust)'}], formulas:['p⃗ = mv⃗','J⃗ = ∫F dt = Δp⃗','x_cm = (1/M)∫x dm','Thrust: F = v_ex|dm/dt|'], tips:['Center of mass: the whole system moves as if all mass were there.','In the CM frame, total momentum = 0 — useful for collision analysis.','Rocket equation is a classic FRQ topic.'] },
-      { num:'5', title:'Rotation', pct:'~18%', desc:'The rotational analogs of all linear quantities. Moment of inertia, torque, angular momentum — now with calculus.', topics:[{h:'Rotational Kinematics',p:'θ, ω = dθ/dt, α = dω/dt; linear analogy: replace x→θ, v→ω, a→α, m→I'},{h:'Moment of Inertia',p:'I = Σmr²; for continuous: I = ∫r² dm; parallel axis theorem: I = Icm + Md²'},{h:'Torque & Newton\'s 2nd',p:'τ = r×F; Στ = Iα'},{h:'Angular Momentum',p:'L = Iω; ΔL/Δt = Στ; conserved when Στ = 0'},{h:'Rolling Without Slipping',p:'v = rω; K_total = ½mv² + ½Iω²'}], formulas:['I = ∫r² dm','Parallel axis: I = Icm + Md²','L = Iω = r × p','Στ = Iα','K_roll = ½mv² + ½Iω²'], tips:['Memorize key moments of inertia: solid sphere 2/5 MR², hollow sphere 2/3 MR², solid cylinder 1/2 MR², hoop MR².','Parallel axis theorem: always add Md² to the CENTER OF MASS moment of inertia.','For rolling without slipping: a = αR and v = ωR — these are the key constraints.'] },
-      { num:'6', title:'Oscillations', pct:'~10%', desc:'Simple harmonic motion analyzed with calculus. Solutions to differential equations of oscillating systems.', topics:[{h:'SHM Equation',p:'d²x/dt² = −ω²x; solution: x(t) = A cos(ωt + φ)'},{h:'Spring-Mass',p:'ω = √(k/m); T = 2π√(m/k)'},{h:'Energy in SHM',p:'E = ½kA² = ½mv² + ½kx² (constant)'},{h:'Damped Oscillation',p:'Amplitude decreases exponentially; underdamped, critically damped, overdamped'}], formulas:['x(t) = A cos(ωt + φ)','v(t) = −Aω sin(ωt + φ)','ω = √(k/m) for spring','E = ½kA²'], tips:['Recognize SHM when d²x/dt² = −(constant)x — the constant is ω².','Maximum velocity occurs at x = 0; maximum acceleration at x = ±A.','Know how to derive T from the ODE, not just memorize it.'] },
-      { num:'7', title:'Gravitation', pct:'~12%', desc:'Newton\'s law of gravitation, gravitational potential energy, orbital mechanics, and escape velocity.', topics:[{h:'Universal Gravitation',p:'F = Gm₁m₂/r²; field: g = GM/r²'},{h:'Gravitational PE',p:'U = −GMm/r (negative; reference at infinity)'},{h:'Orbital Mechanics',p:'Circular orbit: gravity provides centripetal force; v = √(GM/r)'},{h:'Kepler\'s Laws',p:'1st: elliptical orbits. 2nd: equal areas equal time. 3rd: T² ∝ r³'},{h:'Escape Velocity',p:'v_esc = √(2GM/r)'}], formulas:['F = Gm₁m₂/r²','U = −GMm/r','v_orbit = √(GM/r)','v_escape = √(2GM/r)','T² = (4π²/GM)r³'], tips:['Gravitational PE is negative — it becomes less negative (increases) as r increases.','Escape velocity: set KE = |PE|: ½mv² = GMm/r.','Kepler\'s 3rd law: T² ∝ r³ — can compare two orbits using ratios.'] },
-    ],
-    flashcards: [
-      {unit:'Rotation',q:'State the parallel axis theorem.',a:'I = Icm + Md²  (where d is the distance from the center of mass to the new axis)'},
-      {unit:'Rotation',q:'Moment of inertia for a solid sphere about its center.',a:'I = 2/5 MR²'},
-      {unit:'Rotation',q:'Moment of inertia for a solid cylinder about its central axis.',a:'I = 1/2 MR²'},
-      {unit:'Oscillations',q:'What is the differential equation for SHM?',a:'d²x/dt² = -ω²x  →  solution: x(t) = A cos(ωt + φ)'},
-      {unit:'Gravitation',q:'Gravitational potential energy (sign matters!)',a:'U = -GMm/r  (negative; reference at r = ∞)'},
-      {unit:'Gravitation',q:'Escape velocity from a planet of mass M, radius R.',a:'v_esc = √(2GM/R)'},
-      {unit:'Work/Energy',q:'How do you get force from a potential energy function?',a:'F = -dU/dx  (negative derivative of PE)'},
-    ],
-    mcq: [
-      {q:'A uniform solid cylinder and a hollow cylinder of the same mass and radius roll down an incline without slipping. Which reaches the bottom first?',opts:['The hollow cylinder','The solid cylinder','They arrive at the same time','Cannot determine without more information'],ans:1,exp:'Solid cylinder has smaller moment of inertia (½MR² vs MR²). Less rotational inertia → more acceleration. Solid cylinder wins.'},
-      {q:'A satellite at radius r has orbital speed v. At radius 4r, the orbital speed is:',opts:['4v','2v','v/2','v/4'],ans:2,exp:'v = √(GM/r). At 4r: v_new = √(GM/4r) = v/√4 = v/2.'},
-      {q:'For a spring-mass system, x(t) = 0.1 cos(4t). What is the maximum speed?',opts:['0.1 m/s','0.4 m/s','4 m/s','2.5 m/s'],ans:1,exp:'v(t) = -Aω sin(ωt). Max speed = Aω = 0.1 × 4 = 0.4 m/s'},
-    ]
-  }
-};
-
-let activeCourse = null;
-let activeTab = 'notes';
-let fcIndex = 0;
-let fcCorrect = 0;
-let fcMissed = 0;
-let fcFlipped = false;
-let fcCards = [];
-let mcqIndex = 0;
-let mcqScore = 0;
-let mcqAnswered = false;
-
-function showHome() {
-  document.getElementById('homeView').style.display = 'block';
-  document.getElementById('courseViews').innerHTML = '';
-  document.getElementById('backBtn').style.display = 'none';
-  document.getElementById('breadcrumb').style.display = 'none';
-  document.querySelectorAll('.course-btn').forEach(b => b.classList.remove('active'));
-  activeCourse = null;
-}
-
-function showCourse(id) {
-  activeCourse = id;
-  const c = COURSES[id];
-  document.getElementById('homeView').style.display = 'none';
-  document.getElementById('backBtn').style.display = 'inline-block';
-  document.getElementById('breadcrumb').style.display = 'inline';
-  document.getElementById('breadcrumb').textContent = c.name;
-  document.querySelectorAll('.course-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('sb-' + id).classList.add('active');
-
-  fcCards = c.flashcards;
-  fcIndex = 0; fcCorrect = 0; fcMissed = 0; fcFlipped = false;
-  mcqIndex = 0; mcqScore = 0; mcqAnswered = false;
-
-  const cv = document.getElementById('courseViews');
-  cv.innerHTML = buildCourseHTML(id, c);
-  showTab('notes');
-}
-
-function buildCourseHTML(id, c) {
-  const accent = c.accent;
-  return `
-  <div class="course-view active" id="cv-${id}">
-    <div class="course-header">
-      <h2>${c.emoji} ${c.name}</h2>
-      <p>${c.desc}</p>
-      <div class="course-stats">
-        <div class="stat"><strong>${c.units.length}</strong> Units</div>
-        <div class="stat"><strong>${c.flashcards.length}</strong> Flashcards</div>
-        <div class="stat"><strong>${c.mcq.length}</strong> Practice MCQs</div>
-      </div>
-    </div>
-    <div class="tabs">
-      <button class="tab active" onclick="showTab('notes')">Unit Notes</button>
-      <button class="tab" onclick="showTab('flashcards')">Flashcards</button>
-      <button class="tab" onclick="showTab('practice')">Practice MCQ</button>
-    </div>
-    <div id="tab-notes">
-      <div class="units-list">${c.units.map((u, i) => buildUnit(u, accent)).join('')}</div>
-    </div>
-    <div id="tab-flashcards" style="display:none">
-      ${buildFlashcardsHTML(c, accent)}
-    </div>
-    <div id="tab-practice" style="display:none">
-      ${buildPracticeHTML(c, accent)}
-    </div>
-  </div>`;
-}
-
-function buildUnit(u, accent) {
-  const formulaHTML = u.formulas ? `<div class="key-formulas"><h4>Key Formulas</h4><div class="formula-list">${u.formulas.map(f=>`<div class="formula" style="border-color:${accent}">${f}</div>`).join('')}</div></div>` : '';
-  const tipsHTML = u.tips ? `<div class="tips-box"><h4>Exam Tips</h4>${u.tips.map(t=>`<div class="tip">${t}</div>`).join('')}</div>` : '';
-  const topicsHTML = `<div class="topics-grid">${u.topics.map(t=>`<div class="topic-item"><h4>${t.h}</h4><p>${t.p}</p></div>`).join('')}</div>`;
-  return `
-  <div class="unit">
-    <div class="unit-header" onclick="toggleUnit(this)">
-      <span class="unit-num">${u.num}</span>
-      <span class="unit-title">${u.title}</span>
-      <span class="unit-pct">${u.pct}</span>
-      <span class="unit-toggle">▾</span>
-    </div>
-    <div class="unit-body">
-      <p class="unit-desc">${u.desc}</p>
-      ${topicsHTML}
-      ${formulaHTML}
-      ${tipsHTML}
-    </div>
-  </div>`;
-}
-
-function buildFlashcardsHTML(c, accent) {
-  return `
-  <div class="flashcard-area">
-    <div class="fc-progress">
-      <div class="fc-bar"><div class="fc-bar-fill" id="fcBarFill" style="background:${accent};width:0%"></div></div>
-      <span class="fc-count" id="fcCountLabel">1 / ${c.flashcards.length}</span>
-    </div>
-    <div class="fc-score">
-      <span class="score-chip c" id="fcCorrectChip">✓ 0 got it</span>
-      <span class="score-chip m" id="fcMissedChip">✗ 0 missed</span>
-    </div>
-    <div class="flashcard-wrap">
-      <div class="flashcard" id="fcCard" onclick="flipCard()">
-        <div class="fc-face fc-front"><p id="fcQ">${c.flashcards[0].q}</p><span class="hint">tap to reveal answer</span></div>
-        <div class="fc-face fc-back"><p id="fcA">${c.flashcards[0].a}</p><span class="hint">tap to flip back</span></div>
-      </div>
-    </div>
-    <div class="fc-actions">
-      <button class="fc-btn missed" onclick="markCard(false)">✗ Missed it</button>
-      <button class="fc-btn" onclick="prevCard()">← Prev</button>
-      <button class="fc-btn got" onclick="markCard(true)">✓ Got it</button>
-    </div>
-  </div>`;
-}
-
-function buildPracticeHTML(c, accent) {
-  const q = c.mcq[0];
-  const opts = q.opts.map((o,i) => `<button class="mcq-opt" onclick="selectOpt(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('');
-  return `
-  <div class="practice-area">
-    <div class="stat" style="margin-bottom:1.5rem">
-      <div class="stat-item"><div class="val" id="mcqScoreVal">0</div><div class="lbl">Score</div></div>
-      <div class="stat-item"><div class="val" id="mcqIndexVal">1</div><div class="lbl">Question</div></div>
-      <div class="stat-item"><div class="val">${c.mcq.length}</div><div class="lbl">Total</div></div>
-    </div>
-    <div id="mcqContainer">
-      <div class="mcq-card">
-        <div class="mcq-q" id="mcqQ">${q.q}</div>
-        <div class="mcq-opts" id="mcqOpts">${opts}</div>
-        <div class="mcq-explanation" id="mcqExp" style="border-color:${accent}">${q.exp}</div>
-      </div>
-      <button class="next-btn" id="nextBtn" onclick="nextMCQ()">Next question →</button>
-    </div>
-  </div>`;
-}
-
-function toggleUnit(header) {
-  const unit = header.parentElement;
-  unit.classList.toggle('open');
-}
-
-function showTab(tab) {
-  activeTab = tab;
-  ['notes','flashcards','practice'].forEach(t => {
-    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
-  });
-  document.querySelectorAll('.tab').forEach((b, i) => {
-    b.classList.toggle('active', ['notes','flashcards','practice'][i] === tab);
-  });
-}
-
-function flipCard() {
-  fcFlipped = !fcFlipped;
-  document.getElementById('fcCard').classList.toggle('flipped', fcFlipped);
-}
-
-function prevCard() {
-  if (fcIndex > 0) { fcIndex--; updateCard(); }
-}
-
-function markCard(correct) {
-  if (correct) fcCorrect++; else fcMissed++;
-  updateScoreChips();
-  if (fcIndex < fcCards.length - 1) { fcIndex++; updateCard(); }
-}
-
-function updateCard() {
-  fcFlipped = false;
-  document.getElementById('fcCard').classList.remove('flipped');
-  document.getElementById('fcQ').textContent = fcCards[fcIndex].q;
-  document.getElementById('fcA').textContent = fcCards[fcIndex].a;
-  const pct = Math.round((fcIndex + 1) / fcCards.length * 100);
-  document.getElementById('fcBarFill').style.width = pct + '%';
-  document.getElementById('fcCountLabel').textContent = (fcIndex+1) + ' / ' + fcCards.length;
-}
-
-function updateScoreChips() {
-  document.getElementById('fcCorrectChip').textContent = '✓ ' + fcCorrect + ' got it';
-  document.getElementById('fcMissedChip').textContent = '✗ ' + fcMissed + ' missed';
-}
-
-function selectOpt(i) {
-  if (mcqAnswered) return;
-  mcqAnswered = true;
-  const c = COURSES[activeCourse];
-  const q = c.mcq[mcqIndex];
-  const opts = document.querySelectorAll('.mcq-opt');
-  opts.forEach((o, idx) => {
-    o.disabled = true;
-    if (idx === q.ans) o.classList.add('correct');
-    if (idx === i && i !== q.ans) o.classList.add('wrong');
-  });
-  if (i === q.ans) mcqScore++;
-  document.getElementById('mcqScoreVal').textContent = mcqScore;
-  const exp = document.getElementById('mcqExp');
-  exp.classList.add('show');
-  exp.style.borderColor = i === q.ans ? '#4ecb8d' : '#e06b6b';
-  document.getElementById('nextBtn').classList.add('show');
-}
-
-function nextMCQ() {
-  const c = COURSES[activeCourse];
-  mcqIndex++;
-  mcqAnswered = false;
-  if (mcqIndex >= c.mcq.length) {
-    document.getElementById('mcqContainer').innerHTML = `
-    <div class="quiz-score">
-      <h3>${mcqScore}/${c.mcq.length}</h3>
-      <p>${mcqScore === c.mcq.length ? 'Perfect score! You\'re ready.' : mcqScore >= c.mcq.length/2 ? 'Good work — keep reviewing!' : 'Keep studying — you\'ll get there!'}</p>
-      <button class="restart-btn" onclick="restartMCQ()">Try again</button>
-    </div>`;
-    return;
-  }
-  const q = c.mcq[mcqIndex];
-  const opts = q.opts.map((o,i) => `<button class="mcq-opt" onclick="selectOpt(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('');
-  document.getElementById('mcqIndexVal').textContent = mcqIndex + 1;
-  document.getElementById('mcqQ').textContent = q.q;
-  document.getElementById('mcqOpts').innerHTML = opts;
-  document.getElementById('mcqExp').textContent = q.exp;
-  document.getElementById('mcqExp').classList.remove('show');
-  document.getElementById('nextBtn').classList.remove('show');
-}
-
-function restartMCQ() {
-  mcqIndex = 0; mcqScore = 0; mcqAnswered = false;
-  const c = COURSES[activeCourse];
-  document.getElementById('mcqScoreVal').textContent = 0;
-  document.getElementById('mcqIndexVal').textContent = 1;
-  const q = c.mcq[0];
-  const opts = q.opts.map((o,i) => `<button class="mcq-opt" onclick="selectOpt(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('');
-  document.getElementById('mcqContainer').innerHTML = `
-    <div class="mcq-card">
-      <div class="mcq-q" id="mcqQ">${q.q}</div>
-      <div class="mcq-opts" id="mcqOpts">${opts}</div>
-      <div class="mcq-explanation" id="mcqExp" style="border-color:${c.accent}">${q.exp}</div>
-    </div>
-    <button class="next-btn" id="nextBtn" onclick="nextMCQ()">Next question →</button>`;
-}
+    function showUnit(unit) {
+        const title = document.getElementById('viewTitle');
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        if(unit === 'dash') { title.innerText = "My Study Dashboard"; }
+        else { title.innerText = "Unit " + unit + " Focus"; }
+    }
 </script>
+
 </body>
 </html>
