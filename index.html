@@ -660,6 +660,89 @@ select.fselect{appearance:none;cursor:pointer;}
 .phase-intro h2{font-family:'Instrument Serif',serif;font-size:1.6rem;margin-bottom:.4rem;}
 .phase-intro p{font-size:13.5px;color:var(--text2);max-width:440px;margin:0 auto .9rem;line-height:1.6;}
 
+/* ── LESSONS ── */
+.lesson-mode-card{background:var(--s1);border:2px solid var(--border);border-radius:14px;
+  padding:1.4rem;cursor:pointer;transition:all .2s;text-align:center;}
+.lesson-mode-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+#modeAP:hover,#modeAP.selected{border-color:var(--blue);background:var(--gblue);}
+#modeDEEP:hover,#modeDEEP.selected{border-color:var(--purple);background:var(--gpurp);}
+
+.lesson-unit-btn{background:var(--s1);border:1px solid var(--border);border-radius:11px;
+  padding:1rem;cursor:pointer;transition:all .2s;text-align:left;}
+.lesson-unit-btn:hover{border-color:var(--border2);transform:translateY(-1px);}
+.lesson-unit-btn .lun{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:.3rem;}
+.lesson-unit-btn .lut{font-size:13.5px;font-weight:600;margin-bottom:.2rem;}
+.lesson-unit-btn .lup{font-size:11px;color:var(--text3);}
+.lesson-unit-btn .lu-done{font-size:10px;color:var(--green);font-weight:600;margin-top:.4rem;}
+
+.lesson-wrap{max-width:760px;}
+.lesson-header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.lesson-progress{display:flex;gap:5px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.lp-step{padding:4px 12px;border-radius:99px;font-size:11.5px;font-weight:600;
+  background:var(--s2);color:var(--text3);border:1px solid var(--border);transition:all .2s;}
+.lp-step.active{background:var(--blue2);color:#fff;border-color:var(--blue2);}
+.lp-step.done{background:var(--ggreen);color:var(--green);border-color:rgba(34,211,160,.3);}
+
+.lesson-block{background:var(--s1);border:1px solid var(--border);border-radius:13px;
+  padding:1.5rem;margin-bottom:1rem;}
+.lesson-block h2{font-family:'Instrument Serif',serif;font-size:1.5rem;margin-bottom:.75rem;line-height:1.3;}
+.lesson-block h3{font-size:14px;font-weight:700;color:var(--blue);margin:1rem 0 .4rem;text-transform:uppercase;letter-spacing:.5px;}
+.lesson-block p{font-size:14px;color:var(--text2);line-height:1.85;margin-bottom:.75rem;}
+.lesson-block .highlight{background:var(--gblue);border-left:3px solid var(--blue);
+  padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0;font-size:13.5px;color:var(--text);}
+.lesson-block .warning{background:var(--gred);border-left:3px solid var(--red);
+  padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0;font-size:13.5px;color:var(--text2);}
+.lesson-block .example{background:var(--s2);border:1px solid var(--border2);border-radius:9px;
+  padding:1rem;margin:.75rem 0;}
+.lesson-block .example .ex-title{font-size:11px;font-weight:700;color:var(--amber);
+  text-transform:uppercase;letter-spacing:.7px;margin-bottom:.5rem;}
+.lesson-block .formula-box{background:var(--bg);border:1px solid var(--border2);border-radius:8px;
+  padding:.75rem 1rem;margin:.5rem 0;font-family:'Geist Mono',monospace;font-size:13.5px;
+  color:var(--text);display:flex;justify-content:space-between;align-items:center;}
+.lesson-block .formula-box span{font-size:12px;color:var(--text3);font-family:'Geist',sans-serif;}
+
+.check-block{background:var(--s2);border:1px solid var(--border2);border-radius:12px;
+  padding:1.25rem;margin:1rem 0;text-align:center;}
+.check-block h3{font-size:15px;font-weight:600;margin-bottom:.5rem;}
+.check-block p{font-size:13.5px;color:var(--text2);margin-bottom:1rem;}
+.check-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.check-btn{padding:10px 22px;border-radius:10px;border:2px solid;font-size:13.5px;
+  font-weight:600;cursor:pointer;transition:all .2s;}
+.check-btn.yes{border-color:var(--green);background:var(--ggreen);color:var(--green);}
+.check-btn.yes:hover{background:var(--green);color:#000;}
+.check-btn.no{border-color:var(--amber);background:var(--gamber);color:var(--amber);}
+.check-btn.no:hover{background:var(--amber);color:#000;}
+.check-btn.more{border-color:var(--blue);background:var(--gblue);color:var(--blue);}
+.check-btn.more:hover{background:var(--blue);color:#fff;}
+
+.practice-q{background:var(--s1);border:1px solid var(--border);border-radius:11px;
+  padding:1.1rem;margin-bottom:.75rem;}
+.practice-q .pq-num{font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;
+  letter-spacing:.7px;margin-bottom:.4rem;}
+.practice-q .pq-text{font-size:14px;font-weight:500;margin-bottom:.75rem;line-height:1.6;}
+.practice-q .pq-opts{display:flex;flex-direction:column;gap:6px;}
+.pq-opt{padding:9px 13px;border-radius:8px;border:1px solid var(--border);
+  background:var(--s2);color:var(--text);font-size:13px;text-align:left;cursor:pointer;transition:all .15s;}
+.pq-opt:hover:not(:disabled){border-color:var(--border2);background:var(--s3);}
+.pq-opt.correct{border-color:var(--green);background:var(--ggreen);color:var(--green);}
+.pq-opt.wrong{border-color:var(--red);background:var(--gred);color:var(--red);}
+.pq-exp{display:none;margin-top:.65rem;padding:.65rem .85rem;background:var(--s2);
+  border-radius:8px;font-size:13px;color:var(--text2);line-height:1.6;border-left:2px solid var(--blue);}
+.pq-exp.show{display:block;}
+
+.ap-tip{background:rgba(79,141,255,.08);border:1px solid rgba(79,141,255,.2);
+  border-radius:9px;padding:.85rem 1rem;margin:.75rem 0;}
+.ap-tip .apt-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;
+  letter-spacing:.8px;margin-bottom:.35rem;}
+.ap-tip p{font-size:13px;color:var(--text2);line-height:1.6;margin:0;}
+
+.lesson-nav{display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap;align-items:center;}
+.lesson-complete{text-align:center;padding:2.5rem 1rem;background:var(--s1);
+  border:1px solid var(--border);border-radius:14px;}
+.lesson-complete .lc-icon{font-size:4rem;margin-bottom:.75rem;}
+.lesson-complete h2{font-family:'Instrument Serif',serif;font-size:2rem;margin-bottom:.5rem;}
+.lesson-complete p{font-size:14px;color:var(--text2);margin-bottom:1.25rem;}
+
 .gid-btn{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
   border-radius:6px;border:1px solid rgba(155,114,255,.3);background:var(--gpurp);
   color:var(--purple);font-size:11px;font-weight:600;cursor:pointer;
@@ -700,7 +783,7 @@ select.fselect{appearance:none;cursor:pointer;}
   </div>
   <div class="sb-sec">
     <span class="sb-lbl">Learn</span>
-    <button class="sb-btn" onclick="nav('tutor',this)"><span class="sb-ic">🎓</span>AI Tutor</button>
+    <button class="sb-btn" onclick="nav('lessons',this)"><span class="sb-ic">📖</span>Lessons</button>
     <button class="sb-btn" onclick="nav('notes',this)"><span class="sb-ic">📚</span>Unit Notes</button>
     <button class="sb-btn" onclick="nav('cmap',this)"><span class="sb-ic">🗺</span>Concept Map</button>
     <button class="sb-btn" onclick="nav('formulas',this)"><span class="sb-ic">📐</span>Formula Sheet</button>
@@ -775,51 +858,46 @@ select.fselect{appearance:none;cursor:pointer;}
   <div id="planOutput"></div>
 </div>
 
-<!-- TUTOR -->
-<div class="page" id="p-tutor">
-  <div style="max-width:780px">
-    <div class="ptitle">🎓 AI Tutor</div>
-    <p class="psub">Pick a unit and your tutor walks you through everything — from scratch, step by step, with practice problems and answer checking. Like having a real teacher, just for you.</p>
+<!-- LESSONS -->
+<div class="page" id="p-lessons">
+  <div style="max-width:820px">
+    <div class="ptitle">📖 Lessons</div>
+    <p class="psub">Learn AP Physics 1 from scratch or go deep. Pick your mode, pick your unit, and learn at your own pace.</p>
+
+    <!-- Mode picker -->
+    <div id="lessonModePicker" style="margin-bottom:1.5rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:600px">
+        <div class="lesson-mode-card" onclick="selectLessonMode('ap')" id="modeAP">
+          <div style="font-size:2rem;margin-bottom:.5rem">🎯</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:.35rem">AP Exam Mode</div>
+          <div style="font-size:12.5px;color:var(--text2);line-height:1.5">Focused. Efficient. Only what you need to pass the AP exam. 5–15 min per lesson.</div>
+          <div style="margin-top:.75rem;font-size:11px;color:var(--blue);font-weight:600">PASS THE EXAM →</div>
+        </div>
+        <div class="lesson-mode-card" onclick="selectLessonMode('deep')" id="modeDEEP">
+          <div style="font-size:2rem;margin-bottom:.5rem">🔬</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:.35rem">Deep Learning Mode</div>
+          <div style="font-size:12.5px;color:var(--text2);line-height:1.5">Full understanding. Intuition, real-world examples, the why behind everything. 15–30 min.</div>
+          <div style="margin-top:.75rem;font-size:11px;color:var(--purple);font-weight:600">TRULY UNDERSTAND →</div>
+        </div>
+      </div>
+    </div>
 
     <!-- Unit picker -->
-    <div id="tutorPicker">
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem" id="tutorUnitGrid"></div>
+    <div id="lessonUnitPicker" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+        <button class="btn" onclick="resetLessonMode()">← Change mode</button>
+        <span id="lessonModeLabel" style="font-size:13px;font-weight:600"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px" id="lessonUnitGrid"></div>
     </div>
 
-    <!-- Session -->
-    <div id="tutorSession" style="display:none">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
-        <button class="btn" onclick="resetTutor()">← Pick different unit</button>
-        <div style="font-size:13px;color:var(--text2)" id="tutorUnitLabel"></div>
-        <div style="margin-left:auto;display:flex;gap:6px">
-          <div class="tb-step" id="ts0">📖 Learn</div>
-          <div class="tb-step" id="ts1">🔢 Formulas</div>
-          <div class="tb-step" id="ts2">🧩 Guided</div>
-          <div class="tb-step" id="ts3">✏️ Practice</div>
-          <div class="tb-step" id="ts4">🌍 Apply</div>
-        </div>
-      </div>
-
-      <!-- Phase content -->
-      <div id="tutorContent"></div>
-
-      <!-- Input area (for practice phases) -->
-      <div id="tutorInputArea" style="display:none;margin-top:1rem">
-        <textarea class="ftextarea" id="tutorAnswer" placeholder="Type your answer here... Show your work! You can write equations, explain your thinking, or just give a number." rows="4"></textarea>
-        <div style="display:flex;gap:8px;margin-top:.6rem">
-          <button class="btn pri" id="tutorSubmitBtn" onclick="submitTutorAnswer()">Submit Answer →</button>
-          <button class="btn" onclick="tutorHint()">💡 Hint</button>
-          <button class="btn" onclick="tutorSkip()">Skip this problem</button>
-        </div>
-      </div>
-
-      <!-- Navigation -->
-      <div id="tutorNav" style="margin-top:1.25rem;display:flex;gap:8px;flex-wrap:wrap"></div>
-    </div>
+    <!-- Lesson content -->
+    <div id="lessonContent" style="display:none"></div>
   </div>
 </div>
 
 <!-- NOTES -->
+
 <div class="page" id="p-notes">
   <div class="ptitle">Unit Notes</div>
   <p class="psub">All 8 units — cheat sheet tips integrated. Flag anything confusing for targeted practice.</p>
@@ -1827,6 +1905,7 @@ function nav(id,btn){
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('on'));
   document.getElementById('p-'+id).classList.add('on');
   if(btn)btn.classList.add('on');
+  if(id==='lessons')initLessons();
   if(id==='tutor')buildTutorPicker();
   if(id==='flashcards')initFC();
   if(id==='dashboard')refreshDash();
@@ -2786,8 +2865,698 @@ function updatePomoDots(){
 }
 
 // ═══════════════════════════════════════════
-// AI TUTOR MODE
+// LESSON SYSTEM
 // ═══════════════════════════════════════════
+let lessonMode=null, lessonUnitIdx=null, lessonStepIdx=0;
+
+const LESSONS={
+  ap:[ // AP EXAM MODE — focused, efficient, pass the test
+    { // Unit 1 Kinematics
+      steps:[
+        {
+          type:'lesson',
+          title:'Kinematics: The Big Picture',
+          content:`
+            <h2>Unit 1: Kinematics</h2>
+            <p><strong>What is kinematics?</strong> Kinematics is the study of HOW things move — not why they move, just describing the motion itself. Think of it like being a sports commentator: you describe what the player is doing (speed, direction, distance) without caring about what's making them move.</p>
+            <div class="highlight">⚡ <strong>AP Exam Weight: 10–15% of the exam.</strong> You will see kinematics questions every single year. Master this unit first — it's the foundation for everything else.</div>
+            <h3>The 5 Variables You Need to Know</h3>
+            <p>Every kinematics problem gives you some of these and asks for others. Write them down every time:</p>
+            <div class="formula-box">v₀ = initial velocity (where you start) <span>m/s</span></div>
+            <div class="formula-box">v = final velocity (where you end up) <span>m/s</span></div>
+            <div class="formula-box">a = acceleration (how fast velocity changes) <span>m/s²</span></div>
+            <div class="formula-box">Δx = displacement (change in position) <span>m</span></div>
+            <div class="formula-box">t = time <span>s</span></div>
+            <div class="warning">⚠️ <strong>Displacement ≠ Distance.</strong> If you drive 10 km north then 10 km south, your distance is 20 km but your displacement is 0. The AP exam tests this every year.</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>The first thing you do on ANY kinematics problem: write out all 5 variables, fill in what you know, circle what you're solving for. This alone will save you from most mistakes.</p></div>
+          `
+        },
+        {
+          type:'check',
+          question:'Quick check — do you understand what displacement means and how it differs from distance?',
+        },
+        {
+          type:'lesson',
+          title:'The 4 Kinematic Equations',
+          content:`
+            <h2>The 4 Magic Equations</h2>
+            <p>These 4 equations are your entire toolkit for kinematics. They only work when acceleration is <strong>constant</strong> (doesn't change). Here they are:</p>
+            <div class="formula-box">v = v₀ + at <span>use when: have v₀, a, t — missing Δx</span></div>
+            <div class="formula-box">Δx = v₀t + ½at² <span>use when: have v₀, a, t — missing v</span></div>
+            <div class="formula-box">v² = v₀² + 2aΔx <span>use when: NO TIME given or needed</span></div>
+            <div class="formula-box">Δx = ½(v₀ + v)t <span>use when: have both velocities and time</span></div>
+            <div class="highlight">🔑 <strong>The Strategy:</strong> You always know 3 variables and need 1 more. Pick the equation that has your 3 knowns and your 1 unknown. The missing variable from your list tells you which equation to use.</div>
+            <div class="example">
+              <div class="ex-title">📝 Worked Example</div>
+              <p><strong>Problem:</strong> A car starts from rest and accelerates at 4 m/s² for 5 seconds. How far does it travel?</p>
+              <p><strong>Step 1 — List variables:</strong> v₀=0 (starts from rest), a=4 m/s², t=5 s, Δx=? (unknown), v=? (also unknown)</p>
+              <p><strong>Step 2 — Pick equation:</strong> I know v₀, a, t. I want Δx. Missing v → use Δx = v₀t + ½at²</p>
+              <p><strong>Step 3 — Solve:</strong> Δx = 0(5) + ½(4)(25) = 0 + 50 = <strong>50 m</strong></p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>The equation v²=v₀²+2aΔx is the most tested. It has no time variable — use it whenever time isn't given and you don't need it. Stopping distance problems ALWAYS use this equation.</p></div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Practice: Kinematic Equations',
+          questions:[
+            {q:'A ball is thrown upward at 20 m/s. How high does it reach? (g = 10 m/s²)',opts:['10 m','20 m','40 m','5 m'],ans:1,exp:'At the top, v=0. Use v²=v₀²+2aΔx: 0=400+2(−10)Δx → Δx=20 m. No time needed!'},
+            {q:'A car brakes from 30 m/s to rest. Stopping distance doubles if initial speed doubles. By what factor does stopping distance change if speed TRIPLES?',opts:['3×','6×','9×','27×'],ans:2,exp:'Stopping distance ∝ v² (from v²=v₀²+2aΔx). Triple speed → distance ×9. This is quadratic!'},
+            {q:'Which equation has NO time variable?',opts:['v = v₀ + at','Δx = v₀t + ½at²','v² = v₀² + 2aΔx','Δx = ½(v₀+v)t'],ans:2,exp:'v²=v₀²+2aΔx has no t. Use it whenever time is not given and not needed.'},
+          ]
+        },
+        {
+          type:'lesson',
+          title:'Free Fall & Projectile Motion',
+          content:`
+            <h2>Free Fall & Projectile Motion</h2>
+            <p><strong>Free fall</strong> means an object is only under the influence of gravity. Acceleration = <strong>−9.8 m/s²</strong> (downward) the entire time — at launch, at the peak, coming down.</p>
+            <div class="warning">⚠️ <strong>The #1 AP trap:</strong> At the peak of a throw, velocity = 0 BUT acceleration is still −9.8 m/s². Acceleration is NEVER zero during free fall.</div>
+            <h3>Projectile Motion: Two Independent Motions</h3>
+            <p>A projectile has two completely separate motions happening at the same time:</p>
+            <div class="formula-box">HORIZONTAL: a_x = 0, v_x = constant <span>never changes</span></div>
+            <div class="formula-box">VERTICAL: a_y = −9.8 m/s², free fall <span>changes every second</span></div>
+            <div class="highlight">🔑 <strong>The Link:</strong> Time is the ONLY thing shared between horizontal and vertical. Solve vertical for time, then use that time in horizontal.</div>
+            <div class="example">
+              <div class="ex-title">📝 Ball Thrown Horizontally</div>
+              <p>Ball thrown at 20 m/s horizontally from 45 m high cliff. Where does it land?</p>
+              <p><strong>Vertical:</strong> 45 = ½(9.8)t² → t = 3 s</p>
+              <p><strong>Horizontal:</strong> x = 20 × 3 = <strong>60 m</strong> from base of cliff</p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>Two objects thrown horizontally from the same height — one at 10 m/s, one at 30 m/s — hit the ground at the SAME TIME. Horizontal speed never affects fall time.</p></div>
+          `
+        },
+        {
+          type:'lesson',
+          title:'Graph Interpretation (High-Value AP Skill)',
+          content:`
+            <h2>Reading Motion Graphs</h2>
+            <p>The AP exam gives you graphs and asks you to extract information. This is worth serious points — master it.</p>
+            <h3>Position-Time (x-t) Graph</h3>
+            <div class="formula-box">Slope of x-t graph = velocity <span>steep slope = fast, flat = stopped, negative = backward</span></div>
+            <p>Curved x-t graph means velocity is changing = acceleration exists. Straight x-t means constant velocity (zero acceleration).</p>
+            <h3>Velocity-Time (v-t) Graph</h3>
+            <div class="formula-box">Slope of v-t graph = acceleration <span>how fast velocity is changing</span></div>
+            <div class="formula-box">Area under v-t graph = displacement <span>count boxes if irregular shape</span></div>
+            <h3>Acceleration-Time (a-t) Graph</h3>
+            <div class="formula-box">Area under a-t graph = change in velocity <span>same idea, one level down</span></div>
+            <div class="highlight">🔑 <strong>Memory trick:</strong> Each graph's slope gives you the next level down. x-t slope → v. v-t slope → a. And each graph's area gives you the level above. a-t area → Δv. v-t area → Δx.</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>A parabola on the x-t graph means constant acceleration. A straight line on v-t means constant acceleration. These are the most common graph questions.</p></div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Final Practice: Kinematics',
+          questions:[
+            {q:'A v-t graph shows a straight line from (0,0) to (4s, 20 m/s). What is the displacement?',opts:['20 m','40 m','80 m','5 m'],ans:1,exp:'Area under v-t = displacement. Triangle area = ½ × base × height = ½ × 4 × 20 = 40 m.'},
+            {q:'At the peak of a projectile\'s path, which is true?',opts:['Both v and a are zero','v=0 but a=−9.8 m/s²','a=0 but v is maximum','Both v and a are maximum'],ans:1,exp:'At the peak, vertical velocity = 0 but gravity still acts. Acceleration is ALWAYS −9.8 m/s² during free fall.'},
+            {q:'A horizontal x-t graph means the object is:',opts:['Moving at constant speed','Accelerating','At rest (not moving)','Decelerating'],ans:2,exp:'Horizontal x-t means x is not changing = object is stationary. Constant speed would be a sloped straight line.'},
+          ]
+        },
+        {type:'complete', unit:'Kinematics'}
+      ]
+    },
+    { // Unit 2 Forces
+      steps:[
+        {
+          type:'lesson',
+          title:'Forces: Why Things Move',
+          content:`
+            <h2>Unit 2: Forces & Newton's Laws</h2>
+            <p><strong>Forces are the WHY behind motion.</strong> Kinematics describes how things move — forces explain why. This is the biggest unit on the AP exam (18–23%). Every single dynamics problem needs a Free Body Diagram.</p>
+            <div class="highlight">⚡ <strong>The Golden Rule:</strong> Draw a Free Body Diagram (FBD) before writing ANY equation. Every force as an arrow. Label each force. This earns partial credit even when your math is wrong.</div>
+            <h3>Newton's Three Laws</h3>
+            <div class="example">
+              <div class="ex-title">Newton's 1st Law — Inertia</div>
+              <p>Objects keep doing what they're doing unless a net force acts on them. Moving → keeps moving. Still → stays still. This is WHY seatbelts exist — without one, you keep moving forward when the car stops.</p>
+            </div>
+            <div class="example">
+              <div class="ex-title">Newton's 2nd Law — ΣF = ma</div>
+              <p>Net force = mass × acceleration. Apply it in EACH direction separately. The x-forces give x-acceleration. The y-forces give y-acceleration. They don't mix.</p>
+            </div>
+            <div class="example">
+              <div class="ex-title">Newton's 3rd Law — Action-Reaction</div>
+              <p>Every force has an equal and opposite reaction force on a DIFFERENT object. You push the floor → floor pushes you back. These NEVER cancel because they're on different objects.</p>
+            </div>
+            <div class="warning">⚠️ <strong>N3L Trap:</strong> Weight and normal force on a book look like a pair — they're NOT. They're both on the same object. The real N3L pair: Earth pulls book down AND book pulls Earth up.</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>FBD checklist: mg↓ (weight always down), N⊥ surface (normal is always perpendicular to surface), T along rope, friction opposing motion. Draw these four types and you've covered 90% of AP problems.</p></div>
+          `
+        },
+        {type:'check', question:'Do you understand the difference between Newton\'s 2nd and 3rd laws? Can you draw a basic FBD?'},
+        {
+          type:'lesson',
+          title:'Friction, Inclines & Normal Force',
+          content:`
+            <h2>Friction & Inclined Planes</h2>
+            <p><strong>Normal force is NOT always mg.</strong> This is the most common mistake. Normal force is always perpendicular to the surface — its value depends on the situation.</p>
+            <div class="formula-box">On flat surface: N = mg <span>simple case</span></div>
+            <div class="formula-box">On incline (angle θ): N = mg cosθ <span>less than mg</span></div>
+            <div class="formula-box">Elevator accelerating up: N = m(g + a) <span>more than mg</span></div>
+            <div class="formula-box">Free fall: N = 0 <span>weightlessness</span></div>
+            <h3>Friction</h3>
+            <div class="formula-box">Kinetic friction: f_k = μ_k × N <span>constant once sliding starts</span></div>
+            <div class="formula-box">Static friction: f_s ≤ μ_s × N <span>adjusts up to maximum</span></div>
+            <p>μ_s > μ_k always — harder to START sliding than to keep sliding.</p>
+            <h3>Inclined Planes — The Axis Trick</h3>
+            <p>Tilt your coordinate axes to match the incline. Now "x" runs along the slope and "y" runs perpendicular to it.</p>
+            <div class="formula-box">Along slope (x): mg sinθ pulls down the slope <span>this drives motion</span></div>
+            <div class="formula-box">Perpendicular (y): N = mg cosθ <span>no acceleration into surface</span></div>
+            <div class="example">
+              <div class="ex-title">📝 Box on 30° ramp, μ_k = 0.2, m = 5 kg</div>
+              <p>N = mg cos30° = 5(9.8)(0.866) = 42.4 N</p>
+              <p>f_k = μN = 0.2(42.4) = 8.5 N</p>
+              <p>Net force = mg sin30° − f_k = 24.5 − 8.5 = 16 N down slope</p>
+              <p>a = F/m = 16/5 = 3.2 m/s²</p>
+            </div>
+          `
+        },
+        {
+          type:'lesson',
+          title:'Circular Motion',
+          content:`
+            <h2>Circular Motion</h2>
+            <p>Moving in a circle at constant speed still requires acceleration — because direction is constantly changing. This acceleration always points <strong>toward the center</strong> (centripetal).</p>
+            <div class="formula-box">F_c = mv²/r <span>net force pointing toward center</span></div>
+            <div class="warning">⚠️ <strong>Critical point:</strong> F_c is NOT a new force. It is the NET inward force provided by existing forces. Never draw "centripetal force" as a separate arrow on your FBD.</div>
+            <div class="example">
+              <div class="ex-title">Which force provides centripetal force?</div>
+              <p>Car turning on flat road → <strong>static friction</strong> points inward</p>
+              <p>Ball on a string in horizontal circle → <strong>tension</strong> points inward</p>
+              <p>Planet orbiting sun → <strong>gravity</strong> points inward</p>
+              <p>Top of a loop-the-loop → <strong>N + mg</strong> both point inward</p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>F_c ∝ v². Double the speed → need 4× more centripetal force. This is why highway curves are designed for specific speed limits.</p></div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Practice: Forces',
+          questions:[
+            {q:'A 10 kg box sits on a 37° ramp. What is the normal force? (g = 10 m/s²)',opts:['100 N','80 N','60 N','37 N'],ans:1,exp:'N = mg cosθ = 10(10)(cos37°) = 100(0.8) = 80 N. NOT equal to mg on inclines!'},
+            {q:'A car rounds a flat curve at constant speed. What provides the centripetal force?',opts:['Engine thrust','Gravity','Static friction from road','Normal force'],ans:2,exp:'On a flat curve, static friction from the road points inward (toward center). Gravity is vertical.'},
+            {q:'A box accelerates upward at 3 m/s². If mass = 5 kg, what is the tension in the rope? (g = 10)',opts:['50 N','15 N','65 N','35 N'],ans:2,exp:'T − mg = ma → T = m(g+a) = 5(10+3) = 65 N. Upward acceleration always increases tension.'},
+          ]
+        },
+        {type:'complete', unit:'Forces & Newton\'s Laws'}
+      ]
+    },
+    { // Unit 3 Energy
+      steps:[
+        {
+          type:'lesson',
+          title:'Energy: The Scalar Superpower',
+          content:`
+            <h2>Unit 3: Work, Energy & Power</h2>
+            <p><strong>Energy is a scalar</strong> — no direction, just a number. This makes it way faster to use than forces for many problems. If a problem asks for speed or height and doesn't ask about forces or tension, use energy.</p>
+            <div class="highlight">⚡ <strong>The Decision Rule:</strong> Need speed or height? → Energy. Need force, tension, or acceleration? → Newton's Laws. Many FRQs need BOTH in sequence.</div>
+            <h3>Work</h3>
+            <div class="formula-box">W = Fd cosθ <span>θ = angle between force and displacement</span></div>
+            <p>If force is perpendicular to motion (θ = 90°), work = 0. Normal force does zero work. Centripetal force does zero work.</p>
+            <h3>Kinetic and Potential Energy</h3>
+            <div class="formula-box">KE = ½mv² <span>quadratic in v — double speed = 4× energy</span></div>
+            <div class="formula-box">PE_grav = mgh <span>choose h = 0 wherever is convenient</span></div>
+            <div class="formula-box">PE_spring = ½kx² <span>x = displacement FROM equilibrium</span></div>
+            <div class="warning">⚠️ <strong>Spring trap:</strong> x in ½kx² is measured from the equilibrium position, NOT from the natural length of the spring. For a hanging spring, these are different!</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>Draw energy "bar charts" — vertical bars for KE, PE_grav, PE_spring, E_friction at the start and end. This makes the conservation equation visual and hard to mess up.</p></div>
+          `
+        },
+        {type:'check', question:'Do you understand when to use energy vs forces? And what the x in ½kx² means?'},
+        {
+          type:'lesson',
+          title:'Conservation of Energy',
+          content:`
+            <h2>Conservation of Energy</h2>
+            <p>In a closed system with no friction, total mechanical energy is conserved:</p>
+            <div class="formula-box">KE_i + PE_i = KE_f + PE_f <span>no friction version</span></div>
+            <div class="formula-box">KE_i + PE_i = KE_f + PE_f + E_lost <span>with friction: E_lost = f_k × d</span></div>
+            <p>E_lost is always positive and always reduces mechanical energy. Friction converts mechanical energy to heat — it's gone from the mechanical system but total energy is still conserved.</p>
+            <div class="example">
+              <div class="ex-title">📝 Roller Coaster — Classic AP Problem</div>
+              <p>Coaster starts at rest at 30 m height. Find speed at bottom.</p>
+              <p>mgh = ½mv² → gh = ½v² → v = √(2gh) = √(2×10×30) = √600 ≈ 24.5 m/s</p>
+              <p>Mass cancels! Speed at bottom doesn't depend on mass.</p>
+            </div>
+            <div class="formula-box">P = W/t = Fv <span>power — rate of doing work</span></div>
+            <div class="formula-box">W_net = ΔKE <span>work-energy theorem</span></div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>Stopping distance ∝ v². If you double your speed, stopping distance quadruples. If you triple your speed, stopping distance increases 9×. This is tested constantly.</p></div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Practice: Energy',
+          questions:[
+            {q:'A pendulum swings down from 0.8 m above the bottom. What is its speed at the bottom? (g = 10)',opts:['4 m/s','8 m/s','16 m/s','2 m/s'],ans:0,exp:'mgh = ½mv² → v = √(2gh) = √(2×10×0.8) = √16 = 4 m/s. Mass cancels!'},
+            {q:'A spring (k = 400 N/m) is compressed 0.2 m. What is the stored energy?',opts:['8 J','16 J','80 J','4 J'],ans:1,exp:'PE = ½kx² = ½(400)(0.04) = 8 J. Wait: ½×400×0.04 = 8 J. Answer is 8 J.'},
+            {q:'A car at 20 m/s brakes to a stop. A heavier car at the same speed uses the same brakes. How does stopping distance compare?',opts:['Heavier car stops in longer distance','Heavier car stops in shorter distance','Both stop in the same distance','Depends on road conditions'],ans:2,exp:'From v²=v₀²+2aΔx → Δx=v₀²/(2a). Heavier car has more friction force but also more inertia — they cancel. Same stopping distance!'},
+          ]
+        },
+        {type:'complete', unit:'Work, Energy & Power'}
+      ]
+    },
+    { // Unit 4 Momentum
+      steps:[
+        {
+          type:'lesson',
+          title:'Momentum: The Vector That\'s Conserved',
+          content:`
+            <h2>Unit 4: Momentum & Impulse</h2>
+            <p><strong>Momentum (p = mv) is a vector</strong> — direction matters. Opposite directions = opposite signs. Total momentum of a system is conserved whenever there's no net external force.</p>
+            <div class="highlight">⚡ <strong>When to use momentum:</strong> Any collision, any explosion, any problem where objects stick together or fly apart. Always draw a before/after picture and assign positive direction.</div>
+            <div class="formula-box">p = mv <span>vector — always include direction with signs</span></div>
+            <div class="formula-box">J = FΔt = Δp <span>impulse = change in momentum</span></div>
+            <div class="formula-box">m₁v₁ + m₂v₂ = m₁v₁f + m₂v₂f <span>conservation of momentum</span></div>
+            <h3>Types of Collisions</h3>
+            <div class="example">
+              <div class="ex-title">Elastic — both p AND KE conserved</div>
+              <p>Ideal billiard balls. Equal mass elastic collision: moving ball stops, stationary ball takes full speed.</p>
+            </div>
+            <div class="example">
+              <div class="ex-title">Perfectly Inelastic — objects stick together</div>
+              <p>Only p conserved. Use: (m₁ + m₂)v_f = m₁v₁ + m₂v₂</p>
+            </div>
+            <div class="example">
+              <div class="ex-title">Explosion — starts from rest</div>
+              <p>Total p = 0 before and after. Objects fly in opposite directions with equal and opposite momenta.</p>
+            </div>
+            <div class="warning">⚠️ <strong>Signs are everything.</strong> Objects moving toward each other have opposite signs. NEVER add magnitudes of objects moving in opposite directions.</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>Ballistic pendulum = TWO separate steps. Step 1: momentum conservation during the collision (bullet embeds). Step 2: energy conservation during the swing upward. You CANNOT use energy during the collision — it's lost to heat.</p></div>
+          `
+        },
+        {
+          type:'lesson',
+          title:'Impulse and the F-t Graph',
+          content:`
+            <h2>Impulse: Force × Time = Change in Momentum</h2>
+            <p>Impulse (J) = FΔt = Δp. Same change in momentum can be achieved with a large force for a short time OR a small force for a long time.</p>
+            <div class="example">
+              <div class="ex-title">Why Airbags Save Lives</div>
+              <p>In a crash, Δp is fixed (you must go from moving to stopped). Airbag increases the time of the collision by 10× → force on your body decreases by 10×. Same impulse, survivable force.</p>
+            </div>
+            <div class="example">
+              <div class="ex-title">Bouncing vs Sticking</div>
+              <p>Ball bounces off wall: Δp = m(v_f − v_i) = m(v − (−v)) = 2mv</p>
+              <p>Ball sticks to wall: Δp = m(0 − v) = mv</p>
+              <p>Bouncing requires TWICE the impulse — the wall must push harder.</p>
+            </div>
+            <div class="formula-box">Area under F-t graph = impulse = Δp <span>triangle: J = ½ × F_max × Δt</span></div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>Two eggs dropped from the same height — one on concrete, one on a pillow. Which has greater impulse? SAME. Impulse = Δp = mΔv. Same mass, same height, same speed change → same impulse. The pillow reduces FORCE, not impulse.</p></div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Practice: Momentum',
+          questions:[
+            {q:'A 3 kg ball at 4 m/s right hits a 1 kg ball at rest. They stick together. Final speed?',opts:['3 m/s right','4 m/s right','1 m/s right','12 m/s right'],ans:0,exp:'m₁v₁ = (m₁+m₂)v_f → 3×4 = 4×v_f → v_f = 3 m/s right.'},
+            {q:'A rocket in space fires exhaust backward. It accelerates forward because of:',opts:['Newton\'s 1st Law','Newton\'s 2nd Law','Newton\'s 3rd Law','Conservation of Energy'],ans:2,exp:'Exhaust pushes backward on the rocket (N3L). Also equals conservation of momentum — total p stays zero.'},
+            {q:'A 0.5 kg ball hits a wall at 6 m/s and bounces back at 4 m/s. Impulse magnitude?',opts:['1 N·s','3 N·s','5 N·s','10 N·s'],ans:2,exp:'J = |Δp| = m|v_f − v_i| = 0.5|−4−6| = 0.5×10 = 5 N·s. Bouncing reverses direction!'},
+          ]
+        },
+        {type:'complete', unit:'Momentum & Impulse'}
+      ]
+    },
+    { // Unit 5 Rotation
+      steps:[
+        {
+          type:'lesson',
+          title:'Rotation: Everything Has a Twin',
+          content:`
+            <h2>Unit 5: Torque & Rotation</h2>
+            <p>Every linear concept has a rotational twin. Once you see the pattern, this unit becomes much easier:</p>
+            <div class="formula-box">Force F ↔ Torque τ <span>what causes rotation</span></div>
+            <div class="formula-box">Mass m ↔ Moment of Inertia I <span>resistance to rotation</span></div>
+            <div class="formula-box">Acceleration a ↔ Angular acceleration α <span>how fast rotation changes</span></div>
+            <div class="formula-box">ΣF = ma ↔ Στ = Iα <span>rotational Newton's 2nd law</span></div>
+            <h3>Torque</h3>
+            <div class="formula-box">τ = rF sinθ <span>r = distance from pivot, θ = angle between r and F</span></div>
+            <p>Maximum torque when force is perpendicular (sinθ = 1). This is why door handles are far from hinges — bigger r = bigger torque for same force.</p>
+            <h3>Moment of Inertia — Key Values</h3>
+            <div class="formula-box">Solid sphere: I = ⅖mr² <span>lowest — fastest in rolling race</span></div>
+            <div class="formula-box">Solid disk/cylinder: I = ½mr² <span>middle</span></div>
+            <div class="formula-box">Hoop/hollow cylinder: I = mr² <span>highest — slowest in rolling race</span></div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>Static equilibrium needs TWO conditions: ΣF=0 AND Στ=0. One alone is not enough. Put your torque pivot at an unknown force to make it disappear from the equation.</p></div>
+          `
+        },
+        {
+          type:'lesson',
+          title:'Rolling Motion',
+          content:`
+            <h2>Rolling Without Slipping</h2>
+            <p>When something rolls without slipping, translational and rotational motion are linked:</p>
+            <div class="formula-box">v_cm = rω <span>speed of center = radius × angular speed</span></div>
+            <div class="formula-box">KE_total = ½mv² + ½Iω² = ½mv²(1 + I/mr²) <span>both types of KE</span></div>
+            <div class="highlight">🔑 <strong>Rolling Race Winner:</strong> The shape with the LOWEST I/mr² ratio wins. Solid sphere (2/5) beats solid cylinder (1/2) beats hoop (1). Mass and radius cancel — only shape matters.</div>
+            <div class="example">
+              <div class="ex-title">📝 Ball rolling down ramp from height h</div>
+              <p>mgh = ½mv²(1 + 2/5) = ½mv²(7/5) = 7mv²/10</p>
+              <p>v = √(10gh/7)</p>
+              <p>If it slid without rolling: v = √(2gh) — faster because no energy goes to rotation</p>
+            </div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Practice: Rotation',
+          questions:[
+            {q:'A solid sphere and a hollow sphere (same mass, same radius) roll from rest down the same ramp. Which wins?',opts:['Hollow sphere','Solid sphere','They tie','Need to know mass'],ans:1,exp:'Solid sphere: I/mr²=2/5. Hollow sphere: I/mr²=2/3. Lower ratio = more translational KE = faster. Solid wins. Mass cancels.'},
+            {q:'A door handle is placed 0.8 m from the hinge. You push with 20 N perpendicular to the door. Torque?',opts:['25 N·m','16 N·m','0.04 N·m','20 N·m'],ans:1,exp:'τ = rF sinθ = 0.8 × 20 × sin90° = 16 N·m.'},
+            {q:'For static equilibrium, which conditions are required?',opts:['ΣF=0 only','Στ=0 only','Both ΣF=0 AND Στ=0','Either ΣF=0 or Στ=0'],ans:2,exp:'Both conditions required. ΣF=0 prevents translation. Στ=0 prevents rotation. One alone is insufficient.'},
+          ]
+        },
+        {type:'complete', unit:'Torque & Rotation'}
+      ]
+    },
+    { // Unit 6 Angular Momentum
+      steps:[
+        {
+          type:'lesson',
+          title:'Angular Momentum: L = Iω',
+          content:`
+            <h2>Unit 6: Angular Momentum</h2>
+            <p>Angular momentum (L = Iω) is conserved when net external torque is zero — just like linear momentum is conserved when net external force is zero.</p>
+            <div class="formula-box">L = Iω <span>angular momentum</span></div>
+            <div class="formula-box">I_i × ω_i = I_f × ω_f <span>conservation when Στ_ext = 0</span></div>
+            <div class="example">
+              <div class="ex-title">Figure Skater Spin</div>
+              <p>Skater pulls arms in → I decreases → ω increases to keep L = Iω constant.</p>
+              <p>Before: I=2, ω=3, L=6. After: I=0.5, ω=L/I=6/0.5=12 rad/s (4× faster!)</p>
+            </div>
+            <div class="warning">⚠️ <strong>KE increases when skater spins up!</strong> Even though L is constant, KE = L²/(2I). Smaller I → larger KE. The skater's muscles do positive work pulling arms in.</div>
+            <div class="formula-box">KE = L²/(2I) <span>use when L is constant and I changes</span></div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>Always check if Στ_ext = 0 FIRST before claiming L is conserved. If any external torque acts on the system, L is not conserved.</p></div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Practice: Angular Momentum',
+          questions:[
+            {q:'A spinning skater (I=3, ω=4) pulls in arms to I=1. New ω?',opts:['4/3 rad/s','12 rad/s','4 rad/s','3 rad/s'],ans:1,exp:'L = Iω conserved. L_i = 3×4 = 12. ω_f = L/I_f = 12/1 = 12 rad/s.'},
+            {q:'When the skater above pulls arms in, kinetic energy:',opts:['Stays the same','Decreases','Increases','Goes to zero'],ans:2,exp:'KE = L²/(2I). L=12 constant. KE_f = 144/(2×1) = 72 J. KE_i = 144/(2×3) = 24 J. KE increases — muscles did work.'},
+          ]
+        },
+        {type:'complete', unit:'Angular Momentum'}
+      ]
+    },
+    { // Unit 7 SHM
+      steps:[
+        {
+          type:'lesson',
+          title:'Simple Harmonic Motion: Period Never Depends on Amplitude',
+          content:`
+            <h2>Unit 7: Simple Harmonic Motion</h2>
+            <p><strong>The defining property of SHM:</strong> Period is independent of amplitude. A pendulum swinging 5° or 45° takes the same time per swing. This seems wrong but it's a law of physics.</p>
+            <div class="formula-box">T_spring = 2π√(m/k) <span>no amplitude, no g — just mass and spring constant</span></div>
+            <div class="formula-box">T_pendulum = 2π√(L/g) <span>no mass, no amplitude — just length and gravity</span></div>
+            <div class="warning">⚠️ <strong>Spring on the Moon vs Earth:</strong> T_spring is IDENTICAL (no g in the formula). T_pendulum is LONGER on Moon (lower g = longer period). This is tested constantly.</div>
+            <h3>Energy in SHM</h3>
+            <div class="formula-box">E = ½kA² <span>total energy — proportional to A SQUARED</span></div>
+            <p>At x=0 (equilibrium): all energy is KE, velocity is maximum.</p>
+            <p>At x=±A (turning points): all energy is PE, velocity is zero.</p>
+            <div class="formula-box">v_max = Aω = A√(k/m) <span>maximum speed at equilibrium</span></div>
+            <div class="highlight">🔑 <strong>Double amplitude:</strong> Energy ×4 (quadratic!), v_max doubles, period unchanged.</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>When KE = PE: each equals ½E = ¼kA². From ½kx² = ¼kA² → x = A/√2 ≈ 0.707A. NOT A/2. This catches people every year.</p></div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Practice: SHM',
+          questions:[
+            {q:'A spring-mass system has period T. If the amplitude doubles, new period?',opts:['T/2','T','2T','4T'],ans:1,exp:'Period is independent of amplitude. T is unchanged. This is the defining property of SHM.'},
+            {q:'Same spring system taken to the Moon (lower g). Period?',opts:['Longer','Shorter','Same','Zero'],ans:2,exp:'T_spring = 2π√(m/k). No g in this formula! Period is identical on Moon and Earth.'},
+            {q:'In SHM, where is acceleration maximum?',opts:['At equilibrium (x=0)','At the amplitude (x=±A)','Halfway between','Always the same'],ans:1,exp:'F = −kx. Force is maximum when displacement is maximum (at amplitude). Since F = ma, acceleration is also maximum at x = ±A.'},
+          ]
+        },
+        {type:'complete', unit:'Simple Harmonic Motion'}
+      ]
+    },
+    { // Unit 8 Waves
+      steps:[
+        {
+          type:'lesson',
+          title:'Waves: The Biggest AP Unit',
+          content:`
+            <h2>Unit 8: Waves, Sound & Circuits</h2>
+            <p><strong>This is 25–33% of your AP exam</strong> — the biggest single unit. Master this and you've secured a huge chunk of your score. It covers waves, standing waves, Doppler effect, and DC circuits.</p>
+            <div class="formula-box">v = fλ <span>wave speed = frequency × wavelength</span></div>
+            <p>Frequency is set by the source and never changes. When a wave enters a different medium, wavelength changes but frequency stays the same.</p>
+            <h3>Standing Waves</h3>
+            <p>When waves reflect back and forth in a confined space, they interfere to create standing waves with fixed nodes (no displacement) and antinodes (maximum displacement).</p>
+            <div class="formula-box">String fixed both ends / open-open pipe: fn = nv/2L <span>n = 1,2,3...</span></div>
+            <div class="formula-box">Open-closed pipe: fn = nv/4L <span>n = 1,3,5 ODD ONLY!</span></div>
+            <div class="warning">⚠️ <strong>Open-closed pipes only have ODD harmonics.</strong> The 2nd harmonic does not exist. Draw the wave pattern inside to confirm — closed end must be a node, open end must be an antinode. Only odd numbers of quarter-wavelengths fit.</div>
+            <div class="highlight">🔑 <strong>Boundary Rules:</strong> Fixed/closed end = NODE (zero displacement). Open/free end = ANTINODE (maximum displacement). These determine which harmonics are allowed.</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>ALWAYS draw the wave pattern. Count the number of half-wavelengths that fit. That gives you the harmonic number n. Then plug into the formula. Don't try to memorize — just draw.</p></div>
+          `
+        },
+        {type:'check', question:'Do you understand the difference between open-open and open-closed pipes? Can you draw the fundamental mode for each?'},
+        {
+          type:'lesson',
+          title:'DC Circuits: Simplify Then Solve',
+          content:`
+            <h2>DC Circuits</h2>
+            <p><strong>The one strategy that works every time:</strong> Simplify the circuit to one equivalent resistance, find total current, then backsolve for each element.</p>
+            <div class="formula-box">V = IR <span>Ohm's Law — always true for individual elements</span></div>
+            <div class="formula-box">P = IV = I²R = V²/R <span>power — three equivalent forms</span></div>
+            <h3>Series vs Parallel — The Most Important Distinction</h3>
+            <div class="example">
+              <div class="ex-title">SERIES — one path for current</div>
+              <p>Same current I flows everywhere. R_total = R₁ + R₂ + ...</p>
+              <p>Voltage SPLITS proportionally to resistance (more R = more voltage)</p>
+            </div>
+            <div class="example">
+              <div class="ex-title">PARALLEL — multiple paths</div>
+              <p>Same voltage across each branch. 1/R_total = 1/R₁ + 1/R₂ + ...</p>
+              <p>Current SPLITS inversely to resistance (less R = more current)</p>
+              <p>R_total is ALWAYS less than the smallest individual resistor</p>
+            </div>
+            <div class="highlight">🔑 <strong>Memory trick:</strong> Series = same current (current has one path, no choice). Parallel = same voltage (each branch connects directly across the battery).</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Exam Tip</div><p>Adding a resistor in PARALLEL always decreases total resistance. If your answer is larger than the smallest branch resistor, you made an error. This is a great self-check.</p></div>
+          `
+        },
+        {
+          type:'practice',
+          title:'Practice: Waves & Circuits',
+          questions:[
+            {q:'An open-closed pipe has length 0.85 m. What is the fundamental frequency? (v = 340 m/s)',opts:['200 Hz','100 Hz','400 Hz','50 Hz'],ans:1,exp:'fn = nv/4L. Fundamental: n=1. f = 340/(4×0.85) = 340/3.4 = 100 Hz. Open-closed uses 4L.'},
+            {q:'Three 6Ω resistors in parallel. Total resistance?',opts:['18Ω','6Ω','2Ω','3Ω'],ans:2,exp:'1/R = 1/6+1/6+1/6 = 3/6 = 1/2. R = 2Ω. For n identical resistors in parallel: R/n = 6/3 = 2Ω.'},
+            {q:'A string fixed at both ends vibrates in its 3rd harmonic. How many nodes are there?',opts:['2','3','4','6'],ans:2,exp:'nth harmonic of fixed-fixed string has n+1 nodes. 3rd harmonic → 4 nodes (including both endpoints).'},
+          ]
+        },
+        {type:'complete', unit:'Waves, Sound & Circuits'}
+      ]
+    },
+  ],
+  deep:[] // Deep mode — same structure, populated below
+};
+
+// Deep mode uses same unit structure but with richer content
+// For now, deep mode points to same lessons but we can expand later
+LESSONS.deep = LESSONS.ap.map(unit => ({
+  steps: unit.steps.map(step => {
+    if(step.type === 'lesson'){
+      return {...step, deepMode: true};
+    }
+    return step;
+  })
+}));
+
+let lessonAnswered = {};
+
+function initLessons(){
+  document.getElementById('lessonModePicker').style.display='block';
+  document.getElementById('lessonUnitPicker').style.display='none';
+  document.getElementById('lessonContent').style.display='none';
+}
+
+function selectLessonMode(mode){
+  lessonMode = mode;
+  document.getElementById('modeAP').classList.toggle('selected', mode==='ap');
+  document.getElementById('modeDEEP').classList.toggle('selected', mode==='deep');
+  document.getElementById('lessonModePicker').style.display='none';
+  document.getElementById('lessonUnitPicker').style.display='block';
+  document.getElementById('lessonModeLabel').textContent = mode==='ap' ? '🎯 AP Exam Mode' : '🔬 Deep Learning Mode';
+  buildLessonUnitGrid();
+}
+
+function resetLessonMode(){
+  lessonMode=null;
+  document.getElementById('lessonModePicker').style.display='block';
+  document.getElementById('lessonUnitPicker').style.display='none';
+  document.getElementById('lessonContent').style.display='none';
+}
+
+function buildLessonUnitGrid(){
+  const grid = document.getElementById('lessonUnitGrid');
+  grid.innerHTML = UNITS.map((u,i) => {
+    const key = `lesson_done_${i}`;
+    const done = S[key];
+    return `<div class="lesson-unit-btn" onclick="startLesson(${i})" style="border-top:3px solid ${u.color}">
+      <div class="lun" style="color:${u.color}">Unit ${u.num}</div>
+      <div class="lut">${u.title}</div>
+      <div class="lup">${u.pct} of exam</div>
+      ${done?'<div class="lu-done">✓ Completed</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function startLesson(unitIdx){
+  lessonUnitIdx = unitIdx;
+  lessonStepIdx = 0;
+  lessonAnswered = {};
+  document.getElementById('lessonUnitPicker').style.display='none';
+  document.getElementById('lessonContent').style.display='block';
+  renderLessonStep();
+}
+
+function renderLessonStep(){
+  const unit = LESSONS[lessonMode][lessonUnitIdx];
+  if(!unit){
+    document.getElementById('lessonContent').innerHTML='<div style="color:var(--red);padding:2rem">Lesson content not available yet for this unit.</div>';
+    return;
+  }
+  const steps = unit.steps;
+  const step = steps[lessonStepIdx];
+  const u = UNITS[lessonUnitIdx];
+
+  // Build progress indicators
+  const progress = steps.map((s,i) => {
+    const label = s.type==='lesson'?'📖':s.type==='check'?'✔':s.type==='practice'?'✏️':'🎉';
+    const cls = i<lessonStepIdx?'done':i===lessonStepIdx?'active':'';
+    return `<div class="lp-step ${cls}">${label}</div>`;
+  }).join('');
+
+  let html = `<div class="lesson-wrap">
+    <div class="lesson-header">
+      <button class="btn" onclick="document.getElementById('lessonUnitPicker').style.display='block';document.getElementById('lessonContent').style.display='none'">← Units</button>
+      <span style="font-size:13px;font-weight:600;color:${u.color}">Unit ${u.num}: ${u.title}</span>
+      <span style="font-size:12px;color:var(--text3);margin-left:auto">${lessonStepIdx+1}/${steps.length}</span>
+    </div>
+    <div class="lesson-progress">${progress}</div>`;
+
+  if(step.type === 'lesson'){
+    html += `<div class="lesson-block">${step.content}</div>`;
+    if(lessonMode==='deep' && step.deepMode){
+      html += `<div class="lesson-block" style="border-color:rgba(155,114,255,.3);background:var(--gpurp)">
+        <h3 style="color:var(--purple)">🔬 Going Deeper</h3>
+        <p style="color:var(--text2)">In deep learning mode, think about WHY this works mathematically and physically. The equations aren't just formulas — they describe real relationships in nature. Try to visualize what's happening at the particle level as you read each concept.</p>
+      </div>`;
+    }
+    html += `<div class="lesson-nav">
+      ${lessonStepIdx>0?`<button class="btn" onclick="lessonStepIdx--;renderLessonStep()">← Back</button>`:''}
+      <button class="btn pri" onclick="lessonStepIdx++;renderLessonStep()">Continue →</button>
+    </div>`;
+  }
+
+  else if(step.type === 'check'){
+    html += `<div class="check-block">
+      <h3>Quick Check ✋</h3>
+      <p>${step.question}</p>
+      <div class="check-btns">
+        <button class="check-btn yes" onclick="lessonCheckYes()">✓ Yes, I got it!</button>
+        <button class="check-btn no" onclick="lessonCheckNo()">🤔 Not quite...</button>
+        <button class="check-btn more" onclick="lessonCheckMore()">📖 Explain more</button>
+      </div>
+      <div id="checkResponse" style="margin-top:1rem;display:none"></div>
+    </div>`;
+  }
+
+  else if(step.type === 'practice'){
+    html += `<div class="lesson-block">
+      <h2>✏️ ${step.title}</h2>
+      <p style="color:var(--text2)">Answer these questions. Read each explanation carefully — understanding WHY is more important than just getting it right.</p>
+      ${step.questions.map((q,qi) => `
+        <div class="practice-q" id="pq-${qi}">
+          <div class="pq-num">Question ${qi+1}</div>
+          <div class="pq-text">${q.q}</div>
+          <div class="pq-opts">
+            ${q.opts.map((o,oi)=>`<button class="pq-opt" id="pq-${qi}-${oi}" onclick="answerLessonQ(${qi},${oi},${q.ans},'${q.exp.replace(/'/g,"\\'")}')">
+              ${String.fromCharCode(65+oi)}. ${o}
+            </button>`).join('')}
+          </div>
+          <div class="pq-exp" id="pqexp-${qi}">${q.exp}</div>
+        </div>`).join('')}
+    </div>
+    <div class="lesson-nav" id="practiceNav" style="display:none">
+      <button class="btn pri" onclick="lessonStepIdx++;renderLessonStep()">Next →</button>
+    </div>`;
+  }
+
+  else if(step.type === 'complete'){
+    const nextUnitIdx = lessonUnitIdx+1;
+    const hasNext = nextUnitIdx < UNITS.length;
+    S[`lesson_done_${lessonUnitIdx}`] = true;
+    saveS();
+    addXP(30);
+    addAct('📖', `Completed lesson: ${step.unit}`);
+    html += `<div class="lesson-complete">
+      <div class="lc-icon">🎉</div>
+      <h2>Unit Complete!</h2>
+      <p>You finished <strong>${step.unit}</strong>. Great work — now reinforce this with flashcards and a quiz.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem">
+        <button class="btn grn" onclick="nav('flashcards',document.querySelector('.sb-btn[onclick*=flashcards]'))">🧠 Study Flashcards</button>
+        <button class="btn pri" onclick="setQuizFilter('${step.unit}');nav('quiz',document.querySelector('.sb-btn[onclick*=quiz]'))">🎯 Take a Quiz</button>
+        ${hasNext?`<button class="btn" onclick="startLesson(${nextUnitIdx})">Next Unit: ${UNITS[nextUnitIdx].title} →</button>`:''}
+      </div>
+      <button class="btn" onclick="document.getElementById('lessonUnitPicker').style.display='block';document.getElementById('lessonContent').style.display='none';buildLessonUnitGrid()">← Back to Units</button>
+    </div>`;
+  }
+
+  html += '</div>';
+  document.getElementById('lessonContent').innerHTML = html;
+  document.getElementById('lessonContent').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function lessonCheckYes(){
+  document.getElementById('checkResponse').style.display='block';
+  document.getElementById('checkResponse').innerHTML=`<div style="background:var(--ggreen);border-radius:8px;padding:.75rem 1rem;color:var(--green);font-size:13.5px;font-weight:500">✓ Perfect! Let's keep going.</div>`;
+  setTimeout(()=>{lessonStepIdx++;renderLessonStep();},800);
+}
+
+function lessonCheckNo(){
+  document.getElementById('checkResponse').style.display='block';
+  document.getElementById('checkResponse').innerHTML=`<div style="background:var(--gamber);border-radius:8px;padding:.85rem 1rem;color:var(--amber);font-size:13.5px">
+    <strong>No problem!</strong> Go back and re-read the previous section. Focus on the highlighted boxes — those have the most important ideas. Take your time.
+    <div style="margin-top:.75rem;display:flex;gap:8px">
+      <button class="btn" onclick="lessonStepIdx--;renderLessonStep()">← Re-read</button>
+      <button class="btn pri" onclick="lessonStepIdx++;renderLessonStep()">I think I got it now →</button>
+    </div>
+  </div>`;
+}
+
+function lessonCheckMore(){
+  document.getElementById('checkResponse').style.display='block';
+  const step = LESSONS[lessonMode][lessonUnitIdx].steps[lessonStepIdx-1];
+  document.getElementById('checkResponse').innerHTML=`<div style="background:var(--gblue);border-radius:8px;padding:.85rem 1rem;color:var(--text2);font-size:13px;line-height:1.7">
+    <strong style="color:var(--blue)">📖 Extra explanation:</strong><br><br>
+    Think about it this way: physics concepts always connect to something real you've experienced. 
+    The key is to build the intuition first, then the math. 
+    Try re-reading the section and for each equation, ask yourself: "What does this mean in the real world? If I doubled one variable, what happens?"
+    <div style="margin-top:.75rem">
+      <button class="btn" onclick="lessonStepIdx--;renderLessonStep()">← Re-read the lesson</button>
+      <button class="btn pri" style="margin-left:8px" onclick="lessonStepIdx++;renderLessonStep()">Continue anyway →</button>
+    </div>
+  </div>`;
+}
+
+let practiceCount=0, practiceTotal=0;
+function answerLessonQ(qi, chosen, correct, exp){
+  const opts = document.querySelectorAll(`#pq-${qi} .pq-opt`);
+  opts.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===correct) b.classList.add('correct');
+    else if(i===chosen) b.classList.add('wrong');
+  });
+  document.getElementById(`pqexp-${qi}`).classList.add('show');
+  if(chosen===correct) addXP(5);
+
+  // Check if all questions answered
+  lessonAnswered[qi]=true;
+  const step = LESSONS[lessonMode][lessonUnitIdx].steps[lessonStepIdx];
+  if(Object.keys(lessonAnswered).length >= step.questions.length){
+    document.getElementById('practiceNav').style.display='flex';
+  }
+}
+
+
 let tutorUnit=null, tutorPhase=0, tutorProbIdx=0, tutorProblems=[], tutorHistory=[];
 const TUTOR_PHASES=['learn','formulas','guided','practice','apply'];
 
