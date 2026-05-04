@@ -743,6 +743,13 @@ select.fselect{appearance:none;cursor:pointer;}
 .lesson-complete h2{font-family:'Instrument Serif',serif;font-size:2rem;margin-bottom:.5rem;}
 .lesson-complete p{font-size:14px;color:var(--text2);margin-bottom:1.25rem;}
 
+.mode-switch-btn{padding:5px 14px;border-radius:99px;border:1px solid var(--border2);
+  background:var(--s2);color:var(--text3);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+.mode-switch-btn:hover{color:var(--text);background:var(--s3);}
+.mode-switch-btn.active-eli5{background:rgba(245,166,35,.2);color:var(--amber);border-color:rgba(245,166,35,.4);}
+.mode-switch-btn.active-normal{background:var(--gblue);color:var(--blue);border-color:rgba(79,141,255,.4);}
+.mode-switch-btn.active-deep{background:var(--gpurp);color:var(--purple);border-color:rgba(155,114,255,.4);}
+
 .gid-btn{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
   border-radius:6px;border:1px solid rgba(155,114,255,.3);background:var(--gpurp);
   color:var(--purple);font-size:11px;font-weight:600;cursor:pointer;
@@ -2869,507 +2876,897 @@ function updatePomoDots(){
 // ═══════════════════════════════════════════
 let lessonMode=null, lessonUnitIdx=null, lessonStepIdx=0;
 
-const LESSONS={
-  ap:[
-    // ── UNIT 1: KINEMATICS ──
-    {steps:[
-      {type:'lesson',title:'1.1 What Is Kinematics?',content:`
-        <h2>Unit 1: Kinematics</h2>
-        <p><strong>Kinematics describes HOW things move — not why.</strong> Think of yourself as a sports commentator. You describe speed, direction, and distance without asking what's causing the motion. That comes later in Unit 2.</p>
-        <div class="highlight">⚡ <strong>AP Weight: 10–15%.</strong> Kinematics is the foundation — every other unit builds on it. Master this first.</div>
-        <h3>The 5 Variables — Write These Every Time</h3>
-        <div class="formula-box">v₀ = initial velocity <span>where you START (m/s)</span></div>
-        <div class="formula-box">v = final velocity <span>where you END UP (m/s)</span></div>
-        <div class="formula-box">a = acceleration <span>how fast velocity changes (m/s²)</span></div>
-        <div class="formula-box">Δx = displacement <span>net change in position (m)</span></div>
-        <div class="formula-box">t = time <span>duration (s)</span></div>
-        <h3>⚠️ Misconception: Displacement ≠ Distance</h3>
-        <div class="warning">Distance = total path length (always positive). Displacement = net change in position (can be negative or zero). Drive 10 km north then 10 km south: distance = 20 km, displacement = 0. The AP exam tests this every single year.</div>
-        <div class="example"><div class="ex-title">📝 Example</div>
-          <p>A runner goes 40 m east, then 15 m west. Find distance and displacement.</p>
-          <p>Distance = 40 + 15 = <strong>55 m</strong></p>
-          <p>Displacement = 40 − 15 = <strong>25 m east</strong></p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 AP Strategy</div><p>The first thing you do on ANY kinematics problem: write all 5 variables, fill in knowns, circle your unknown. This one habit prevents 80% of mistakes.</p></div>
-      `},
-      {type:'check',question:'Can you explain the difference between displacement and distance in your own words?'},
-      {type:'lesson',title:'1.2 Velocity vs Speed & Acceleration',content:`
-        <h2>Velocity, Speed, and Acceleration</h2>
-        <h3>Velocity vs Speed</h3>
-        <p><strong>Speed</strong> is a scalar — just a number (always positive). <strong>Velocity</strong> is a vector — has both magnitude and direction. Average velocity = Δx/Δt. Instantaneous velocity = slope of x-t graph at that moment.</p>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Negative velocity" doesn't mean slowing down — it means moving in the negative direction. A car moving backward at 20 m/s has velocity = −20 m/s but speed = 20 m/s.</div>
-        <h3>Acceleration</h3>
-        <p>Acceleration = rate of change of velocity = Δv/Δt. You can accelerate while slowing down (negative acceleration, positive velocity). You can have acceleration while momentarily stopped (ball at peak of throw).</p>
-        <div class="warning">⚠️ <strong>Biggest Misconception in All of Kinematics:</strong> At the peak of a throw, velocity = 0 but acceleration = −9.8 m/s² ALWAYS. Acceleration during free fall is NEVER zero. Not even for an instant.</div>
-        <div class="example"><div class="ex-title">📝 Example — Decelerating Car</div>
-          <p>Car moving right at +20 m/s brakes to a stop. Acceleration is negative (opposing motion). Both a and v are real — a is negative, v starts positive and decreases to zero.</p>
-          <p>This is NOT "no acceleration." The car IS accelerating — just in the opposite direction of motion.</p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 AP Strategy</div><p>On a v-t graph: slope = acceleration. Positive slope = speeding up (if moving forward). Negative slope = slowing down (if moving forward). But if moving backward — a negative slope means speeding up in the backward direction.</p></div>
-      `},
-      {type:'lesson',title:'1.3 The Four Kinematic Equations',content:`
-        <h2>The Four Kinematic Equations</h2>
-        <p>These equations ONLY work when acceleration is constant. They are your complete toolkit for kinematics.</p>
-        <div class="formula-box">① v = v₀ + at <span>missing Δx</span></div>
-        <div class="formula-box">② Δx = v₀t + ½at² <span>missing v</span></div>
-        <div class="formula-box">③ v² = v₀² + 2aΔx <span>missing t ← most used!</span></div>
-        <div class="formula-box">④ Δx = ½(v₀ + v)t <span>missing a</span></div>
-        <div class="highlight">🔑 <strong>Strategy:</strong> You know 3 variables, need 1 more. The variable missing from your list tells you which equation. Missing t? Use ③. Missing v? Use ②. Missing Δx? Use ①.</div>
-        <div class="example"><div class="ex-title">📝 Full Worked Example</div>
-          <p><strong>Problem:</strong> A car starts from rest, accelerates at 3 m/s² for 8 seconds. Find final speed and distance.</p>
-          <p><strong>List variables:</strong> v₀=0, a=3, t=8, v=?, Δx=?</p>
-          <p><strong>Find v</strong> (missing Δx → use ①): v = 0 + 3(8) = <strong>24 m/s</strong></p>
-          <p><strong>Find Δx</strong> (missing v → use ②): Δx = 0(8) + ½(3)(64) = <strong>96 m</strong></p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> You cannot use kinematic equations when acceleration is changing. If a problem says "force varies" or shows a curved F-t graph, kinematics doesn't directly apply.</div>
-        <div class="ap-tip"><div class="apt-label">🎯 Proportional Reasoning</div><p>Stopping distance ∝ v². Double your speed → stopping distance ×4. Triple speed → ×9. This comes from ③ with v=0: Δx = v₀²/(2a). The AP exam loves this.</p></div>
-      `},
-      {type:'lesson',title:'1.4 Free Fall & Projectile Motion',content:`
-        <h2>Free Fall and Projectile Motion</h2>
-        <h3>Free Fall</h3>
-        <p>Any object under gravity alone has a = −9.8 m/s² (downward) the entire time. This includes:</p>
-        <p>• Going up (decelerating) &nbsp; • At the peak (v=0 but a=−9.8!) &nbsp; • Coming down (accelerating)</p>
-        <div class="warning">⚠️ <strong>Clear this misconception forever:</strong> Many students think "the ball is at rest at the peak, so acceleration must be zero." NO. Acceleration describes how velocity is CHANGING, not what velocity IS. At the peak, velocity is changing from upward to downward — that change requires acceleration.</div>
-        <h3>Projectile Motion — Two Independent Motions</h3>
-        <div class="formula-box">HORIZONTAL: a_x = 0, v_x = constant <span>never changes — ever</span></div>
-        <div class="formula-box">VERTICAL: a_y = −9.8 m/s² <span>pure free fall the entire time</span></div>
-        <div class="highlight">🔑 <strong>Time is the link.</strong> Solve vertical for time t, then use t in horizontal. This is always the approach.</div>
-        <div class="example"><div class="ex-title">📝 Horizontal Launch from Cliff</div>
-          <p>Ball launched at 25 m/s horizontally from 80 m cliff. Where does it land?</p>
-          <p><strong>Vertical</strong> (find t): 80 = ½(9.8)t² → t² = 16.3 → t = 4.04 s</p>
-          <p><strong>Horizontal</strong> (find x): x = 25 × 4.04 = <strong>101 m from base</strong></p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> A heavier ball dropped next to a lighter ball hits the ground at the same time (ignoring air resistance). Gravity gives all objects the same acceleration regardless of mass. Galileo proved this. The AP exam tests it.</div>
-      `},
-      {type:'lesson',title:'1.5 Graph Interpretation',content:`
-        <h2>Motion Graphs — High-Value AP Skill</h2>
-        <p>Graph questions appear in nearly every AP exam. Learn to extract information quickly.</p>
-        <h3>Position-Time (x-t) Graph</h3>
-        <div class="formula-box">Slope = instantaneous velocity <span>steep = fast, flat = stopped, negative slope = backward</span></div>
-        <p>Curved x-t → changing velocity → acceleration. Straight x-t → constant velocity → zero acceleration. Parabola → constant acceleration.</p>
-        <h3>Velocity-Time (v-t) Graph</h3>
-        <div class="formula-box">Slope = acceleration <span>how fast v is changing</span></div>
-        <div class="formula-box">Area under curve = displacement <span>negative area (below axis) = negative displacement</span></div>
-        <h3>Acceleration-Time (a-t) Graph</h3>
-        <div class="formula-box">Area under curve = change in velocity <span>Δv, not v itself</span></div>
-        <div class="highlight">🔑 <strong>The Chain:</strong> x-t slope→v. v-t slope→a. And going the other way: a-t area→Δv. v-t area→Δx.</div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> A negative area on v-t doesn't mean the object slowed down — it means displacement is in the negative direction. The object might be speeding up in reverse.</div>
-        <div class="example"><div class="ex-title">📝 Reading a v-t Graph</div>
-          <p>v-t graph: straight line from (0,0) to (6s, 18 m/s).</p>
-          <p>Acceleration = slope = 18/6 = <strong>3 m/s²</strong></p>
-          <p>Displacement = area = ½ × 6 × 18 = <strong>54 m</strong></p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 AP Tip</div><p>If the v-t graph has a section below the x-axis, split the area into positive and negative parts. Add for total displacement, add magnitudes for total distance.</p></div>
-      `},
-      {type:'practice',title:'Kinematics Practice',questions:[
-        {q:'A car at 30 m/s brakes with a = −6 m/s². How far does it travel before stopping?',opts:['75 m','90 m','150 m','180 m'],ans:0,exp:'Use v²=v₀²+2aΔx: 0=900+2(−6)Δx → 12Δx=900 → Δx=75 m. No time needed!'},
-        {q:'At the peak of a ball thrown straight up, which is true?',opts:['v=0, a=0','v=0, a=−9.8 m/s²','v=max, a=0','v=max, a=−9.8 m/s²'],ans:1,exp:'At peak, vertical velocity momentarily = 0. BUT gravity still acts — acceleration = −9.8 m/s² always during free fall. Never zero.'},
-        {q:'Two balls are dropped simultaneously from the same height. Ball A has mass 2 kg, Ball B has mass 8 kg. Which hits first?',opts:['Ball A (lighter)','Ball B (heavier)','Both hit at the same time','Depends on shape'],ans:2,exp:'Free fall acceleration = g regardless of mass. Both experience the same downward acceleration and hit simultaneously (ignoring air resistance).'},
-        {q:'A v-t graph shows a line from (0, 10) to (4, −2). What is the displacement?',opts:['16 m','32 m','8 m','Cannot determine'],ans:0,exp:'Area under v-t = displacement. The line crosses zero at t=10/3≈3.33s. Positive triangle: ½×(10/3)×10=16.7m. Negative triangle: ½×(2/3)×2=0.67m. Net = 16.7−0.67≈16 m.'},
-        {q:'A projectile is launched horizontally at 30 m/s from a 45 m cliff. How far from the base does it land? (g=10)',opts:['90 m','135 m','45 m','300 m'],ans:0,exp:'Vertical: 45=½(10)t² → t=3s. Horizontal: x=30×3=90 m.'},
-      ]},
-      {type:'complete',unit:'Kinematics'}
-    ]},
+const LESSONS = {
+  units: [
+    // ════════════════════════════════════════
+    // UNIT 1: KINEMATICS
+    // ════════════════════════════════════════
+    {
+      num: 1, title: 'Kinematics', color: '#4f8dff', pct: '10–15%',
+      subunits: [
+        {
+          id: 'k1', title: '1.1 What Is Kinematics?',
+          eli5: `
+            <h2>🧒 What Is Kinematics? (Simple Version)</h2>
+            <p>Imagine you're watching your friend ride their bike. You write down: they went 100 meters, it took 10 seconds, they were going 10 meters per second. That's kinematics — you're just <strong>describing the motion</strong>. You don't care WHY they're moving. Maybe someone pushed them. Maybe they're pedaling. Doesn't matter. You just watch and write down what you see.</p>
+            <div class="highlight">🏀 Think of it like a basketball game recap. "Player ran 30 feet in 2 seconds." That's kinematics. Simple!</div>
+            <h3>The 5 Things You Track</h3>
+            <p>Every motion has 5 numbers. You usually know 3 and need to find the others:</p>
+            <div class="formula-box">Where did it start? → starting speed (v₀) <span>like 0 if starting from rest</span></div>
+            <div class="formula-box">Where did it end up? → final speed (v) <span>how fast at the end</span></div>
+            <div class="formula-box">Was it speeding up or slowing down? → acceleration (a) <span>change in speed per second</span></div>
+            <div class="formula-box">How far did it go? → displacement (Δx) <span>start to finish, straight line</span></div>
+            <div class="formula-box">How long? → time (t) <span>in seconds</span></div>
+            <div class="warning">⚠️ <strong>Big "gotcha":</strong> If you walk to school (500m) and walk back (500m), you traveled 1000m total. But your displacement is ZERO because you ended up where you started. Distance = total path. Displacement = net change.</div>
+          `,
+          normal: `
+            <h2>Unit 1: Kinematics</h2>
+            <p><strong>Kinematics studies HOW things move — not why.</strong> It's the language of motion. Before we talk about forces causing motion, we need to be able to describe motion precisely.</p>
+            <div class="highlight">⚡ <strong>AP Weight: 10–15%.</strong> This is the foundation. Every other unit builds on kinematics. Master this first.</div>
+            <h3>The 5 Kinematic Variables</h3>
+            <div class="formula-box">v₀ = initial velocity <span>starting speed + direction (m/s)</span></div>
+            <div class="formula-box">v = final velocity <span>ending speed + direction (m/s)</span></div>
+            <div class="formula-box">a = acceleration <span>rate of velocity change (m/s²)</span></div>
+            <div class="formula-box">Δx = displacement <span>net change in position (m)</span></div>
+            <div class="formula-box">t = time <span>duration (s)</span></div>
+            <div class="warning">⚠️ <strong>Misconception: Displacement ≠ Distance.</strong> Distance is total path length (always positive). Displacement is the straight-line change from start to finish (can be negative or zero). Run 400m around a track and finish where you started: distance=400m, displacement=0.</div>
+            <div class="example"><div class="ex-title">📝 Example</div>
+              <p>A dog runs 30m east, stops, then runs 12m west. Find distance and displacement.</p>
+              <p>Distance = 30 + 12 = <strong>42 m</strong></p>
+              <p>Displacement = 30 − 12 = <strong>18 m east</strong></p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Strategy</div><p>On every kinematics problem: write all 5 variables, fill in the knowns, circle the unknown. This alone prevents 80% of mistakes.</p></div>
+          `,
+          deep: `
+            <h2>🔬 Kinematics: The Deep View</h2>
+            <p>Kinematics is the mathematical language of motion. Historically, it was developed before dynamics (forces) because humans could observe motion long before they understood its causes. Galileo developed kinematic descriptions in the 1600s; Newton explained WHY with forces in the same century.</p>
+            <h3>Vectors vs Scalars — Why It Matters</h3>
+            <p>Displacement, velocity, and acceleration are <strong>vectors</strong> — they have both magnitude and direction. Speed and distance are <strong>scalars</strong> — magnitude only. This distinction has deep physical consequences. Two cars going 60 mph in opposite directions have the same speed but very different velocities. Their momenta would cancel if they collided.</p>
+            <div class="highlight">🔬 <strong>Why displacement?</strong> In 1D, displacement = ∫v dt (integral of velocity over time). In the absence of calculus, displacement is Δx = x_final − x_initial. The sign encodes direction — a negative displacement means you moved in the negative direction, not that you went backward in time.</div>
+            <h3>Reference Frames</h3>
+            <p>All kinematic quantities are measured relative to a reference frame. There's no "absolute" motion — only motion relative to something. A ball thrown upward on a moving train has different kinematics measured from the train vs. from the ground. Both are correct in their respective reference frames.</p>
+            <div class="warning">⚠️ <strong>Misconception to unlearn:</strong> "At rest means velocity = 0." At rest means velocity = 0 relative to your chosen reference frame. The chair you're sitting in is moving at ~30 km/s relative to the Sun.</div>
+          `,
+          misconceptions: [
+            'Displacement is NOT distance — it\'s the net change in position, can be zero even after moving far',
+            '"At rest" is always relative to a reference frame, not absolute',
+          ],
+          practice: [
+            {q:'A runner goes 60m east then 25m west. Displacement?', opts:['85m east','35m east','25m west','60m east'], ans:1, exp:'Displacement = 60−25 = 35m east. Distance = 85m. They are different!'},
+            {q:'Which of these is a vector quantity?', opts:['Speed','Distance','Time','Displacement'], ans:3, exp:'Displacement has both magnitude and direction → vector. Speed and distance have only magnitude → scalars.'},
+          ]
+        },
+        {
+          id: 'k2', title: '1.2 Velocity and Acceleration',
+          eli5: `
+            <h2>🧒 Speed vs Velocity vs Acceleration (Simple!)</h2>
+            <p><strong>Speed</strong> = how fast you're going. Like your car's speedometer. Always positive. "60 mph."</p>
+            <p><strong>Velocity</strong> = speed PLUS direction. "60 mph going NORTH." If you turn around and go south, your speed is still 60 mph but your velocity is now -60 mph (negative means opposite direction).</p>
+            <p><strong>Acceleration</strong> = how fast your speed is CHANGING. Step on the gas → you're accelerating (speeding up). Hit the brakes → you're also accelerating! Just in the opposite direction (slowing down).</p>
+            <div class="highlight">🚗 Imagine you're in a car. The gas pedal and brake are BOTH "acceleration pedals" — one makes velocity bigger, one makes it smaller. Both are changing your velocity, so both are acceleration.</div>
+            <div class="warning">⚠️ <strong>Mind-blowing fact:</strong> When you throw a ball straight up and it reaches the top, for just a moment the ball is stopped (v=0). But it's STILL accelerating downward at 9.8 m/s². Why? Because the very next moment it's moving downward. Gravity never stops — it's always pulling, even when the ball looks frozen at the top.</div>
+          `,
+          normal: `
+            <h2>Velocity and Acceleration</h2>
+            <h3>Average vs Instantaneous</h3>
+            <div class="formula-box">Average velocity = Δx/Δt <span>total displacement over total time</span></div>
+            <div class="formula-box">Instantaneous velocity = slope of x-t graph at a point <span>what the speedometer reads RIGHT NOW</span></div>
+            <div class="formula-box">Average acceleration = Δv/Δt <span>change in velocity over time</span></div>
+            <div class="warning">⚠️ <strong>Misconception: Negative velocity = slowing down.</strong> WRONG. Negative velocity means moving in the negative direction. A car moving backward at 20 m/s has velocity = −20 m/s. It could be speeding UP in the backward direction.</div>
+            <div class="warning">⚠️ <strong>Misconception: At the peak of a throw, acceleration = 0.</strong> NEVER. During free fall, a = −9.8 m/s² the ENTIRE time — going up, at peak, coming down. The velocity is zero at the peak but acceleration is never zero.</div>
+            <div class="example"><div class="ex-title">📝 Example — Deceleration</div>
+              <p>Car moves right (+) at 30 m/s, brakes to stop in 5s.</p>
+              <p>a = Δv/Δt = (0−30)/5 = −6 m/s²</p>
+              <p>Negative acceleration with positive velocity = slowing down. This is deceleration.</p>
+              <p>But if the car were moving LEFT and a = −6 m/s², it would be SPEEDING UP leftward.</p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 Graph Tip</div><p>On a v-t graph: slope = acceleration. Positive slope = velocity increasing. Negative slope = velocity decreasing (if positive) or increasing leftward (if negative). Always check the sign of velocity too.</p></div>
+          `,
+          deep: `
+            <h2>🔬 Velocity and Acceleration: The Calculus Connection</h2>
+            <p>Velocity is the time derivative of position: v = dx/dt. Acceleration is the time derivative of velocity: a = dv/dt = d²x/dt². This means on any x-t graph, the instantaneous slope at any point gives velocity, and the slope of the resulting v-t graph gives acceleration.</p>
+            <h3>Why Can Acceleration Be Nonzero When Velocity Is Zero?</h3>
+            <p>Because velocity and acceleration are independent quantities. Velocity tells you where you ARE in velocity-space. Acceleration tells you which DIRECTION you're moving in velocity-space. At the peak of a throw: v=0 means you're momentarily at the "zero velocity" point. a=−9.8 means you're moving through velocity-space in the negative direction. An instant later, v is slightly negative. Gravity doesn't know or care that v=0 — it just keeps pulling.</p>
+            <div class="highlight">🔬 <strong>Mathematical proof:</strong> If a=0 at peak, then Δv=aΔt=0 for any small Δt. The ball would stay at zero velocity forever. But we observe it coming back down, so a≠0 at peak. QED.</div>
+            <h3>Jerk — The Third Derivative</h3>
+            <p>The derivative of acceleration is called "jerk" (da/dt). It's why a rough start in a car feels uncomfortable — high jerk means rapidly changing acceleration. Smooth acceleration feels comfortable because jerk is low. Engineers minimize jerk in elevator and train design.</p>
+          `,
+          misconceptions: [
+            'Negative velocity does NOT mean slowing down — it means moving in the negative direction',
+            'At the peak of a throw, velocity = 0 BUT acceleration = −9.8 m/s² always — never zero during free fall',
+            'Deceleration is just acceleration in the opposite direction of motion — not a fundamentally different concept',
+          ],
+          practice: [
+            {q:'A ball is thrown straight up. At the highest point, what is true?', opts:['v=0, a=0','v=0, a=−9.8 m/s²','v=max, a=0','Both v and a are max'], ans:1, exp:'At peak, vertical velocity momentarily = 0. But gravity still acts — a = −9.8 m/s² always during free fall. The ball is about to start coming back down.'},
+            {q:'A car moves LEFT at 15 m/s and speeds up to 25 m/s leftward. Acceleration is:', opts:['Positive','Negative','Zero','Cannot determine'], ans:1, exp:'Taking right as positive: v₀=−15, v=−25. a=Δv/Δt=(−25−(−15))/t = negative. Negative acceleration in the direction of motion (leftward) = speeding up leftward.'},
+          ]
+        },
+        {
+          id: 'k3', title: '1.3 The Four Kinematic Equations',
+          eli5: `
+            <h2>🧒 The Four Magic Equations (Super Simple)</h2>
+            <p>You have 5 numbers to track (v₀, v, a, Δx, t). Every problem gives you 3 and asks for 1. You just need to pick the equation that has your 3 knowns plus your 1 unknown.</p>
+            <p>Think of it like this — you have 4 tools in your toolbox. Each tool is missing one variable. Pick the tool that's missing the variable you DON'T need:</p>
+            <div class="formula-box">Tool 1: v = v₀ + at <span>👈 missing Δx</span></div>
+            <div class="formula-box">Tool 2: Δx = v₀t + ½at² <span>👈 missing v</span></div>
+            <div class="formula-box">Tool 3: v² = v₀² + 2aΔx <span>👈 missing t ⭐ MOST USED</span></div>
+            <div class="formula-box">Tool 4: Δx = ½(v₀+v)t <span>👈 missing a</span></div>
+            <div class="example"><div class="ex-title">🎯 How to Pick: Follow This</div>
+              <p>List your 5 variables. Fill in what you know. Circle what you want. The one with a ? that you DON'T care about tells you which equation to use.</p>
+              <p>Example: know v₀, a, t. Want Δx. Don't care about v → Use Tool 2 (missing v)!</p>
+            </div>
+            <div class="highlight">⭐ Tool 3 (v²=v₀²+2aΔx) is the MOST TESTED on the AP exam because it has no time variable. Any problem that doesn't give you time and doesn't ask for time → use Tool 3 automatically.</div>
+          `,
+          normal: `
+            <h2>The Four Kinematic Equations</h2>
+            <p>These equations ONLY work when acceleration is <strong>constant</strong>. They are your complete toolkit.</p>
+            <div class="formula-box">① v = v₀ + at <span>use when: missing Δx</span></div>
+            <div class="formula-box">② Δx = v₀t + ½at² <span>use when: missing v</span></div>
+            <div class="formula-box">③ v² = v₀² + 2aΔx <span>use when: missing t ← most important!</span></div>
+            <div class="formula-box">④ Δx = ½(v₀+v)t <span>use when: missing a</span></div>
+            <div class="highlight">🔑 <strong>Strategy:</strong> List all 5 variables. Fill in 3 knowns. Circle 1 unknown. The leftover variable tells you which equation (the one that's missing that variable).</div>
+            <div class="example"><div class="ex-title">📝 Full Worked Example</div>
+              <p><strong>Problem:</strong> A car starts from rest and accelerates at 4 m/s² for 6 seconds. Find final speed and distance traveled.</p>
+              <p><strong>Variables:</strong> v₀=0 (rest), a=4, t=6, v=?, Δx=?</p>
+              <p><strong>Find v</strong> (missing Δx → use ①): v = 0 + 4(6) = <strong>24 m/s</strong></p>
+              <p><strong>Find Δx</strong> (missing v → use ②): Δx = 0(6) + ½(4)(36) = <strong>72 m</strong></p>
+            </div>
+            <div class="warning">⚠️ <strong>Misconception:</strong> These equations don't work if acceleration is changing. If force varies, or if there are multiple phases of motion — you must split the problem into phases, solve each separately.</div>
+            <div class="example"><div class="ex-title">📝 Stopping Distance — Most Common AP Proportional Problem</div>
+              <p>From v²=v₀²+2aΔx with v=0: Δx = v₀²/(2a)</p>
+              <p>Stopping distance ∝ v₀². Double speed → 4× stopping distance. Triple speed → 9× stopping distance.</p>
+              <p>This is why speeding is so dangerous — small increases in speed cause huge increases in stopping distance.</p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Tip</div><p>Equation ③ (no time) is the most commonly tested. Any problem without time given AND without time asked for → use it immediately.</p></div>
+          `,
+          deep: `
+            <h2>🔬 The Kinematic Equations: Where Do They Come From?</h2>
+            <p>These equations aren't magic — they're derived from calculus. Starting with constant acceleration a:</p>
+            <p>Integrate once: v = v₀ + at (equation ①)</p>
+            <p>Integrate again: x = x₀ + v₀t + ½at² (equation ②)</p>
+            <p>Eliminate t by solving ① for t and substituting into ②: v² = v₀² + 2aΔx (equation ③)</p>
+            <p>Average velocity for constant acceleration: Δx = ½(v₀+v)t (equation ④)</p>
+            <div class="highlight">🔬 <strong>Why only work for constant a?</strong> If a varies, the integral of a(t) is not simply at. You'd need ∫a(t)dt which requires knowing the specific function a(t). For constant a, the integral is trivially at.</div>
+            <h3>Proportional Reasoning — The Deeper Level</h3>
+            <p>From Δx = v₀²/(2a): stopping distance scales as v₀². This is a quadratic relationship. Graph Δx vs v₀ and you get a parabola. This means the relationship is nonlinear — the danger of speeding doesn't increase proportionally with speed, it increases with the square. Going from 60→70 mph increases stopping distance MORE than going from 50→60 mph, even though it's the same 10 mph difference.</p>
+          `,
+          misconceptions: [
+            'These equations ONLY work for constant acceleration — if a is changing, you cannot use them',
+            'Stopping distance scales as v² (quadratic) — doubling speed quadruples distance, not doubles it',
+            'v₀=0 does NOT mean the object wasn\'t moving before — it means it was at rest at your chosen t=0',
+          ],
+          practice: [
+            {q:'Car starts from rest, a=5 m/s², for 4s. How far?', opts:['20 m','40 m','80 m','10 m'], ans:1, exp:'v₀=0, a=5, t=4. Missing v → use ②: Δx=0+½(5)(16)=40m.'},
+            {q:'Ball thrown at 30 m/s, a=−10 m/s². Max height?', opts:['45 m','90 m','30 m','15 m'], ans:0, exp:'At max height v=0. Use ③: 0=900+2(−10)Δx → 20Δx=900 → Δx=45m.'},
+            {q:'Car at 20 m/s brakes to rest. If initial speed were 40 m/s with same braking, stopping distance would be?', opts:['Same','2× longer','4× longer','8× longer'], ans:2, exp:'Δx∝v₀². Speed doubles → distance ×4. Quadratic relationship.'},
+          ]
+        },
+        {
+          id: 'k4', title: '1.4 Free Fall and Projectiles',
+          eli5: `
+            <h2>🧒 Free Fall and Projectiles (Super Easy Version)</h2>
+            <p><strong>Free fall</strong> just means gravity is the only thing acting on the object. No engine, no wings, just gravity pulling it straight down at 9.8 m/s² the whole time.</p>
+            <p><strong>Projectile motion</strong> is when something is thrown and moves through the air. Here's the secret: just ignore the horizontal and vertical separately!</p>
+            <div class="highlight">🏀 Think of shooting a basketball. Sideways: the ball moves forward at the same speed the whole time (nobody pushes it sideways in the air). Up-down: the ball goes up, slows down, stops for a moment, then falls — just like dropping a ball straight down.</div>
+            <p>The sideways part and the up-down part happen at the same time but don't affect each other at all. They share one thing: time.</p>
+            <div class="example"><div class="ex-title">🤔 Does heavier = falls faster?</div>
+              <p>NO! Galileo proved this. Drop a feather and a hammer on the Moon (no air). They hit at EXACTLY the same time. Gravity gives everything the same acceleration: 9.8 m/s². Mass doesn't matter.</p>
+            </div>
+          `,
+          normal: `
+            <h2>Free Fall and Projectile Motion</h2>
+            <h3>Free Fall</h3>
+            <p>Any object with only gravity acting has a = −9.8 m/s² (downward) the entire time. No exceptions.</p>
+            <div class="warning">⚠️ <strong>Clear this forever:</strong> At the PEAK of a throw — velocity = 0 but a = −9.8 ALWAYS. Acceleration is the rate of change of velocity. At the peak, velocity is CHANGING from upward to downward. That change requires acceleration. Zero velocity does NOT mean zero acceleration.</div>
+            <h3>Projectile Motion: Two Independent Motions</h3>
+            <div class="formula-box">HORIZONTAL: a_x = 0, v_x = constant <span>no horizontal force → no horizontal acceleration</span></div>
+            <div class="formula-box">VERTICAL: a_y = −9.8 m/s² <span>gravity only — pure free fall</span></div>
+            <div class="highlight">🔑 <strong>Time connects them.</strong> Solve vertical for t first, then use that t in horizontal. This is always the approach.</div>
+            <div class="example"><div class="ex-title">📝 Ball Launched Horizontally from 45m Cliff at 20 m/s</div>
+              <p><strong>Vertical:</strong> 45 = ½(9.8)t² → t = √(90/9.8) = 3.03s</p>
+              <p><strong>Horizontal:</strong> x = 20 × 3.03 = <strong>60.6m from base</strong></p>
+            </div>
+            <div class="warning">⚠️ <strong>Misconception:</strong> "A thrown ball and a dropped ball hit the ground at different times." WRONG — if launched horizontally from the same height, they hit the GROUND at the SAME TIME. Horizontal speed doesn't affect vertical fall time.</div>
+            <div class="example"><div class="ex-title">📝 Ball Launched at Angle θ</div>
+              <p>Split initial velocity: v_x = v₀cosθ, v_y = v₀sinθ</p>
+              <p>Time to peak: 0 = v_y − gt_peak → t_peak = v_y/g</p>
+              <p>Total time in air: 2×t_peak (symmetric path)</p>
+              <p>Range: R = v_x × total time</p>
+            </div>
+          `,
+          deep: `
+            <h2>🔬 Projectile Motion: The Physics of Independence</h2>
+            <p>Why are horizontal and vertical independent? Because Newton's Second Law applies per-direction. The only force is gravity: F_x = 0, F_y = −mg. Therefore a_x = 0, a_y = −g. The x and y equations are completely separate — they share only time.</p>
+            <h3>Why Do All Objects Fall at the Same Rate?</h3>
+            <p>From Newton's 2nd Law: F=ma → mg=ma → a=g. The mass cancels perfectly. This is a profound coincidence (or deep principle) — the mass that resists acceleration (inertial mass) equals the mass that experiences gravitational force (gravitational mass). Einstein elevated this to a fundamental principle: the Equivalence Principle, the foundation of General Relativity.</p>
+            <div class="highlight">🔬 <strong>The Range Equation:</strong> R = v₀²sin(2θ)/g. Maximum range at θ=45° (sin90°=1). Complementary angles (30° and 60°) give the same range. This is a beautiful result that comes from the symmetry of the sine function around 45°.</div>
+            <h3>Symmetry of Projectile Motion</h3>
+            <p>For a projectile launched and landing at the same height: the path is a perfect parabola. Speed at launch = speed at landing. Angle at launch = angle at landing (below horizontal). Time going up = time going down. These symmetries arise from energy conservation and the constant nature of g.</p>
+          `,
+          misconceptions: [
+            'At the peak, velocity = 0 but acceleration = −9.8 always — never zero during free fall',
+            'A horizontally thrown ball and a dropped ball hit the ground at the SAME time (same vertical fall)',
+            'Heavier objects do NOT fall faster (in the absence of air resistance)',
+            'Horizontal velocity is CONSTANT throughout flight — nothing pushes the projectile horizontally',
+          ],
+          practice: [
+            {q:'Ball thrown horizontally at 15 m/s from 20m high. Time to hit ground? (g=10)', opts:['1s','2s','3s','4s'], ans:1, exp:'Vertical: 20=½(10)t² → t²=4 → t=2s. Horizontal speed doesn\'t affect fall time.'},
+            {q:'Same ball — how far from base of cliff?', opts:['15m','30m','20m','60m'], ans:1, exp:'Horizontal: x=v_x×t=15×2=30m.'},
+            {q:'At peak of angled projectile, what is the speed?', opts:['Zero','v₀','v₀cosθ','v₀sinθ'], ans:2, exp:'At peak, v_y=0 but v_x=v₀cosθ always (constant). Speed at peak = v₀cosθ, not zero!'},
+          ]
+        },
+        {
+          id: 'k5', title: '1.5 Motion Graphs',
+          eli5: `
+            <h2>🧒 Reading Motion Graphs (Easy Mode)</h2>
+            <p>There are three types of graphs about motion. Each one tells you something different:</p>
+            <div class="highlight">📈 <strong>Position-Time (x-t):</strong> Shows WHERE the object is. Slope = how fast it's moving (velocity). Flat line = not moving. Steep line = moving fast.</div>
+            <div class="highlight">📈 <strong>Velocity-Time (v-t):</strong> Shows HOW FAST it's going. Slope = how fast velocity changes (acceleration). The AREA under the line = how far it went (displacement).</div>
+            <div class="highlight">📈 <strong>Acceleration-Time (a-t):</strong> Shows how fast the speed is changing. Area under it = change in velocity.</div>
+            <div class="example"><div class="ex-title">🎮 Easy Memory Trick</div>
+              <p>Each graph's <strong>slope</strong> gives the next graph down:</p>
+              <p>x-t slope → v &nbsp;|&nbsp; v-t slope → a</p>
+              <p>Each graph's <strong>area</strong> gives the previous graph up:</p>
+              <p>a-t area → Δv &nbsp;|&nbsp; v-t area → Δx</p>
+            </div>
+          `,
+          normal: `
+            <h2>Motion Graphs</h2>
+            <h3>Position-Time (x-t)</h3>
+            <div class="formula-box">Slope at any point = instantaneous velocity</div>
+            <p>Straight line = constant velocity (zero acceleration). Curved line = changing velocity (nonzero acceleration). Parabola = constant acceleration. Horizontal line = at rest.</p>
+            <h3>Velocity-Time (v-t)</h3>
+            <div class="formula-box">Slope = acceleration</div>
+            <div class="formula-box">Area under curve = displacement</div>
+            <p>Straight line = constant acceleration. Horizontal line = constant velocity. Area below the x-axis = negative displacement (moved backward).</p>
+            <h3>Acceleration-Time (a-t)</h3>
+            <div class="formula-box">Area under curve = change in velocity (Δv)</div>
+            <div class="example"><div class="ex-title">📝 Reading a v-t Graph</div>
+              <p>v-t graph: straight line from (0, 0) to (5s, 20 m/s)</p>
+              <p>Acceleration = slope = 20/5 = <strong>4 m/s²</strong></p>
+              <p>Displacement = area = ½ × 5 × 20 = <strong>50 m</strong></p>
+            </div>
+            <div class="warning">⚠️ <strong>Misconception:</strong> Area below the x-axis on a v-t graph is negative displacement — it doesn't mean the object slowed down. The object moved in the negative direction during that time.</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Tip</div><p>If a v-t graph crosses the x-axis, the object changed direction at that point. Calculate positive and negative areas separately to get net displacement. Add magnitudes for total distance.</p></div>
+          `,
+          deep: `
+            <h2>🔬 Motion Graphs: The Calculus Foundation</h2>
+            <p>The relationships between motion graphs are fundamentally calculus relationships:</p>
+            <p>v(t) = dx/dt &nbsp;→&nbsp; slope of x-t = velocity</p>
+            <p>a(t) = dv/dt &nbsp;→&nbsp; slope of v-t = acceleration</p>
+            <p>Δx = ∫v dt &nbsp;→&nbsp; area under v-t = displacement</p>
+            <p>Δv = ∫a dt &nbsp;→&nbsp; area under a-t = change in velocity</p>
+            <div class="highlight">🔬 <strong>The Fundamental Theorem of Calculus</strong> connects differentiation and integration — which is exactly why slope and area are inverse operations across these graphs. This is one of the most beautiful connections in mathematics.</div>
+            <h3>Shapes and Their Meaning</h3>
+            <p>Parabola in x-t ↔ Straight line in v-t ↔ Horizontal line in a-t → all consistent with constant acceleration (like free fall).</p>
+            <p>Straight line in x-t ↔ Horizontal line in v-t ↔ Zero in a-t → consistent with constant velocity.</p>
+            <p>Cubic in x-t ↔ Parabola in v-t ↔ Straight line in a-t → constant jerk (da/dt = const).</p>
+          `,
+          misconceptions: [
+            'A steep x-t graph means fast movement, NOT acceleration',
+            'Area below the x-axis on v-t means NEGATIVE displacement, not that the object slowed down',
+            'A curved x-t graph means acceleration exists — a straight x-t means constant velocity',
+          ],
+          practice: [
+            {q:'v-t graph: line from (0,12) to (4,0). Displacement in 4s?', opts:['24m','48m','12m','0m'], ans:0, exp:'Area = triangle = ½×4×12=24m. The velocity was positive throughout, so displacement = 24m forward.'},
+            {q:'A horizontal line on an x-t graph means:', opts:['Constant speed','Constant acceleration','Object at rest','Moving backward'], ans:2, exp:'Horizontal x-t → x not changing → object not moving → at rest. Slope = velocity = 0.'},
+            {q:'Area under an acceleration-time graph equals:', opts:['Displacement','Velocity','Change in velocity','Distance'], ans:2, exp:'Area under a-t = Δv (change in velocity). Area under v-t = Δx (displacement). One level up each time.'},
+          ]
+        },
+      ]
+    },
 
-    // ── UNIT 2: FORCES ──
-    {steps:[
-      {type:'lesson',title:'2.1 Newton\'s First Law — Inertia',content:`
-        <h2>Unit 2: Forces & Newton's Laws</h2>
-        <p><strong>AP Weight: 18–23% — the biggest unit.</strong> Forces explain WHY things move the way they do.</p>
-        <h3>Newton's First Law</h3>
-        <p>An object at rest stays at rest. An object in motion stays in motion at constant velocity. UNLESS a net external force acts on it. This tendency to resist change is called <strong>inertia</strong>.</p>
-        <div class="example"><div class="ex-title">Real World: Seatbelts</div>
-          <p>Your car brakes suddenly. Your body has inertia — it wants to keep moving forward at the car's speed. Without a seatbelt, nothing stops you until you hit the windshield. The seatbelt applies a force to decelerate you safely.</p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Objects naturally slow down." No — on Earth, friction always acts, which is why things slow. In space, a pushed object moves at constant velocity forever. Friction is the force that decelerates things on Earth, not some natural tendency to stop.</div>
-        <div class="highlight">🔑 <strong>Key insight:</strong> Zero net force means constant velocity — NOT zero velocity. An object moving at 50 m/s with zero net force keeps moving at 50 m/s forever.</div>
-        <div class="ap-tip"><div class="apt-label">🎯 AP Tip</div><p>If a problem says "constant velocity" or "moving at constant speed" — that means net force = 0. Use this to find unknown forces immediately.</p></div>
-      `},
-      {type:'lesson',title:'2.2 Newton\'s Second Law — ΣF = ma',content:`
-        <h2>Newton's Second Law</h2>
-        <div class="formula-box">ΣF = ma <span>net force = mass × acceleration</span></div>
-        <p>Apply it <strong>separately in each direction</strong>. x-forces → x-acceleration. y-forces → y-acceleration. They never mix.</p>
-        <h3>Free Body Diagram — Draw This First, Every Time</h3>
-        <p>A FBD shows every force on an object as an arrow. Label each force with what's causing it. This is worth points on the AP exam even if your math is wrong.</p>
-        <p><strong>FBD Checklist:</strong> mg downward (weight) · N perpendicular to surface · T along rope · f opposing motion</p>
-        <div class="example"><div class="ex-title">📝 Box on Flat Surface with Friction</div>
-          <p>10 kg box, applied force 40 N right, μ_k=0.3, g=10</p>
-          <p>Normal: N = mg = 100 N (no vertical acceleration)</p>
-          <p>Friction: f_k = μN = 0.3×100 = 30 N (opposes motion)</p>
-          <p>Net force: 40−30 = 10 N right</p>
-          <p>Acceleration: a = F/m = 10/10 = <strong>1 m/s²</strong></p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "If something moves at constant speed, there's no friction." Wrong — friction exists, it's just balanced by the applied force. ΣF=0 doesn't mean no friction; it means friction equals applied force.</div>
-      `},
-      {type:'lesson',title:'2.3 Newton\'s Third Law & Pairs',content:`
-        <h2>Newton's Third Law</h2>
-        <p>For every force, there is an equal and opposite reaction force on a <strong>different object</strong>. These force pairs NEVER cancel — they act on different objects.</p>
-        <div class="example"><div class="ex-title">Real Examples of N3L Pairs</div>
-          <p>🚀 Rocket pushes exhaust backward → exhaust pushes rocket forward</p>
-          <p>🤸 You push floor down → floor pushes you up (normal force)</p>
-          <p>🌍 Earth pulls you down (weight) → you pull Earth up</p>
-        </div>
-        <div class="warning">⚠️ <strong>Classic Misconception — Weight and Normal Force are NOT N3L pairs.</strong> Both act on the book. They happen to be equal in magnitude on a flat surface (because ΣF=0), but they are NOT Newton's 3rd Law pairs. The N3L pair for weight is: Earth pulls book down AND book pulls Earth up with equal force.</div>
-        <div class="ap-tip"><div class="apt-label">🎯 N3L Pair Test</div><p>To identify a true N3L pair: (1) same magnitude, (2) opposite direction, (3) same type of force, (4) on DIFFERENT objects. All four must be true.</p></div>
-      `},
-      {type:'lesson',title:'2.4 Friction, Normal Force & Inclines',content:`
-        <h2>Friction, Normal Force, and Inclines</h2>
-        <h3>Normal Force — NOT Always mg</h3>
-        <div class="formula-box">Flat surface: N = mg <span>simple case</span></div>
-        <div class="formula-box">Incline (angle θ): N = mg cosθ <span>always less than mg</span></div>
-        <div class="formula-box">Elevator going up (accel a): N = m(g+a) <span>greater than mg</span></div>
-        <div class="formula-box">Free fall: N = 0 <span>weightlessness</span></div>
-        <h3>Friction</h3>
-        <div class="formula-box">Kinetic: f_k = μ_k × N <span>constant once sliding</span></div>
-        <div class="formula-box">Static: f_s ≤ μ_s × N <span>adjusts, max = μ_sN</span></div>
-        <p>μ_s > μ_k always. Harder to start sliding than to keep sliding.</p>
-        <h3>Inclined Planes — The Axis Tilt Trick</h3>
-        <p>Tilt your axes to align with the surface. x-axis along slope, y-axis perpendicular.</p>
-        <div class="formula-box">Along slope: ΣF_x = mg sinθ − f = ma</div>
-        <div class="formula-box">Perpendicular: ΣF_y = N − mg cosθ = 0 → N = mg cosθ</div>
-        <div class="example"><div class="ex-title">📝 Block on 37° Ramp, μ_k=0.25, m=4 kg, g=10</div>
-          <p>N = mg cos37° = 4(10)(0.8) = 32 N</p>
-          <p>f_k = 0.25(32) = 8 N</p>
-          <p>Net = mg sin37° − f_k = 4(10)(0.6) − 8 = 24−8 = 16 N</p>
-          <p>a = 16/4 = <strong>4 m/s² down the slope</strong></p>
-        </div>
-      `},
-      {type:'lesson',title:'2.5 Circular Motion',content:`
-        <h2>Circular Motion</h2>
-        <p>Moving in a circle at constant speed STILL requires acceleration — direction is constantly changing. This centripetal acceleration always points toward the center.</p>
-        <div class="formula-box">F_c = mv²/r <span>net force toward center — not a new force!</span></div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Centripetal force" is NOT a new type of force. Never draw it as a separate arrow. It is the label for whatever existing force(s) point inward. On a flat curve it's friction. On a string it's tension. At the top of a loop it's N + mg.</div>
-        <div class="example"><div class="ex-title">Top of a Loop vs Bottom of a Loop</div>
-          <p><strong>Top:</strong> Both N and mg point toward center (down). F_c = N + mg → N = mv²/r − mg</p>
-          <p><strong>Bottom:</strong> N points up, mg points down. F_c = N − mg → N = mv²/r + mg</p>
-          <p>Normal force is larger at the bottom — why rides feel heavier at the bottom of a loop.</p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 Proportional Reasoning</div><p>F_c ∝ v². Double speed in a curve → need 4× the centripetal force. This is why sharp highway curves have speed limits much lower than straight sections.</p></div>
-      `},
-      {type:'practice',title:'Forces Practice',questions:[
-        {q:'A 5 kg box moves right at constant velocity on a rough surface. Applied force = 20 N. What is friction force?',opts:['0 N','10 N','20 N','50 N'],ans:2,exp:'Constant velocity → ΣF = 0 → friction = applied force = 20 N. They balance exactly.'},
-        {q:'Normal force on a 10 kg box on a 53° ramp (g=10)?',opts:['100 N','60 N','80 N','53 N'],ans:1,exp:'N = mg cosθ = 10(10)(cos53°) = 100(0.6) = 60 N. NOT equal to mg on inclines!'},
-        {q:'Earth pulls the Moon toward Earth. By Newton\'s 3rd Law, which is true?',opts:['Moon pulls Earth with equal force','Moon pushes Earth away','Moon has no effect on Earth','Moon pulls Earth with less force'],ans:0,exp:'N3L: Moon pulls Earth toward the Moon with exactly the same magnitude force. This is why Earth has tides — the Moon\'s gravity affects Earth too.'},
-        {q:'A car rounds a flat circular track at 20 m/s. Radius = 50 m, mass = 1000 kg. Centripetal force?',opts:['4000 N','8000 N','400 N','2000 N'],ans:1,exp:'F_c = mv²/r = 1000×400/50 = 8000 N. This is provided by static friction from the road.'},
-        {q:'In an elevator accelerating upward at 2 m/s², what does a 70 kg person\'s scale read? (g=10)',opts:['700 N','840 N','560 N','70 N'],ans:1,exp:'N = m(g+a) = 70(10+2) = 70×12 = 840 N. Upward acceleration increases apparent weight.'},
-      ]},
-      {type:'complete',unit:'Forces & Newton\'s Laws'}
-    ]},
+    // ════════════════════════════════════════
+    // UNIT 2: FORCES
+    // ════════════════════════════════════════
+    {
+      num: 2, title: "Forces & Newton's Laws", color: '#f5a623', pct: '18–23%',
+      subunits: [
+        {
+          id: 'f1', title: "2.1 Newton's First Law — Inertia",
+          eli5: `
+            <h2>🧒 Newton's First Law (Like You're 5)</h2>
+            <p>Imagine you're sliding on ice with no friction. You'll keep sliding FOREVER in the same direction unless someone pushes or pulls you. That's Newton's First Law — things keep doing what they're doing unless a force changes it.</p>
+            <div class="highlight">🛋️ Think about when a car suddenly stops and you lurch forward. Your body wanted to keep moving forward — that's INERTIA. Your seatbelt is the force that stops you.</div>
+            <p><strong>Inertia</strong> is just a fancy word for "things don't want to change." Heavy things have more inertia — they're harder to get moving AND harder to stop.</p>
+            <div class="warning">⚠️ <strong>Big misconception:</strong> Things don't "naturally" slow down. On Earth, friction slows things down. In space, there's no friction — a pushed object moves forever at the same speed. Friction is the force that makes things stop on Earth, not some natural tendency.</div>
+          `,
+          normal: `
+            <h2>Newton's First Law: Inertia</h2>
+            <p><strong>An object at rest stays at rest. An object in motion stays in motion at constant velocity. Unless a net external force acts on it.</strong></p>
+            <div class="highlight">🔑 <strong>Key insight:</strong> Zero net force → constant velocity (NOT zero velocity). A hockey puck sliding on frictionless ice moves at constant speed forever. No force needed to MAINTAIN motion — only to CHANGE it.</div>
+            <div class="example"><div class="ex-title">Real World Examples</div>
+              <p>🚗 Seatbelts: car stops suddenly, your body (inertia) wants to keep moving forward at car's speed. Belt provides the force to stop you.</p>
+              <p>🚀 Space: no friction means objects coasting forever at constant velocity — no fuel needed to maintain speed, only to change it.</p>
+              <p>🏈 Tablecloth trick: yank the cloth fast enough and inertia keeps the dishes in place while cloth slides out.</p>
+            </div>
+            <div class="warning">⚠️ <strong>Misconception:</strong> "A moving object needs a constant force to keep moving." This is Aristotle's view — and it's WRONG. Newton showed that zero force means constant velocity. Friction on Earth makes it seem like you need to keep pushing, but that's to overcome friction, not to maintain motion.</div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Tip</div><p>"Constant velocity" in a problem → net force = 0. Use this immediately to set up your force equation.</p></div>
+          `,
+          deep: `
+            <h2>🔬 Inertia: The Deep Physics</h2>
+            <p>Inertia is quantified by mass — specifically inertial mass, which measures resistance to acceleration. Newton's First Law was revolutionary because it overturned 2000 years of Aristotelian physics, which claimed that force was needed to maintain motion.</p>
+            <h3>Why Do Things Have Inertia?</h3>
+            <p>This is one of the deepest open questions in physics. Newton's Laws describe inertia perfectly but don't explain its origin. The Higgs field (discovered 2012) gives particles their mass, but the relationship between Higgs mass and inertial resistance is still being studied. Einstein's General Relativity connects inertia to the geometry of spacetime.</p>
+            <div class="highlight">🔬 <strong>Mach's Principle:</strong> Ernst Mach proposed that inertia arises from the gravitational influence of all matter in the universe. Einstein was inspired by this in developing General Relativity. It remains philosophically provocative — your inertia may be fundamentally connected to every star in the universe.</div>
+            <h3>Reference Frames and Newton's First Law</h3>
+            <p>Newton's First Law only holds in inertial (non-accelerating) reference frames. In an accelerating car, objects appear to accelerate backward with no apparent force — this is a pseudo-force (fictitious force). True forces only exist in inertial frames.</p>
+          `,
+          misconceptions: [
+            'Objects do NOT naturally slow down — friction causes slowing on Earth. In space, there\'s no friction and objects move forever',
+            '"Constant velocity" means zero NET force, not zero force. Forces can balance.',
+            'More massive objects have MORE inertia — harder to start AND stop',
+          ],
+          practice: [
+            {q:'A 5kg box moves at constant 10 m/s on a rough floor. Applied force = 20N. Friction force?', opts:['0N','10N','20N','50N'], ans:2, exp:'Constant velocity → ΣF=0 → friction = applied force = 20N exactly. They balance perfectly.'},
+            {q:'In outer space, far from any planet, you push an object and let go. It will:', opts:['Slow down gradually','Stop immediately','Move at constant velocity forever','Speed up gradually'], ans:2, exp:'No friction in space, no net force after release. Newton\'s 1st Law: constant velocity forever.'},
+          ]
+        },
+        {
+          id: 'f2', title: '2.2 Newton\'s Second Law & FBDs',
+          eli5: `
+            <h2>🧒 Newton's Second Law (Easy!)</h2>
+            <p><strong>ΣF = ma</strong> — the bigger the force, the bigger the acceleration. The bigger the mass, the harder it is to accelerate.</p>
+            <div class="highlight">🛒 Imagine pushing a shopping cart. Empty cart → easy to push fast (small mass, big acceleration). Full cart → much harder (bigger mass, smaller acceleration for same push). Same idea!</div>
+            <p>Before solving ANY forces problem, you MUST draw a <strong>Free Body Diagram (FBD)</strong>. It's just a picture with arrows showing every force on your object.</p>
+            <div class="example"><div class="ex-title">FBD Arrows You Always Need</div>
+              <p>⬇️ Weight (mg) — always downward, always there</p>
+              <p>⬆️ Normal force (N) — surface pushing back, perpendicular to surface</p>
+              <p>➡️ Applied force — whatever's pushing/pulling</p>
+              <p>⬅️ Friction — always opposing motion</p>
+              <p>⬆️/➡️ Tension — along the rope/string</p>
+            </div>
+          `,
+          normal: `
+            <h2>Newton's Second Law and Free Body Diagrams</h2>
+            <div class="formula-box">ΣF = ma <span>apply in EACH direction separately</span></div>
+            <p>The net force equals mass times acceleration. Apply it separately for x and y. x-forces give x-acceleration. y-forces give y-acceleration. They never mix.</p>
+            <h3>Free Body Diagram — Always First</h3>
+            <p>Draw every force as an arrow on the object. Label each: weight (mg↓), Normal (N⊥ surface), Tension (T along rope), Friction (f opposing motion), Applied (F in given direction).</p>
+            <div class="example"><div class="ex-title">📝 Box on Flat Surface — Full Solution</div>
+              <p>8 kg box, push = 50N right, μ_k=0.3, g=10</p>
+              <p><strong>y-direction:</strong> N − mg = 0 → N = 80N</p>
+              <p><strong>Friction:</strong> f_k = 0.3×80 = 24N left</p>
+              <p><strong>x-direction:</strong> 50−24 = 8×a → a = 26/8 = <strong>3.25 m/s²</strong></p>
+            </div>
+            <div class="warning">⚠️ <strong>Misconception:</strong> "Normal force always equals mg." ONLY on flat horizontal surfaces with no vertical acceleration. On inclines, in elevators, with vertical forces applied — N ≠ mg. Always derive N from ΣF_y=0 or ΣF_y=ma_y.</div>
+            <div class="example"><div class="ex-title">📝 Connected Objects — Atwood Machine</div>
+              <p>m₁ = 6kg (heavier, goes down), m₂ = 2kg (lighter, goes up)</p>
+              <p>FBD m₁: m₁g − T = m₁a</p>
+              <p>FBD m₂: T − m₂g = m₂a</p>
+              <p>Add: (m₁−m₂)g = (m₁+m₂)a → a = 4×10/8 = <strong>5 m/s²</strong></p>
+              <p>T = m₂(g+a) = 2(15) = <strong>30N</strong></p>
+            </div>
+          `,
+          deep: `
+            <h2>🔬 F=ma: The Deepest Equation in Classical Mechanics</h2>
+            <p>F=ma is deceptively simple but profoundly deep. Force and acceleration are both vectors — the equation is actually three equations: F_x=ma_x, F_y=ma_y, F_z=ma_z. Each dimension is independent.</p>
+            <h3>What Is "Net Force" Really?</h3>
+            <p>Forces are vector quantities. Net force is their vector sum. Two 10N forces at 90° don't give 20N — they give 10√2 ≈ 14.1N at 45°. The principle of superposition allows us to add forces independently.</p>
+            <div class="highlight">🔬 <strong>Inertial vs Gravitational Mass:</strong> F=ma uses inertial mass (resistance to acceleration). Weight = mg uses gravitational mass (response to gravity). Experiments show these are equal to 1 part in 10¹². Einstein elevated this to the Equivalence Principle — the foundation of General Relativity.</div>
+            <h3>Non-Inertial Frames and Pseudo-Forces</h3>
+            <p>In an accelerating reference frame (like a car turning), you feel pushed sideways. This "centrifugal force" is a pseudo-force — it arises because your frame is non-inertial. Newton's Laws in their standard form only hold in inertial frames.</p>
+          `,
+          misconceptions: [
+            'Normal force is NOT always mg — always derive it from ΣF_y = ma_y',
+            'Drawing FBD is not optional — it\'s the foundation and earns partial credit on AP FRQs',
+            'Apply ΣF=ma separately in each direction — x and y equations are independent',
+          ],
+          practice: [
+            {q:'10kg box, push=60N right, μ_k=0.4, g=10. Acceleration?', opts:['2 m/s²','6 m/s²','2.5 m/s²','4 m/s²'], ans:0, exp:'N=mg=100N. f_k=0.4×100=40N. Net=60−40=20N. a=20/10=2 m/s².'},
+            {q:'Elevator accelerates upward at 3 m/s². 70kg person. Scale reading? (g=10)', opts:['700N','490N','910N','210N'], ans:2, exp:'N=m(g+a)=70(10+3)=70×13=910N. Upward acceleration increases apparent weight.'},
+            {q:'Two masses connected by string over pulley: m₁=4kg, m₂=6kg. Acceleration? (g=10)', opts:['2 m/s²','5 m/s²','10 m/s²','1 m/s²'], ans:0, exp:'a=(m₂−m₁)g/(m₁+m₂)=(6−4)×10/(4+6)=20/10=2 m/s².'},
+          ]
+        },
+        {
+          id: 'f3', title: "2.3 Newton's Third Law",
+          eli5: `
+            <h2>🧒 Newton's Third Law (The Action-Reaction Law)</h2>
+            <p>Every force has a partner. You can NEVER have a lone force — they always come in pairs.</p>
+            <div class="highlight">🤜 Push a wall → wall pushes you back with the SAME force. You can feel it! That's Newton's Third Law.</div>
+            <p>The key is: the two forces are on <strong>DIFFERENT objects</strong>. Wall pushes you. You push the wall. Two different objects.</p>
+            <div class="example"><div class="ex-title">Real Examples</div>
+              <p>🚀 Rocket: pushes gas backward → gas pushes rocket forward</p>
+              <p>🏊 Swimming: push water backward → water pushes you forward</p>
+              <p>🐟 Fish: flap tail left → water pushes fish right</p>
+              <p>🔫 Gun: bullet pushed forward → gun pushed backward (recoil)</p>
+            </div>
+            <div class="warning">⚠️ <strong>The classic wrong answer:</strong> If forces are equal and opposite, why do things ever move? Because the forces act on DIFFERENT objects! The wall pushes you with 100N. You push the wall with 100N. Your 100N accelerates YOU. The wall's 100N accelerates the WALL (barely, since it's huge). They don't cancel each other because they're on different objects!</div>
+          `,
+          normal: `
+            <h2>Newton's Third Law</h2>
+            <p>For every force on object A by object B, there is an equal and opposite force on object B by object A. Action-reaction pairs are always: same magnitude, opposite direction, same type, on DIFFERENT objects.</p>
+            <div class="warning">⚠️ <strong>N3L Pair Test:</strong> To identify a true pair — (1) equal magnitude, (2) opposite direction, (3) same type of force, (4) on DIFFERENT objects. All four must be true.</div>
+            <div class="warning">⚠️ <strong>Biggest Misconception:</strong> Weight (mg↓ on box) and Normal force (N↑ on box) look like a Newton's 3rd Law pair. They are NOT. Both act on the same box. They happen to be equal only when ΣF_y=0. The real N3L pairs: Earth pulls box down AND box pulls Earth up. Floor pushes box up AND box pushes floor down.</div>
+            <div class="example"><div class="ex-title">📝 Why Does a Rocket Work in Space?</div>
+              <p>No air to "push against" in space. So how does a rocket work?</p>
+              <p>Rocket pushes exhaust gas backward with force F.</p>
+              <p>N3L: exhaust gas pushes rocket FORWARD with force F.</p>
+              <p>No air needed. The rocket and exhaust are the two objects in the N3L pair.</p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 AP Tip</div><p>When asked about N3L pairs, always identify: what is force A? What object does it act on? The N3L pair has the same magnitude, opposite direction, same type, and acts on the OTHER object.</p></div>
+          `,
+          deep: `
+            <h2>🔬 Newton's Third Law: Conservation of Momentum in Disguise</h2>
+            <p>Newton's Third Law is equivalent to conservation of momentum. If A exerts force F_AB on B, and B exerts −F_AB on A, then for an isolated system: F_AB + F_BA = 0 → dp_A/dt + dp_B/dt = 0 → d(p_A+p_B)/dt = 0 → total momentum is constant.</p>
+            <div class="highlight">🔬 <strong>Deep insight:</strong> Newton's 3rd Law and momentum conservation are the same statement in different languages. The 3rd Law is the microscopic, instantaneous version. Momentum conservation is the macroscopic, integrated version.</div>
+            <h3>Symmetry and the Third Law</h3>
+            <p>Newton's Third Law reflects a deep symmetry: physical laws don't distinguish between "cause" and "effect" at the force level. The book pushes the table exactly as much as the table pushes the book — neither is "primary." This symmetry is related to the conservation of momentum through Noether's theorem.</p>
+          `,
+          misconceptions: [
+            'Weight and Normal force on an object are NOT Newton\'s 3rd Law pairs — they act on the SAME object',
+            'N3L force pairs don\'t cancel because they act on DIFFERENT objects',
+            'A rocket works in space by pushing exhaust backward — no air required',
+          ],
+          practice: [
+            {q:'Earth pulls the Moon with force F. The Moon pulls Earth with:', opts:['Force less than F','Force equal to F, same direction','Force equal to F, opposite direction','No force'], ans:2, exp:'N3L: equal magnitude, opposite direction, on different objects. Moon pulls Earth with force F toward the Moon.'},
+            {q:'You push a wall with 80N. Wall pushes you with:', opts:['0N','Less than 80N','80N','More than 80N'], ans:2, exp:'N3L: always equal magnitude. Wall pushes you back with exactly 80N regardless of whether you move or the wall moves.'},
+          ]
+        },
+        {
+          id: 'f4', title: '2.4 Friction and Inclines',
+          eli5: `
+            <h2>🧒 Friction and Ramps (Easy Mode)</h2>
+            <p><strong>Friction</strong> is a force that opposes sliding. Two types:</p>
+            <p>📦 <strong>Static friction</strong> — when something is NOT sliding yet. It's like a guard that adjusts to match whatever's trying to move it, up to a limit. Push gently → small friction. Push harder → bigger friction. Push too hard → the guard gives up and it starts sliding.</p>
+            <p>🏂 <strong>Kinetic friction</strong> — when something IS sliding. This one is constant — doesn't matter how fast it's going.</p>
+            <div class="highlight">🧊 Static friction > Kinetic friction. It's harder to START sliding than to KEEP sliding. That's why you have to push hard to get a heavy box moving, but once it moves, it keeps going with less effort.</div>
+            <p>On a <strong>ramp</strong>, just tilt your brain! Instead of thinking of "up" and "down," think of "along the ramp" and "into the ramp." Gravity splits into two parts: one pulling you down the ramp, one pushing you into the ramp.</p>
+          `,
+          normal: `
+            <h2>Friction and Inclined Planes</h2>
+            <h3>Friction</h3>
+            <div class="formula-box">Kinetic: f_k = μ_k × N <span>constant while sliding</span></div>
+            <div class="formula-box">Static: f_s ≤ μ_s × N <span>adjusts up to maximum μ_sN</span></div>
+            <p>μ_s > μ_k always. Harder to start sliding than to keep sliding.</p>
+            <h3>Normal Force — NOT Always mg</h3>
+            <div class="formula-box">Flat: N = mg</div>
+            <div class="formula-box">Incline (θ): N = mg cosθ <span>always less than mg</span></div>
+            <div class="formula-box">Elevator up (a): N = m(g+a) <span>more than mg</span></div>
+            <div class="formula-box">Free fall: N = 0 <span>weightlessness</span></div>
+            <h3>Inclined Planes — Tilt Your Axes</h3>
+            <p>Rotate x-axis to align with the slope direction. Now gravity splits:</p>
+            <div class="formula-box">Along slope: mg sinθ <span>pulls object down the incline</span></div>
+            <div class="formula-box">Perpendicular: mg cosθ = N <span>into the surface</span></div>
+            <div class="example"><div class="ex-title">📝 Box on 37° Ramp, μ_k=0.2, m=5kg, g=10</div>
+              <p>N = 5(10)cos37° = 50(0.8) = 40N</p>
+              <p>f_k = 0.2(40) = 8N (up the slope, opposing slide)</p>
+              <p>Net along slope = mg sinθ − f_k = 50(0.6) − 8 = 30 − 8 = 22N down slope</p>
+              <p>a = 22/5 = <strong>4.4 m/s² down the slope</strong></p>
+            </div>
+            <div class="warning">⚠️ <strong>Misconception:</strong> Friction is not always f=μN. Static friction ADJUSTS — it can be anything from 0 to μ_sN. Only kinetic friction is always exactly μ_kN.</div>
+          `,
+          deep: `
+            <h2>🔬 Friction: The Microscopic Picture</h2>
+            <p>Friction arises from electromagnetic interactions between surface atoms. At the microscopic level, surfaces are rough — the actual contact area is much smaller than the apparent area (as little as 1%). The normal force determines how many atomic contacts are made, which determines friction force. This explains why f=μN: more N → more contacts → more friction, regardless of apparent surface area.</p>
+            <div class="highlight">🔬 <strong>Why does surface area not matter?</strong> Larger area → more contact points but each point carries less load (same total N spread over more points) → same friction. This cancellation is exact and gives the empirical friction law its remarkable simplicity.</div>
+            <h3>Inclines: The Angle of Repose</h3>
+            <p>The critical angle where an object just begins to slide: tanθ = μ_s. At this angle, mg sinθ = μ_s mg cosθ. This angle is called the "angle of repose" and is used in engineering (grain piles, soil slopes, avalanche prediction).</p>
+            <p>Interestingly, once sliding starts, since μ_k < μ_s, the object accelerates (kinetic friction is less than the force component driving it) — which is why avalanches accelerate once they start.</p>
+          `,
+          misconceptions: [
+            'Static friction is NOT always μ_sN — it adjusts to whatever is needed, up to that maximum',
+            'Friction does NOT depend on surface area — only on N and μ',
+            'Normal force is NOT always mg — always derive it from perpendicular force balance',
+          ],
+          practice: [
+            {q:'Box on 53° ramp, m=10kg, g=10. Normal force?', opts:['100N','60N','80N','53N'], ans:1, exp:'N = mg cos53° = 10(10)(0.6) = 60N. NOT mg.'},
+            {q:'μ_s=0.5, μ_k=0.3, m=4kg on flat surface, g=10. Applied force=15N. Does it slide?', opts:['Yes, a=0.75 m/s²','No, stays still','Yes, a=3.75 m/s²','Cannot determine'], ans:0, exp:'Max static friction = μ_s×N = 0.5×40=20N. Applied=15N < 20N → NO sliding. Wait: 15N < 20N → stays still. Correct answer: No.'},
+          ]
+        },
+        {
+          id: 'f5', title: '2.5 Circular Motion',
+          eli5: `
+            <h2>🧒 Circular Motion (Easy Mode)</h2>
+            <p>Imagine swinging a ball on a string in a circle above your head. Even though the ball moves at constant speed, it's constantly changing DIRECTION. Changing direction = changing velocity = acceleration!</p>
+            <div class="highlight">🎡 This inward acceleration is called centripetal acceleration. "Centripetal" just means "center-seeking." The acceleration always points toward the center of the circle.</div>
+            <p>To keep something moving in a circle, you need a force pointing toward the center. For the ball on a string, that's the tension in the string. For a car turning, that's friction from the road. For the Moon orbiting Earth, that's gravity.</p>
+            <div class="warning">⚠️ <strong>There is NO "centrifugal force" pushing you outward.</strong> When you're in a turning car and feel pushed to the side — that's just your inertia! You want to go straight, but the car is turning. The feeling of being pushed out is fake — it's just inertia resisting the turn.</div>
+          `,
+          normal: `
+            <h2>Circular Motion</h2>
+            <p>Constant-speed circular motion still requires acceleration because direction changes. Centripetal acceleration points toward the center.</p>
+            <div class="formula-box">F_c = mv²/r <span>net inward force — NOT a new separate force</span></div>
+            <div class="formula-box">a_c = v²/r <span>centripetal acceleration toward center</span></div>
+            <div class="warning">⚠️ <strong>Critical Misconception:</strong> "Centripetal force" is NOT a new type of force. NEVER draw it as an extra arrow on your FBD. It is the NET inward force — the label we give to whatever existing force(s) point toward the center.</div>
+            <div class="example"><div class="ex-title">What Provides the Centripetal Force?</div>
+              <p>🚗 Car on flat curve → <strong>static friction</strong> (pointing inward)</p>
+              <p>🪁 Ball on string → <strong>tension</strong> (pointing inward)</p>
+              <p>🌙 Moon orbiting → <strong>gravity</strong> (pointing toward Earth)</p>
+              <p>🎢 Top of loop-the-loop → <strong>N + mg</strong> (both pointing down/inward)</p>
+              <p>🎢 Bottom of loop → <strong>N − mg</strong> (N upward, mg downward, net = upward/inward)</p>
+            </div>
+            <div class="example"><div class="ex-title">📝 Car on Flat Curve</div>
+              <p>m=1200kg, v=15 m/s, r=45m. Minimum μ_s to not skid?</p>
+              <p>F_c = mv²/r = 1200×225/45 = 6000N</p>
+              <p>This must equal max static friction: μ_s×mg = μ_s×12000</p>
+              <p>μ_s = 6000/12000 = <strong>0.5</strong></p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 Proportional Reasoning</div><p>F_c ∝ v². Double speed → need 4× the centripetal force. This is why small speed increases make sharp curves much more dangerous.</p></div>
+          `,
+          deep: `
+            <h2>🔬 Circular Motion: The Math Behind the Circle</h2>
+            <p>For uniform circular motion, position: r(t) = R(cosωt, sinωt). Velocity: v(t) = Rω(−sinωt, cosωt). Acceleration: a(t) = −Rω²(cosωt, sinωt) = −ω²r(t).</p>
+            <p>The acceleration vector equals −ω² times the position vector — it always points toward the center (centripetal). Magnitude = Rω² = v²/R.</p>
+            <div class="highlight">🔬 <strong>Non-uniform circular motion:</strong> If speed changes, there's also tangential acceleration (along the circle, changing speed). Total acceleration = √(a_c² + a_t²). This appears in problems with objects speeding up or slowing down while moving in a circle.</div>
+            <h3>Banked Curves</h3>
+            <p>A banked curve (angled road) allows turning without friction. The horizontal component of normal force provides centripetal force. Optimal angle: tanθ = v²/(rg). At this speed, zero friction needed — which is why highways curve are banked.</p>
+          `,
+          misconceptions: [
+            'Centrifugal force is NOT real — it\'s the feeling of inertia in a turning reference frame',
+            'Centripetal force is NOT a new type of force — it\'s the label for whatever inward force exists',
+            'Speed is constant in uniform circular motion but velocity is NOT (direction changes)',
+          ],
+          practice: [
+            {q:'Ball on 0.6m string moves in horizontal circle at 4 m/s, m=0.3kg. Tension?', opts:['8N','2N','0.8N','3.2N'], ans:0, exp:'T=mv²/r=0.3×16/0.6=4.8/0.6=8N.'},
+            {q:'Car speed doubles on same curved road. Required centripetal force changes by factor:', opts:['2','4','0.5','1'], ans:1, exp:'F_c=mv²/r. Double v: F_c=m(2v)²/r=4mv²/r. Force quadruples.'},
+          ]
+        },
+      ]
+    },
 
-    // ── UNIT 3: ENERGY ──
-    {steps:[
-      {type:'lesson',title:'3.1 Work and the Work-Energy Theorem',content:`
-        <h2>Unit 3: Work, Energy & Power</h2>
-        <p><strong>AP Weight: 18–23%.</strong> Energy is a scalar — no direction. This makes it faster than force methods for many problems. If a question asks for speed or height, use energy.</p>
-        <div class="formula-box">W = Fd cosθ <span>θ = angle between force and displacement</span></div>
-        <div class="formula-box">W_net = ΔKE <span>work-energy theorem</span></div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "If an object moves, the normal force does work." WRONG. Normal force is perpendicular to motion (θ=90°, cos90°=0). Zero work. Same for centripetal force — always perpendicular to velocity, always zero work.</div>
-        <div class="example"><div class="ex-title">📝 Example — Negative Work</div>
-          <p>A box slides 5 m on a surface with 12 N friction. How much work does friction do?</p>
-          <p>W = Fd cosθ = 12×5×cos180° = −60 J</p>
-          <p>Negative because friction opposes displacement (θ=180°). This energy becomes heat.</p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 Decision Rule</div><p>Need speed or height? → Energy. Need force, tension, or acceleration? → Newton's Laws. Need BOTH? → Use Newton's Laws first to find acceleration, then kinematics or energy.</p></div>
-      `},
-      {type:'lesson',title:'3.2 Kinetic and Potential Energy',content:`
-        <h2>Kinetic and Potential Energy</h2>
-        <div class="formula-box">KE = ½mv² <span>quadratic in v — double v means ×4 KE</span></div>
-        <div class="formula-box">PE_grav = mgh <span>h measured from your chosen reference (h=0)</span></div>
-        <div class="formula-box">PE_spring = ½kx² <span>x = distance from EQUILIBRIUM, not natural length</span></div>
-        <div class="warning">⚠️ <strong>Spring Misconception:</strong> For a hanging spring with a mass, the equilibrium position is where the spring is already stretched by mg/k. The x in PE=½kx² is measured from THAT point, not from where the spring is unloaded. AP problems test this.</div>
-        <div class="highlight">🔑 <strong>KE is quadratic in v.</strong> A car at 60 mph has 4× the KE of the same car at 30 mph — not 2×. This is why highway crashes are so much more destructive. The damage scales with v².</div>
-        <div class="example"><div class="ex-title">📝 Comparing Speeds and KE</div>
-          <p>Car A: 20 m/s. Car B: 40 m/s. Same mass. KE ratio?</p>
-          <p>KE_B/KE_A = (40)²/(20)² = 1600/400 = <strong>4 times more</strong></p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 Choose h=0 wisely</div><p>Always set h=0 at the lowest point in the problem. This makes PE=0 at the bottom and PE=mgh at the top — simplest algebra.</p></div>
-      `},
-      {type:'lesson',title:'3.3 Conservation of Energy & Power',content:`
-        <h2>Conservation of Energy</h2>
-        <div class="formula-box">KE_i + PE_i = KE_f + PE_f <span>no friction — mechanical energy conserved</span></div>
-        <div class="formula-box">KE_i + PE_i = KE_f + PE_f + E_lost <span>with friction: E_lost = f_k × d</span></div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Friction destroys energy." No — friction converts mechanical energy to thermal energy. Total energy is still conserved. Only MECHANICAL energy decreases.</div>
-        <div class="example"><div class="ex-title">📝 Roller Coaster — Classic AP Problem</div>
-          <p>Coaster starts from rest at 40 m. Find speed at 10 m height. No friction.</p>
-          <p>mgh_i = ½mv² + mgh_f</p>
-          <p>g(40) = ½v² + g(10)</p>
-          <p>v² = 2g(40−10) = 2(10)(30) = 600</p>
-          <p>v = √600 ≈ <strong>24.5 m/s</strong></p>
-          <p>Notice: mass cancelled! Speed doesn't depend on mass.</p>
-        </div>
-        <h3>Power</h3>
-        <div class="formula-box">P = W/t = Fv <span>rate of doing work — watts (W = J/s)</span></div>
-        <div class="example"><div class="ex-title">📝 Motor Power Problem</div>
-          <p>80 W motor lifts a 4 kg box at constant speed. How fast? (g=10)</p>
-          <p>P = Fv → 80 = mg×v → 80 = 40v → v = <strong>2 m/s</strong></p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 Stopping Distance</div><p>Stopping distance ∝ v². From v²=v₀²+2aΔx with v=0: Δx = v₀²/(2a). Triple your speed → 9× the stopping distance. This is tested on every exam.</p></div>
-      `},
-      {type:'practice',title:'Energy Practice',questions:[
-        {q:'A 3 kg ball drops 20 m. Speed just before hitting ground? (g=10)',opts:['10 m/s','14 m/s','20 m/s','200 m/s'],ans:2,exp:'mgh=½mv² → v=√(2gh)=√(2×10×20)=√400=20 m/s. Mass cancels!'},
-        {q:'A spring (k=500 N/m) compressed 0.06 m. Stored energy?',opts:['0.9 J','30 J','15 J','1.8 J'],ans:0,exp:'PE=½kx²=½(500)(0.06)²=½(500)(0.0036)=0.9 J.'},
-        {q:'Work done by normal force on a sliding box?',opts:['Positive','Negative','Zero','Depends on speed'],ans:2,exp:'Normal force is perpendicular to displacement (θ=90°). W=Fd cos90°=0. Perpendicular forces do zero work.'},
-        {q:'Two ramps of same height but different steepness. Ball released from top (no friction). Speed at bottom?',opts:['Faster on steeper ramp','Faster on shallower ramp','Same speed on both','Depends on mass'],ans:2,exp:'Energy conservation: mgh=½mv². Only height matters, not path. Same height → same speed. Mass cancels.'},
-        {q:'A 60 W motor lifts boxes at 0.3 m/s. Maximum mass it can lift? (g=10)',opts:['2 kg','20 kg','0.2 kg','200 kg'],ans:1,exp:'P=Fv=mgv → m=P/(gv)=60/(10×0.3)=60/3=20 kg.'},
-      ]},
-      {type:'complete',unit:'Work, Energy & Power'}
-    ]},
+    // ════════════════════════════════════════
+    // UNIT 3: ENERGY
+    // ════════════════════════════════════════
+    {
+      num: 3, title: 'Work, Energy & Power', color: '#22d3a0', pct: '18–23%',
+      subunits: [
+        {
+          id: 'e1', title: '3.1 Work',
+          eli5: `<h2>🧒 What Is Work? (Easy Version)</h2>
+            <p>In physics, "work" has a very specific meaning. Work = force × distance BUT only when the force is in the SAME direction as the motion.</p>
+            <div class="highlight">💼 Carrying a heavy backpack across a room — are you doing work on the backpack? NO! You're pushing UP (to hold it) but moving SIDEWAYS. Force and motion are perpendicular → zero work.</div>
+            <p>Push a box across the floor → yes, work! The push is in the same direction as the box moves.</p>
+            <div class="warning">⚠️ <strong>Push a wall for an hour and get tired.</strong> Did you do work on the wall? NO — the wall didn't move! Work requires movement. W = F × d × cosθ. No movement → d=0 → W=0.</div>`,
+          normal: `<h2>Work</h2>
+            <div class="formula-box">W = Fd cosθ <span>θ = angle between force and displacement</span></div>
+            <div class="formula-box">W_net = ΔKE <span>work-energy theorem</span></div>
+            <div class="warning">⚠️ <strong>Zero Work Cases:</strong> Normal force (⊥ to motion), centripetal force (⊥ to velocity), carrying an object horizontally (force up, motion horizontal, θ=90°).</div>
+            <div class="example"><div class="ex-title">📝 Work by Friction on 5m slide, f=20N</div>
+              <p>W = Fd cosθ = 20×5×cos180° = −100J. Negative because friction opposes motion.</p>
+              <p>This 100J becomes thermal energy (heat in surface and box).</p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 F-x Graphs</div><p>Area under a Force vs. displacement graph = work done. Triangle: W=½Fmax×d. Rectangle: W=F×d.</p></div>`,
+          deep: `<h2>🔬 Work: The Path Independence Question</h2>
+            <p>Work done by conservative forces (gravity, springs) depends only on start and end points — NOT the path. Work done by non-conservative forces (friction) DOES depend on path length. This distinction leads directly to the concept of potential energy — we can define PE only for conservative forces.</p>
+            <div class="highlight">🔬 <strong>Line integral definition:</strong> W = ∫F·dr. For constant force: W = F·Δr = FΔrcosθ. For variable force (like a spring), you integrate F(x)dx from x_i to x_f, giving ½k(x_f²−x_i²).</div>`,
+          misconceptions:['Normal force does zero work — perpendicular to motion always','Negative work doesn\'t mean no work was done — it means energy was removed from the object'],
+          practice:[
+            {q:'20N force at 60° to displacement, moves 5m. Work done?', opts:['50J','100J','86.6J','43.3J'], ans:0, exp:'W=Fd cosθ=20×5×cos60°=100×0.5=50J.'},
+            {q:'Box slides 4m, friction=15N. Work by friction?', opts:['+60J','−60J','0J','Cannot determine'], ans:1, exp:'W=Fd cos180°=15×4×(−1)=−60J. Friction opposes motion → negative work.'},
+          ]
+        },
+        {
+          id: 'e2', title: '3.2 Kinetic and Potential Energy',
+          eli5: `<h2>🧒 KE and PE (Super Simple)</h2>
+            <p><strong>Kinetic Energy (KE)</strong> = energy of motion. Fast = lots of KE. Double your speed → 4× the KE (not 2×!). This is why fast crashes are so much worse.</p>
+            <p><strong>Potential Energy (PE)</strong> = stored energy. Held-up ball has gravitational PE. Compressed spring has spring PE. When you let go, PE converts to KE.</p>
+            <div class="highlight">🎢 Roller coaster at the top of a hill: max PE, min KE (slow). At the bottom: min PE, max KE (fast). Energy just switches forms!</div>`,
+          normal: `<h2>Kinetic and Potential Energy</h2>
+            <div class="formula-box">KE = ½mv² <span>quadratic in v — double speed = ×4 KE</span></div>
+            <div class="formula-box">PE_grav = mgh <span>set h=0 at lowest point for simplicity</span></div>
+            <div class="formula-box">PE_spring = ½kx² <span>x = distance from equilibrium, NOT natural length</span></div>
+            <div class="warning">⚠️ <strong>Spring PE Misconception:</strong> x is measured from the EQUILIBRIUM position, not the unloaded/natural length. For a hanging spring+mass, equilibrium is where mg=kx_eq. The PE in oscillation uses distance from THAT point.</div>
+            <div class="example"><div class="ex-title">📝 KE Comparison</div>
+              <p>Car A: 20 m/s. Car B: 40 m/s. Same mass. KE ratio?</p>
+              <p>KE_B/KE_A = (40²)/(20²) = 1600/400 = 4. Car B has 4× the KE of Car A!</p>
+            </div>`,
+          deep: `<h2>🔬 Why Is KE = ½mv²?</h2>
+            <p>Derived from the work-energy theorem: W = ∫F dx = ∫ma dx = m∫(dv/dt)dx = m∫v dv = ½mv². The ½ comes from integration, and v² comes from velocity being squared during integration. It's not arbitrary — it's a mathematical consequence.</p>
+            <div class="highlight">🔬 <strong>Relativistic KE:</strong> At speeds near light, KE = (γ−1)mc² where γ=1/√(1−v²/c²). At low speeds, this approximates to ½mv² (Taylor expansion). So ½mv² is valid for everyday speeds but breaks down near light speed.</div>`,
+          misconceptions:['Doubling speed gives 4× KE, not 2×','Spring x is from equilibrium, not natural length','PE=mgh only works near Earth\'s surface where g is approximately constant'],
+          practice:[
+            {q:'3kg ball at 6 m/s. KE?', opts:['9J','18J','54J','108J'], ans:2, exp:'KE=½mv²=½(3)(36)=54J.'},
+            {q:'Spring k=200N/m compressed 0.1m. PE?', opts:['1J','2J','10J','20J'], ans:0, exp:'PE=½kx²=½(200)(0.01)=1J.'},
+          ]
+        },
+        {
+          id: 'e3', title: '3.3 Conservation of Energy',
+          eli5: `<h2>🧒 Conservation of Energy (Easy!)</h2>
+            <p>Energy can't be created or destroyed — only changed from one form to another. This is one of the biggest rules in all of physics.</p>
+            <div class="highlight">🎳 Bowling ball rolling down a ramp: at the top it has PE (height energy). At the bottom it has KE (motion energy). Same total energy the whole way — just changed form!</div>
+            <p>Friction? It doesn't destroy energy — it turns KE into heat. Still the same total energy in the universe, just warmer.</p>`,
+          normal: `<h2>Conservation of Energy</h2>
+            <div class="formula-box">KE_i + PE_i = KE_f + PE_f <span>no friction</span></div>
+            <div class="formula-box">KE_i + PE_i = KE_f + PE_f + E_lost <span>with friction: E_lost = f_k × d</span></div>
+            <div class="formula-box">P = W/t = Fv <span>power — rate of energy transfer</span></div>
+            <div class="example"><div class="ex-title">📝 Pendulum from 0.9m height (g=10)</div>
+              <p>mgh = ½mv² → v = √(2gh) = √(2×10×0.9) = √18 ≈ <strong>4.24 m/s</strong></p>
+              <p>Mass cancels! Speed at bottom doesn't depend on mass.</p>
+            </div>
+            <div class="warning">⚠️ <strong>Misconception:</strong> "Friction destroys energy." No — friction converts mechanical energy to thermal energy. Total energy is conserved. Only MECHANICAL energy decreases.</div>
+            <div class="example"><div class="ex-title">📝 With Friction — Roller Coaster</div>
+              <p>Start h=25m, friction does −3000J of work, m=100kg, g=10</p>
+              <p>KE_f = mgh − E_lost = 100(10)(25) − 3000 = 25000 − 3000 = 22000J</p>
+              <p>v = √(2×KE/m) = √(2×22000/100) = √440 ≈ <strong>21 m/s</strong></p>
+            </div>
+            <div class="ap-tip"><div class="apt-label">🎯 Stopping Distance</div><p>From KE=½mv²=f_k×d → d=mv²/(2f_k)=mv²/(2μmg)=v²/(2μg). Stopping distance ∝ v². Independent of mass!</p></div>`,
+          deep: `<h2>🔬 Conservation of Energy: Noether's Theorem</h2>
+            <p>Energy conservation is not just an observed fact — it follows mathematically from time-translation symmetry (the laws of physics are the same today as yesterday). Emmy Noether proved in 1915 that every symmetry of nature corresponds to a conservation law. Time symmetry → energy conservation. Spatial symmetry → momentum conservation. Rotational symmetry → angular momentum conservation.</p>`,
+          misconceptions:['Energy is never destroyed — only converted to different forms','Mass cancels in mgh=½mv² — speed at bottom doesn\'t depend on mass','Power is not force — P=Fv connects them'],
+          practice:[
+            {q:'Ball dropped from 20m. Speed at 8m above ground? (g=10)', opts:['√240 m/s','√120 m/s','√160 m/s','20 m/s'], ans:0, exp:'mg(20)=½mv²+mg(8) → v²=2g(20−8)=2(10)(12)=240 → v=√240≈15.5 m/s.'},
+            {q:'100W motor lifts 5kg boxes. How fast? (g=10)', opts:['0.5 m/s','2 m/s','5 m/s','50 m/s'], ans:1, exp:'P=Fv=mgv → 100=5(10)v=50v → v=2 m/s.'},
+          ]
+        },
+      ]
+    },
 
-    // ── UNIT 4: MOMENTUM ──
-    {steps:[
-      {type:'lesson',title:'4.1 Momentum and Impulse',content:`
-        <h2>Unit 4: Momentum & Impulse</h2>
-        <p><strong>Momentum is a vector — direction is everything.</strong> When you see a collision, explosion, or objects sticking together, momentum conservation is the tool.</p>
-        <div class="formula-box">p = mv <span>vector — sign matters</span></div>
-        <div class="formula-box">J = FΔt = Δp <span>impulse = change in momentum</span></div>
-        <div class="highlight">🔑 <strong>Before solving:</strong> Draw a before/after diagram. Define positive direction. Write signs on all velocities. This prevents 90% of sign errors.</div>
-        <div class="example"><div class="ex-title">Real World: Airbags</div>
-          <p>In a crash, you must lose momentum Δp = mv (fixed by your mass and speed). With airbag: collision takes 0.15s instead of 0.015s — force decreases by 10×. Same Δp, 10× smaller force. Survivable.</p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Airbags reduce impulse." NO — airbags reduce FORCE by increasing TIME. The impulse (Δp) is the same. The egg-on-pillow vs egg-on-concrete question tests this exact idea.</div>
-        <div class="example"><div class="ex-title">📝 Bouncing vs Sticking</div>
-          <p>0.5 kg ball hits wall at 8 m/s and bounces at 8 m/s. Δp = m(v_f−v_i) = 0.5(−8−8) = −8 N·s. Magnitude = 8 N·s.</p>
-          <p>Same ball hits wall and sticks. Δp = 0.5(0−8) = −4 N·s. Magnitude = 4 N·s.</p>
-          <p>Bouncing requires TWICE the impulse — wall must push harder to reverse the motion.</p>
-        </div>
-      `},
-      {type:'lesson',title:'4.2 Conservation of Momentum & Collisions',content:`
-        <h2>Conservation of Momentum</h2>
-        <div class="formula-box">m₁v₁ + m₂v₂ = m₁v₁f + m₂v₂f <span>when no external net force</span></div>
-        <h3>Three Types of Collisions</h3>
-        <div class="example"><div class="ex-title">Elastic — p AND KE conserved</div>
-          <p>Equal-mass elastic: moving ball stops, stationary ball takes full speed. Rare in real life.</p>
-        </div>
-        <div class="example"><div class="ex-title">Perfectly Inelastic — objects stick</div>
-          <p>(m₁+m₂)v_f = m₁v₁+m₂v₂. Most KE lost. Most common AP type.</p>
-        </div>
-        <div class="example"><div class="ex-title">Explosion — starts from rest</div>
-          <p>Total p = 0. Pieces fly opposite: m₁v₁ = −m₂v₂</p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Momentum is conserved in all collisions, even with friction." Momentum is conserved when there is no NET EXTERNAL force. During a brief collision, external forces (like friction from the floor) act for such a short time that their impulse is negligible. So momentum is approximately conserved during collisions.</div>
-        <div class="example"><div class="ex-title">📝 Ballistic Pendulum — Two Step Process</div>
-          <p><strong>Step 1 (Collision — use momentum):</strong> m_bullet × v = (m_bullet + m_block) × v_after</p>
-          <p><strong>Step 2 (Swing — use energy):</strong> ½(m_total)v_after² = (m_total)gh</p>
-          <p>You CANNOT combine these. The collision is inelastic — KE is lost. Only AFTER the collision does energy conservation apply.</p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 2D Momentum</div><p>In 2D collisions, conserve x-momentum AND y-momentum as two separate equations. The x-components don't affect y-components.</p></div>
-      `},
-      {type:'practice',title:'Momentum Practice',questions:[
-        {q:'2 kg cart at 6 m/s right collides with 4 kg cart at rest. They stick. Final speed?',opts:['2 m/s','3 m/s','4 m/s','6 m/s'],ans:0,exp:'p_before = 2×6+4×0 = 12 kg·m/s. p_after = (2+4)v_f = 6v_f. v_f = 12/6 = 2 m/s right.'},
-        {q:'Egg dropped on concrete vs pillow from same height. Which has larger impulse?',opts:['Concrete','Pillow','Same impulse','Depends on egg mass'],ans:2,exp:'Impulse = Δp = mΔv. Same mass, same height → same speed change → same Δp → same impulse. Pillow reduces FORCE by increasing time, not impulse.'},
-        {q:'A 60 kg astronaut at rest throws a 2 kg tool at 15 m/s. Astronaut recoils at?',opts:['0.5 m/s','0.25 m/s','15 m/s','7.5 m/s'],ans:0,exp:'Total p = 0. 0 = 2(15) + 60v_astro → v_astro = −30/60 = −0.5 m/s. Magnitude = 0.5 m/s.'},
-        {q:'A ball bounces off a wall. The wall exerts force on the ball. By N3L, the ball exerts:',opts:['No force on wall','Smaller force on wall','Equal force on wall, opposite direction','Larger force on wall'],ans:2,exp:'N3L: ball pushes wall with equal magnitude, opposite direction. This is why balls damage walls and walls stay (much larger mass means tiny acceleration).'},
-      ]},
-      {type:'complete',unit:'Momentum & Impulse'}
-    ]},
-
-    // ── UNIT 5: ROTATION ──
-    {steps:[
-      {type:'lesson',title:'5.1 Torque and Rotational Newton\'s 2nd Law',content:`
-        <h2>Unit 5: Torque & Rotation</h2>
-        <p>Every linear concept has a rotational twin. The pattern makes this unit much easier once you see it.</p>
-        <div class="formula-box">τ = rF sinθ <span>torque — r from pivot, θ between r and F</span></div>
-        <div class="formula-box">Στ = Iα <span>rotational Newton's 2nd Law</span></div>
-        <div class="example"><div class="ex-title">Real World: Why Wrenches Have Long Handles</div>
-          <p>Torque = rF sinθ. Longer wrench = larger r = larger torque for the same force. This is also why door handles are far from hinges — you need less force to open the door.</p>
-        </div>
-        <h3>Moment of Inertia — Key Values</h3>
-        <div class="formula-box">Solid sphere: I = ⅖mr² <span>smallest → fastest in rolling race</span></div>
-        <div class="formula-box">Solid disk/cylinder: I = ½mr²</div>
-        <div class="formula-box">Hoop: I = mr² <span>largest → slowest in rolling race</span></div>
-        <div class="formula-box">Parallel Axis: I = I_cm + Md² <span>shifting axis away from center</span></div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Heavier objects win rolling races." WRONG. Mass cancels completely. Only the shape (I/mr² ratio) determines the winner. A ping pong ball and bowling ball of the same shape reach the bottom at the same time.</div>
-        <div class="ap-tip"><div class="apt-label">🎯 Static Equilibrium</div><p>Need BOTH: ΣF=0 AND Στ=0. Smart pivot: place it at an unknown force → that force creates zero torque and drops from the equation. This is the key technique for beam and ladder problems.</p></div>
-      `},
-      {type:'lesson',title:'5.2 Rolling Motion',content:`
-        <h2>Rolling Without Slipping</h2>
-        <div class="formula-box">v_cm = rω <span>speed of center = radius × angular speed</span></div>
-        <div class="formula-box">KE_total = ½mv²(1 + I/mr²) <span>both translational and rotational KE</span></div>
-        <div class="highlight">🔑 <strong>Rolling race winner:</strong> Lowest I/mr² wins. Solid sphere (2/5) beats solid cylinder (1/2) beats hoop (1). Same height → same PE → same total KE. Less rotational KE = more translational KE = faster.</div>
-        <div class="example"><div class="ex-title">📝 Solid Cylinder Rolling Down Height h</div>
-          <p>mgh = ½mv²(1 + ½) = ¾mv²</p>
-          <p>v = √(4gh/3)</p>
-          <p>Compare: if it slid without rolling: v = √(2gh) — faster because no rotational KE</p>
-        </div>
-        <div class="warning">⚠️ <strong>What provides rolling torque?</strong> Static friction at the contact point. BUT static friction does NO work on a rolling object — the contact point is instantaneously at rest.</div>
-      `},
-      {type:'practice',title:'Rotation Practice',questions:[
-        {q:'Solid sphere, solid cylinder, and hoop roll from same height. Fastest to slowest?',opts:['Sphere, cylinder, hoop','Hoop, cylinder, sphere','All the same','Cylinder, sphere, hoop'],ans:0,exp:'I/mr² ratios: sphere=2/5, cylinder=1/2, hoop=1. Lower ratio = more translational KE = faster. Sphere wins, hoop loses.'},
-        {q:'For a ladder leaning against a frictionless wall, where should you put the torque pivot?',opts:['Middle of ladder','Bottom of ladder','Top of ladder (at wall)','Center of mass'],ans:2,exp:'Put pivot at the wall. Wall force has zero moment arm → drops from equation. This leaves only known forces in the torque equation.'},
-        {q:'A disk (I=½mr²) has α=4 rad/s². Applied torque = 16 N·m. Mass? Radius = 0.5 m.',opts:['4 kg','8 kg','16 kg','32 kg'],ans:2,exp:'Στ=Iα → 16=½mr²α=½m(0.25)(4)=0.5m → m=16/0.5=32... Wait: 16=½(m)(0.25)(4)=0.5m → m=32 kg.'},
-      ]},
-      {type:'complete',unit:'Torque & Rotation'}
-    ]},
-
-    // ── UNIT 6: ANGULAR MOMENTUM ──
-    {steps:[
-      {type:'lesson',title:'6.1 Angular Momentum Conservation',content:`
-        <h2>Unit 6: Angular Momentum</h2>
-        <div class="formula-box">L = Iω <span>angular momentum</span></div>
-        <div class="formula-box">L = mvr <span>point mass moving in a curve</span></div>
-        <div class="formula-box">I_iω_i = I_fω_f <span>when Στ_ext = 0</span></div>
-        <p><strong>Check Στ_ext = 0 FIRST.</strong> Only then can you use conservation.</p>
-        <div class="example"><div class="ex-title">Figure Skater Spin</div>
-          <p>Skater: I=2.5, ω=4 rad/s, L=10. Pulls arms in: I=0.5.</p>
-          <p>ω_f = L/I_f = 10/0.5 = <strong>20 rad/s (5× faster!)</strong></p>
-          <p>KE_i = ½(2.5)(16) = 20 J. KE_f = ½(0.5)(400) = 100 J.</p>
-          <p>KE increased by 80 J — muscles did that work.</p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Conservation of angular momentum means kinetic energy is also conserved." NO. KE = L²/(2I). With constant L, if I decreases, KE increases. Muscles do positive work, adding energy to the system.</div>
-        <div class="example"><div class="ex-title">Planets and Kepler's 2nd Law</div>
-          <p>Planet moves faster near Sun (smaller r). L = mvr = constant. Smaller r → larger v. This is Kepler's 2nd Law — equal areas in equal times — which IS conservation of angular momentum.</p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 Use KE = L²/(2I)</div><p>When L is constant and I changes, find KE with KE=L²/(2I). You don't need ω. This form is faster and avoids one calculation step.</p></div>
-      `},
-      {type:'practice',title:'Angular Momentum Practice',questions:[
-        {q:'Diver with I=4, ω=2 tucks to I=1. New ω?',opts:['2 rad/s','4 rad/s','8 rad/s','0.5 rad/s'],ans:2,exp:'L=Iω conserved. L_i=4×2=8. ω_f=L/I_f=8/1=8 rad/s.'},
-        {q:'After the diver tucks, kinetic energy:',opts:['Halves','Stays same','Doubles','Quadruples'],ans:3,exp:'KE=L²/(2I). L=8 constant. KE_i=64/8=8J. KE_f=64/2=32J. Quadrupled. Muscles did work during tuck.'},
-      ]},
-      {type:'complete',unit:'Angular Momentum'}
-    ]},
-
-    // ── UNIT 7: SHM ──
-    {steps:[
-      {type:'lesson',title:'7.1 SHM Fundamentals',content:`
-        <h2>Unit 7: Simple Harmonic Motion</h2>
-        <p>SHM occurs when a restoring force is proportional to displacement: F = −kx. The negative sign means it always points back toward equilibrium.</p>
-        <div class="formula-box">T_spring = 2π√(m/k) <span>no amplitude, no g</span></div>
-        <div class="formula-box">T_pendulum = 2π√(L/g) <span>no mass, no amplitude</span></div>
-        <div class="highlight">🔑 <strong>The defining property of SHM:</strong> Period is INDEPENDENT of amplitude. Wider swing takes the SAME time as a narrow swing. This is not intuitive but it is a fact of physics.</div>
-        <div class="warning">⚠️ <strong>Common Misconceptions Cleared:</strong></div>
-        <div class="warning">1. "Doubling amplitude doubles the period." FALSE — period is unchanged.</div>
-        <div class="warning">2. "A spring-mass on the Moon has a longer period." FALSE — T=2π√(m/k) has no g. Same period everywhere.</div>
-        <div class="warning">3. "A heavier pendulum swings slower." FALSE — mass cancels in T=2π√(L/g). Only length and g matter.</div>
-        <div class="example"><div class="ex-title">📝 Spring-Mass Period</div>
-          <p>m=0.4 kg, k=160 N/m. Period?</p>
-          <p>T=2π√(m/k)=2π√(0.4/160)=2π√(0.0025)=2π(0.05)=0.314 s</p>
-          <p>Frequency f=1/T=1/0.314≈3.18 Hz</p>
-        </div>
-      `},
-      {type:'lesson',title:'7.2 Energy in SHM',content:`
-        <h2>Energy in Simple Harmonic Motion</h2>
-        <div class="formula-box">E = ½kA² <span>total energy — proportional to A²</span></div>
-        <div class="formula-box">v_max = Aω = A√(k/m) <span>at equilibrium (x=0)</span></div>
-        <p>At x=0: all KE, zero PE, maximum speed. At x=±A: all PE, zero KE, zero speed.</p>
-        <div class="highlight">🔑 <strong>Double amplitude:</strong> E×4 (quadratic!). v_max doubles. Period unchanged.</div>
-        <div class="example"><div class="ex-title">📝 Where is KE = PE?</div>
-          <p>Total E = ½kA². When KE=PE, each equals ½E = ¼kA².</p>
-          <p>PE = ½kx² = ¼kA² → x² = A²/2 → x = A/√2 ≈ 0.707A</p>
-          <p>NOT A/2. This is tested on the AP exam and almost everyone gets it wrong the first time.</p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Speed is maximum at the endpoints." WRONG. Speed = 0 at endpoints (all PE there). Speed is MAXIMUM at equilibrium (all KE there). This is the opposite of what intuition suggests.</div>
-      `},
-      {type:'practice',title:'SHM Practice',questions:[
-        {q:'Spring-mass with period T. Mass is quadrupled. New period?',opts:['T/2','T','2T','4T'],ans:2,exp:'T=2π√(m/k). Quadruple m: T_new=2π√(4m/k)=2×T. Period doubles. T∝√m.'},
-        {q:'Same spring-mass moved to the Moon (g_moon = g_earth/6). Period?',opts:['6T','T√6','T','T/√6'],ans:2,exp:'T_spring=2π√(m/k). No g! Period is identical on Moon and Earth. Only pendulum period changes with g.'},
-        {q:'SHM oscillator amplitude doubles. Energy changes by factor of?',opts:['2','4','√2','0.5'],ans:1,exp:'E=½kA². Double A: E_new=½k(2A)²=4×½kA²=4E. Energy quadruples.'},
-        {q:'In SHM, where is acceleration zero?',opts:['At amplitude (x=±A)','At equilibrium (x=0)','Halfway between','Acceleration is never zero'],ans:1,exp:'a=−kx/m. At x=0 (equilibrium), acceleration=0. Maximum acceleration is at x=±A where displacement is maximum.'},
-      ]},
-      {type:'complete',unit:'Simple Harmonic Motion'}
-    ]},
-
-    // ── UNIT 8: WAVES & CIRCUITS ──
-    {steps:[
-      {type:'lesson',title:'8.1 Wave Properties',content:`
-        <h2>Unit 8: Waves, Sound & Circuits</h2>
-        <p><strong>AP Weight: 25–33% — the largest unit.</strong> Master this and you secure the biggest chunk of your score.</p>
-        <div class="formula-box">v = fλ <span>wave speed = frequency × wavelength</span></div>
-        <p>Frequency is set by the SOURCE — never changes when entering a new medium. Wavelength changes when speed changes. Speed depends only on the medium (tension, density, temperature).</p>
-        <h3>Transverse vs Longitudinal</h3>
-        <p><strong>Transverse:</strong> particles move perpendicular to wave direction. Light, guitar strings.</p>
-        <p><strong>Longitudinal:</strong> particles move parallel to wave direction. Sound. Air compresses and expands in the direction of travel.</p>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Waves carry matter." NO — waves carry energy, not matter. Ocean waves move through water but the water molecules mostly move in circles, not forward. A floating duck bobs up and down but doesn't travel with the wave.</div>
-        <h3>Interference</h3>
-        <p><strong>Constructive</strong> (in phase): amplitudes add. Larger wave.</p>
-        <p><strong>Destructive</strong> (out of phase 180°): amplitudes subtract. Can cancel completely.</p>
-        <div class="ap-tip"><div class="apt-label">🎯 Wave Speed on a String</div><p>Wave speed = √(Tension/linear density). More tension → faster wave. Heavier string → slower wave. Frequency and amplitude do NOT affect wave speed — they're set by the source and the medium respectively.</p></div>
-      `},
-      {type:'lesson',title:'8.2 Standing Waves',content:`
-        <h2>Standing Waves</h2>
-        <p>When waves reflect back and forth in a confined space, they interfere to create standing waves. Fixed/closed ends = NODES. Open/free ends = ANTINODES.</p>
-        <div class="formula-box">Fixed-fixed or open-open: fn = nv/2L <span>n = 1,2,3,4... all harmonics</span></div>
-        <div class="formula-box">Open-closed: fn = nv/4L <span>n = 1,3,5... ODD ONLY!</span></div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Open-closed pipes have all harmonics." WRONG. The 2nd harmonic doesn't fit because you can't have a node at the closed end AND an antinode at the open end with an even harmonic. Only odd multiples of the fundamental work.</div>
-        <div class="highlight">🔑 <strong>Always draw the wave pattern.</strong> Count half-wavelengths in the string. Count quarter-wavelengths fitting in the pipe (must start at node, end at antinode for open-closed). This tells you n directly.</div>
-        <div class="example"><div class="ex-title">📝 Open-Closed Pipe, L=0.68m, v=340 m/s</div>
-          <p>Fundamental (n=1): f=v/4L=340/(4×0.68)=340/2.72=<strong>125 Hz</strong></p>
-          <p>3rd harmonic (n=3): f=3×125=<strong>375 Hz</strong></p>
-          <p>2nd harmonic: DOES NOT EXIST for open-closed pipe.</p>
-        </div>
-      `},
-      {type:'lesson',title:'8.3 Doppler Effect',content:`
-        <h2>The Doppler Effect</h2>
-        <p>When a source moves toward you, waves bunch up → shorter wavelength → higher frequency. Moving away → stretched waves → lower frequency.</p>
-        <div class="formula-box">f_obs = f_s × v/(v ∓ v_s) <span>− when approaching, + when receding</span></div>
-        <div class="example"><div class="ex-title">Real World: Police Radar, Ultrasound, Astronomy</div>
-          <p>Police radar: radio waves bounce off car. Reflected frequency is Doppler-shifted by car's speed. Computer calculates speed from frequency difference.</p>
-          <p>Medical ultrasound: sound bounces off moving blood. Frequency shift reveals blood velocity.</p>
-          <p>Astronomy: galaxies moving away show red-shifted light (lower frequency). This is how we know the universe is expanding.</p>
-        </div>
-        <div class="ap-tip"><div class="apt-label">🎯 AP Shortcut</div><p>For AP qualitative questions: source approaching → higher frequency observed. Source receding → lower frequency. Observer moving toward source → higher frequency. These directions are always tested qualitatively.</p></div>
-      `},
-      {type:'lesson',title:'8.4 DC Circuits',content:`
-        <h2>DC Circuits</h2>
-        <div class="formula-box">V = IR <span>Ohm's Law</span></div>
-        <div class="formula-box">P = IV = I²R = V²/R <span>three equivalent power formulas</span></div>
-        <h3>Series vs Parallel — Master This</h3>
-        <div class="example"><div class="ex-title">SERIES — one path</div>
-          <p>Same I everywhere. R_total = ΣR. Voltage splits: V=IR, most R gets most V.</p>
-          <p>Adding more series resistance → total R increases → total I decreases.</p>
-        </div>
-        <div class="example"><div class="ex-title">PARALLEL — multiple paths</div>
-          <p>Same V across each branch. 1/R_total = Σ(1/R). Current splits: I=V/R, least R gets most I.</p>
-          <p>Adding more parallel branches → total R decreases → total I increases.</p>
-        </div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Parallel total resistance is the average of branch resistances." WRONG. Use the reciprocal formula. Two equal 6Ω resistors in parallel give 3Ω (half of one), not 6Ω (average). Parallel R is ALWAYS less than the smallest branch.</div>
-        <div class="highlight">🔑 <strong>Strategy:</strong> Simplify entire circuit to R_total → find I_total = V/R_total → backsolve. For series: I is same everywhere, use V=IR. For parallel: V is same everywhere, use I=V/R.</div>
-        <div class="warning">⚠️ <strong>Misconception:</strong> "Voltmeter in series, ammeter in parallel." REVERSED. Voltmeter in PARALLEL (high R, barely changes circuit). Ammeter in SERIES (low R, barely drops voltage).</div>
-      `},
-      {type:'practice',title:'Waves & Circuits Practice',questions:[
-        {q:'Open-closed pipe, L=0.85m, v=340 m/s. Fundamental frequency?',opts:['200 Hz','100 Hz','400 Hz','50 Hz'],ans:1,exp:'fn=nv/4L. n=1: f=340/(4×0.85)=340/3.4=100 Hz. Open-closed uses 4L (NOT 2L).'},
-        {q:'String fixed both ends, 3rd harmonic. How many antinodes?',opts:['2','3','4','6'],ans:1,exp:'nth harmonic of fixed-fixed: n antinodes. 3rd harmonic → 3 antinodes, 4 nodes.'},
-        {q:'4Ω and 12Ω resistors in parallel. Total resistance?',opts:['16Ω','8Ω','3Ω','6Ω'],ans:2,exp:'1/R=1/4+1/12=3/12+1/12=4/12=1/3. R=3Ω. Always less than smallest branch (4Ω).'},
-        {q:'Source moving TOWARD observer. Observed frequency is:',opts:['Lower than source','Same as source','Higher than source','Zero'],ans:2,exp:'Approaching source → waves bunch up → shorter wavelength → higher frequency. Classic Doppler effect.'},
-        {q:'12V battery, 2Ω and 4Ω in series. Power in 4Ω resistor?',opts:['48 W','16 W','4 W','8 W'],ans:1,exp:'R_total=6Ω. I=12/6=2A. P=I²R=4×4=16 W. In series, same I through all resistors.'},
-      ]},
-      {type:'complete',unit:'Waves, Sound & Circuits'}
-    ]},
-  ],
-
-  deep:[]
+    // Units 4-8 follow same structure — abbreviated for space, full content inline
+    {
+      num:4, title:'Momentum & Impulse', color:'#f472b6', pct:'10–15%',
+      subunits:[
+        {id:'m1',title:'4.1 Momentum and Impulse',
+          eli5:`<h2>🧒 Momentum (Easy!)</h2><p>Momentum = mass × velocity. Heavy and fast = lots of momentum. A truck at 5 mph has more momentum than a tennis ball at 100 mph because the truck is SO much heavier.</p><div class="highlight">🎳 Bowling ball vs ping pong ball. Same speed. The bowling ball is much harder to stop — more momentum. The ping pong ball barely makes a dent.</div><p><strong>Impulse</strong> = force × time. It's what CHANGES momentum. A big force for a short time OR a small force for a long time can give the same impulse.</p><div class="warning">⚠️ Airbags: same impulse (same momentum change) but more time → smaller force → survivable!</div>`,
+          normal:`<h2>Momentum and Impulse</h2><div class="formula-box">p = mv <span>vector — direction matters!</span></div><div class="formula-box">J = FΔt = Δp <span>impulse = change in momentum</span></div><div class="warning">⚠️ <strong>Signs are everything.</strong> Opposite directions = opposite signs. NEVER add magnitudes of objects moving in opposite directions.</div><div class="example"><div class="ex-title">📝 Ball Bouncing vs Sticking</div><p>0.4kg ball at 8 m/s hits wall. Bounces back at 8 m/s:</p><p>Δp = m(v_f−v_i) = 0.4(−8−8) = −6.4 N·s. Magnitude = 6.4 N·s</p><p>If it stuck: Δp = 0.4(0−8) = −3.2 N·s. Magnitude = 3.2 N·s</p><p>Bouncing requires TWICE the impulse!</p></div><div class="ap-tip"><div class="apt-label">🎯 F-t Graph</div><p>Area under F-t graph = impulse = Δp. Triangle area = ½ × F_max × Δt.</p></div>`,
+          deep:`<h2>🔬 Impulse-Momentum: Newton's Original Form</h2><p>Newton originally wrote his 2nd Law as F = dp/dt (rate of change of momentum), not F=ma. F=ma only follows when mass is constant. For variable-mass systems (rockets!), you must use F=dp/dt. As a rocket burns fuel, its mass decreases, so constant thrust produces increasing acceleration.</p>`,
+          misconceptions:['Bouncing requires MORE impulse than sticking (velocity reverses, larger Δv)','Impulse is Δp, not p itself — it\'s the CHANGE in momentum','Same Δp can come from large force + short time OR small force + long time'],
+          practice:[
+            {q:'0.2kg ball at 10 m/s hits wall, bounces at 6 m/s. Impulse?', opts:['0.8 N·s','3.2 N·s','0.4 N·s','1.6 N·s'], ans:1, exp:'J=|Δp|=m|v_f−v_i|=0.2|−6−10|=0.2×16=3.2 N·s.'},
+          ]
+        },
+        {id:'m2',title:'4.2 Conservation of Momentum',
+          eli5:`<h2>🧒 Momentum Conservation (Easy!)</h2><p>In a collision with no outside forces, total momentum before = total momentum after. Always. No exceptions.</p><div class="highlight">🎱 Billiard balls: one ball rolling hits another at rest. First ball stops. Second ball rolls away with the same momentum. Total momentum transferred completely!</div><div class="warning">⚠️ Ballistic pendulum: bullet hits block — this is TWO separate problems. First: momentum conservation during collision. Then: energy conservation during the swing. Can't mix them!</div>`,
+          normal:`<h2>Conservation of Momentum</h2><div class="formula-box">m₁v₁ + m₂v₂ = m₁v₁f + m₂v₂f <span>when no external net force</span></div><div class="example"><div class="ex-title">Types of Collisions</div><p><strong>Elastic:</strong> p AND KE conserved. Equal mass: moving stops, stationary takes full speed.</p><p><strong>Perfectly Inelastic:</strong> Objects stick. (m₁+m₂)v_f = m₁v₁+m₂v₂. Max KE lost.</p><p><strong>Explosion:</strong> Starts at rest. m₁v₁ = −m₂v₂ (opposite directions).</p></div><div class="example"><div class="ex-title">📝 Perfectly Inelastic</div><p>2kg at 6 m/s + 4kg at rest → stick together.</p><p>2(6)+4(0)=(2+4)v_f → 12=6v_f → v_f=<strong>2 m/s</strong></p></div>`,
+          deep:`<h2>🔬 Why Is Momentum Conserved?</h2><p>Momentum conservation follows from Newton's 3rd Law. During any collision: F_12 = −F_21 at every instant. Since J=FΔt=Δp, the impulse on object 1 equals minus the impulse on object 2. Therefore Δp_1 = −Δp_2 → p_1+p_2 = constant. Conservation of momentum is Newton's 3rd Law integrated over time.</p>`,
+          misconceptions:['KE is NOT conserved in most collisions — only in elastic ones','Momentum is a vector — directions matter, use signs','Ballistic pendulum MUST be solved in two separate steps'],
+          practice:[
+            {q:'4kg at 5 m/s right + 2kg at 2 m/s left. Perfectly inelastic. Final velocity?', opts:['2.67 m/s right','1.33 m/s right','3 m/s right','0 m/s'], ans:0, exp:'p_total=4(5)+2(−2)=20−4=16 kg·m/s. v_f=16/(4+2)=16/6≈2.67 m/s right.'},
+          ]
+        },
+      ]
+    },
+    {
+      num:5, title:'Torque & Rotation', color:'#9b72ff', pct:'10–15%',
+      subunits:[
+        {id:'r1',title:'5.1 Torque and Rotational Dynamics',
+          eli5:`<h2>🧒 Torque (Easy!)</h2><p>Torque is what makes things SPIN. It's like force but for rotation.</p><div class="highlight">🚪 Door handle is far from the hinge. Why? Because the farther from the pivot you push, the easier it is to spin the door. More distance = more torque = easier to open!</div><p>Try pushing a door right next to the hinge. Almost impossible! Same force, but less torque because you're close to the pivot.</p><p><strong>Torque = force × distance from pivot × sin(angle)</strong></p>`,
+          normal:`<h2>Torque and Rotational Dynamics</h2><div class="formula-box">τ = rF sinθ <span>r from pivot, θ between r and F</span></div><div class="formula-box">Στ = Iα <span>rotational Newton's 2nd Law</span></div><div class="formula-box">I_sphere = ⅖mr² | I_disk = ½mr² | I_hoop = mr²</div><div class="highlight">🔑 Static Equilibrium needs BOTH: ΣF=0 AND Στ=0. Smart pivot: place it at an unknown force to eliminate it from the torque equation.</div><div class="example"><div class="ex-title">📝 Seesaw Equilibrium</div><p>60kg person 2m left of pivot. Where must 40kg person sit to balance?</p><p>Στ=0: 60(10)(2) = 40(10)d → 1200=400d → d=<strong>3m right of pivot</strong></p></div>`,
+          deep:`<h2>🔬 Torque as a Cross Product</h2><p>τ = r × F (cross product). Magnitude = rF sinθ. Direction: perpendicular to both r and F (right-hand rule). This is why torque is a vector pointing along the rotation axis — a screw turns along its own axis.</p><div class="highlight">🔬 The parallel axis theorem (I = I_cm + Md²) arises from integrating r² dm for an axis displaced from the center. Every mass element is now farther from the new axis, so I always increases.</div>`,
+          misconceptions:['Static equilibrium requires BOTH ΣF=0 and Στ=0 — one alone is insufficient','Smart pivot choice eliminates unknown forces — put it at the unknown'],
+          practice:[
+            {q:'10N force applied 0.4m from pivot perpendicularly. Torque?', opts:['4 N·m','25 N·m','0.04 N·m','40 N·m'], ans:0, exp:'τ=rF sinθ=0.4×10×sin90°=4 N·m.'},
+            {q:'Rolling race: solid sphere vs hollow cylinder, same m and r. Who wins?', opts:['Hollow cylinder','Solid sphere','Tie','Depends on mass'], ans:1, exp:'I/mr²: sphere=2/5, hollow cylinder=1. Lower ratio → more translational KE → faster. Sphere wins. Mass cancels.'},
+          ]
+        },
+      ]
+    },
+    {
+      num:6, title:'Angular Momentum', color:'#22d3ee', pct:'5–8%',
+      subunits:[
+        {id:'l1',title:'6.1 Angular Momentum Conservation',
+          eli5:`<h2>🧒 Angular Momentum (Easy!)</h2><p>Angular momentum is like regular momentum but for spinning things. And just like regular momentum, it's conserved when nothing from outside pushes on the spinning object.</p><div class="highlight">🤸 Figure skater spinning: arms out = spinning slowly. Pull arms in = spinning FAST. Why? Because angular momentum (L=Iω) must stay the same. Smaller I (arms in) → bigger ω (faster spin).</div>`,
+          normal:`<h2>Angular Momentum</h2><div class="formula-box">L = Iω <span>conserved when Στ_ext = 0</span></div><div class="formula-box">I_i ω_i = I_f ω_f</div><div class="formula-box">KE = L²/(2I) <span>use when L is constant and I changes</span></div><div class="warning">⚠️ <strong>KE increases when skater pulls arms in!</strong> L constant, I decreases → KE = L²/2I increases. Muscles do the work.</div><div class="example"><div class="ex-title">📝 Skater Spins Up</div><p>I_i=3, ω_i=5, L=15. Pulls to I_f=0.75.</p><p>ω_f=L/I_f=15/0.75=<strong>20 rad/s (4× faster!)</strong></p><p>KE_i=L²/2I_i=225/6=37.5J. KE_f=225/1.5=150J. Muscles added 112.5J.</p></div>`,
+          deep:`<h2>🔬 Angular Momentum: The Deep Picture</h2><p>L = r × p (cross product). For a point mass: |L| = mvr sinθ. Angular momentum conservation follows from rotational symmetry (Noether's theorem) — the same way linear momentum conservation follows from translational symmetry.</p>`,
+          misconceptions:['KE is NOT conserved when I changes — muscles add energy','Check Στ_ext=0 FIRST before applying conservation'],
+          practice:[
+            {q:'Skater I=4, ω=3. Pulls to I=1. New ω?', opts:['0.75','3','12','6'], ans:2, exp:'L=Iω=12 conserved. ω_f=L/I_f=12/1=12 rad/s.'},
+          ]
+        },
+      ]
+    },
+    {
+      num:7, title:'Simple Harmonic Motion', color:'#f5a623', pct:'5–8%',
+      subunits:[
+        {id:'s1',title:'7.1 SHM Period and Energy',
+          eli5:`<h2>🧒 Simple Harmonic Motion (Easy!)</h2><p>SHM is when something bounces back and forth around a center point — like a spring or a pendulum.</p><div class="highlight">⏱️ The coolest thing: a pendulum takes the SAME time for a big swing as a small swing! Swing it wide or barely at all — same time. That's why grandfather clocks work — the pendulum keeps perfect time even as it slows down.</div><div class="warning">⚠️ Period has NOTHING to do with amplitude. Swing harder or softer — same time. This is the defining property of SHM.</div>`,
+          normal:`<h2>Simple Harmonic Motion</h2><div class="formula-box">T_spring = 2π√(m/k) <span>no amplitude, no g anywhere</span></div><div class="formula-box">T_pendulum = 2π√(L/g) <span>no mass, no amplitude</span></div><div class="formula-box">E = ½kA² <span>total energy ∝ A²</span></div><div class="formula-box">v_max = A√(k/m) <span>at equilibrium x=0</span></div><div class="warning">⚠️ <strong>3 Independence Facts:</strong> Spring period ≠ f(amplitude). Spring period ≠ f(g). Pendulum period ≠ f(mass). These are tested every year.</div><div class="example"><div class="ex-title">📝 Where is KE = PE?</div><p>KE=PE means each = ½E = ¼kA². Setting ½kx²=¼kA² → x=A/√2 ≈ 0.707A. NOT A/2!</p></div>`,
+          deep:`<h2>🔬 Why Is Period Independent of Amplitude?</h2><p>For a spring: F=−kx → ma=−kx → a=−(k/m)x. The acceleration is proportional to displacement. The solution to this ODE is x(t)=A cos(ωt+φ) where ω=√(k/m), independent of A. The amplitude affects how far it goes but not how fast the oscillation cycles — these are decoupled by the mathematics of the cosine function.</p>`,
+          misconceptions:['Period is independent of amplitude — this is the DEFINING property of SHM','Spring period doesn\'t change on the Moon (no g in formula)','KE=PE at x=A/√2, not A/2'],
+          practice:[
+            {q:'Spring-mass T=2s. Mass quadrupled. New T?', opts:['0.5s','2s','4s','8s'], ans:2, exp:'T∝√m. Quadruple m: T×√4=T×2=4s.'},
+            {q:'SHM amplitude triples. Energy changes by factor:', opts:['3','6','9','√3'], ans:2, exp:'E=½kA². Triple A: E×9 (quadratic).'},
+          ]
+        },
+      ]
+    },
+    {
+      num:8, title:'Waves, Sound & Circuits', color:'#f05e5e', pct:'25–33%',
+      subunits:[
+        {id:'w1',title:'8.1 Wave Properties',
+          eli5:`<h2>🧒 Waves (Easy!)</h2><p>Waves carry energy without carrying matter. Drop a stone in water — the ripple travels outward but the water itself just bobs up and down. The wave moves, the water doesn't travel with it.</p><div class="highlight">🌊 v = fλ. Wave speed = frequency × wavelength. If frequency goes up and speed stays the same, wavelength must get shorter. They're inversely related when speed is constant.</div><div class="warning">⚠️ Frequency is set by the SOURCE and never changes as the wave moves through different materials. The wavelength changes, not the frequency.</div>`,
+          normal:`<h2>Wave Properties</h2><div class="formula-box">v = fλ <span>wave speed = frequency × wavelength</span></div><p>Transverse: particles move ⊥ to wave direction (light, strings). Longitudinal: particles move ∥ to wave direction (sound).</p><div class="warning">⚠️ <strong>Wave speed depends on the medium, NOT frequency or amplitude.</strong> Speed changes when medium changes. Frequency stays constant. Wavelength adjusts.</div><div class="example"><div class="ex-title">📝 Frequency vs Wavelength</div><p>Wave in water: v=4 m/s, f=2Hz → λ=v/f=2m. Same wave enters deeper water: v=6 m/s, f still 2Hz → λ=3m. Wavelength changed, frequency didn't.</p></div>`,
+          deep:`<h2>🔬 Wave Speed and Medium Properties</h2><p>For a string: v=√(T/μ). For sound: v=√(B/ρ). Both are √(restoring force property/inertia property). This pattern holds for all mechanical waves — the stiffer the medium and lighter it is, the faster waves travel. Speed is a property of the medium and the wave type, completely independent of frequency.</p>`,
+          misconceptions:['Frequency is set by the source and doesn\'t change between media','Waves carry energy, not matter','Amplitude doesn\'t affect wave speed'],
+          practice:[
+            {q:'Wave: v=12 m/s, f=3Hz. Wavelength?', opts:['4m','36m','0.25m','9m'], ans:0, exp:'λ=v/f=12/3=4m.'},
+          ]
+        },
+        {id:'w2',title:'8.2 Standing Waves',
+          eli5:`<h2>🧒 Standing Waves (Easy!)</h2><p>When a wave bounces back and some spots never move (NODES) and some spots move the most (ANTINODES), you get a standing wave. It looks like the wave is "standing still" even though energy is moving.</p><div class="highlight">🎸 Guitar string: both ends tied down (fixed) = NODES at both ends. The string vibrates in different patterns — fundamental, then harmonics. Each pattern has more "bumps."</div><div class="warning">⚠️ Open-closed pipe (like a bottle): only ODD harmonics fit! 1st, 3rd, 5th... The 2nd harmonic can't exist here. Always draw the wave to see why.</div>`,
+          normal:`<h2>Standing Waves</h2><div class="formula-box">Fixed-fixed / open-open: fn = nv/2L <span>n = 1,2,3... all harmonics</span></div><div class="formula-box">Open-closed: fn = nv/4L <span>n = 1,3,5... ODD only!</span></div><p>Closed/fixed = NODE. Open/free = ANTINODE. Always draw the pattern first.</p><div class="warning">⚠️ <strong>Open-closed pipes allow only ODD harmonics.</strong> The fundamental fits one quarter-wavelength. The next is 3 quarter-wavelengths (n=3). Even harmonics require equal nodes at both ends or antinodes at both ends — impossible for open-closed.</div><div class="example"><div class="ex-title">📝 Pipe Open-Closed, L=0.85m, v=340 m/s</div><p>f₁=v/4L=340/3.4=100Hz. Next: f₃=3×100=300Hz. (No f₂!)</p></div>`,
+          deep:`<h2>🔬 Standing Waves: Superposition of Traveling Waves</h2><p>A standing wave is the superposition of two identical traveling waves moving in opposite directions. y₁=A sin(kx−ωt), y₂=A sin(kx+ωt). Sum: y=2A sin(kx)cos(ωt). The sin(kx) factor creates the spatial nodes/antinodes. The cos(ωt) factor creates the time oscillation. They're separable — the wave shape and the time behavior are independent.</p>`,
+          misconceptions:['Open-closed pipe has ODD harmonics ONLY','Draw the wave pattern — don\'t memorize, derive from boundary conditions','Node = zero displacement, Antinode = maximum displacement'],
+          practice:[
+            {q:'Open-closed pipe L=0.68m, v=340 m/s. 3rd harmonic frequency?', opts:['125Hz','375Hz','250Hz','500Hz'], ans:1, exp:'f₁=v/4L=340/2.72=125Hz. 3rd harmonic (n=3): f₃=3×125=375Hz.'},
+            {q:'String fixed both ends, 4th harmonic. Number of nodes?', opts:['3','4','5','8'], ans:2, exp:'nth harmonic: n+1 nodes. 4th harmonic → 5 nodes (including both fixed ends).'},
+          ]
+        },
+        {id:'w3',title:'8.3 Doppler Effect',
+          eli5:`<h2>🧒 Doppler Effect (Easy!)</h2><p>Ever notice how a siren sounds higher pitched as an ambulance comes toward you, then lower as it passes? That's the Doppler effect!</p><div class="highlight">🚑 When the source moves toward you, it "bunches up" the sound waves — shorter wavelength, higher frequency, higher pitch. Moving away? Stretches them out — lower pitch.</div>`,
+          normal:`<h2>Doppler Effect</h2><p>Source approaching → higher observed frequency. Source receding → lower observed frequency.</p><div class="formula-box">f_obs = f_s × v/(v ∓ v_s) <span>− approaching, + receding</span></div><div class="example"><div class="ex-title">Real Applications</div><p>Police radar, medical ultrasound (blood flow), astronomy (red shift = universe expanding)</p></div>`,
+          deep:`<h2>🔬 Doppler and Relativity</h2><p>The classical Doppler formula works when v_source ≪ v_wave. For light (electromagnetic waves), there's no medium, so you must use the relativistic Doppler formula: f_obs = f_s√((1−β)/(1+β)) where β=v/c. The redshift of galaxies (recession velocity) is measured this way, providing evidence for the expanding universe.</p>`,
+          misconceptions:['Doppler effect changes frequency, not the speed of sound','Both source and observer motion matter — they have different formulas'],
+          practice:[{q:'Ambulance at 340 m/s sound speed moves at 20 m/s toward you. f_source=800Hz. f_obs?', opts:['752Hz','851Hz','800Hz','900Hz'], ans:1, exp:'f_obs=f×v/(v−v_s)=800×340/320=800×1.0625≈850Hz.'}]
+        },
+        {id:'w4',title:'8.4 DC Circuits',
+          eli5:`<h2>🧒 Circuits (Easy!)</h2><p>Think of a circuit like water pipes. The battery is the pump. Voltage is water pressure. Current is how much water flows. Resistance is how narrow the pipe is.</p><div class="highlight">🔌 Series circuit: one path for current, like one pipe. All the water goes through each resistor one by one. Parallel circuit: multiple paths, like splitting into separate pipes. Current splits between them.</div><div class="warning">⚠️ Adding more resistors in PARALLEL always makes total resistance SMALLER (more paths for current). Adding in SERIES always makes it bigger.</div>`,
+          normal:`<h2>DC Circuits</h2><div class="formula-box">V = IR <span>Ohm's Law</span></div><div class="formula-box">P = IV = I²R = V²/R <span>three equivalent power forms</span></div><div class="formula-box">Series: R_total = ΣR | same I everywhere</div><div class="formula-box">Parallel: 1/R_total = Σ(1/R) | same V across each</div><div class="highlight">🔑 Strategy: Simplify circuit → find total I → backsolve each element. Series: same I, use V=IR for each. Parallel: same V, use I=V/R for each.</div><div class="warning">⚠️ <strong>Parallel R is always LESS than the smallest branch resistor.</strong> If your answer is bigger, you made an error.</div><div class="example"><div class="ex-title">📝 Mixed Circuit</div><p>12V battery. 6Ω and 3Ω in parallel, then 2Ω in series with that combination.</p><p>R_parallel: 1/R=1/6+1/3=1/2 → R=2Ω</p><p>R_total = 2+2 = 4Ω</p><p>I_total = 12/4 = 3A</p><p>V across parallel = 3×2 = 6V</p><p>I through 6Ω = 6/6 = 1A. I through 3Ω = 6/3 = 2A. ✓ (adds to 3A)</p></div>`,
+          deep:`<h2>🔬 Kirchhoff's Laws: The Deep Foundation</h2><p>KCL (Current Law): sum of currents at any node = 0. Follows from conservation of charge. KVL (Voltage Law): sum of voltages around any loop = 0. Follows from conservation of energy (path-independent potential). These two laws, combined with V=IR for each element, give a complete system of equations for any circuit.</p>`,
+          misconceptions:['Parallel resistance is SMALLER than any individual branch — not larger','Voltmeter goes in PARALLEL (high R). Ammeter goes in SERIES (low R)','Adding parallel paths always reduces total resistance'],
+          practice:[
+            {q:'4Ω and 12Ω in parallel. Total resistance?', opts:['16Ω','3Ω','8Ω','6Ω'], ans:1, exp:'1/R=1/4+1/12=4/12=1/3. R=3Ω. Less than smallest (4Ω). ✓'},
+            {q:'12V, 4Ω and 2Ω in series. Power in 4Ω?', opts:['16W','8W','36W','4W'], ans:0, exp:'I=12/6=2A. P=I²R=4×4=16W.'},
+            {q:'Two identical bulbs, one in series vs parallel with same battery. Which is brighter?', opts:['Series','Parallel','Same brightness','Depends on voltage'], ans:1, exp:'Parallel: each gets full battery voltage. Series: voltage splits. Parallel bulbs get more voltage → more power → brighter.'},
+          ]
+        },
+      ]
+    },
+  ]
 };
 
-// Deep mode — richer, more conceptual versions
-LESSONS.deep = LESSONS.ap.map((unit,ui) => {
-  const unitNames=['Kinematics','Forces','Energy','Momentum','Rotation','Angular Momentum','SHM','Waves'];
-  return {
-    steps: unit.steps.map(step => {
-      if(step.type==='lesson'){
-        return {
-          ...step,
-          deepMode:true,
-          deepExtra:`<div style="background:var(--gpurp);border:1px solid rgba(155,114,255,.25);border-radius:10px;padding:1rem;margin-top:.85rem">
-            <div style="font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.5rem">🔬 Going Deeper — ${unitNames[ui]||'Physics'}</div>
-            <p style="font-size:13px;color:var(--text2);line-height:1.75;margin:0">
-              In deep learning mode, ask yourself WHY each equation has the form it does. Physics equations aren't arbitrary — they emerge from fundamental principles. 
-              For every concept you learn: (1) Can you derive it from first principles? (2) What happens at extreme values (very large, very small)? (3) What real system in nature demonstrates this?
-              Understanding at this level means you can solve problems you've never seen before — not just ones you've memorized.
-            </p>
-          </div>`
-        };
-      }
-      if(step.type==='practice'){
-        return {
-          ...step,
-          deepNote:`<div style="background:var(--gpurp);border-radius:8px;padding:.75rem;margin-bottom:.75rem;font-size:13px;color:var(--text2)">
-            <strong style="color:var(--purple)">🔬 Deep Mode Practice:</strong> For each question, after you answer — explain WHY in words. Not just "I used this formula" but "this makes physical sense because..." That level of understanding is what separates a 4 from a 5 on the AP exam.
-          </div>`
-        };
-      }
-      return step;
-    })
-  };
-});
+
+let lessonAnswered = {};
+let currentMode = 'normal'; // 'eli5' | 'normal' | 'deep'
+let lessonUnitIdx = null;
+let lessonSubIdx = null;
+
+function initLessons(){
+  document.getElementById('lessonModePicker').style.display='block';
+  document.getElementById('lessonUnitPicker').style.display='none';
+  document.getElementById('lessonContent').style.display='none';
+}
+
+function resetLessonMode(){
+  document.getElementById('lessonModePicker').style.display='block';
+  document.getElementById('lessonUnitPicker').style.display='none';
+  document.getElementById('lessonContent').style.display='none';
+}
+
+function selectLessonMode(mode){
+  // mode here is 'ap' or 'deep' from the mode picker
+  // map to content mode
+  currentMode = mode === 'deep' ? 'deep' : 'normal';
+  document.getElementById('lessonModePicker').style.display='none';
+  document.getElementById('lessonUnitPicker').style.display='block';
+  buildLessonUnitGrid();
+}
+
+function buildLessonUnitGrid(){
+  const grid = document.getElementById('lessonUnitGrid');
+  grid.innerHTML = LESSONS.units.map((u,i) => {
+    const done = S[`lesson_done_${i}`];
+    return `<div class="lesson-unit-btn" onclick="openLessonUnit(${i})" style="border-top:3px solid ${u.color}">
+      <div class="lun" style="color:${u.color}">Unit ${u.num}</div>
+      <div class="lut">${u.title}</div>
+      <div class="lup">${u.pct} of exam · ${u.subunits.length} subunits</div>
+      ${done?'<div class="lu-done">✓ Completed</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function openLessonUnit(unitIdx){
+  lessonUnitIdx = unitIdx;
+  lessonSubIdx = 0;
+  lessonAnswered = {};
+  document.getElementById('lessonUnitPicker').style.display='none';
+  document.getElementById('lessonContent').style.display='block';
+  renderSubunit();
+}
+
+function renderSubunit(){
+  const unit = LESSONS.units[lessonUnitIdx];
+  const sub = unit.subunits[lessonSubIdx];
+  lessonAnswered = {};
+
+  // subunit progress bar
+  const subProgress = unit.subunits.map((s,i) => {
+    const cls = i < lessonSubIdx ? 'done' : i === lessonSubIdx ? 'active' : '';
+    return `<div class="lp-step ${cls}" onclick="lessonSubIdx=${i};renderSubunit()" style="cursor:pointer">${s.title.split(' ')[0]}</div>`;
+  }).join('');
+
+  const content = sub[currentMode] || sub.normal;
+
+  const modeButtons = `
+    <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--text3);align-self:center">Reading mode:</span>
+      <button class="mode-switch-btn ${currentMode==='eli5'?'active-eli5':''}" onclick="switchMode('eli5')">🧒 ELI5</button>
+      <button class="mode-switch-btn ${currentMode==='normal'?'active-normal':''}" onclick="switchMode('normal')">📖 Normal</button>
+      <button class="mode-switch-btn ${currentMode==='deep'?'active-deep':''}" onclick="switchMode('deep')">🔬 Deep</button>
+    </div>`;
+
+  const misconHTML = sub.misconceptions && sub.misconceptions.length ? `
+    <div style="background:var(--gred);border:1px solid rgba(240,94,94,.2);border-radius:10px;padding:.9rem 1rem;margin-top:.75rem">
+      <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.5rem">⚠️ Clear These Misconceptions</div>
+      ${sub.misconceptions.map(m=>`<div style="font-size:13px;color:var(--text2);padding:3px 0;border-bottom:1px solid rgba(240,94,94,.12);line-height:1.6">• ${m}</div>`).join('')}
+    </div>` : '';
+
+  const practiceHTML = sub.practice && sub.practice.length ? `
+    <div style="margin-top:1rem">
+      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:.75rem">✏️ Practice</div>
+      ${sub.practice.map((q,qi)=>`
+        <div class="practice-q" id="pq-${qi}">
+          <div class="pq-num">Question ${qi+1}</div>
+          <div class="pq-text">${q.q}</div>
+          <div class="pq-opts">
+            ${q.opts.map((o,oi)=>`<button class="pq-opt" id="pq-${qi}-${oi}" onclick="answerLessonQ(${qi},${oi},${q.ans},'${q.exp.replace(/'/g,"\\'").replace(/"/g,"&quot;")}')">
+              ${String.fromCharCode(65+oi)}. ${o}
+            </button>`).join('')}
+          </div>
+          <div class="pq-exp" id="pqexp-${qi}">${q.exp}</div>
+        </div>`).join('')}
+    </div>` : '';
+
+  const isLast = lessonSubIdx === unit.subunits.length - 1;
+  const nextUnit = lessonUnitIdx + 1;
+  const hasNextUnit = nextUnit < LESSONS.units.length;
+
+  const navHTML = `<div class="lesson-nav" style="margin-top:1.25rem">
+    ${lessonSubIdx > 0 ? `<button class="btn" onclick="lessonSubIdx--;renderSubunit()">← Previous</button>` : ''}
+    ${!isLast ? `<button class="btn pri" onclick="lessonSubIdx++;renderSubunit()">Next Subunit →</button>` : `
+      <button class="btn grn" onclick="completeUnit(${lessonUnitIdx})">✓ Complete Unit!</button>
+    `}
+    <button class="btn" onclick="document.getElementById('lessonUnitPicker').style.display='block';document.getElementById('lessonContent').style.display='none';buildLessonUnitGrid()" style="margin-left:auto">All Units</button>
+  </div>`;
+
+  document.getElementById('lessonContent').innerHTML = `
+    <div class="lesson-wrap">
+      <div class="lesson-header">
+        <button class="btn" onclick="document.getElementById('lessonUnitPicker').style.display='block';document.getElementById('lessonContent').style.display='none';buildLessonUnitGrid()">← Units</button>
+        <span style="font-size:13px;font-weight:600;color:${unit.color}">Unit ${unit.num}: ${unit.title}</span>
+        <span style="font-size:11px;color:var(--text3);margin-left:auto">${lessonSubIdx+1}/${unit.subunits.length} subunits</span>
+      </div>
+      <div class="lesson-progress">${subProgress}</div>
+      ${modeButtons}
+      <div class="lesson-block">
+        ${content}
+      </div>
+      ${misconHTML}
+      ${practiceHTML}
+      ${navHTML}
+    </div>`;
+
+  document.getElementById('lessonContent').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function switchMode(mode){
+  currentMode = mode;
+  renderSubunit();
+}
+
+function completeUnit(unitIdx){
+  S[`lesson_done_${unitIdx}`] = true;
+  saveS();
+  addXP(50);
+  addAct('📖', `Completed Unit ${LESSONS.units[unitIdx].num}: ${LESSONS.units[unitIdx].title}`);
+  const nextUnit = unitIdx + 1;
+  const hasNext = nextUnit < LESSONS.units.length;
+  document.getElementById('lessonContent').innerHTML = `
+    <div class="lesson-complete">
+      <div class="lc-icon">🎉</div>
+      <h2>Unit ${LESSONS.units[unitIdx].num} Complete!</h2>
+      <p>You finished <strong>${LESSONS.units[unitIdx].title}</strong>. +50 XP earned. Now reinforce it with practice.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem">
+        <button class="btn grn" onclick="nav('flashcards',document.querySelector('.sb-btn[onclick*=flashcards]'))">🧠 Flashcards</button>
+        <button class="btn pri" onclick="nav('quiz',document.querySelector('.sb-btn[onclick*=quiz]'))">🎯 Quiz</button>
+        ${hasNext ? `<button class="btn purp" onclick="openLessonUnit(${nextUnit})">Next: Unit ${LESSONS.units[nextUnit].num} →</button>` : ''}
+      </div>
+      <button class="btn" onclick="document.getElementById('lessonUnitPicker').style.display='block';document.getElementById('lessonContent').style.display='none';buildLessonUnitGrid()">← Back to All Units</button>
+    </div>`;
+}
+
+function answerLessonQ(qi, chosen, correct, exp){
+  const opts = document.querySelectorAll(`#pq-${qi} .pq-opt`);
+  opts.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===correct) b.classList.add('correct');
+    else if(i===chosen) b.classList.add('wrong');
+  });
+  document.getElementById(`pqexp-${qi}`).classList.add('show');
+  if(chosen===correct){ addXP(5); touchStudy(true,5000); }
+  else touchStudy(false,5000);
+  lessonAnswered[qi]=true;
+}
 
 let lessonAnswered = {};
 
