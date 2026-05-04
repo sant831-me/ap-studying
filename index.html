@@ -764,6 +764,50 @@ select.fselect{appearance:none;cursor:pointer;}
   .fsheet-grid,.dash-grid,.setup-grid,.plan-grid,.ch-opts{grid-template-columns:1fr;}
   .page{padding:1.25rem;}
 }
+
+/* ── DAILY REVIEW & LEARNING IMPROVEMENTS ── */
+.daily-task{display:flex;align-items:center;gap:10px;padding:8px 10px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;}
+.daily-task-ic{font-size:16px;width:24px;text-align:center;}
+.daily-task-txt{flex:1;font-size:13px;color:var(--text2);}
+.daily-task-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;}
+.daily-task-badge.due{background:var(--gred);color:var(--red);}
+.daily-task-badge.new{background:var(--gblue);color:var(--blue);}
+.daily-task-badge.review{background:var(--gamber);color:var(--amber);}
+.daily-task-badge.practice{background:var(--ggreen);color:var(--green);}
+.daily-task-btn{padding:4px 12px;border-radius:7px;border:1px solid var(--border2);
+  background:var(--s2);color:var(--text);font-size:12px;cursor:pointer;transition:all .15s;}
+.daily-task-btn:hover{background:var(--s3);}
+
+.subunit-chip{background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:7px 10px;cursor:pointer;transition:all .15s;}
+.subunit-chip:hover{border-color:var(--border2);}
+.subunit-chip .sc-title{font-size:12px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.subunit-chip .sc-bar{height:3px;background:var(--s3);border-radius:99px;overflow:hidden;margin-bottom:3px;}
+.subunit-chip .sc-fill{height:100%;border-radius:99px;transition:width .5s;}
+.subunit-chip .sc-meta{font-size:10.5px;color:var(--text3);}
+
+.recall-card{background:var(--s1);border:2px solid var(--blue);border-radius:13px;padding:1.5rem;margin-bottom:1rem;text-align:center;}
+.recall-card h3{font-size:14px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.75rem;}
+.recall-card .recall-q{font-size:16px;font-weight:500;margin-bottom:1.25rem;line-height:1.6;}
+.recall-input{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:8px;
+  color:var(--text);padding:10px 12px;font-size:13.5px;resize:vertical;min-height:80px;
+  outline:none;font-family:'Geist',sans-serif;transition:border-color .15s;}
+.recall-input:focus{border-color:var(--blue);}
+.recall-reveal{display:none;margin-top:1rem;background:var(--s2);border-radius:9px;padding:1rem;text-align:left;}
+.recall-reveal.show{display:block;}
+
+.flag-lesson-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;
+  border-radius:7px;border:1px solid rgba(245,166,35,.3);background:var(--gamber);
+  color:var(--amber);font-size:12px;cursor:pointer;transition:all .15s;margin-left:auto;}
+.flag-lesson-btn:hover{background:rgba(245,166,35,.2);}
+.flag-lesson-btn.flagged{background:var(--amber);color:#000;border-color:var(--amber);}
+
+.review-due-item{display:flex;align-items:center;gap:8px;padding:7px 10px;
+  background:var(--gred);border:1px solid rgba(240,94,94,.2);border-radius:8px;margin-bottom:5px;}
+.review-due-item .rdi-txt{flex:1;font-size:13px;}
+.review-due-item .rdi-time{font-size:11px;color:var(--red);font-weight:600;}
+
 </style>
 </head>
 <body>
@@ -828,6 +872,23 @@ select.fselect{appearance:none;cursor:pointer;}
 <div class="page on" id="p-dashboard">
   <div class="ptitle">Good to see you 👋</div>
   <p class="psub">Your AP Physics 1 command center. Study consistently — the streak is your most important number.</p>
+
+  <!-- DAILY REVIEW PANEL -->
+  <div id="dailyReviewPanel" style="background:linear-gradient(135deg,rgba(79,141,255,.12),rgba(155,114,255,.12));border:1px solid rgba(79,141,255,.25);border-radius:14px;padding:1.2rem 1.4rem;margin-bottom:1.4rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:15px;font-weight:700">📋 Today's Study Plan</div>
+        <div style="font-size:12px;color:var(--text3)" id="dailyDate"></div>
+      </div>
+      <div style="display:flex;gap:7px">
+        <button class="btn" onclick="nav('studyplan',document.querySelector('.sb-btn[onclick*=studyplan]'))">⚙ Set Exam Date</button>
+        <button class="btn pri" onclick="startDailyReview()">▶ Start Review</button>
+      </div>
+    </div>
+    <div id="dailyTaskList" style="display:flex;flex-direction:column;gap:6px"></div>
+    <div id="dailyEmpty" style="font-size:13px;color:var(--text3);display:none">Complete some lessons and quizzes first — your personalized plan will appear here.</div>
+  </div>
+
   <div class="dash-stats">
     <div class="dstat"><div class="dstat-val" id="dCards" style="color:var(--blue)">0</div><div class="dstat-lbl">Cards today</div><div class="dstat-ic">🧠</div></div>
     <div class="dstat"><div class="dstat-val" id="dAcc" style="color:var(--green)">—</div><div class="dstat-lbl">Accuracy today</div><div class="dstat-ic">✅</div></div>
@@ -847,6 +908,18 @@ select.fselect{appearance:none;cursor:pointer;}
   <div class="dash-grid">
     <div class="dcard"><h3>Session history (accuracy)</h3><div class="hist-bars" id="histBars"></div><div class="hist-labels" id="histLabels"></div></div>
     <div class="dcard"><h3>Recent activity</h3><div class="act-list" id="actList"><div class="act-item"><span class="act-ic">👋</span><span class="act-txt">Welcome! Start studying to see activity.</span><span class="act-t">now</span></div></div></div>
+  </div>
+
+  <!-- SUBUNIT MASTERY -->
+  <div class="dcard" style="margin-top:10px">
+    <h3>Subunit mastery — where to focus</h3>
+    <div id="subunitMastery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;margin-top:.5rem"></div>
+  </div>
+
+  <!-- LESSON REVIEW DUE -->
+  <div class="dcard" style="margin-top:10px">
+    <h3>📅 Lesson reviews due</h3>
+    <div id="lessonReviewDue" style="font-size:13px;color:var(--text3)">Study some lessons to see what needs review.</div>
   </div>
 </div>
 
@@ -1830,14 +1903,18 @@ const FRQ_BANK=[
 // ═══════════════════════════════════════════
 let S={
   xp:0,streak:0,lastDate:null,
-  srs:{},// cardId→{interval,ef,dueDate,reps,conf}
-  unitAcc:{},// unit→{correct,total,totalTime}
+  srs:{},
+  unitAcc:{},
+  subunitAcc:{},
   wrongLog:[],flagged:[],customCards:[],
   activity:[],
   todayCards:0,todayCorrect:0,todayTotal:0,
-  sessions:[],// [{date,acc,apScore}]
+  sessions:[],
   challengeScores:{speed:[],streak:[],sudden:[]},
-  planChecks:{},// dateStr→{taskIdx→bool}
+  planChecks:{},
+  lessonSRS:{},
+  subunitFlags:{},
+  recallAttempts:{},
 };
 
 function loadS(){
@@ -2842,6 +2919,10 @@ function refreshDash(){
   const predsData=S.sessions.slice(-7);
   document.getElementById('predBars').innerHTML=predsData.map(s=>`<div class="pred-bar" data-v="${s.apScore}" style="height:${s.apScore/5*100}%;background:${['','var(--red)','var(--red)','var(--amber)','var(--cyan)','var(--green)'][s.apScore]}"></div>`).join('')||'<div style="font-size:12px;color:var(--text3)">Complete exams/quizzes to see trend.</div>';
   document.getElementById('predLabels').innerHTML=predsData.map(s=>`<div class="pred-lbl-i">${s.date.split('/').slice(0,2).join('/')}</div>`).join('');
+  // New learning panels
+  try{renderDailyReview();}catch(e){}
+  try{renderSubunitMastery();}catch(e){}
+  try{renderLessonReviewDue();}catch(e){}
 }
 
 // ═══════════════════════════════════════════
@@ -3699,6 +3780,29 @@ function renderSubunit(){
   const isLast = lessonSubIdx === unit.subunits.length - 1;
   const nextUnit = lessonUnitIdx + 1;
   const hasNextUnit = nextUnit < LESSONS.units.length;
+  
+  // Active recall question
+  const recallQ = getRecallQuestion();
+  const recallHTML = recallQ ? `<div class="recall-card">
+    <h3>🧠 Active Recall</h3>
+    <p class="recall-q">${recallQ.q}</p>
+    <textarea class="recall-input" id="recallInput" placeholder="Try to answer from memory before revealing..."></textarea>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:.75rem">
+      <button class="btn" onclick="document.getElementById('recallReveal').classList.add('show')">Reveal Answer</button>
+    </div>
+    <div class="recall-reveal" id="recallReveal">
+      <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.4rem">✓ Answer</div>
+      <div style="font-size:13.5px;color:var(--text2);line-height:1.65">${recallQ.ans}</div>
+      <div style="display:flex;gap:8px;margin-top:.85rem;justify-content:center">
+        <button class="check-btn no" onclick="recordRecall('${recallQ.id}',false);this.closest('.recall-card').style.opacity='.5'">❌ Didn't know it</button>
+        <button class="check-btn yes" onclick="recordRecall('${recallQ.id}',true);this.closest('.recall-card').style.opacity='.5';addXP(5)">✓ Got it!</button>
+      </div>
+    </div>
+  </div>` : '';
+
+  // Flag button
+  const isFlagged = S.subunitFlags && S.subunitFlags[sub.id];
+  const flagHTML = `<button class="flag-lesson-btn ${isFlagged?'flagged':''}" onclick="toggleSubunitFlag('${sub.id}',this)" style="margin-bottom:.75rem">${isFlagged?'🚩 Flagged as confusing':'🚩 Flag as confusing'}</button>`;
 
   const navHTML = `<div class="lesson-nav" style="margin-top:1.25rem">
     ${lessonSubIdx > 0 ? `<button class="btn" onclick="lessonSubIdx--;renderSubunit()">← Previous</button>` : ''}
@@ -3721,7 +3825,9 @@ function renderSubunit(){
         ${content}
       </div>
       ${misconHTML}
+      ${recallHTML}
       ${practiceHTML}
+      ${flagHTML}
       ${navHTML}
     </div>`;
 
@@ -3737,6 +3843,10 @@ function completeUnit(unitIdx){
   S[`lesson_done_${unitIdx}`] = true;
   saveS();
   addXP(50);
+  // Set lesson SRS for all subunits in this unit
+  if(LESSONS&&LESSONS.units&&LESSONS.units[unitIdx]){
+    LESSONS.units[unitIdx].subunits.forEach(sub=>setLessonSRS(sub.id,true));
+  }
   addAct('📖', `Completed Unit ${LESSONS.units[unitIdx].num}: ${LESSONS.units[unitIdx].title}`);
   const nextUnit = unitIdx + 1;
   const hasNext = nextUnit < LESSONS.units.length;
@@ -3762,9 +3872,18 @@ function answerLessonQ(qi, chosen, correct, exp){
     else if(i===chosen) b.classList.add('wrong');
   });
   document.getElementById(`pqexp-${qi}`).classList.add('show');
-  if(chosen===correct){ addXP(5); touchStudy(true,5000); }
+  const isCorrect = chosen===correct;
+  if(isCorrect){ addXP(5); touchStudy(true,5000); }
   else touchStudy(false,5000);
   lessonAnswered[qi]=true;
+  // Track subunit accuracy
+  if(LESSONS&&LESSONS.units&&lessonUnitIdx!==null){
+    const unit=LESSONS.units[lessonUnitIdx];
+    if(unit&&unit.subunits){
+      const sub=unit.subunits[lessonSubIdx||0];
+      if(sub) recordSubunitResult(sub.id, isCorrect);
+    }
+  }
 }
 
 
@@ -4333,6 +4452,285 @@ function showToast(msg){
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
+
+// ═══════════════════════════════════════════
+// LEARNING IMPROVEMENTS ENGINE
+// ═══════════════════════════════════════════
+
+// ── 1. LESSON SPACED REPETITION ──
+function getLessonSRS(subId){
+  return S.lessonSRS[subId]||{interval:0,dueDate:0,reps:0};
+}
+function setLessonSRS(subId, passed){
+  const srs=getLessonSRS(subId);
+  let {interval,reps}=srs;
+  if(passed){
+    reps++;
+    interval = reps===1?1 : reps===2?3 : reps===3?7 : Math.round(interval*2.1);
+  } else {
+    interval=1; reps=0;
+  }
+  S.lessonSRS[subId]={interval,dueDate:Date.now()+interval*86400000,reps};
+  saveS();
+}
+function getLessonsDue(){
+  const now=Date.now();
+  const due=[];
+  if(!LESSONS||!LESSONS.units) return due;
+  LESSONS.units.forEach(unit=>{
+    unit.subunits.forEach(sub=>{
+      const srs=getLessonSRS(sub.id);
+      if(srs.reps>0 && srs.dueDate<=now){
+        due.push({sub,unit,overdue:Math.floor((now-srs.dueDate)/86400000)});
+      }
+    });
+  });
+  return due;
+}
+
+// ── 2. SUBUNIT TRACKING ──
+function recordSubunitResult(subId, correct){
+  if(!S.subunitAcc[subId]) S.subunitAcc[subId]={correct:0,total:0,flagged:false,lastSeen:0};
+  S.subunitAcc[subId].total++;
+  if(correct) S.subunitAcc[subId].correct++;
+  S.subunitAcc[subId].lastSeen=Date.now();
+  saveS();
+}
+function getSubunitMastery(subId){
+  const acc=S.subunitAcc[subId];
+  if(!acc||acc.total===0) return null;
+  return Math.round(acc.correct/acc.total*100);
+}
+function getWeakSubunits(){
+  const weak=[];
+  if(!LESSONS||!LESSONS.units) return weak;
+  LESSONS.units.forEach(unit=>{
+    unit.subunits.forEach(sub=>{
+      const pct=getSubunitMastery(sub.id);
+      if(pct!==null && pct<70){
+        weak.push({sub,unit,pct});
+      }
+    });
+  });
+  return weak.sort((a,b)=>a.pct-b.pct);
+}
+
+// ── 3. DAILY REVIEW SYSTEM ──
+function buildDailyReview(){
+  const today=new Date().toDateString();
+  const due=getLessonsDue();
+  const weak=getWeakSubunits();
+  const tasks=[];
+
+  // Lessons due for review
+  due.slice(0,3).forEach(d=>{
+    const ui=LESSONS.units.indexOf(d.unit);
+    const si=d.unit.subunits.indexOf(d.sub);
+    tasks.push({
+      type:'review', ic:'📖',
+      txt:`Review: ${d.sub.title}`,
+      badge:'due', badgeTxt:d.overdue>0?d.overdue+'d overdue':'due today',
+      unitIdx:ui, subIdx:si
+    });
+  });
+
+  // Weak subunits to practice
+  weak.slice(0,2).forEach(w=>{
+    const ui=LESSONS.units.indexOf(w.unit);
+    const si=w.unit.subunits.indexOf(w.sub);
+    tasks.push({
+      type:'practice', ic:'🎯',
+      txt:`Practice: ${w.sub.title} (${w.pct}% mastery)`,
+      badge:'practice', badgeTxt:'weak area',
+      unitIdx:ui, subIdx:si
+    });
+  });
+
+  // Wrong log drill
+  if(S.wrongLog.length>0){
+    tasks.push({type:'wronglog',ic:'❌',txt:`Drill ${Math.min(S.wrongLog.length,10)} wrong answers`,badge:'due',badgeTxt:`${S.wrongLog.length} wrong`});
+  }
+
+  // Daily flashcards
+  const fcDue=getDueCount();
+  if(fcDue>0){
+    tasks.push({type:'flashcards',ic:'🧠',txt:`${fcDue} flashcards due for review`,badge:'review',badgeTxt:`${fcDue} due`});
+  }
+
+  // Suggest next unstarted lesson
+  if(tasks.length===0&&LESSONS&&LESSONS.units){
+    for(let i=0;i<LESSONS.units.length;i++){
+      const unit=LESSONS.units[i];
+      const started=unit.subunits.some(s=>S.subunitAcc[s.id]&&S.subunitAcc[s.id].total>0);
+      if(!started){
+        tasks.push({type:'new',ic:'✨',txt:`Start Unit ${unit.num}: ${unit.title}`,badge:'new',badgeTxt:'next up',unitIdx:i,subIdx:0});
+        break;
+      }
+    }
+  }
+
+  S.dailyReview={date:today,tasks};
+  saveS();
+  return tasks;
+}
+
+function renderDailyReview(){
+  const today=new Date().toDateString();
+  document.getElementById('dailyDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const tasks=buildDailyReview();
+  const list=document.getElementById('dailyTaskList');
+  const empty=document.getElementById('dailyEmpty');
+  if(!tasks.length){
+    list.innerHTML='';
+    empty.style.display='block';
+    return;
+  }
+  empty.style.display='none';
+  // Store tasks globally so onclick can reference them safely
+  window._dailyTasks=tasks;
+  list.innerHTML=tasks.map((t,i)=>`
+    <div class="daily-task">
+      <span class="daily-task-ic">${t.ic}</span>
+      <span class="daily-task-txt">${t.txt}</span>
+      <span class="daily-task-badge ${t.badge}">${t.badgeTxt}</span>
+      <button class="daily-task-btn" onclick="executeDailyTask(${i})">Go →</button>
+    </div>`).join('');
+}
+
+function startDailyReview(){
+  const tasks=buildDailyReview();
+  if(!tasks.length){showToast('Nothing due today — great job!');return;}
+  // Start first task - execute its action function
+  const t=tasks[0];
+  if(t.type==='review'||t.type==='practice'||t.type==='new'){
+    if(t.unitIdx!==undefined){
+      openLessonUnit(t.unitIdx);
+      if(t.subIdx!==undefined){lessonSubIdx=t.subIdx;renderSubunit();}
+    } else {
+      nav('lessons',document.querySelector('.sb-btn[onclick*=lessons]'));
+    }
+  } else if(t.type==='wronglog'){drillWrong();}
+  else if(t.type==='flashcards'){nav('flashcards',document.querySelector('.sb-btn[onclick*=flashcards]'));}
+  else {nav('lessons',document.querySelector('.sb-btn[onclick*=lessons]'));}
+}
+
+// ── 4. ACTIVE RECALL QUESTIONS ──
+const RECALL_QUESTIONS=[
+  {id:'k-eq',q:'What are the 4 kinematic equations? Try to write them from memory.',ans:'v=v₀+at · Δx=v₀t+½at² · v²=v₀²+2aΔx · Δx=½(v₀+v)t',unit:'Kinematics'},
+  {id:'k-graph',q:'What does the slope of a v-t graph represent? What does the area under it represent?',ans:'Slope = acceleration · Area = displacement',unit:'Kinematics'},
+  {id:'f-nsl',q:'State Newton\'s Second Law and explain what each variable means.',ans:'ΣF=ma — net force equals mass times acceleration. Apply in each direction separately.',unit:'Forces'},
+  {id:'f-circ',q:'What provides centripetal force in a car turning on a flat road?',ans:'Static friction from the road pointing inward (toward center of curve).',unit:'Forces'},
+  {id:'e-cons',q:'Write the conservation of energy equation for a frictionless system. What changes when friction is present?',ans:'KE_i+PE_i=KE_f+PE_f (no friction). With friction: add E_lost=f_k×d on right side.',unit:'Energy'},
+  {id:'m-types',q:'Name the 3 types of collisions and what is conserved in each.',ans:'Elastic: p AND KE conserved · Perfectly inelastic: only p conserved (stick) · All: p conserved when no external net force.',unit:'Momentum'},
+  {id:'r-eq',q:'What are the rotational analogs of F=ma and p=mv?',ans:'Στ=Iα (torque = moment of inertia × angular acceleration) · L=Iω (angular momentum)',unit:'Rotation'},
+  {id:'s-period',q:'Write the period formula for a spring-mass system and a pendulum. Which variables does each NOT depend on?',ans:'T_spring=2π√(m/k) — does NOT depend on amplitude or g · T_pendulum=2π√(L/g) — does NOT depend on mass or amplitude',unit:'SHM'},
+  {id:'w-stand',q:'What is the standing wave formula for an open-closed pipe? What harmonics are allowed?',ans:'fn=nv/4L where n=1,3,5,7... (ODD harmonics ONLY). Closed end=node, open end=antinode.',unit:'Waves'},
+  {id:'c-series',q:'In a series circuit, what is the same for all resistors? In parallel?',ans:'Series: same current I through all · Parallel: same voltage V across all',unit:'Circuits'},
+];
+
+function getRecallQuestion(){
+  // Pick a question the student hasn't seen recently or has gotten wrong
+  const now=Date.now();
+  let scored=RECALL_QUESTIONS.map(q=>{
+    const att=S.recallAttempts[q.id]||{attempts:0,correct:0,lastSeen:0};
+    const accuracy=att.attempts>0?att.correct/att.attempts:0;
+    const recency=(now-att.lastSeen)/86400000; // days since seen
+    // Score: lower accuracy + longer since seen = higher priority
+    return {...q,priority:(1-accuracy)*3+recency};
+  });
+  scored.sort((a,b)=>b.priority-a.priority);
+  return scored[0];
+}
+
+function recordRecall(id, correct){
+  if(!S.recallAttempts[id]) S.recallAttempts[id]={attempts:0,correct:0,lastSeen:0};
+  S.recallAttempts[id].attempts++;
+  if(correct) S.recallAttempts[id].correct++;
+  S.recallAttempts[id].lastSeen=Date.now();
+  saveS();
+}
+
+// ── 5. SUBUNIT MASTERY DASHBOARD ──
+function renderSubunitMastery(){
+  const con=document.getElementById('subunitMastery');
+  if(!LESSONS||!LESSONS.units){con.innerHTML='<div style="font-size:13px;color:var(--text3)">Study some lessons first.</div>';return;}
+  let html='';
+  LESSONS.units.forEach((unit,ui)=>{
+    unit.subunits.forEach((sub,si)=>{
+      const pct=getSubunitMastery(sub.id);
+      const flagged=S.subunitFlags[sub.id];
+      const srs=getLessonSRS(sub.id);
+      const isDue=srs.reps>0&&srs.dueDate<=Date.now();
+      const color=pct===null?'var(--s3)':pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
+      html+=`<div class="subunit-chip" onclick="openLessonUnit(${ui});window.lessonSubIdx=${si};renderSubunit()">
+        <div class="sc-title" style="color:${pct===null?'var(--text3)':'var(--text)'}">${sub.title} ${flagged?'🚩':''} ${isDue?'📅':''}</div>
+        <div class="sc-bar"><div class="sc-fill" style="width:${pct||0}%;background:${color}"></div></div>
+        <div class="sc-meta">${pct===null?'Not started':pct+'% mastery'} · ${srs.reps>0?'Seen '+srs.reps+'x':'New'}</div>
+      </div>`;
+    });
+  });
+  con.innerHTML=html||'<div style="font-size:13px;color:var(--text3)">Start some lessons to see mastery.</div>';
+}
+
+function renderLessonReviewDue(){
+  const con=document.getElementById('lessonReviewDue');
+  const due=getLessonsDue();
+  if(!due.length){
+    con.innerHTML='<div style="font-size:13px;color:var(--green)">✓ All caught up! No reviews due.</div>';
+    return;
+  }
+  window._dueItems=due;
+  con.innerHTML=due.map((d,i)=>`
+    <div class="review-due-item">
+      <span style="font-size:14px">📖</span>
+      <span class="rdi-txt">${d.sub.title}</span>
+      <span class="rdi-time">${d.overdue>0?d.overdue+'d overdue':'due today'}</span>
+      <button class="daily-task-btn" onclick="executeDueReview(${i})">Review</button>
+    </div>`).join('');
+}
+
+function toggleSubunitFlag(subId, btn){
+  if(!S.subunitFlags) S.subunitFlags={};
+  S.subunitFlags[subId]=!S.subunitFlags[subId];
+  saveS();
+  if(S.subunitFlags[subId]){
+    btn.classList.add('flagged');
+    btn.innerHTML='🚩 Flagged';
+    showToast('Flagged for focused review!');
+  } else {
+    btn.classList.remove('flagged');
+    btn.innerHTML='🚩 Flag as confusing';
+    showToast('Flag removed');
+  }
+}
+
+function revealRecall(id){
+  const el=document.getElementById('recallReveal');
+  if(el) el.classList.add('show');
+}
+
+
+function executeDailyTask(i){
+  if(!window._dailyTasks||!window._dailyTasks[i])return;
+  const t=window._dailyTasks[i];
+  if(t.type==='review'||t.type==='practice'||t.type==='new'){
+    openLessonUnit(t.unitIdx);
+    if(t.subIdx!==undefined){window.lessonSubIdx=t.subIdx;renderSubunit();}
+  } else if(t.type==='wronglog'){drillWrong();}
+  else if(t.type==='flashcards'){nav('flashcards',document.querySelector('.sb-btn[onclick*=flashcards]'));}
+}
+
+function executeDueReview(i){
+  if(!window._dueItems||!window._dueItems[i])return;
+  const d=window._dueItems[i];
+  const ui=LESSONS.units.indexOf(d.unit);
+  const si=d.unit.subunits.indexOf(d.sub);
+  openLessonUnit(ui);
+  window.lessonSubIdx=si;
+  renderSubunit();
+}
+
+
 loadS();
 buildNotes();
 buildFCFilter();updateFC();
