@@ -2874,7 +2874,6 @@ function updatePomoDots(){
 // ═══════════════════════════════════════════
 // LESSON SYSTEM
 // ═══════════════════════════════════════════
-let lessonMode=null, lessonUnitIdx=null, lessonStepIdx=0;
 
 const LESSONS = {
   units: [
@@ -3607,7 +3606,7 @@ const LESSONS = {
 
 
 let lessonAnswered = {};
-let currentMode = 'normal'; // 'eli5' | 'normal' | 'deep'
+let currentMode = 'normal';
 let lessonUnitIdx = null;
 let lessonSubIdx = null;
 
@@ -3768,7 +3767,6 @@ function answerLessonQ(qi, chosen, correct, exp){
   lessonAnswered[qi]=true;
 }
 
-let lessonAnswered = {};
 
 
 let tutorUnit=null, tutorPhase=0, tutorProbIdx=0, tutorProblems=[], tutorHistory=[];
