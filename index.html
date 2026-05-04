@@ -4028,7 +4028,7 @@ function renderTutorText(raw){
     .replace(/###\s*(.+)/g,'<h3>$1</h3>')
     .replace(/##\s*(.+)/g,'<h3>$1</h3>')
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/`([^`]+)`/g,'<code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-family:Geist Mono,monospace">$1</code>')
+    .replace(/\x60([^\x60]+)\x60/g,'<code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-family:Geist Mono,monospace">$1</code>')
     .replace(/\[KEY\](.+?)\[\/KEY\]/g,'<div class="key-box">$1</div>')
     .replace(/\[WARN\](.+?)\[\/WARN\]/g,'<div class="warn-box">$1</div>')
     .replace(/\[EX\](.+?)\[\/EX\]/gs,'<div class="ex-box">$1</div>')
