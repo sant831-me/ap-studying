@@ -618,26 +618,11 @@ const state = {
 };
 
 // Official AP Physics 1 Units (College Board CED 2024-2025)
-// Beginner-friendly: assumes ZERO prior physics knowledge
+// Comprehensive lesson content with worked examples and practice problems
 const UNITS = [
   { 
-    num: 1, 
-    name: 'Kinematics', 
-    color: '#7c5cfc', 
-    weight: '10-15%',
-    desc: 'The Study of Motion — How Things Move',
-    
-    // What you need to know BEFORE starting this unit
-    prerequisites: [
-      'Basic algebra (solving for x)',
-      'Understanding of the coordinate plane (x and y axes)',
-      'What sine, cosine, and tangent mean (SOH CAH TOA)',
-      'Nothing else! We\'ll build physics knowledge from scratch'
-    ],
-    
-    // Overview for complete beginners
-    overview: {
-      what_is_this: 'Kinematics is the study of HOW things move — their position, velocity, and acceleration. It\'s like creating a language to describe motion precisely. Before kinematics, people said 
+    num: 1, name: 'Kinematics', color: '#7c5cfc', weight: '10-15%',
+    desc: 'Scalars, Vectors, and Motion in One and Two Dimensions',
     topics: ['Scalars and Vectors in One Dimension', 'Displacement, Velocity, and Acceleration', 'Representing Motion (Graphs)', 'Reference Frames and Relative Motion', 'Vectors and Motion in Two Dimensions'],
     apContent: {
       key_ideas: [
@@ -1356,52 +1341,623 @@ const UNITS = [
 
 const LESSON_SUBUNITS = {
   1: [
-    { code: '1.1', title: 'Scalars, Vectors, and Signs', objective: 'Decide whether a quantity needs direction, then choose a sign convention before calculating.', notes: ['Distance is total path length; displacement is change in position.', 'Speed is scalar; velocity is vector.', 'A negative answer usually means the quantity points opposite your chosen positive direction, not that it is "bad".'], example: 'If east is positive, a car moving west at 12 m/s has v = -12 m/s.', check: 'A runner travels 100 m east then 60 m west. Distance = 160 m, displacement = 40 m east.' },
-    { code: '1.2', title: 'Motion Graphs', objective: 'Read position-time, velocity-time, and acceleration-time graphs like AP free-response prompts.', notes: ['Slope of x-t graph is velocity.', 'Slope of v-t graph is acceleration.', 'Area under v-t graph is displacement; area under a-t graph is change in velocity.', 'Curved x-t graph means changing velocity.'], example: 'If a v-t graph is a triangle with base 6 s and height 10 m/s, displacement = 1/2(6)(10) = 30 m.', check: 'A flat v-t graph above the axis means constant positive velocity and zero acceleration.' },
-    { code: '1.3', title: 'Constant Acceleration Equations', objective: 'Choose the kinematics equation that contains exactly one unknown.', notes: ['List knowns first: v0, v, a, t, delta x.', 'Use v = v0 + at when displacement is not involved.', 'Use v^2 = v0^2 + 2a delta x when time is not involved.', 'Units are your built-in error check.'], example: 'From rest with a = 2 m/s^2 for 5 s: delta x = 1/2(2)(25) = 25 m.', check: 'If a car slows from 30 m/s to 10 m/s in 4 s, a = -5 m/s^2.' },
-    { code: '1.4', title: 'Projectile Motion', objective: 'Split one 2D problem into two independent 1D problems.', notes: ['Horizontal acceleration is zero unless stated otherwise.', 'Vertical acceleration is -g if up is positive.', 'Time is the bridge between x and y motion.', 'At the top, vertical velocity is zero but acceleration is still downward.'], example: 'A ball launched horizontally at 8 m/s for 2 s travels x = vt = 16 m horizontally.', check: 'Two balls dropped from the same height hit at the same time even if one is thrown horizontally.' }
+    { code: '1.1', title: 'Scalars, Vectors, and Choosing a Direction', 
+      objective: 'Learn the difference between quantities that need direction and those that do not, and why picking a positive direction is the FIRST thing you do in every physics problem.',
+      explain: 'Some quantities are just numbers — like your mass (70 kg) or the temperature outside (20°C). These are SCALARS. Other quantities need a direction to make sense — like "the car is moving 60 mph north." These are VECTORS. If I say "the car is moving 60 mph," you do not know where it is going! That is why direction matters. In physics, we usually pick a coordinate system: right and up are positive, left and down are negative. This choice is not built into nature — you pick it! But once you pick it, you must be consistent throughout the entire problem.',
+      notes: [
+        'DISTANCE = total path length traveled (like your car odometer). It is always positive. DISPLACEMENT = net change in position (straight line from start to finish). Can be positive, negative, or zero.',
+        'SPEED = how fast something moves (scalar). Example: 30 m/s. VELOCITY = speed with direction (vector). Example: 30 m/s east.',
+        'A negative velocity does NOT mean "slowing down" or "going slow." It means the object is moving in the NEGATIVE direction (like moving left if right is positive).',
+        'Scalar examples: mass, temperature, time, distance, speed, energy.',
+        'Vector examples: velocity, acceleration, force, displacement, momentum.',
+        'Before solving ANY problem: write "Let right = positive" or "Let up = positive." This is your sign convention.'
+      ],
+      analogy: 'Think of it like a GPS. If you say "drive 2 miles," someone could go north, south, east, or west — it is ambiguous. But "drive 2 miles north" tells you everything. Vectors give you that direction information that scalars leave out.',
+      example: 'A car moves 100 m east, then 60 m west. Distance = 100 + 60 = 160 m (total path). Displacement = 100 − 60 = 40 m east (net change). These are DIFFERENT numbers!',
+      check: 'A person walks 300 m north, then 120 m south. Distance = 420 m. Displacement = 180 m north. If north is positive, displacement = +180 m.',
+      confusions: ['Confusing "negative" with "bad" or "wrong" — negative just means opposite to your chosen positive direction', 'Thinking distance and displacement are always the same — they are NOT', 'Forgetting that velocity is a vector so direction must be tracked with +/− signs'] 
+    },
+    { code: '1.2', title: 'Position, Velocity, and Acceleration — What Do They Really Mean?',
+      objective: 'Deeply understand what position, velocity, and acceleration are, how they relate to each other, and common misconceptions.',
+      explain: 'Position (x) tells you WHERE something is. Velocity (v) tells you how fast the position is CHANGING. Acceleration (a) tells you how fast the velocity is CHANGING. Here is the critical insight most beginners miss: acceleration means ANY change in velocity — that includes speeding up, slowing down, AND changing direction. A car going in a circle at constant 50 mph IS accelerating because the direction keeps changing! Another crucial idea: you can have zero velocity with non-zero acceleration (a ball at the top of a toss), and you can have zero acceleration with non-zero velocity (a car cruising on the highway). These are NOT the same thing!',
+      notes: [
+        'Position (x): Where the object is. We measure it from a chosen reference point (usually called the origin). Units: meters (m).',
+        'Velocity (v): Rate of change of position. v = Δx/Δt. Think of it as the slope of a position-time graph. Units: m/s.',
+        'Acceleration (a): Rate of change of velocity. a = Δv/Δt. Think of it as the slope of a velocity-time graph. Units: m/s².',
+        'Speeding up = velocity and acceleration in the SAME direction. Example: moving right with positive acceleration → speeding up.',
+        'Slowing down = velocity and acceleration in OPPOSITE directions. Example: moving right with negative acceleration → slowing down.',
+        'At the TOP of a ball\'s flight: velocity = 0, but acceleration = 9.8 m/s² downward. Gravity never stops!',
+        'Constant velocity = ZERO acceleration. Not "small" acceleration, but exactly zero.'
+      ],
+      analogy: 'Imagine position as your bank account balance, velocity as how fast money flows in or out, and acceleration as whether that flow is speeding up or slowing down. You can have $0 in your account (position = 0) but still have money flowing in fast (velocity ≠ 0). You can be broke and still have an increasing rate of deposit (acceleration > 0).',
+      example: 'A ball is thrown straight up. At the very peak: v = 0 (it stops for an instant). But a = 9.8 m/s² downward — gravity does not take a break! The ball immediately starts falling.',
+      check: 'A car moves at a constant 30 m/s east. What is its acceleration? (Zero! Constant velocity means no change in velocity, so a = 0.)',
+      confusions: ['Thinking "stopped" means "no acceleration" — gravity is always pulling!', 'Thinking acceleration must be in the same direction as velocity — it can be opposite (slowing down)', 'Confusing speed and velocity — speed has no direction, velocity does'] 
+    },
+    { code: '1.3', title: 'Motion Graphs — How to Read Position-Time, Velocity-Time, and Acceleration-Time Graphs',
+      objective: 'Look at any motion graph and immediately understand what is happening: speed, direction, acceleration, and displacement.',
+      explain: 'AP Physics LOVES graph questions. They will give you a graph and ask you to extract physical information. The two key ideas are: (1) The SLOPE of a graph tells you the RATE OF CHANGE. (2) The AREA under a graph tells you the ACCUMULATED CHANGE. So slope of position-time = velocity. Slope of velocity-time = acceleration. Area under velocity-time = displacement. These are not just formulas — they are how calculus works, and they will show up on the AP exam in multiple questions.',
+      notes: [
+        'POSITION-TIME GRAPH (x vs t): Slope = velocity. Steeper slope = faster. Flat slope = stopped. Negative slope = moving backward. Curved = accelerating (velocity is changing).',
+        'VELOCITY-TIME GRAPH (v vs t): Slope = acceleration. Flat line above axis = constant positive velocity (no acceleration). Area under curve = displacement. Area above axis = positive displacement. Area below = negative displacement.',
+        'ACCELERATION-TIME GRAPH (a vs t): Area = change in velocity. Flat line = constant acceleration (like free fall). Zero line = constant velocity.',
+        'A STRAIGHT LINE on a position-time graph means constant velocity. A CURVED line means changing velocity (acceleration).',
+        'If the position-time curve bends UPWARD (concave up), acceleration is positive. If it bends DOWNWARD (concave down), acceleration is negative.',
+        'Two objects can have the same velocity-time graph but end up at different positions — it depends on where they started!'
+      ],
+      analogy: 'Think of a road trip. The position-time graph is your distance from home over time — it shows WHERE you are. The velocity-time graph is your speedometer over time — it shows HOW FAST you are going. The acceleration-time graph is whether you are pressing the gas or brake over time.',
+      example: 'A velocity-time graph goes from (0,0) to (5s, 20m/s) as a straight line. Slope = 20/5 = 4 m/s² (acceleration). Area = ½ × base × height = ½(5)(20) = 50 m (displacement).',
+      check: 'A position-time graph is a horizontal line at x = 10 m. What is the object doing? (It is not moving — sitting at rest at 10 m. Velocity = 0.)',
+      confusions: ['Thinking the HEIGHT of a position-time graph tells you speed — it does NOT, the SLOPE does', 'Forgetting that area under velocity-time gives displacement, not distance (unless graph is entirely above axis)', 'Not recognizing that a curved position-time graph means acceleration'] 
+    },
+    { code: '1.4', title: 'The 4 Kinematic Equations — Your Toolkit for Constant Acceleration',
+      objective: 'Use the right equation to solve any constant acceleration problem by matching knowns to unknowns.',
+      explain: 'When acceleration is constant (free fall, a car speeding up at a steady rate, a ball rolling down a ramp), there are exactly FOUR equations that connect five variables: initial velocity (v₀), final velocity (v), acceleration (a), time (t), and displacement (Δx). Each equation uses 4 of these 5 variables. Your strategy: (1) List what you KNOW. (2) List what you WANT. (3) Pick the equation that has exactly those variables and nothing you do not know. This is a SKILL — practice it until it becomes automatic.',
+      notes: [
+        'v = v₀ + at — Use when you do NOT need displacement. Think: "How fast am I going now?"',
+        'Δx = v₀t + ½at² — Use when you do NOT need final velocity. Think: "How far did I go?"',
+        'v² = v₀² + 2aΔx — Use when you do NOT need time. This is the AP exam favorite!',
+        'Δx = ½(v₀ + v)t — Use when you do NOT need acceleration. Think: average velocity × time.',
+        'STEP 1: List knowns (v₀, v, a, t, Δx — fill in what you have, mark what you want with "?").',
+        'STEP 2: Pick the equation that contains your unknown and your knowns, and NO extra unknowns.',
+        'STEP 3: Plug in and solve. CHECK YOUR UNITS!',
+        '"From rest" = v₀ = 0. "Comes to rest" = v = 0. "Dropped" = v₀ = 0 AND a = g.',
+        '"Deceleration" or "braking" = acceleration is OPPOSITE to velocity direction.'
+      ],
+      analogy: 'Think of the four equations as tools in a toolbox. You would not use a hammer to cut wood. Similarly, if the problem does not mention time, use the equation without t. Match the tool to the job!',
+      example: 'A car starts from rest and accelerates at 3 m/s² for 8 seconds. Known: v₀ = 0, a = 3, t = 8. Want: Δx. Use Δx = v₀t + ½at² = 0 + ½(3)(64) = 96 m.',
+      check: 'A ball is dropped from 45 m. Time to hit ground? Known: Δx = 45, v₀ = 0, a = 9.8. Use Δx = ½gt² → 45 = 4.9t² → t = 3.03 s.',
+      confusions: ['Picking an equation before listing knowns/unknowns — ALWAYS list first!', 'Forgetting that "from rest" means v₀ = 0', 'Using positive a when the object is slowing down — it should be negative if velocity is positive'] 
+    },
+    { code: '1.5', title: 'Free Fall — Why a Feather and a Bowling Ball Fall at the Same Rate',
+      objective: 'Understand that gravity accelerates all objects equally and solve free-fall problems.',
+      explain: 'This is one of the most counterintuitive ideas in physics: in the absence of air, a feather and a bowling ball dropped from the same height hit the ground at the EXACT same time. Galileo discovered this. Why? The heavier object has more weight (pulling it down harder) but also more inertia (harder to accelerate). These two effects cancel EXACTLY. On Earth near the surface, every freely-falling object accelerates downward at g ≈ 9.8 m/s². "Free fall" means ONLY gravity acts — no air resistance, no strings, no pushes.',
+      notes: [
+        'g = 9.8 m/s² (downward). For quick mental math, use g = 10 m/s².',
+        'Free fall = only force is gravity. Dropped ball: free fall. Thrown ball in air: free fall (after leaving your hand). Ball on a string: NOT free fall (tension acts).',
+        'Dropped = v₀ = 0, a = g downward.',
+        'Thrown upward = the ball rises, stops momentarily at the top, then falls. The ENTIRE time, a = g downward.',
+        'Going UP: velocity is upward, but acceleration is downward. The ball is slowing down. (Opposite directions = slowing.)',
+        'At the TOP: v = 0 for an instant, but a = g still! Gravity does not pause.',
+        'Coming DOWN: velocity is downward, acceleration is downward. Ball speeds up. (Same direction = speeding up.)',
+        'Time to go up = time to come down (for symmetric paths from/to same height).'
+      ],
+      analogy: 'Apollo 15 astronaut David Scott actually tested this on the Moon! He dropped a hammer and a feather at the same time. They hit the lunar surface simultaneously. No air = no difference. Search "hammer and feather Moon" to see the video.',
+      example: 'Ball thrown up at 20 m/s. Time to top: v = v₀ − gt → 0 = 20 − 9.8t → t = 2.04 s. Total air time = 2 × 2.04 = 4.08 s. Max height: v² = v₀² − 2gh → 0 = 400 − 19.6h → h = 20.4 m.',
+      check: 'You drop a ball and simultaneously throw another horizontally. Which hits first? (SAME TIME! Horizontal throw does not affect vertical fall.)',
+      confusions: ['Thinking heavy objects fall faster — NO, g is the same for all!', 'Thinking a = 0 at the top — NO, gravity is always acting!', 'Forgetting that on the way up, v and a are in opposite directions (ball is decelerating)'] 
+    },
+    { code: '1.6', title: 'Projectile Motion — Two Independent Motions Happening Simultaneously',
+      objective: 'Split any 2D projectile into horizontal (constant velocity) and vertical (constant acceleration g), then solve each part separately and connect them with shared time.',
+      explain: 'A projectile is anything launched and then moves only under gravity. The KEY insight: horizontal and vertical motions are COMPLETELY INDEPENDENT. The ball does not "know" it was thrown sideways — vertical motion is the same as if you just dropped it. And horizontal motion has no gravity component (gravity pulls DOWN, not sideways), so horizontal velocity is constant. The BRIDGE between the two motions is TIME — both start and end at the same instant. This is why a bullet fired horizontally from a gun hits the ground at the same time as a bullet simply dropped.',
+      notes: [
+        'HORIZONTAL: aₓ = 0 (unless stated). vₓ = constant = v₀cosθ. Δx = v₀ₓ × t.',
+        'VERTICAL: aᵧ = −g (if up is +). Use the same 1D kinematic equations as free fall.',
+        'STEP 1: Break v₀ into components: v₀ₓ = v₀ cos θ, v₀ᵧ = v₀ sin θ.',
+        'STEP 2: Solve vertical motion to find time (usually). STEP 3: Plug that time into horizontal equation.',
+        'At the TOP of the path: vᵧ = 0, but vₓ is still v₀ₓ. The object is still moving horizontally! Total speed is NOT zero.',
+        'Range formula (level ground, launch height = landing height): R = v₀² sin(2θ) / g. Maximum range at θ = 45°.',
+        'Same range for complementary angles: 30° and 60° give the same range. So do 20° and 70°.',
+        'For horizontal launch (θ = 0°): v₀ᵧ = 0, so it is just free fall with constant horizontal speed.'
+      ],
+      analogy: 'Imagine two trains on separate tracks. Train 1 moves horizontally at constant speed (no acceleration). Train 2 accelerates downward (gravity). They start together and you solve each train independently. The only connection is they share the same elapsed time.',
+      example: 'Ball launched at 25 m/s at 53°. v₀ₓ = 25 cos 53° = 15 m/s. v₀ᵧ = 25 sin 53° = 20 m/s. Time to top: t = 20/9.8 = 2.04 s. Total time = 4.08 s. Max height = 20²/19.6 = 20.4 m. Range = 15 × 4.08 = 61.2 m.',
+      check: 'At the peak of a projectile\'s path, is the speed zero? (NO! Only vᵧ = 0. The ball still has vₓ = v₀ₓ, so total speed = v₀ₓ at the top.)',
+      confusions: ['Forgetting to split v₀ into x and y components', 'Setting total velocity = 0 at the top instead of just vᵧ = 0', 'Thinking horizontal velocity changes — it does NOT (no horizontal force!)'] 
+    }
   ],
   2: [
-    { code: '2.1', title: 'Systems and Free-Body Diagrams', objective: 'Draw only real external forces acting on the chosen object or system.', notes: ['Weight points down.', 'Normal force is perpendicular to contact surface.', 'Tension pulls along a string.', 'Friction acts parallel to surfaces and opposes slipping or impending slipping.', 'Do not draw velocity, acceleration, or "force of motion" as forces.'], example: 'For a block sliding down a ramp, forces are weight, normal, and kinetic friction only.', check: 'Newton third-law pairs do not appear on the same free-body diagram because they act on different objects.' },
-    { code: '2.2', title: 'Newton Laws in Components', objective: 'Turn a free-body diagram into equations in x and y directions.', notes: ['Pick axes that make the problem simple, often parallel/perpendicular to an incline.', 'If there is no acceleration in one direction, net force in that direction is zero.', 'On inclines: mg sin theta is parallel to ramp; mg cos theta is perpendicular.'], example: 'On a frictionless 30 degree incline, a = g sin 30 = 4.9 m/s^2.', check: 'For an elevator accelerating upward, N - mg = ma so N = m(g + a).' },
-    { code: '2.3', title: 'Friction and Springs', objective: 'Know when friction adjusts and when it has a fixed value.', notes: ['Static friction adjusts up to fs,max = mu_s N.', 'Kinetic friction is fk = mu_k N.', 'Spring force is restorative: F = -kx.', 'Normal force must be found from the y-direction equation, not assumed to equal mg.'], example: 'A 10 kg crate with mu_k = 0.20 has fk = 0.20(98) = 19.6 N on a horizontal floor.', check: 'If a block does not move while pushed by 15 N, static friction is 15 N unless the maximum is exceeded.' },
-    { code: '2.4', title: 'Circular Motion as Net Force', objective: 'Treat centripetal force as the inward net force, not as an extra force.', notes: ['Centripetal means center-seeking.', 'The inward net force equals mv^2/r.', 'The actual inward force may be tension, gravity, friction, normal force, or a combination.', 'Constant speed in a circle still means acceleration because direction changes.'], example: 'For a car on a flat curve, static friction supplies mv^2/r.', check: 'If speed doubles, required centripetal force becomes four times larger.' }
+    { code: '2.1', title: 'What Is a Force? The Building Blocks of Dynamics',
+      objective: 'Understand what forces actually are, identify the main types, and stop making the #1 beginner mistake of drawing "force of motion."',
+      explain: 'A force is a PUSH or PULL that can change an object\'s velocity (cause acceleration). Forces are NOT things objects "have" — they are things that HAPPEN TO objects through interactions. A book on a table is not "using up" force to stay there. It is experiencing forces from the table (normal force) and Earth (gravity) that balance out. The biggest mistake beginners make is drawing a "force of motion" or "force of the throw" on a flying ball. Once the ball leaves your hand, the ONLY force acting on it is gravity (ignoring air). There is no force pushing it forward!',
+      notes: [
+        'FORCE = any push or pull. Measured in Newtons (N). 1 N = 1 kg·m/s².',
+        'WEIGHT (Fg = mg): The gravitational force pulling an object toward Earth. Always points DOWN. Depends on mass AND local gravity.',
+        'NORMAL FORCE (N or FN): The force a surface pushes back with, PERPENDICULAR to the surface. Not always equal to mg! (Think: inclines, elevators.)',
+        'TENSION (T): The pull in a rope/string. Always PULLS, never pushes. Points along the rope AWAY from the object.',
+        'FRICTION (f): Parallel to the surface, opposes motion or intended motion. Never in the direction of motion!',
+        'SPRING FORCE (F = −kx): Restorative — always points toward the equilibrium position. The negative sign tells you it opposes displacement.',
+        'DO NOT DRAW: "force of motion," "force of the throw," velocity, acceleration, or momentum as forces. Only draw actual pushes/pulls!'
+      ],
+      analogy: 'Forces are like conversations between two objects. When you push a box, the box pushes back on you (Newton\'s 3rd Law). Forces always come in pairs. But on a FREE-BODY DIAGRAM, you only draw forces acting ON the one object you chose — not forces it exerts on other things.',
+      example: 'A ball thrown through the air: forces acting ON the ball = weight (down) ONLY. There is no forward force! Once it leaves your hand, the hand no longer pushes it. The ball continues forward due to its inertia (Newton\'s 1st Law), not a force.',
+      check: 'Draw forces on a book resting on a table. Answer: weight down, normal force up. That\'s it! No "table pushing down" or "force of rest."',
+      confusions: ['Drawing "force of motion" or "force of the throw" — these do not exist!', 'Thinking the normal force always equals mg — only true on flat horizontal surfaces', 'Drawing forces that the object exerts on OTHER things instead of forces acting ON the object'] 
+    },
+    { code: '2.2', title: 'Newton\'s Three Laws — The Rules That Govern All Motion',
+      objective: 'Understand inertia, F = ma, and action-reaction pairs deeply enough to explain everyday situations and avoid common traps.',
+      explain: 'Newton\'s three laws are the foundation of all of classical mechanics. The 1st Law (inertia) says objects keep doing what they are doing unless a net force acts. The 2nd Law (F = ma) quantifies how forces change motion. The 3rd Law (action-reaction) says forces always come in equal-and-opposite pairs. The tricky part: Newton\'s 3rd Law pairs act on DIFFERENT objects, so they do NOT cancel each other! If you push a wall, the wall pushes you back — but these forces are on different objects, so they cannot be added together to get zero.',
+      notes: [
+        'NEWTON\'S 1ST LAW (Law of Inertia): An object at rest stays at rest, and an object in motion stays in motion at constant velocity, UNLESS acted upon by a net external force. Objects resist changes in their state of motion.',
+        'NEWTON\'S 2ND LAW: F_net = ma. The NET (total) force on an object equals its mass times its acceleration. This is THE equation of Unit 2.',
+        'NET force = vector sum of ALL forces. Not just one force — ALL of them added together (with direction!).',
+        'NEWTON\'S 3RD LAW: For every action, there is an equal and opposite reaction. If A pushes B with force F, then B pushes A with force −F.',
+        'KEY: 3rd Law pairs act on DIFFERENT objects. They do NOT appear on the same free-body diagram and do NOT cancel each other!',
+        'If F_net = 0, acceleration = 0. The object could be at rest OR moving at constant velocity — both are equilibrium.',
+        'If F_net ≠ 0, the object accelerates in the direction of F_net.'
+      ],
+      analogy: '1st Law: A book on a table stays put. A hockey puck on frictionless ice keeps sliding forever. Things do not just stop on their own — something must cause the change. 3rd Law: When you punch a wall, your hand hurts too. The wall hit your hand just as hard as you hit it!',
+      example: 'A 5 kg box with two forces: 30 N right and 10 N left. F_net = 30 − 10 = 20 N right. F = ma → 20 = 5a → a = 4 m/s² to the right. The box accelerates right because net force is right.',
+      check: 'You push a box with 50 N. Does the box push back on you? (YES! By Newton\'s 3rd Law, the box pushes on you with 50 N in the opposite direction. These forces act on different objects.)',
+      confusions: ['Thinking 3rd Law pairs cancel — they do NOT because they act on different objects!', 'Thinking F_net = 0 means "no forces" — it means forces BALANCE', 'Applying F = ma to just one force instead of the NET force'] 
+    },
+    { code: '2.3', title: 'Free-Body Diagrams — The #1 Skill for AP Physics',
+      objective: 'Draw accurate free-body diagrams and turn them into equations that you can solve.',
+      explain: 'A Free-Body Diagram (FBD) is a picture where you isolate one object and draw ONLY the forces acting on it. This is not optional — AP graders specifically look for FBDs on free-response questions, and you LOSE POINTS without them. Here is the process: (1) Choose your object. (2) Draw it as a simple dot or box. (3) Draw every force as an arrow starting from the object. (4) Label each force. (5) Choose a coordinate system. (6) Break forces into x and y components. (7) Write F_net = ma in each direction. DO NOT draw velocity, acceleration, or forces the object exerts on other things.',
+      notes: [
+        'STEP 1: Draw the object as a dot/box. Do NOT draw the surrounding environment.',
+        'STEP 2: Draw arrows for each force. Weight always points down. Normal is perpendicular to surface. Tension pulls along the string. Friction is parallel to surface.',
+        'STEP 3: Label every force with its name and value (if known). Use Fg or mg for weight, N for normal, T for tension, f for friction.',
+        'STEP 4: Choose axes. For flat surfaces, use horizontal/vertical. For inclines, use parallel/perpendicular to the ramp.',
+        'STEP 5: Write equations. ΣFx = max and ΣFy = may. If no acceleration in a direction, that sum equals zero.',
+        'On inclines: weight breaks into components. Parallel to ramp: mg sin θ. Perpendicular to ramp: mg cos θ.',
+        'Common forces: gravity (always down), normal (perpendicular to surface), tension (along rope, pulling), friction (parallel to surface, opposing motion).'
+      ],
+      analogy: 'An FBD is like a police report for forces — you isolate ONE object and list everything happening TO it, ignoring everything else in the scene. It is a focused snapshot.',
+      example: 'Block on an incline (30°): Draw a box. Weight arrow straight down (mg). Normal arrow perpendicular to the ramp (N). Friction arrow parallel to the ramp pointing uphill (if the block slides down). That is your FBD! Now break mg into components: mg sin 30 parallel, mg cos 30 perpendicular.',
+      check: 'Draw the FBD for a hanging mass on a rope. Forces: weight (down), tension (up along rope). Only 2 forces!',
+      confusions: ['Drawing the whole scene instead of isolating one object', 'Including velocity or acceleration as forces (they are NOT forces!)', 'Forgetting to break weight into components on an incline'] 
+    },
+    { code: '2.4', title: 'Friction — The Force You Cannot Ignore',
+      objective: 'Understand static vs. kinetic friction, when to use each coefficient, and why normal force is not always mg.',
+      explain: 'Friction is the force that opposes sliding between two surfaces. There are TWO types: STATIC (object is not sliding) and KINETIC (object is sliding). Static friction is special because it ADJUSTS to match the applied force, up to a maximum. If you push a box gently and it does not move, static friction equals exactly what you push — it matches you. Only when you push harder than the maximum does the box start moving, and then kinetic friction takes over. Here is the key: kinetic friction is usually LESS than maximum static friction, which is why it is harder to START pushing something than to KEEP pushing it.',
+      notes: [
+        'STATIC FRICTION (fs): Exists when surfaces are NOT sliding past each other. It ADJUSTS: fs = whatever force is needed to prevent motion, up to a maximum of fs,max = μsN.',
+        'KINETIC FRICTION (fk): Exists when surfaces ARE sliding. It has a FIXED value: fk = μkN. It does not change with speed!',
+        'Usually μs > μk. It takes more force to START something moving than to keep it moving.',
+        'Friction OPPOSES the direction of motion (kinetic) or intended motion (static). It is NEVER in the direction of motion.',
+        'N is the NORMAL FORCE — the perpendicular force from the surface. On a flat surface, N = mg. On an incline, N = mg cos θ. If someone is pushing down or pulling up, N changes!',
+        'NORMAL FORCE IS NOT ALWAYS mg! On an incline: N = mg cos θ (less than mg). In an elevator going up: N = m(g + a) (more than mg).',
+        'To find N: always look at the perpendicular-to-surface direction and apply ΣF = ma.'
+      ],
+      analogy: 'Static friction is like a handshake — it grips harder when you pull harder, up to a limit. Once you break the grip (exceed maximum static friction), the surfaces slide and kinetic friction takes over, which is weaker (like a loose handshake).',
+      example: 'A 10 kg box sits on a flat surface with μk = 0.30. You push it at constant velocity. Since a = 0, F_net = 0, so your push = fk = μkN = 0.30(10)(9.8) = 29.4 N. You must push exactly 29.4 N to maintain constant velocity.',
+      check: 'If you push a box with 20 N and it does not move, what is the friction force? (Static friction = 20 N, matching your push. You have not exceeded the maximum yet.)',
+      confusions: ['Using μs when the object is already sliding (use μk!)', 'Assuming N = mg on an incline (wrong — N = mg cos θ on an incline)', 'Thinking friction always equals μN — static friction can be LESS than μsN'] 
+    },
+    { code: '2.5', title: 'Inclined Planes — Breaking Weight into Components',
+      objective: 'Resolve weight into parallel and perpendicular components on a ramp and solve for acceleration.',
+      explain: 'Incline problems are everywhere on the AP exam. The trick is choosing your axes wisely: instead of horizontal/vertical, choose axes parallel and perpendicular to the ramp. Then gravity (which points straight down) needs to be broken into two components: one parallel to the ramp (mg sin θ) that tries to pull the object down the ramp, and one perpendicular to the ramp (mg cos θ) that pushes into the surface. The perpendicular component equals the normal force (if no other perpendicular forces exist). The parallel component drives acceleration down the ramp.',
+      notes: [
+        'CHOOSE AXES: x along the ramp (downhill = positive), y perpendicular to ramp (up = positive).',
+        'WEIGHT COMPONENTS: Parallel to ramp (x): mg sin θ (pulls object down the ramp). Perpendicular to ramp (y): mg cos θ (pushes into surface).',
+        'NORMAL FORCE: N = mg cos θ (if no other y-direction forces). Notice N < mg — that is why you feel lighter on a hill!',
+        'FRICTIONLESS RAMP: a = g sin θ. Notice mass cancels! Every object slides down at the same acceleration.',
+        'RAMP WITH FRICTION: mg sin θ − fk = ma (if sliding down). fk = μkN = μk mg cos θ.',
+        'Block STAYS at rest if mg sin θ ≤ μsN = μs mg cos θ, which means θ ≤ tan⁻¹(μs).'
+      ],
+      analogy: 'Imagine standing on a hill. Gravity pulls you straight down, but you FEEL two things: you are being pulled downhill (that is mg sin θ), and you are being pressed into the hill (that is mg cos θ). You only slide if the downhill pull exceeds friction.',
+      example: '5 kg block on a frictionless 30° ramp. a = g sin 30° = 9.8(0.5) = 4.9 m/s². Notice: mass does not matter! A 5 kg block and a 500 kg boulder accelerate at the same rate on a frictionless ramp.',
+      check: 'At what angle does a block on a frictionless ramp accelerate at half of g? (30° — because sin 30° = 0.5, so a = 0.5g.)',
+      confusions: ['Using mg for the normal force instead of mg cos θ', 'Confusing sin and cos — parallel uses sin, perpendicular uses cos', 'Forgetting to rotate your axes for the incline — do NOT use horizontal/vertical!'] 
+    },
+    { code: '2.6', title: 'Circular Motion — Constant Speed but Constantly Accelerating',
+      objective: 'Understand that circular motion requires a centripetal (center-seeking) force and solve for it.',
+      explain: 'Here is a mind-bender: an object moving in a circle at constant speed IS accelerating. How? Because acceleration means any change in VELOCITY, and velocity includes direction. In a circle, the direction changes every instant, so there is always acceleration pointing toward the center. This is called centripetal acceleration (a_c = v²/r). By F = ma, there must be a NET force pointing toward the center too. This centripetal force is NOT a new type of force — it is provided by whatever real force is available: tension (ball on a string), friction (car on road), gravity (satellite), or normal force (car on banked curve).',
+      notes: [
+        'CENTRIPETAL ACCELERATION: a_c = v²/r = ω²r. Always points TOWARD the center.',
+        'CENTRIPETAL FORCE: F_c = mv²/r. This is the NET force toward the center. It is NOT a separate force — it is the sum of real forces.',
+        'Common sources of centripetal force: Tension (ball on string), friction (car turning), gravity (satellite orbiting), normal (roller coaster at top of loop).',
+        'Constant speed in a circle = centripetal acceleration toward center. NOT zero acceleration!',
+        'If the centripetal force disappears (string breaks), the object flies off TANGENTIALLY, not radially outward.',
+        'At higher speeds, you need MORE centripetal force to maintain the same radius. If force cannot increase, the radius increases (object flies outward).'
+      ],
+      analogy: 'Imagine swinging a ball on a string. The string pulls inward (tension provides centripetal force). If you let go, the ball does not fly outward from the center — it flies off in a straight line tangent to where you let go. That is Newton\'s 1st Law: without a force, it goes straight!',
+      example: 'A 1000 kg car turns a flat curve of radius 50 m at 15 m/s. Required centripetal force = mv²/r = 1000(225)/50 = 4500 N. This must come from static friction between tires and road.',
+      check: 'If you double the speed of a car on a curve, what happens to the required centripetal force? (Quadruples! F_c ∝ v², so 2² = 4×.)',
+      confusions: ['Thinking "centrifugal force" pushes objects outward in a circle — it is fictitious in an inertial frame!', 'Treating centripetal force as a separate type of force — it is the NET inward force, provided by real forces', 'Forgetting that speed can be constant while acceleration is not zero (direction changes!)'] 
+    }
   ],
   3: [
-    { code: '3.1', title: 'Work and Energy Transfer', objective: 'Decide whether a force adds energy, removes energy, or does no work.', notes: ['Work is W = Fd cos theta.', 'Force in the direction of motion does positive work.', 'Force opposite motion does negative work.', 'A perpendicular force does zero work.'], example: 'A 40 N pull over 3 m does 120 J if parallel to motion.', check: 'Normal force does zero work for horizontal motion because it is perpendicular to displacement.' },
-    { code: '3.2', title: 'Kinetic and Potential Energy', objective: 'Represent motion and stored energy using energy bar charts and equations.', notes: ['K = 1/2 mv^2.', 'Ug = mgh depends on your chosen zero height.', 'Us = 1/2 kx^2.', 'Kinetic energy is never negative.'], example: 'Doubling speed makes kinetic energy four times larger.', check: 'A spring compressed twice as far stores four times as much energy.' },
-    { code: '3.3', title: 'Conservation of Mechanical Energy', objective: 'Use energy when forces vary or when acceleration is hard to find.', notes: ['If only gravity and springs do work, Ki + Ui = Kf + Uf.', 'Friction changes mechanical energy into thermal energy.', 'Energy equations are scalar, so direction is not tracked by signs in the same way as forces.'], example: 'From height h, speed at bottom is v = sqrt(2gh) if frictionless.', check: 'Mass cancels in many gravity-only energy problems.' },
-    { code: '3.4', title: 'Power', objective: 'Connect energy transfer to time.', notes: ['Power is rate of doing work: P = W/t.', 'Instantaneous power can be P = Fv when force is parallel to velocity.', 'Same work done in less time requires more power.'], example: 'Lifting 1000 J in 2 s requires 500 W.', check: 'A stronger motor may not do more work; it may do the same work faster.' }
+    { code: '3.1', title: 'What Is Energy? The Currency of Physics',
+      objective: 'Understand energy as the ability to do work, and learn the different "accounts" where energy can be stored.',
+      explain: 'Energy is one of the most important concepts in all of physics. It is a SCALAR (no direction!) which makes energy problems often easier than force problems. Energy cannot be created or destroyed — only transferred or transformed. This is the law of conservation of energy, and it is the most powerful tool in physics. Think of energy like money in bank accounts: you can move money between checking (kinetic energy), savings (potential energy), and other accounts, but the total never changes (unless you spend it — that is like friction converting it to heat).',
+      notes: [
+        'Energy is measured in JOULES (J). 1 Joule = 1 Newton × 1 meter = 1 kg·m²/s².',
+        'Energy is a SCALAR — no direction! This is why energy problems are often easier than force problems.',
+        'KINETIC ENERGY (K = ½mv²): Energy of motion. Always positive. Double the speed = 4× the energy (because of v²).',
+        'GRAVITATIONAL POTENTIAL ENERGY (Ug = mgh): Stored energy due to height. Depends on your chosen reference level (h = 0).',
+        'SPRING POTENTIAL ENERGY (Us = ½kx²): Stored energy in a compressed or stretched spring. Depends on displacement x from equilibrium.',
+        'Energy can transform: a falling ball converts potential → kinetic. A compressed spring converts elastic → kinetic.',
+        'The total energy of an isolated system stays constant. This is THE LAW.'
+      ],
+      analogy: 'Energy is like water in connected buckets. Pour water from the "height" bucket to the "speed" bucket — the total water stays the same. Friction is like a leak in the bucket — energy leaves the mechanical system and turns into heat.',
+      example: 'A 2 kg ball at height 10 m has Ug = (2)(9.8)(10) = 196 J of gravitational potential energy. When it falls to the ground, all 196 J converts to kinetic energy: ½mv² = 196 → v = 14 m/s.',
+      check: 'If you double the speed of a car, how does its kinetic energy change? (K ∝ v², so it QUADRUPLES.)',
+      confusions: ['Thinking energy is a vector — it is a SCALAR', 'Forgetting that "potential energy" depends on your chosen reference point', 'Confusing energy with power (power is energy per TIME)'] 
+    },
+    { code: '3.2', title: 'Work — How Forces Transfer Energy',
+      objective: 'Calculate work done by any force and understand when work is positive, negative, or zero.',
+      explain: 'Work is how energy gets transferred between objects by forces. If you push a box across the floor, you do work on the box and transfer energy to it. But work is NOT just force × distance — the angle between the force and displacement matters! If you push a box horizontally while holding it at an angle, only the horizontal component of your push does work. And here is a key insight: the NORMAL FORCE does zero work on horizontal motion because it is perpendicular to displacement. Similarly, centripetal force does zero work in circular motion because it is perpendicular to velocity.',
+      notes: [
+        'WORK = W = Fd cos θ, where θ is the angle BETWEEN the force and displacement vectors.',
+        'θ = 0° (force parallel to motion): W = Fd (maximum positive work). You are HELPING the motion.',
+        'θ = 180° (force opposite to motion): W = −Fd (negative work). You are OPPOSING the motion.',
+        'θ = 90° (force perpendicular to motion): W = 0. You are neither helping nor opposing.',
+        'Normal force does ZERO work on horizontal motion (perpendicular to displacement).',
+        'Gravity does NEGATIVE work when you lift something (force down, displacement up).',
+        'Gravity does POSITIVE work when something falls (force and displacement both down).',
+        'Friction does NEGATIVE work (always opposes motion). Friction takes energy OUT of mechanical energy.',
+        'NET work = change in kinetic energy (Work-Energy Theorem): W_net = ΔK = ½mv² − ½mv₀².'
+      ],
+      analogy: 'Imagine pushing a shopping cart. Pushing straight forward (parallel) does maximum work. Pushing sideways (perpendicular) does nothing useful. Pushing backward while it moves forward does negative work (you are slowing it down). The angle between push and motion determines everything.',
+      example: 'You pull a sled with 50 N at 30° above horizontal for 10 m. Work = (50)(10)cos(30°) = 500(0.866) = 433 J. Only the horizontal component (43.3 N) does work!',
+      check: 'Does the normal force do any work on a box sliding across a flat floor? (NO! Normal force is perpendicular to displacement, so W = 0.)',
+      confusions: ['Using W = Fd without considering the angle — must include cos θ!', 'Thinking normal force does work on horizontal motion — it does NOT (perpendicular!)', 'Forgetting that negative work means energy is being REMOVED from the system'] 
+    },
+    { code: '3.3', title: 'Conservation of Energy — The Most Powerful Problem-Solving Tool',
+      objective: 'Use energy conservation to solve problems involving height changes, springs, and speed — often easier than forces!',
+      explain: 'If only conservative forces (gravity, springs) do work, then mechanical energy is CONSERVED: K_initial + U_initial = K_final + U_final. This means you can relate speeds and heights without knowing the path in between! This is incredibly powerful because you do not need to know how the object got from A to B — just where it started and ended. If friction is present, it does negative work and removes energy: K_i + U_i − W_friction = K_f + U_f.',
+      notes: [
+        'CONSERVATION OF MECHANICAL ENERGY (no friction, no air resistance): K_i + U_i = K_f + U_f',
+        'This means ½mv₀² + mgh₀ + ½kx₀² = ½mv² + mgh + ½kx²',
+        'The mass often CANCELS OUT! This is why all objects fall at the same rate.',
+        'CONSERVATIVE FORCES: gravity and springs. The path does not matter — only start and end points.',
+        'NON-CONSERVATIVE FORCES: friction, air resistance. They convert mechanical energy to heat.',
+        'WITH FRICTION: K_i + U_i + W_nc = K_f + U_f, where W_nc is negative.',
+        'ENERGY BAR CHARTS: Draw bars for KE and PE at each state. The total height stays the same (conservation).',
+        'When all energy is potential: v = 0. When all energy is kinetic: at the lowest point or equilibrium.'
+      ],
+      analogy: 'Think of a roller coaster. At the top of the first hill, you have maximum potential energy and zero kinetic energy. As you go down, PE converts to KE (you speed up). At the bottom, maximum KE and zero PE. Going up the next hill, KE converts back to PE (you slow down). The total energy stays constant (ignoring friction).',
+      example: 'A 2 kg ball is dropped from 5 m. At the ground: mgh = ½mv² → v = √(2gh) = √(2×9.8×5) = 9.9 m/s. Notice mass canceled! A 2 kg ball and a 200 kg ball hit the ground at the same speed.',
+      check: 'From what height must a ball be released to reach 20 m/s at the bottom? (½mv² = mgh → h = v²/2g = 400/19.6 = 20.4 m)',
+      confusions: ['Forgetting to set a reference point for height (where is h = 0?)', 'Not including all energy types in the equation (KE + gravitational PE + spring PE)', 'Trying to use energy conservation when friction is present without accounting for energy loss'] 
+    },
+    { code: '3.4', title: 'Power — How Fast Energy Is Transferred',
+      objective: 'Calculate power and understand why doing the same work faster requires more power.',
+      explain: 'Power is the RATE of energy transfer. Two people can lift the same box to the same shelf (same work), but the person who does it in 2 seconds has more power than the person who takes 10 seconds. Power is measured in Watts (W), where 1 Watt = 1 Joule per second. This connects to everyday life: a 60 W light bulb converts 60 J of electrical energy every second. A car engine with more horsepower can accelerate faster because it delivers energy to the wheels more quickly.',
+      notes: [
+        'POWER = rate of doing work: P = W/t. Units: Watts (W) = Joules/second.',
+        'INSTANTANEOUS POWER: P = Fv, when force is parallel to velocity.',
+        'Same work, less time = MORE power. Same work, more time = LESS power.',
+        '1 horsepower (hp) ≈ 746 Watts.',
+        'Kilowatt-hours (kWh) is a unit of ENERGY (not power!). 1 kWh = 3.6 × 10⁶ J.'
+      ],
+      analogy: 'Power is like the speed of filling a swimming pool. If garden hose A fills it in 1 hour and hose B fills it in 10 hours, hose A has 10× the power. Same total water (work), different rates (power).',
+      example: 'Lifting a 50 kg box to a height of 4 m requires W = mgh = 50(9.8)(4) = 1960 J. Doing it in 2 seconds: P = 1960/2 = 980 W. Doing it in 10 seconds: P = 1960/10 = 196 W. Same work, different power.',
+      check: 'A 2000 W motor lifts a 100 kg mass. How fast does it rise? (P = Fv = mgv → 2000 = 100(9.8)v → v = 2.04 m/s)',
+      confusions: ['Confusing power with energy — power is energy per TIME', 'Forgetting to convert units consistently', 'Thinking a more powerful motor does more work — it does the same work FASTER'] 
+    }
   ],
   4: [
-    { code: '4.1', title: 'Momentum as a Vector', objective: 'Track direction carefully using signs or components.', notes: ['p = mv.', 'Momentum has units kg m/s.', 'A small fast object can have the same momentum as a large slow object.', 'Momentum direction is velocity direction.'], example: 'A 2 kg cart at -3 m/s has momentum -6 kg m/s.', check: 'If two objects have the same momentum, the smaller mass has the larger speed.' },
-    { code: '4.2', title: 'Impulse', objective: 'Use force-time information to find change in momentum.', notes: ['Impulse J = F delta t = delta p.', 'Area under an F-t graph is impulse.', 'Increasing collision time reduces average force for the same momentum change.'], example: 'A 20 N force for 0.5 s gives impulse 10 N s.', check: 'Airbags reduce force by increasing stopping time.' },
-    { code: '4.3', title: 'Conservation in Collisions', objective: 'Identify the system and conserve momentum when external impulse is negligible.', notes: ['Momentum is conserved for the system, not necessarily for each object.', 'Perfectly inelastic means objects stick together.', 'Elastic means momentum and kinetic energy are both conserved.', 'Kinetic energy is usually lost in real collisions.'], example: 'A 2 kg cart at 6 m/s sticks to a 4 kg cart at rest: vf = 12/6 = 2 m/s.', check: 'If objects stick, do not conserve kinetic energy.' },
-    { code: '4.4', title: 'Center of Mass', objective: 'Use center of mass to describe motion of a multi-object system.', notes: ['External forces change center-of-mass motion.', 'Internal forces cannot accelerate the center of mass of the whole system.', 'Explosions conserve total momentum if external impulse is negligible.'], example: 'A system initially at rest that explodes has total final momentum zero.', check: 'If one fragment moves right, the other fragments must have total momentum left.' }
+    { code: '4.1', title: 'What Is Momentum? The "Oomph" of Moving Objects',
+      objective: 'Understand momentum as mass times velocity, and why it matters more than kinetic energy for understanding collisions.',
+      explain: 'Momentum is p = mv. It measures how hard it is to STOP an object. A slow semi-truck and a fast motorcycle might have the same momentum — the same "oomph." The key difference from energy: momentum is a VECTOR, so direction matters! A 5 kg object moving right at 3 m/s has momentum +15 kg·m/s. The same object moving left at 3 m/s has momentum −15 kg·m/s. When analyzing collisions, you MUST track the + and − signs carefully or you will get wrong answers.',
+      notes: [
+        'MOMENTUM: p = mv. Vector — has magnitude AND direction. Units: kg·m/s.',
+        'Direction of momentum = direction of velocity. If velocity is left, momentum is left.',
+        'A heavy, slow object can have the same momentum as a light, fast object.',
+        'Momentum is directly proportional to mass AND velocity. Double either one = double the momentum.',
+        'Momentum is a better quantity than kinetic energy for analyzing collisions because it is always conserved (in isolated systems).'
+      ],
+      analogy: 'Think of momentum like "difficulty to stop." A bowling ball rolling slowly is hard to stop (large mass). A bullet is hard to stop (high speed). Both have significant momentum. To stop them, you need to apply a force over time — that is impulse.',
+      example: 'A 0.005 kg bullet traveling at 400 m/s has momentum p = (0.005)(400) = 2 kg·m/s. A 1000 kg car at 0.002 m/s has the SAME momentum! Small mass × huge speed = huge mass × tiny speed.',
+      check: 'Two objects have the same momentum. Object A has mass 2 kg, object B has mass 8 kg. Which has greater speed? (A has 4× the speed because p = mv means v = p/m, and A has ¼ the mass.)',
+      confusions: ['Forgetting momentum is a vector and treating it like a scalar', 'Confusing momentum with kinetic energy (KE = p²/2m, so they are related but different)', 'Not tracking +/− signs in collision problems'] 
+    },
+    { code: '4.2', title: 'Impulse — How Force Over Time Changes Momentum',
+      objective: 'Understand that impulse equals change in momentum, and why crumple zones and airbags save lives.',
+      explain: 'IMPULSE is defined as J = FΔt (force multiplied by the time it acts). The Impulse-Momentum Theorem says: J = Δp (impulse equals change in momentum). This is HUGE for understanding safety. If you need to stop a car (change in momentum is fixed — you go from speed v to 0), you can either have a LARGE force for a SHORT time (hitting a wall) or a SMALL force for a LONG time (gradually braking). The total impulse is the same, but the EXPERIENCE is very different! This is why airbags, crumple zones, and rolling on the ground after a fall all reduce injury.',
+      notes: [
+        'IMPULSE: J = FΔt. Units: N·s (Newton-seconds), which is equivalent to kg·m/s.',
+        'Impulse-Momentum Theorem: J = Δp = mv_final − mv_initial.',
+        'Area under a Force-Time graph = impulse = change in momentum.',
+        'To reduce force for a given impulse: INCREASE the time of contact.',
+        'Airbags: increase stopping time from ~0.01 s to ~0.1 s → force drops by 10×!',
+        'Crumple zones: car front crumples over ~0.1 s, spreading force over time.',
+        'Catching an egg: move your hand WITH the egg to increase stopping time and reduce force.',
+        'Extending contact time = same impulse, smaller average force. Shortening contact time = same impulse, larger average force.'
+      ],
+      analogy: 'Imagine stopping a fast-moving friend. You can either stand rigid (short time, huge force — you both get hurt) or you can catch them and slowly bring them to a stop (long time, small force — safe!). The total change in momentum is the same — the difference is how long it takes.',
+      example: 'A 1500 kg car going 20 m/s stops in 0.5 s with brakes vs 0.05 s hitting a wall. Brakes: F = Δp/Δt = 30000/0.5 = 60,000 N. Wall: F = 30000/0.05 = 600,000 N (10× more force!).',
+      check: 'Why do baseball players move their hands back when catching a ball? (To increase stopping time, which reduces the force on their hands.)',
+      confusions: ['Confusing impulse (J) with momentum (p) — impulse is CHANGE in momentum', 'Forgetting that impulse is a vector — direction matters!', 'Not connecting the area under an F-t graph to impulse'] 
+    },
+    { code: '4.3', title: 'Conservation of Momentum — The Rule for All Collisions',
+      objective: 'Apply momentum conservation to collisions, explosions, and any isolated system.',
+      explain: 'If no EXTERNAL net force acts on a system, the TOTAL momentum of the system is conserved. This is one of the most powerful conservation laws in physics. Notice: INTERNAL forces (forces between objects within the system) do not matter! Two billiard balls colliding exert huge forces on each other, but these are internal — the total momentum before = total momentum after. To use this: (1) Define your system (both objects). (2) Pick a positive direction. (3) Write Σp_before = Σp_after. (4) Solve.',
+      notes: [
+        'CONSERVATION OF MOMENTUM: If F_external = 0, then Σp_initial = Σp_final.',
+        'This applies to the SYSTEM (all objects together), not to individual objects.',
+        'Internal forces (forces between objects in the system) cancel by Newton\'s 3rd Law and do not change total momentum.',
+        'PERFECTLY INELASTIC: Objects stick together after collision. Momentum conserved, KE NOT conserved (maximum KE lost).',
+        'ELASTIC: Both momentum AND kinetic energy conserved. Rare in real life (billiard balls are close).',
+        'INELASTIC: Momentum conserved, KE partially lost. Most real collisions are inelastic.',
+        'EXPLOSIONS: Total momentum before = 0 (if at rest). After explosion: total momentum still = 0. The pieces fly apart with equal and opposite momenta.',
+        'In 2D: conserve momentum SEPARATELY in x and y: Σpx_i = Σpx_f and Σpy_i = Σpy_f.'
+      ],
+      analogy: 'Imagine two ice skaters pushing off each other. If they start at rest, total momentum = 0. After pushing, one goes right, one goes left. The heavier one goes slower, the lighter one goes faster, but their momenta are equal and opposite. Total is still zero!',
+      example: 'A 3 kg ball moving at 4 m/s right collides with a 5 kg ball at rest. They stick together. 3(4) + 5(0) = (3+5)v_f → 12 = 8v_f → v_f = 1.5 m/s right.',
+      check: 'In a perfectly inelastic collision, is kinetic energy conserved? (NO! Objects sticking together means maximum KE is lost. Only momentum is conserved.)',
+      confusions: ['Forgetting to define positive direction (signs matter!)', 'Trying to conserve kinetic energy for an inelastic collision — you CANNOT', 'Not accounting for all objects in the system'] 
+    },
+    { code: '4.4', title: 'Center of Mass — The "Average Position" of a System',
+      objective: 'Understand how the center of mass moves and why internal forces cannot change its motion.',
+      explain: 'The center of mass (COM) is the "balance point" of a system — the weighted average position of all the mass. For a uniform rod, it is at the middle. For two unequal masses, it is closer to the heavier one. The KEY insight: the center of mass moves as if ALL the mass were concentrated there and ALL external forces acted there. Internal forces (like two parts of the system pushing on each other) CANNOT change the COM velocity. This is why a firework exploding in mid-air: the center of mass of all the fragments continues on the same parabolic path as if nothing happened!',
+      notes: [
+        'CENTER OF MASS: x_cm = (m₁x₁ + m₂x₂ + ...)/(m₁ + m₂ + ...). Weighted average position.',
+        'The COM moves as if all mass is concentrated there and all external forces act there.',
+        'INTERNAL FORCES cannot change the motion of the COM. Only EXTERNAL forces can.',
+        'An explosion or collision does not change the COM velocity (if no external forces).',
+        'If total momentum = 0, the COM is stationary (or moves at constant velocity).',
+        'For a system at rest that explodes: COM stays at rest. Fragments fly apart but the COM does not move.'
+      ],
+      analogy: 'Think of the COM as the "average person" in a crowd. If everyone pushes on each other (internal forces), the average person does not move. But if a strong wind blows on the crowd (external force), the average person drifts.',
+      example: 'Two masses (2 kg at x = 0, 4 kg at x = 6 m). COM = (2×0 + 4×6)/(2+4) = 24/6 = 4 m. The COM is closer to the heavier mass. If they are connected by a spring and explode apart, the COM stays at x = 4 m.',
+      check: 'A person walks from one end of a boat to the other. Does the boat move? (Yes! The COM of person + boat stays in the same place (if no external forces), so the boat shifts backward as the person walks forward.)',
+      confusions: ['Thinking internal forces can move the center of mass — they CANNOT', 'Forgetting that COM is a weighted average (heavier objects pull it closer)', 'Not connecting COM motion to total momentum'] 
+    }
   ],
   5: [
-    { code: '5.1', title: 'Angular Kinematics', objective: 'Use rotational variables as analogs of linear variables.', notes: ['theta is angular position, omega is angular velocity, alpha is angular acceleration.', 'For constant alpha, rotational equations mirror linear kinematics.', 'Linear and angular quantities connect through r.'], example: 'A wheel with omega = 10 rad/s and radius 0.3 m has rim speed v = r omega = 3 m/s.', check: 'Points farther from the axis have greater linear speed for the same omega.' },
-    { code: '5.2', title: 'Torque', objective: 'Calculate turning effect about a chosen pivot.', notes: ['tau = rF sin theta.', 'Only the perpendicular component creates torque.', 'A force through the pivot creates zero torque.', 'Choose a pivot that removes unknown forces.'], example: 'A 50 N force at 0.4 m perpendicular gives tau = 20 N m.', check: 'Opening a door is easier at the handle because r is larger.' },
-    { code: '5.3', title: 'Rotational Equilibrium', objective: 'Solve balance problems with net torque zero.', notes: ['Static equilibrium requires both net force = 0 and net torque = 0.', 'Use clockwise and counterclockwise signs consistently.', 'The weight of a uniform object acts at its center of mass.'], example: 'A 100 N weight 2 m left of pivot balances 200 N at 1 m right of pivot.', check: 'A beam can have net force zero but still rotate if net torque is not zero.' },
-    { code: '5.4', title: 'Rotational Dynamics', objective: 'Use net torque to find angular acceleration.', notes: ['Net torque equals I alpha.', 'Moment of inertia depends on mass distribution.', 'Same torque produces smaller alpha for larger I.', 'Rotational inertia is not just mass; where mass is located matters.'], example: 'tau = 6 N m, I = 2 kg m^2 gives alpha = 3 rad/s^2.', check: 'A hoop is harder to spin than a disk of the same mass and radius.' }
+    { code: '5.1', title: 'Rotation Vocabulary — Angular Position, Velocity, and Acceleration',
+      objective: 'Learn the rotational equivalents of linear quantities and how they connect through the radius.',
+      explain: 'Everything you learned about linear motion (position, velocity, acceleration) has a ROTATIONAL counterpart. Linear position x becomes angular position θ (theta). Linear velocity v becomes angular velocity ω (omega). Linear acceleration a becomes angular acceleration α (alpha). The connection between them: v = rω and a_t = rα, where r is the distance from the rotation axis. A point farther from the axis moves faster in a straight line, even though all points have the same angular velocity!',
+      notes: [
+        'Angular position: θ (radians). Analogous to x (meters). One full revolution = 2π radians = 360°.',
+        'Angular velocity: ω = Δθ/Δt (rad/s). Analogous to v = Δx/Δt. Rotational speed.',
+        'Angular acceleration: α = Δω/Δt (rad/s²). Analogous to a = Δv/Δt.',
+        'LINEAR-ANGULAR CONNECTION: v = rω. A point at distance r from the axis has linear speed v.',
+        'Tangential acceleration: a_t = rα. This is the linear acceleration along the edge.',
+        'Centripetal acceleration: a_c = ω²r = v²/r. Always points toward the center.',
+        'All points on a rigid body have the SAME ω and α, but different v and a (depending on r).'
+      ],
+      analogy: 'Think of a spinning merry-go-round. Everyone on it rotates at the same angular speed (same ω) — they all complete one revolution in the same time. But a person near the edge covers more distance per revolution, so their LINEAR speed v = rω is higher. They feel more "wind" because they are moving faster through space.',
+      example: 'A wheel spins at 20 rad/s with radius 0.5 m. Speed at the rim: v = rω = 0.5(20) = 10 m/s. Speed at half the radius (0.25 m): v = 0.25(20) = 5 m/s. Same ω, different v!',
+      check: 'A point on a record at 10 cm from center moves at 0.2 m/s. What is ω? (ω = v/r = 0.2/0.1 = 2 rad/s)',
+      confusions: ['Confusing angular velocity (rad/s) with linear velocity (m/s)', 'Forgetting that all points on a rigid body have the same ω but different v', 'Not converting between degrees and radians (2π rad = 360°)'] 
+    },
+    { code: '5.2', title: 'Torque — The Rotational Equivalent of Force',
+      objective: 'Calculate torque, understand why distance from the pivot matters, and learn to choose a smart pivot point.',
+      explain: 'Torque (τ) is what CAUSES rotational acceleration, just like force causes linear acceleration. τ = rF sin θ, where r is the distance from the pivot, F is the force, and θ is the angle between them. Three ways to increase torque: (1) push harder (more F), (2) push farther from the pivot (more r), (3) push perpendicular to the lever (sin 90° = 1). This is why door handles are far from the hinges and why wrenches have long handles!',
+      notes: [
+        'TORQUE: τ = rF sin θ. Units: N·m (Newton-meters). NOT the same as work (same units, different meaning).',
+        'r = distance from pivot (axis of rotation) to point where force is applied.',
+        'θ = angle between the force vector and the line from pivot to force point.',
+        'Maximum torque: when force is PERPENDICULAR to r (θ = 90°, sin 90° = 1). Then τ = rF.',
+        'Zero torque: when force acts THROUGH the pivot (r = 0) or is PARALLEL to r (θ = 0°, sin 0° = 0).',
+        'Torque is a VECTOR — it can be clockwise (CW) or counterclockwise (CCW). Pick a convention (usually CCW = +).',
+        'A force applied through the pivot creates NO torque because r = 0.',
+        'CHOOSING A PIVOT: pick the point where an UNKNOWN force acts — that force will have r = 0 and disappear from the torque equation!'
+      ],
+      analogy: 'Opening a door: push near the hinges (small r) — hard to open. Push at the handle (large r) — easy! Same force, different torque. The farther from the pivot, the more "leverage" you have. This is the principle behind every lever, wrench, and seesaw.',
+      example: 'A 30 N force is applied 0.4 m from a pivot, perpendicular to the wrench. τ = rF = 0.4(30) = 12 N·m. If the same force is applied at 0.8 m: τ = 0.8(30) = 24 N·m (double!).',
+      check: 'Why is it harder to push open a door near the hinges? (Smaller r means less torque for the same force.)',
+      confusions: ['Forgetting to include sin θ — torque depends on the PERPENDICULAR component of force', 'Using the wrong distance r — must be from pivot to point of force application', 'Confusing torque with work — they have the same units (N·m) but are completely different concepts'] 
+    },
+    { code: '5.3', title: 'Rotational Equilibrium — When Objects Do Not Rotate',
+      objective: 'Solve problems where net torque = 0 (and net force = 0) for objects at rest or rotating at constant speed.',
+      explain: 'An object is in ROTATIONAL EQUILIBRIUM when the net torque is zero (Στ = 0). This is the rotational equivalent of F_net = 0. For FULL equilibrium (neither translating nor rotating), you need BOTH conditions: ΣF = 0 AND Στ = 0. The classic AP problem: a beam or seesaw with weights at different distances. Strategy: (1) draw FBD, (2) choose pivot (usually where unknown force acts), (3) write Στ = 0 about that pivot, (4) solve.',
+      notes: [
+        'Rotational equilibrium: Στ = 0. The object is not angularly accelerating (could be at rest or spinning at constant ω).',
+        'Static equilibrium: BOTH ΣF = 0 AND Στ = 0. Object is completely at rest.',
+        'CLOCKWISE (CW) torques try to rotate the object one way. COUNTERCLOCKWISE (CCW) torques try to rotate it the other way.',
+        'For equilibrium: Στ_CCW = Στ_CW. (Counterclockwise torques balance clockwise torques.)',
+        'The weight of a uniform object acts at its CENTER (center of mass). For a 6 m beam, weight acts at 3 m from either end.',
+        'SMART PIVOT CHOICE: pick the point where an unknown force acts. That force has r = 0, so its torque = 0, and it disappears from the equation!'
+      ],
+      analogy: 'A seesaw: a heavy child close to the center can balance a light child far from the center. The torques are equal: (heavy)(small distance) = (light)(large distance). This is the principle of the lever — one of the oldest machines in human history.',
+      example: 'A 4 m beam (mass 10 kg) is supported at both ends. A 20 kg weight hangs 1 m from the left. Take torque about the left support. Στ = 0: N_right(4) − 10(9.8)(2) − 20(9.8)(1) = 0 → N_right = 294/4 = 73.5 N.',
+      check: 'Can an object have ΣF = 0 but still rotate? (YES! If there is a net torque, it will spin. A wheel with balanced forces but unbalanced torques will rotate.',
+      confusions: ['Forgetting to include the weight of the beam itself (acts at its center)', 'Not choosing a consistent sign convention for CW/CCW', 'Not choosing the pivot wisely to eliminate unknown forces'] 
+    },
+    { code: '5.4', title: 'Newton\'s Second Law for Rotation — τ = Iα',
+      objective: 'Use net torque to find angular acceleration, understanding moment of inertia as rotational mass.',
+      explain: 'Just as F = ma describes linear acceleration, τ = Iα describes angular acceleration. Here, I (moment of inertia) is the rotational equivalent of mass — it measures how much an object resists angular acceleration. But I is not just mass! It depends on how the mass is DISTRIBUTED relative to the axis. A hoop (all mass at radius R) has I = MR². A disk (mass spread from 0 to R) has I = ½MR². The hoop is harder to spin because more mass is far from the axis.',
+      notes: [
+        'NET TORQUE = Iα. This is Newton\'s 2nd Law for rotation. Analog of F = ma.',
+        'MOMENT OF INERTIA: I = Σmr² (for point masses) or I = ½MR² (solid disk), I = MR² (hoop).',
+        'I depends on: (1) total mass, (2) how mass is distributed relative to axis, (3) choice of axis.',
+        'Mass far from the axis contributes MORE to I (because of r²). Mass near the axis contributes less.',
+        'Hoop vs disk (same mass, radius): Hoop has I = MR², disk has I = ½MR². Hoop is harder to spin.',
+        'PARALLEL AXIS THEOREM: I = I_cm + Md² (for axis shifted distance d from center of mass).',
+        'For multiple torques: Στ = Iα. Add all torques (with signs), set equal to Iα, solve.'
+      ],
+      analogy: 'I is like rotational inertia — how hard it is to start or stop spinning. A figure skater with arms out has large I (mass far from axis). When she pulls arms in, I decreases and she spins faster. I is the "rotational mass."',
+      example: 'A disk (I = ½MR²) with M = 4 kg, R = 0.5 m has a 10 N tangential force at the rim. τ = rF = 0.5(10) = 5 N·m. I = ½(4)(0.25) = 0.5 kg·m². α = τ/I = 5/0.5 = 10 rad/s².',
+      check: 'Why is a hoop harder to spin than a disk of the same mass? (Hoop has larger I because all mass is at maximum distance from axis.)',
+      confusions: ['Using the wrong formula for I — each shape has a specific formula', 'Forgetting that I depends on the axis choice', 'Not including all torques in the Στ equation'] 
+    }
   ],
   6: [
-    { code: '6.1', title: 'Rotational Kinetic Energy', objective: 'Include both translational and rotational energy for rolling objects.', notes: ['Krot = 1/2 I omega^2.', 'Rolling objects usually have Ktrans + Krot.', 'Pure rolling links omega and v by v = r omega.'], example: 'A disk rolling at speed v has Ktotal = 1/2 mv^2 + 1/4 mv^2 = 3/4 mv^2.', check: 'A rolling object is slower down a ramp than a sliding point mass because energy is split into rotation.' },
-    { code: '6.2', title: 'Angular Momentum', objective: 'Apply angular momentum conservation when external torque is zero.', notes: ['L = I omega for a rigid rotating object.', 'If external torque is zero, angular momentum is conserved.', 'When I decreases, omega increases.'], example: 'If I halves, omega doubles to keep L constant.', check: 'A skater pulls arms in and spins faster.' },
-    { code: '6.3', title: 'Angular Impulse and Work', objective: 'Relate torque over time and angle to changes in motion.', notes: ['Angular impulse is tau delta t = delta L.', 'Rotational work can be associated with torque through angle.', 'A torque doing work can increase rotational kinetic energy.'], example: 'A 4 N m torque for 3 s gives angular impulse 12 N m s.', check: 'A motor can spin up a wheel by applying torque over time.' },
-    { code: '6.4', title: 'Orbits and Satellites', objective: 'Connect gravity to circular motion and orbital energy ideas.', notes: ['Gravity provides centripetal force in circular orbits.', 'Orbital speed v = sqrt(GM/r).', 'Larger orbital radius means smaller speed but longer period.'], example: 'If radius increases by factor 4, orbital speed halves.', check: 'A satellite in orbit is falling around Earth, not floating without gravity.' }
+    { code: '6.1', title: 'Rotational Kinetic Energy — Spinning Objects Have Energy Too',
+      objective: 'Calculate the total kinetic energy of rolling objects (translational + rotational) and use energy conservation with rotation.',
+      explain: 'A spinning wheel has kinetic energy even if it is not moving through space! This is ROTATIONAL kinetic energy: K_rot = ½Iω². For objects that are BOTH translating (moving) AND rotating (spinning), you must include BOTH forms: K_total = ½mv² + ½Iω². The classic example: a ball rolling down a ramp. Some of the gravitational potential energy goes into rotation, so the ball rolls SLOWER than a frictionless block sliding. This is why objects "race" down ramps and the one with the smallest I reaches the bottom first.',
+      notes: [
+        'ROTATIONAL KE: K_rot = ½Iω². Analogous to K_trans = ½mv².',
+        'TOTAL KE for rolling object: K_total = ½mv² + ½Iω². BOTH terms count!',
+        'ROLLING WITHOUT SLIPPING: v = rω. This connects the translation and rotation.',
+        'Substituting ω = v/r: K_total = ½mv² + ½I(v/r)² = ½mv²(1 + I/mr²).',
+        'Energy conservation with rotation: mgh = ½mv² + ½Iω² at the bottom of a ramp.',
+        'Object with smaller I reaches bottom faster (more energy goes to translation).',
+        'Sphere < Disk < Hoop in speed at bottom of ramp (sphere wins because I is smallest).'
+      ],
+      analogy: 'Think of your total energy budget being split between "moving forward" and "spinning." A hoop puts a lot of its energy into spinning (large I), so it moves forward slowly. A sphere puts less into spinning (smaller I), so it moves faster.',
+      example: 'A solid sphere (I = ²⁄₅mr²) rolls from rest down a 2 m high ramp. mgh = ½mv² + ½(²⁄₅mr²)(v/r)² = ½mv² + ¹⁄₅mv² = ⁷⁄₁₀mv². v = √(10gh/7) = √(196/7) = 5.29 m/s. A sliding block would reach v = √(2gh) = 6.26 m/s (faster!).',
+      check: 'Why does a rolling ball reach the bottom of a ramp slower than a frictionless sliding block? (Some energy goes into rotation, leaving less for translation.)',
+      confusions: ['Forgetting the rotational KE term for rolling objects', 'Not using v = rω to connect linear and rotational quantities', 'Thinking rolling and sliding reach the same speed — rolling is always slower'] 
+    },
+    { code: '6.2', title: 'Angular Momentum — The Rotational Equivalent of Linear Momentum',
+      objective: 'Calculate angular momentum and apply conservation when external torque is zero.',
+      explain: 'Angular momentum (L = Iω) is the rotational equivalent of linear momentum (p = mv). Just as linear momentum is conserved when F_net = 0, ANGULAR momentum is conserved when Στ_external = 0. The most famous example: a figure skater spinning. When she pulls her arms in, her moment of inertia I decreases. Since L = Iω must stay constant, ω MUST increase — she spins faster! This is not magic — it is physics.',
+      notes: [
+        'ANGULAR MOMENTUM: L = Iω (for rigid body rotating about fixed axis). Units: kg·m²/s.',
+        'For a point particle: L = mvr (where r is the perpendicular distance from the line of motion to the pivot).',
+        'CONSERVATION: If Στ_ext = 0, then L_initial = L_final, or I₁ω₁ = I₂ω₂.',
+        'If I decreases → ω increases (to keep L constant). If I increases → ω decreases.',
+        'Figure skater: arms out (large I, slow spin) → arms in (small I, fast spin). Same L.',
+        'Diver: tucked position = smaller I = faster spin.',
+        'This is the rotational analog of: smaller mass at same momentum = higher speed.'
+      ],
+      analogy: 'Imagine holding a spinning wheel. If you add weight near the edge (increase I), it slows down. If you move weight closer to the center (decrease I), it speeds up. The total "oomph" (angular momentum) stays the same — only how it is distributed changes.',
+      example: 'A skater with I = 4 kg·m² spins at 2 rev/s. Pulling arms in, I becomes 1 kg·m². Conservation: 4(2) = 1(ω) → ω = 8 rev/s. She spins 4× faster!',
+      check: 'If a merry-go-round has kids at the edge and they all move to the center, what happens? (I decreases, ω increases — it spins faster! Same L.)',
+      confusions: ['Forgetting that L = Iω, not just ω — both I and ω matter', 'Not checking if external torque is zero before applying conservation', 'Confusing angular momentum with linear momentum — they are different quantities'] 
+    },
+    { code: '6.3', title: 'Satellites and Orbits — Gravity as Centripetal Force',
+      objective: 'Connect gravitational force to circular motion for satellites and understand orbital mechanics.',
+      explain: 'A satellite in orbit is in FREE FALL — gravity pulls it toward Earth. But it is moving so fast sideways that it keeps "missing" the Earth as it falls. The gravitational force provides exactly the centripetal force needed for circular motion: GMm/r² = mv²/r. Solving for v gives v = √(GM/r). This means: higher orbit = slower satellite! A geostationary satellite (35,786 km up) moves at about 3 km/s, while the ISS (400 km up) moves at about 7.7 km/s.',
+      notes: [
+        'In circular orbit: gravity = centripetal force. GMm/r² = mv²/r.',
+        'Orbital speed: v = √(GM/r). Higher orbit → slower speed.',
+        'Orbital period: T = 2πr/v = 2π√(r³/GM). Higher orbit → longer period.',
+        'Satellites are FALLING around Earth, not floating. They are in continuous free fall.',
+        'If satellite speeds up: orbit gets larger (moves to higher orbit).',
+        'If satellite slows down: orbit gets smaller (spirals inward).',
+        'Orbital speed does NOT depend on satellite mass (mass cancels in v = √(GM/r)).',
+        'Low Earth Orbit (LEO): ~400 km altitude, v ≈ 7.7 km/s, T ≈ 90 min.',
+        'Geostationary orbit: T = 24 hours, stays above same point on Earth.'
+      ],
+      analogy: 'Imagine throwing a ball horizontally. It curves down and hits the ground. Throw it faster — it goes farther before hitting. Throw it fast enough (~8 km/s) and the curve of its fall matches the curve of Earth\'s surface — it keeps falling but never hits! That is orbit.',
+      example: 'ISS orbits at r ≈ 6770 km from Earth\'s center. v = √(GM/r) = √((6.67×10⁻¹¹)(5.97×10²⁴)/6.77×10⁶) ≈ 7670 m/s ≈ 27,600 km/h.',
+      check: 'If a satellite moves to a higher orbit, does it speed up or slow down? (Slows down! v = √(GM/r), so larger r = smaller v.)',
+      confusions: ['Thinking satellites are not falling — they ARE falling, just moving sideways fast enough to miss Earth', 'Forgetting that orbital speed depends on r, not on the satellite\'s mass', 'Thinking higher orbit means faster speed — it actually means SLOWER'] 
+    }
   ],
   7: [
-    { code: '7.1', title: 'Defining SHM', objective: 'Recognize motion caused by a restoring force proportional to displacement.', notes: ['SHM has F = -kx type behavior.', 'Acceleration points toward equilibrium.', 'Acceleration magnitude is greatest at maximum displacement.'], example: 'A spring stretched right pulls left; a spring compressed left pushes right.', check: 'At equilibrium, acceleration is zero but speed is maximum.' },
-    { code: '7.2', title: 'Period and Frequency', objective: 'Predict how changing mass, spring constant, length, or gravity changes period.', notes: ['For springs: T = 2pi sqrt(m/k).', 'For pendulums: T = 2pi sqrt(L/g).', 'Frequency is f = 1/T.', 'Amplitude does not affect ideal period.'], example: 'Quadrupling mass on a spring doubles the period.', check: 'A longer pendulum swings more slowly.' },
-    { code: '7.3', title: 'SHM Graphs', objective: 'Connect position, velocity, acceleration, and energy graphs.', notes: ['Position and acceleration are opposite in sign.', 'Velocity is maximum when position is zero.', 'Energy swaps between kinetic and potential.'], example: 'If x is maximum positive, v = 0 and a is maximum negative.', check: 'Velocity is shifted one-quarter cycle from position.' },
-    { code: '7.4', title: 'Energy in Oscillators', objective: 'Use energy conservation to find speed at any position.', notes: ['Total energy E = 1/2 kA^2.', 'Spring PE = 1/2 kx^2.', 'KE = total energy minus PE.', 'At extremes all energy is potential; at equilibrium all energy is kinetic.'], example: 'At x = A/2, PE is 1/4 of total, so KE is 3/4 of total.', check: 'Maximum speed is vmax = A omega.' }
+    { code: '7.1', title: 'What Is Simple Harmonic Motion? The Most Important Pattern in Physics',
+      objective: 'Recognize SHM as motion where a restoring force is proportional to displacement, and understand its basic characteristics.',
+      explain: 'Simple Harmonic Motion (SHM) is a special type of oscillation where the restoring force is proportional to displacement: F = −kx. The negative sign means the force always points BACK toward equilibrium (the middle position). This creates a smooth back-and-forth motion: mass on a spring, pendulum (small angle), vibrating guitar string, even atoms in a crystal! The key insight: the farther you pull from equilibrium, the stronger the restoring force, and the faster it accelerates back. At equilibrium, force is zero but speed is maximum.',
+      notes: [
+        'SHM = oscillation where F = −kx (force proportional to displacement, directed toward equilibrium).',
+        'Examples: mass on a horizontal spring, pendulum (small angle), tuning fork, vibrating molecule.',
+        'EQUILIBRIUM: the position where net force = 0. For a spring, this is the natural length position.',
+        'At equilibrium: F = 0, a = 0, speed is MAXIMUM, KE is maximum, PE is minimum.',
+        'At extremes (maximum displacement): F is maximum, a is maximum, speed = 0, KE = 0, PE is maximum.',
+        'The motion is PERIODIC: it repeats exactly over and over.',
+        'Acceleration is always directed toward equilibrium: a = −(k/m)x for springs.',
+        'SHM is caused by a RESTORATIVE force — one that always pushes/pulls toward the middle.'
+      ],
+      analogy: 'Imagine a ball in a bowl. Push it to the side and let go — it rolls back toward the bottom (equilibrium), overshoots, rolls back the other way, and oscillates. The farther from the bottom you push, the faster it moves when it passes through the middle. The force is always trying to bring it back to the bottom.',
+      example: 'A mass on a spring is pulled 10 cm from equilibrium and released. At x = 10 cm (extreme): speed = 0, acceleration is maximum to the left. At x = 0 (equilibrium): speed is maximum, acceleration = 0. At x = −10 cm (other extreme): speed = 0 again.',
+      check: 'Where in SHM is the acceleration maximum? (At the extremes — maximum displacement from equilibrium.) Where is speed maximum? (At equilibrium — zero displacement.)',
+      confusions: ['Thinking the object stops at equilibrium — it is moving FASTEST there', 'Forgetting the negative sign in F = −kx (force is always toward equilibrium)', 'Confusing "restoring force" with "force of motion" — restoring force is a real force like spring force'] 
+    },
+    { code: '7.2', title: 'Period and Frequency — How Fast Does It Oscillate?',
+      objective: 'Calculate the period of springs and pendulums, and understand what does and does not affect the period.',
+      explain: 'Period (T) is the time for ONE complete oscillation (back and forth). Frequency (f) is how many oscillations per second: f = 1/T. Here is the mind-blowing part: for a spring-mass system, T = 2π√(m/k). Notice what is MISSING — amplitude! Changing how far you pull the spring does NOT change the period. A gentle oscillation and a big oscillation take the same time. Similarly for a pendulum: T = 2π√(L/g). Period depends on length and gravity, NOT on mass or amplitude (for small angles).',
+      notes: [
+        'PERIOD (T): time for one complete cycle. Units: seconds.',
+        'FREQUENCY (f): cycles per second. f = 1/T. Units: Hertz (Hz). 1 Hz = 1 cycle/second.',
+        'ANGULAR FREQUENCY: ω = 2πf = 2π/T = √(k/m) for springs.',
+        'SPRING PERIOD: T = 2π√(m/k). Depends on mass and spring constant. INDEPENDENT of amplitude!',
+        'PENDULUM PERIOD: T = 2π√(L/g). Depends on length and gravity. INDEPENDENT of mass and amplitude!',
+        'More mass on a spring → longer period (slower oscillation). Stiffer spring (larger k) → shorter period.',
+        'Longer pendulum → longer period. Stronger gravity → shorter period.',
+        'Doubling mass: T increases by √2. Quadrupling mass: T doubles.',
+        'Doubling spring constant: T decreases by factor √2.'
+      ],
+      analogy: 'A grandfather clock uses a pendulum. The period depends only on the length of the pendulum — not on how heavy the bob is or how far it swings. This is why pendulum clocks are so reliable! Galileo discovered this by watching a chandelier swing in a cathedral.',
+      example: 'Spring: m = 0.5 kg, k = 200 N/m. T = 2π√(0.5/200) = 2π√(0.0025) = 2π(0.05) = 0.314 s. If you double the mass to 1 kg: T = 2π√(1/200) = 2π(0.0707) = 0.444 s (increases by √2).',
+      check: 'Does the period of a pendulum depend on the mass of the bob? (NO! T = 2π√(L/g) — mass does not appear anywhere.)',
+      confusions: ['Thinking period depends on amplitude — it does NOT for ideal SHM', 'Forgetting that pendulum period depends on LENGTH, not mass', 'Confusing period and frequency — they are inverses (f = 1/T)'] 
+    },
+    { code: '7.3', title: 'SHM Graphs and Equations — Position, Velocity, Acceleration vs Time',
+      objective: 'Read and draw graphs of x(t), v(t), and a(t) for SHM and understand their relationships.',
+      explain: 'In SHM, position follows a sinusoidal pattern: x(t) = A cos(ωt) (if starting from maximum displacement). The velocity is the DERIVATIVE (slope) of position, which shifts the curve by ¼ cycle: v(t) = −Aω sin(ωt). The acceleration is the derivative of velocity (or −ω² times position): a(t) = −Aω² cos(ωt) = −ω²x. Notice: position and acceleration are OPPOSITE (180° out of phase), while velocity is shifted 90° from both. This means when position is maximum, acceleration is maximum in the opposite direction and velocity is zero.',
+      notes: [
+        'POSITION: x(t) = A cos(ωt). Amplitude = A. Period = 2π/ω.',
+        'VELOCITY: v(t) = −Aω sin(ωt). Maximum speed = Aω. Zero when at extremes.',
+        'ACCELERATION: a(t) = −Aω² cos(ωt) = −ω²x. Maximum when displacement is maximum.',
+        'Phase relationships: position and acceleration are 180° apart (opposite signs). Velocity is 90° from both.',
+        'When x = +A (right extreme): v = 0, a = −ω²A (maximum leftward acceleration).',
+        'When x = 0 (equilibrium): v = ±Aω (maximum), a = 0.',
+        'Graph reading: the slope of x-t graph = velocity. The slope of v-t graph = acceleration.'
+      ],
+      analogy: 'Think of a pendulum. At the right extreme: position is max right, velocity is zero (momentarily stopped), acceleration is max to the left (pulling it back). At center: position is zero, velocity is max to the left, acceleration is zero. The graphs capture this beautifully as shifted sine waves.',
+      example: 'A mass oscillates with A = 0.1 m and period T = 0.5 s. ω = 2π/T = 4π rad/s. At t = 0, x = 0.1 m (at extreme). Equation: x(t) = 0.1 cos(4πt). v(t) = −0.1(4π) sin(4πt) = −0.4π sin(4πt).',
+      check: 'If the position graph is a cosine curve, what shape is the velocity graph? (Negative sine curve — shifted 90° to the left.)',
+      confusions: ['Forgetting the negative sign in velocity and acceleration equations', 'Not understanding that graphs are shifted (out of phase) relative to each other', 'Confusing angular frequency ω with regular frequency f'] 
+    },
+    { code: '7.4', title: 'Energy in SHM — Constant Total, Swapping Between KE and PE',
+      objective: 'Use energy conservation to find speed at any position in an oscillation.',
+      explain: 'In SHM, total mechanical energy is CONSTANT (no friction). But it continuously swaps between kinetic and potential energy. At the extremes: all energy is potential (PE = ½kA², KE = 0). At equilibrium: all energy is kinetic (KE = ½mv²_max, PE = 0). Everywhere in between: E = KE + PE = constant. This is exactly like a roller coaster! The total energy is determined by the AMPLITUDE: E = ½kA². Bigger oscillation = more total energy.',
+      notes: [
+        'TOTAL ENERGY: E = ½kA². Determined by amplitude. Constant throughout the motion.',
+        'SPRING PE: U = ½kx². Maximum at extremes (x = ±A). Zero at equilibrium (x = 0).',
+        'KINETIC ENERGY: K = ½mv². Maximum at equilibrium. Zero at extremes.',
+        'CONSERVATION: E = K + U = constant. ½mv² + ½kx² = ½kA².',
+        'Speed at any position: v = ω√(A² − x²). At x = 0: v = Aω = v_max.',
+        'ENERGY BAR CHARTS: At extremes, tall PE bar, zero KE. At equilibrium, tall KE bar, zero PE.',
+        'Doubling amplitude: total energy QUADRUPLES (because E ∝ A²).'
+      ],
+      analogy: 'Think of a ball in a valley (bowl). At the sides (extremes), it has maximum height (PE) and zero speed (KE). At the bottom (equilibrium), it has maximum speed (KE) and zero height (PE). The total energy stays the same — it just swaps back and forth.',
+      example: 'Spring (k = 100 N/m), mass = 0.5 kg, A = 0.2 m. Total energy: E = ½(100)(0.04) = 2 J. Speed at equilibrium: ½(0.5)v² = 2 → v = √8 = 2.83 m/s. Speed at x = 0.1 m: PE = ½(100)(0.01) = 0.5 J, so KE = 1.5 J, v = √(2×1.5/0.5) = √6 = 2.45 m/s.',
+      check: 'At what position is the kinetic energy equal to half the total energy? (When PE = ½E, so ½kx² = ¼kA², meaning x = A/√2 ≈ 0.707A.)',
+      confusions: ['Forgetting that total energy depends on amplitude', 'Not including all energy types in the conservation equation', 'Forgetting that KE = E − PE (use conservation to find speed!)'] 
+    }
   ],
   8: [
-    { code: '8.1', title: 'Density and Pressure', objective: 'Use density and pressure as local properties of fluids.', notes: ['Density is mass per volume.', 'Pressure is force per area.', 'Pressure in a static fluid depends on depth, density, and gravity.', 'Pressure acts in all directions at a point.'], example: 'At 3 m depth in water, gauge pressure is 1000(9.8)(3) = 29,400 Pa.', check: 'A wider container does not automatically mean greater pressure at the same depth.' },
-    { code: '8.2', title: 'Buoyancy', objective: 'Use displaced fluid to decide whether objects float or sink.', notes: ['Buoyant force equals weight of displaced fluid.', 'Floating objects have buoyant force equal to weight.', 'Fraction submerged equals object density divided by fluid density.', 'Use fluid density in Fb = rho Vg.'], example: 'Wood of density 700 kg/m^3 floats 70% submerged in water.', check: 'A steel ship floats because its average density including air is less than water.' },
-    { code: '8.3', title: 'Pascal Principle', objective: 'Analyze hydraulic systems by equal pressure transmission.', notes: ['In enclosed fluids, pressure changes transmit throughout the fluid.', 'F1/A1 = F2/A2.', 'A large piston multiplies force but moves a smaller distance.'], example: 'If area ratio is 20, a 100 N input can support 2000 N output.', check: 'Hydraulics multiply force, not energy.' },
-    { code: '8.4', title: 'Continuity and Bernoulli', objective: 'Connect flow speed, pipe area, pressure, and height.', notes: ['Continuity: A1v1 = A2v2 for incompressible flow.', 'Narrower pipe means faster flow.', 'Bernoulli: faster flow often means lower pressure at same height.', 'Bernoulli is energy conservation for ideal fluids.'], example: 'If pipe area halves, speed doubles.', check: 'At the same height, the fastest section of a pipe has the lowest pressure.' }
+    { code: '8.1', title: 'Density and Pressure — What Fluids Push and How Hard',
+      objective: 'Understand density as mass per volume and pressure as force per area, and calculate pressure at depth in fluids.',
+      explain: 'DENSITY (ρ = m/V) tells you how much mass is packed into a given volume. Lead is dense (11,340 kg/m³), air is not (1.2 kg/m³). PRESSURE (P = F/A) tells you how much force is spread over an area. Here is the critical insight about fluids: pressure in a fluid increases with DEPTH. The deeper you go, the more fluid is above you pushing down. The formula P = P₀ + ρgh tells you the pressure at depth h below the surface. Also crucial: in a fluid, pressure pushes in ALL DIRECTIONS — not just down! This is why a balloon underwater gets squeezed from all sides.',
+      notes: [
+        'DENSITY: ρ = m/V. Units: kg/m³. Water = 1000 kg/m³. Air = 1.2 kg/m³. Lead = 11,340 kg/m³.',
+        'PRESSURE: P = F/A. Units: Pascals (Pa) = N/m². Atmospheric pressure ≈ 101,325 Pa = 1 atm.',
+        'PRESSURE IN FLUID: P = P₀ + ρgh, where P₀ is surface pressure, h is depth below surface.',
+        'Pressure increases LINEARLY with depth. Every 10 m of water adds about 1 atm of pressure.',
+        'Pressure pushes in ALL DIRECTIONS at a point — up, down, sideways, diagonal. Not just down!',
+        'GAUGE PRESSURE = pressure above atmospheric: P_gauge = ρgh. ABSOLUTE pressure = P_atm + P_gauge.',
+        'Pressure does NOT depend on container shape! Only on depth, density, and gravity.',
+        'A wider container does NOT have more pressure at the same depth — the formula has no area term!'
+      ],
+      analogy: 'Density is like how tightly packed people are in a room. Pressure is like how crowded it feels. Going deeper in a fluid is like going to the bottom of a crowd — more people (fluid) above you means more squeezing from all sides.',
+      example: 'Scuba diver at 20 m depth in seawater (ρ = 1025 kg/m³). Gauge pressure = 1025(9.8)(20) = 200,900 Pa. Absolute pressure = 101,325 + 200,900 = 302,225 Pa ≈ 3 atm. The diver feels 3× normal air pressure.',
+      check: 'Does the pressure at the bottom of a 10 cm tall glass of water depend on the glass diameter? (NO! P = ρgh. Only depth matters, not width.)',
+      confusions: ['Thinking wider containers have more pressure at the same depth — they do NOT', 'Forgetting that pressure acts in all directions, not just downward', 'Not converting units properly (Pa = N/m²)'] 
+    },
+    { code: '8.2', title: 'Buoyancy — Why Things Float or Sink (Archimedes\' Principle)',
+      objective: 'Calculate the buoyant force and predict whether objects float, sink, or are neutrally buoyant.',
+      explain: 'When you push a beach ball underwater, it pushes back — that upward force is BUOYANCY. Archimedes discovered that the buoyant force equals the WEIGHT of the fluid displaced: F_b = ρ_fluid × V_displaced × g. If the buoyant force is GREATER than the object\'s weight, it floats. If LESS, it sinks. If EQUAL, the object is neutrally buoyant (hovers). The KEY: buoyant force depends on the FLUID\'S density and the VOLUME displaced — NOT on the object\'s mass or the depth!',
+      notes: [
+        'ARCHIMEDES\' PRINCIPLE: F_b = ρ_fluid × V_displaced × g. Buoyant force = weight of displaced fluid.',
+        'FLOATING: F_b = weight of object. The object displaces exactly its own weight of fluid.',
+        'SINKING: F_b < weight. The object displaces less than its weight of fluid.',
+        'NEUTRAL BUOYANCY: F_b = weight. Object hovers (like a submarine at cruising depth).',
+        'FRACTION SUBMERGED (floating): V_sub/V_total = ρ_object/ρ_fluid. This is a KEY formula!',
+        'For floating: ρ_object < ρ_fluid. If ρ_object > ρ_fluid, it sinks.',
+        'Buoyant force is the SAME regardless of depth (as long as the object is fully submerged).',
+        'A steel ship floats because its AVERAGE density (including the air inside) is less than water.'
+      ],
+      analogy: 'Imagine standing in a pool. You feel lighter because water pushes up on you. The water you pushed out of the way (displaced) has weight — that weight is the buoyant force. If you are less dense than water, you float. If you are more dense (like a rock), you sink.',
+      example: 'Wood block (ρ = 600 kg/m³) in water (ρ = 1000 kg/m³). Fraction submerged = 600/1000 = 0.6. So 60% is underwater and 40% is above. If the block weighs 10 N, buoyant force = 10 N (equal to weight, because it floats).',
+      check: 'Why does a steel ship float? (The ship is mostly hollow — filled with air. Its average density, including the air space, is less than water\'s density.)',
+      confusions: ['Using the object\'s density in F_b = ρVg instead of the FLUID\'s density', 'Thinking buoyant force depends on depth — it does NOT (for fully submerged objects)', 'Forgetting that floating objects have F_b = weight (equilibrium!)'] 
+    },
+    { code: '8.3', title: 'Pascal\'s Principle and Hydraulics — Multiplying Force with Fluids',
+      objective: 'Understand how pressure transmits through enclosed fluids and how hydraulic systems multiply force.',
+      explain: 'Pascal\'s Principle: pressure applied to an enclosed fluid is transmitted equally in all parts of the fluid. This means if you push on a small piston, the SAME pressure appears at a large piston. Since P = F/A, if the large piston has 10× the area, it gets 10× the force! This is how hydraulic lifts, car brakes, and construction equipment work. The catch: the small piston must move a LARGER distance to move the large piston a small distance. You gain force but lose distance — energy is conserved!',
+      notes: [
+        'PASCAL\'S PRINCIPLE: A pressure change in an enclosed fluid is transmitted equally to ALL parts of the fluid.',
+        'HYDRAULIC FORMULA: F₁/A₁ = F₂/A₂ (equal pressure on both pistons).',
+        'Force multiplication: If A₂ > A₁, then F₂ > F₁. The large piston gets more force.',
+        'Distance trade-off: The small piston must move farther. Volume displaced is the same: A₁d₁ = A₂d₂.',
+        'Energy is conserved: (Force × distance) is the same on both sides. You gain force but lose distance.',
+        'Applications: car brakes (small pedal force → large brake force), hydraulic lifts, construction equipment.',
+        'Pascal\'s principle only works with ENCLOSED fluids — the fluid must be trapped.'
+      ],
+      analogy: 'Think of a small syringe connected by a tube to a large syringe, both filled with water. Push the small plunger with 10 N — the same pressure appears at the large plunger. If the large one has 20× the area, it pushes with 200 N! But the small plunger moves 20× farther. It is a trade: force for distance.',
+      example: 'Small piston: A₁ = 0.01 m². Large piston: A₂ = 0.5 m². Apply 100 N on small piston. Pressure = 100/0.01 = 10,000 Pa. Force on large piston = 10,000 × 0.5 = 5,000 N. Mechanical advantage = 50!',
+      check: 'In a hydraulic lift, if you push the small piston 10 cm, how far does the large piston move? (Less far! A₁d₁ = A₂d₂ → d₂ = d₁(A₁/A₂). If A₂ is 50× bigger, d₂ = 10/50 = 0.2 cm.)',
+      confusions: ['Thinking hydraulics create energy — they do NOT, they trade force for distance', 'Forgetting that Pascal\'s principle requires an ENCLOSED fluid', 'Not connecting F/A = F/A (equal pressure) to force multiplication'] 
+    },
+    { code: '8.4', title: 'Fluid Dynamics — Continuity and Bernoulli\'s Equation',
+      objective: 'Use the continuity equation to relate speed and pipe area, and use Bernoulli\'s equation to connect pressure, speed, and height.',
+      explain: 'When fluid flows through a pipe, two powerful principles apply. CONTINUITY (A₁v₁ = A₂v₂): if the pipe narrows, the fluid MUST speed up (same amount of fluid must get through per second). BERNOULLI (P + ½ρv² + ρgh = constant): where fluid moves faster, pressure is LOWER. This seems backwards but it is true! This explains how planes fly (air moves faster over the curved top of the wing, creating lower pressure above → lift), why shower curtains get sucked inward, and why trains can pull you toward them.',
+      notes: [
+        'CONTINUITY EQUATION: A₁v₁ = A₂v₂ (for incompressible fluid). Same volume per second must flow through every cross-section.',
+        'If pipe narrows (A₂ < A₁), fluid speeds up (v₂ > v₁). If pipe widens, fluid slows down.',
+        'Volume flow rate: Q = Av = constant. Units: m³/s.',
+        'BERNOULLI\'S EQUATION: P₁ + ½ρv₁² + ρgh₁ = P₂ + ½ρv₂² + ρgh₂.',
+        'This is ENERGY CONSERVATION for fluids: pressure energy + kinetic energy + potential energy = constant.',
+        'Key insight: FASTER fluid = LOWER pressure (at the same height). This is the Bernoulli effect.',
+        'Applications: airplane wings (faster air over top = lower pressure = lift), curve balls in baseball, Venturi meters.',
+        'At same height (h₁ = h₂): P₁ + ½ρv₁² = P₂ + ½ρv₂². Fast means low pressure!'
+      ],
+      analogy: 'Imagine water flowing through a garden hose. Put your thumb over the end (smaller area) and the water shoots out faster (continuity). The pressure inside the hose where it is narrow is actually LOWER (Bernoulli). This is counterintuitive but true!',
+      example: 'Water flows at 2 m/s through a 10 cm diameter pipe that narrows to 5 cm. Continuity: A₁v₁ = A₂v₂. Since A₂ = A₁/4 (half diameter = quarter area), v₂ = 4v₁ = 8 m/s. The water quadruples its speed!',
+      check: 'Why does an airplane wing create lift? (Air moves faster over the curved top surface. By Bernoulli, faster = lower pressure. Higher pressure below pushes the wing up.)',
+      confusions: ['Thinking higher speed means higher pressure — it is the OPPOSITE (Bernoulli)', 'Forgetting continuity applies only to incompressible fluids', 'Not connecting Bernoulli to energy conservation (it is just conservation of energy for fluids!)'] 
+    }
   ]
 };
 
@@ -1750,37 +2306,6 @@ function openLesson(unitNum) {
     </div>
   `;
   
-  // Beginner-Friendly Introduction
-  html += `
-    <div class="card mb-4" style="border-color:var(--green);">
-      <div class="font-semibold text-sm mb-3">🌱 Starting from Zero: What You Need to Know</div>
-      <p class="text-sm mb-3" style="color:var(--text-secondary);">
-        <strong>New to physics?</strong> No problem! This unit assumes you've never studied physics before. 
-        We'll build everything step by step, from basic concepts to AP-level mastery.
-      </p>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="p-3 rounded-xl" style="background:var(--bg-secondary);">
-          <div class="text-xs font-semibold mb-2" style="color:var(--accent);">📋 Prerequisites</div>
-          <ul class="text-xs space-y-1" style="color:var(--text-muted);">
-            <li>• Basic algebra (solving for x)</li>
-            <li>• Coordinate planes (x and y axes)</li>
-            <li>• SOH CAH TOA (basic trig)</li>
-            <li>• That's it! No physics background needed</li>
-          </ul>
-        </div>
-        <div class="p-3 rounded-xl" style="background:var(--bg-secondary);">
-          <div class="text-xs font-semibold mb-2" style="color:var(--green);">🎯 What You'll Learn</div>
-          <ul class="text-xs space-y-1" style="color:var(--text-muted);">
-            <li>• ${unit.topics[0]}</li>
-            <li>• ${unit.topics[1] || 'Core concepts'}</li>
-            <li>• ${unit.topics[2] || 'Problem-solving skills'}</li>
-            <li>• How to think like a physicist!</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  `;
-  
   // Topics list
   html += `
     <div class="card mb-4">
@@ -1799,32 +2324,49 @@ function openLesson(unitNum) {
         <p class="text-xs mb-4" style="color:var(--text-muted);">Built from the College Board CED topic order, with AP-style checks after each mini-lesson.</p>
         <div class="space-y-4">
           ${subunits.map(s => `
-            <details class="group rounded-xl border p-4" style="background:var(--bg-secondary);border-color:var(--border);" open>
+            <details class="group rounded-xl border p-4 mb-3" style="background:var(--bg-secondary);border-color:var(--border);" open>
               <summary class="cursor-pointer list-none flex items-start gap-3">
                 <span class="font-mono text-xs px-2 py-1 rounded" style="background:${unit.color}20;color:${unit.color};">${s.code}</span>
-                <span>
+                <span class="flex-1">
                   <span class="block font-semibold text-sm">${s.title}</span>
                   <span class="block text-xs mt-1" style="color:var(--text-muted);">Goal: ${s.objective}</span>
                 </span>
-                <span class="ml-auto text-xs" style="color:var(--text-muted);">collapse</span>
+                <span class="text-xs" style="color:var(--text-muted);">▼ expand/collapse</span>
               </summary>
-              <div class="mt-4 grid lg:grid-cols-3 gap-3">
-                <div class="lg:col-span-2">
-                  <div class="text-xs font-semibold mb-2" style="color:var(--accent);">What to know</div>
+              <div class="mt-4 space-y-4">
+                ${s.explain ? `
+                <div class="p-4 rounded-xl" style="background:var(--bg-card);border-left:3px solid ${unit.color};">
+                  <div class="text-xs font-semibold mb-2" style="color:${unit.color};">📖 Explanation (start here if new!)</div>
+                  <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">${s.explain}</p>
+                </div>` : ''}
+                ${s.analogy ? `
+                <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--border);">
+                  <div class="text-xs font-semibold mb-1" style="color:var(--cyan);">💡 Think of it like...</div>
+                  <p class="text-sm" style="color:var(--text-secondary);">${s.analogy}</p>
+                </div>` : ''}
+                <div>
+                  <div class="text-xs font-semibold mb-2" style="color:var(--accent);">📋 Key Points to Remember</div>
                   <ul class="space-y-2 text-sm" style="color:var(--text-secondary);">
                     ${s.notes.map(n => `<li class="flex gap-2"><span style="color:${unit.color};">•</span><span>${n}</span></li>`).join('')}
                   </ul>
                 </div>
-                <div class="space-y-3">
-                  <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--border);">
-                    <div class="text-xs font-semibold mb-1" style="color:var(--green);">Mini Example</div>
-                    <div class="text-xs" style="color:var(--text-secondary);">${s.example}</div>
+                <div class="grid lg:grid-cols-2 gap-3">
+                  <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--green);">
+                    <div class="text-xs font-semibold mb-1" style="color:var(--green);">📝 Worked Example</div>
+                    <div class="text-xs leading-relaxed" style="color:var(--text-secondary);">${s.example}</div>
                   </div>
-                  <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--border);">
-                    <div class="text-xs font-semibold mb-1" style="color:var(--yellow);">Quick Check</div>
-                    <div class="text-xs" style="color:var(--text-secondary);">${s.check}</div>
+                  <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--yellow);">
+                    <div class="text-xs font-semibold mb-1" style="color:var(--yellow);">✅ Quick Check (test yourself!)</div>
+                    <div class="text-xs leading-relaxed" style="color:var(--text-secondary);">${s.check}</div>
                   </div>
                 </div>
+                ${s.confusions ? `
+                <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--red);">
+                  <div class="text-xs font-semibold mb-2" style="color:var(--red);">⚠️ Common Confusions to Avoid</div>
+                  <ul class="space-y-1 text-xs" style="color:var(--text-muted);">
+                    ${s.confusions.map(c => `<li>✗ ${c}</li>`).join('')}
+                  </ul>
+                </div>` : ''}
               </div>
             </details>
           `).join('')}
