@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -639,48 +639,7 @@ const UNITS = [
         '🏷️ Time up equals time down for symmetric projectile launched from ground',
         '🏷️ Range is max at 45° for level ground'
       ],
-      key_equations: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'x-component: vₓ = v₀cosθ, y-component: vᵧ = v₀sinθ'],
-      worked_examples: [
-        {
-          title: 'Example 1: Free Fall',
-          problem: 'A ball is dropped from rest from a height of 20 m. How long does it take to reach the ground?',
-          solution: [
-            'Step 1: Identify knowns → v₀ = 0, Δy = -20 m (down negative), a = g = -9.8 m/s²',
-            'Step 2: Choose equation: Δy = v₀t + ½at²',
-            'Step 3: Substitute: -20 = 0 + ½(-9.8)t²',
-            'Step 4: Solve: t² = 20/4.9 → t² = 4.08 → t = √4.08 ≈ 2.02 s',
-            'Answer: t ≈ 2.02 seconds'
-          ]
-        },
-        {
-          title: 'Example 2: Projectile Motion',
-          problem: 'A baseball is hit with v₀ = 30 m/s at 40° above horizontal. Find: (a) max height, (b) range.',
-          solution: [
-            'Step 1: Resolve components → v₀x = 30cos40° = 23.0 m/s, v₀y = 30sin40° = 19.3 m/s',
-            'Step 2: Time to peak = v₀y/g = 19.3/9.8 ≈ 1.97 s',
-            'Step 3: Max height h = v₀y²/(2g) = (19.3)²/(19.6) ≈ 19.0 m',
-            'Step 4: Total time = 2t = 3.94 s',
-            'Step 5: Range = v₀x × total time = 23.0 × 3.94 ≈ 90.6 m',
-            'Answers: (a) 19.0 m (b) 90.6 m'
-          ]
-        },
-        {
-          title: 'Example 3: Graph Interpretation',
-          problem: 'A velocity-time graph shows a straight line from (0, 10 m/s) to (5 s, 0 m/s). Find acceleration and displacement.',
-          solution: [
-            'Acceleration = slope = (0-10)/5 = -2 m/s² (deceleration)',
-            'Displacement = area under curve = triangle area = ½(5)(10) = 25 m',
-            'Or use kinematics: v² = v₀² + 2aΔx → 0 = 100 + 2(-2)Δx → Δx = 25 m ✓'
-          ]
-        }
-      ],
-      practice_questions: [
-        { q: 'An object moves with constant velocity. Its acceleration is:', options: ['Zero', 'Positive', 'Negative', 'Depends on speed'], correct: 0, expl: 'Constant velocity means a = 0 (no change in velocity).' },
-        { q: 'A ball is thrown upward. At the top, its velocity is:', options: ['Maximum upward', 'Zero', 'Maximum downward', 'Depends on initial speed'], correct: 1, expl: 'At the peak, v_y = 0 momentarily before falling back.' },
-        { q: 'Two balls are dropped from the same height. Ball A is dropped, Ball B is thrown horizontally. Which hits first?', options: ['A', 'B', 'Same time', 'Depends on speeds'], correct: 2, expl: 'Vertical motion is independent of horizontal. Same initial v_y = 0, same a = g, same time.' },
-        { q: 'The slope of a position-time graph is:', options: ['Acceleration', 'Velocity', 'Displacement', 'Jerk'], correct: 1, expl: 'Slope = Δx/Δt = velocity.' },
-        { q: 'A projectile is launched at 45°. For level ground, this angle gives:', options: ['Max height', 'Max range', 'Max time in air', 'Min range'], correct: 1, expl: 'Range R = v₀²sin(2θ)/g. Max when sin(2θ) = 1 → θ = 45°.' }
-      ]
+      key_equations: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'x-component: vₓ = v₀cosθ, y-component: vᵧ = v₀sinθ']
     },
     deepContent: {
       intuition: 'Imagine watching a ball from a drone — horizontal and vertical motions are completely independent. The ball doesn\'t know it\'s been thrown; it just feels gravity pulling down.',
@@ -715,52 +674,7 @@ const UNITS = [
         '🏷️ Static friction can vary from 0 to μₛN; kinetic friction is fixed at μₖN',
         '🏷️ "At rest" does NOT mean no forces — it means F_net = 0'
       ],
-      key_equations: ['F_net = ma', 'f_k = μₖN', 'f_s ≤ μₛN', 'F_gravity = mg', 'F_spring = -kx', 'F_c = mv²/r = mω²r', 'F_g = Gm₁m₂/r²'],
-      worked_examples: [
-        {
-          title: 'Example 1: Inclined Plane',
-          problem: 'A 10 kg block slides down a frictionless incline at 30°. Find acceleration.',
-          solution: [
-            'Step 1: Draw FBD → mg down, N perpendicular to surface',
-            'Step 2: Resolve mg into components parallel and perpendicular to incline',
-            'Step 3: Parallel component = mg sinθ = 10(9.8)sin30° = 49 N down the incline',
-            'Step 4: Perpendicular component = mg cosθ (balances N)',
-            'Step 5: F_net = ma → mg sinθ = ma → a = g sinθ = 9.8(0.5) = 4.9 m/s²',
-            'Answer: a = 4.9 m/s² down the incline'
-          ]
-        },
-        {
-          title: 'Example 2: Atwood Machine',
-          problem: 'Two masses connected by string over pulley: m₁ = 4 kg, m₂ = 6 kg. Find acceleration and tension.',
-          solution: [
-            'Step 1: Heavier mass (m₂) goes down. Define down for m₂ as positive.',
-            'Step 2: Write equations: m₂g - T = m₂a, T - m₁g = m₁a',
-            'Step 3: Add equations: (m₂ - m₁)g = (m₁ + m₂)a',
-            'Step 4: a = (6-4)(9.8)/(4+6) = 1.96 m/s²',
-            'Step 5: T = m₁(g + a) = 4(9.8 + 1.96) = 47.04 N',
-            'Answers: a = 1.96 m/s², T = 47.0 N'
-          ]
-        },
-        {
-          title: 'Example 3: Friction on Horizontal Surface',
-          problem: 'A 5 kg box is pushed with 20 N. μₛ = 0.5, μₖ = 0.3. Does it move? If so, find acceleration.',
-          solution: [
-            'Step 1: Find max static friction: f_s,max = μₛN = 0.5(5)(9.8) = 24.5 N',
-            'Step 2: Applied force = 20 N < 24.5 N → NO MOTION (static friction = 20 N)',
-            'Step 3: If applied force were 30 N > 24.5 N → box moves, use kinetic friction',
-            'Step 4: f_k = μₖN = 0.3(5)(9.8) = 14.7 N',
-            'Step 5: F_net = 30 - 14.7 = 15.3 N → a = F_net/m = 15.3/5 = 3.06 m/s²',
-            'Answer: Box does NOT move with 20 N. With 30 N, a = 3.06 m/s²'
-          ]
-        }
-      ],
-      practice_questions: [
-        { q: 'A block rests on a table. The normal force is equal to:', options: ['mg', 'The weight of the table', 'The force the block exerts on the table', 'Depends on surface area'], correct: 0, expl: 'On flat horizontal surface, N = mg (Newton\'s 1st Law, F_net = 0 vertically).' },
-        { q: 'Newton\'s 3rd Law force pairs act on:', options: ['The same object', 'Different objects', 'Any object', 'Only moving objects'], correct: 1, expl: 'Action-reaction pairs always act on DIFFERENT objects.' },
-        { q: 'A car goes around a curve at constant speed. The centripetal force is provided by:', options: ['Engine', 'Gravity', 'Friction', 'Normal force'], correct: 2, expl: 'On flat road, static friction provides centripetal force toward center.' },
-        { q: 'Static friction:', options: ['Is always μₛN', 'Can be 0 to μₛN', 'Is greater than kinetic friction', 'Always equals applied force'], correct: 1, expl: 'Static friction adjusts from 0 up to max μₛN to prevent motion.' },
-        { q: 'A 2 kg block on a 30° incline (μₖ = 0.2). What is acceleration?', options: ['4.9 m/s²', '3.3 m/s²', '2.9 m/s²', '1.9 m/s²'], correct: 1, expl: 'a = g(sinθ - μₖcosθ) = 9.8(0.5 - 0.2×0.866) = 9.8(0.5-0.173) = 3.2 m/s² ≈ 3.3 m/s²' }
-      ]
+      key_equations: ['F_net = ma', 'f_k = μₖN', 'f_s ≤ μₛN', 'F_gravity = mg', 'F_spring = -kx', 'F_c = mv²/r = mω²r', 'F_g = Gm₁m₂/r²']
     },
     deepContent: {
       intuition: 'Forces aren\'t things objects HAVE — they\'re things that HAPPEN TO objects between interactions. Think of force as a conversation between two objects.',
@@ -1379,63 +1293,6 @@ function openLesson(unitNum) {
       </div>
     </div>
   `;
-
-  // Worked Examples (NEW - Detailed Practice)
-  if (content.worked_examples && content.worked_examples.length > 0) {
-    html += `
-      <div class="card mb-4" style="border-color:var(--green);">
-        <div class="font-semibold text-sm mb-4">✏️ Worked Examples (Step-by-Step)</div>
-    `;
-    content.worked_examples.forEach((ex, idx) => {
-      html += `
-        <div class="mb-6 pb-6 border-b last:border-b-0 last:pb-0" style="border-color:var(--border);">
-          <div class="font-semibold mb-2 text-sm" style="color:var(--accent);">${ex.title}</div>
-          <div class="p-3 rounded-xl mb-3" style="background:var(--bg-secondary);">
-            <div class="text-xs font-semibold mb-1" style="color:var(--text-muted);">PROBLEM:</div>
-            <div class="text-sm">${ex.problem}</div>
-          </div>
-          <div>
-            <div class="text-xs font-semibold mb-2" style="color:var(--green);">SOLUTION:</div>
-            <ol class="space-y-2 text-sm" style="color:var(--text-secondary);">
-              ${ex.solution.map(step => `<li class="pl-4">${step}</li>`).join('')}
-            </ol>
-          </div>
-        </div>
-      `;
-    });
-    html += `</div>`;
-  }
-
-  // Practice Questions (NEW - Interactive MCQs)
-  if (content.practice_questions && content.practice_questions.length > 0) {
-    html += `
-      <div class="card mb-4">
-        <div class="font-semibold text-sm mb-4">📝 Practice Questions — Test Yourself</div>
-        <div id="lesson-practice-${unit.num}" class="space-y-4">
-    `;
-    content.practice_questions.forEach((pq, idx) => {
-      html += `
-        <div class="p-4 rounded-xl border" style="background:var(--bg-secondary);border-color:var(--border);" id="pq-${unit.num}-${idx}">
-          <div class="text-sm mb-3">${idx+1}. ${pq.q}</div>
-          <div class="grid grid-cols-2 gap-2">
-            ${pq.options.map((opt, optIdx) => `
-              <button class="text-left p-2 text-sm rounded-lg border transition-all option-btn"
-                      style="border-color:var(--border);background:var(--bg-card);"
-                      onclick="checkLessonAnswer(${unit.num}, ${idx}, ${optIdx}, ${pq.correct}, '${pq.expl.replace(/'/g, "\\'")}')">
-                ${String.fromCharCode(65+optIdx)}. ${opt}
-              </button>
-            `).join('')}
-          </div>
-          <div id="pq-feedback-${unit.num}-${idx}" class="mt-2 text-sm hidden"></div>
-        </div>
-      `;
-    });
-    html += `
-        </div>
-        <div class="mt-3 text-xs" style="color:var(--text-muted);">Click an answer to check. Green = correct, Red = wrong.</div>
-      </div>
-    `;
-  }
   
   // Deep Learning Content (only shown in deep mode)
   if (!isAP) {
@@ -1503,25 +1360,6 @@ function backToUnits() {
 
 function startUnitQuiz(unitNum) {
   navigateTo('quiz');
-}
-
-// Interactive lesson practice question checker
-function checkLessonAnswer(unitNum, qIdx, selectedIdx, correctIdx, explanation) {
-  const feedbackId = `pq-feedback-${unitNum}-${qIdx}`;
-  const feedback = document.getElementById(feedbackId);
-  const container = document.getElementById(`pq-${unitNum}-${qIdx}`);
-  
-  // Disable all buttons
-  container.querySelectorAll('button').forEach(btn => btn.disabled = true);
-  
-  if (selectedIdx === correctIdx) {
-    feedback.innerHTML = `<span style="color:var(--green);">✅ Correct! ${explanation}</span>`;
-    container.style.borderColor = 'var(--green)';
-  } else {
-    feedback.innerHTML = `<span style="color:var(--red);">❌ Wrong. ${explanation}</span>`;
-    container.style.borderColor = 'var(--red)';
-  }
-  feedback.classList.remove('hidden');
 }
 
 // ============ UNIT NOTES ============
