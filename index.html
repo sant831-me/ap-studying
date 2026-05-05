@@ -618,6 +618,7 @@ const state = {
 };
 
 // Official AP Physics 1 Units (College Board CED 2024-2025)
+// Comprehensive lesson content with worked examples and practice problems
 const UNITS = [
   { 
     num: 1, name: 'Kinematics', color: '#7c5cfc', weight: '10-15%',
@@ -639,48 +640,7 @@ const UNITS = [
         '🏷️ Time up equals time down for symmetric projectile launched from ground',
         '🏷️ Range is max at 45° for level ground'
       ],
-      key_equations: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'x-component: vₓ = v₀cosθ, y-component: vᵧ = v₀sinθ'],
-      worked_examples: [
-        {
-          title: 'Example 1: Free Fall',
-          problem: 'A ball is dropped from rest from a height of 20 m. How long does it take to reach the ground?',
-          solution: [
-            'Step 1: Identify knowns → v₀ = 0, Δy = -20 m (down negative), a = g = -9.8 m/s²',
-            'Step 2: Choose equation: Δy = v₀t + ½at²',
-            'Step 3: Substitute: -20 = 0 + ½(-9.8)t²',
-            'Step 4: Solve: t² = 20/4.9 → t² = 4.08 → t = √4.08 ≈ 2.02 s',
-            'Answer: t ≈ 2.02 seconds'
-          ]
-        },
-        {
-          title: 'Example 2: Projectile Motion',
-          problem: 'A baseball is hit with v₀ = 30 m/s at 40° above horizontal. Find: (a) max height, (b) range.',
-          solution: [
-            'Step 1: Resolve components → v₀x = 30cos40° = 23.0 m/s, v₀y = 30sin40° = 19.3 m/s',
-            'Step 2: Time to peak = v₀y/g = 19.3/9.8 ≈ 1.97 s',
-            'Step 3: Max height h = v₀y²/(2g) = (19.3)²/(19.6) ≈ 19.0 m',
-            'Step 4: Total time = 2t = 3.94 s',
-            'Step 5: Range = v₀x × total time = 23.0 × 3.94 ≈ 90.6 m',
-            'Answers: (a) 19.0 m (b) 90.6 m'
-          ]
-        },
-        {
-          title: 'Example 3: Graph Interpretation',
-          problem: 'A velocity-time graph shows a straight line from (0, 10 m/s) to (5 s, 0 m/s). Find acceleration and displacement.',
-          solution: [
-            'Acceleration = slope = (0-10)/5 = -2 m/s² (deceleration)',
-            'Displacement = area under curve = triangle area = ½(5)(10) = 25 m',
-            'Or use kinematics: v² = v₀² + 2aΔx → 0 = 100 + 2(-2)Δx → Δx = 25 m ✓'
-          ]
-        }
-      ],
-      practice_questions: [
-        { q: 'An object moves with constant velocity. Its acceleration is:', options: ['Zero', 'Positive', 'Negative', 'Depends on speed'], correct: 0, expl: 'Constant velocity means a = 0 (no change in velocity).' },
-        { q: 'A ball is thrown upward. At the top, its velocity is:', options: ['Maximum upward', 'Zero', 'Maximum downward', 'Depends on initial speed'], correct: 1, expl: 'At the peak, v_y = 0 momentarily before falling back.' },
-        { q: 'Two balls are dropped from the same height. Ball A is dropped, Ball B is thrown horizontally. Which hits first?', options: ['A', 'B', 'Same time', 'Depends on speeds'], correct: 2, expl: 'Vertical motion is independent of horizontal. Same initial v_y = 0, same a = g, same time.' },
-        { q: 'The slope of a position-time graph is:', options: ['Acceleration', 'Velocity', 'Displacement', 'Jerk'], correct: 1, expl: 'Slope = Δx/Δt = velocity.' },
-        { q: 'A projectile is launched at 45°. For level ground, this angle gives:', options: ['Max height', 'Max range', 'Max time in air', 'Min range'], correct: 1, expl: 'Range R = v₀²sin(2θ)/g. Max when sin(2θ) = 1 → θ = 45°.' }
-      ]
+      key_equations: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'x-component: vₓ = v₀cosθ, y-component: vᵧ = v₀sinθ']
     },
     deepContent: {
       intuition: 'Imagine watching a ball from a drone — horizontal and vertical motions are completely independent. The ball doesn\'t know it\'s been thrown; it just feels gravity pulling down.',
@@ -691,7 +651,50 @@ const UNITS = [
         'Using a = 0 at the top of projectile trajectory'
       ],
       why_it_matters: 'Kinematics is the language of motion. Every car crash, every rocket launch, every sports moment — it\'s all described by these equations.'
-    }
+    },
+    workedExamples: [
+      {
+        title: 'Example 1: Car Accelerating from Rest',
+        problem: 'A car accelerates uniformly from rest at 3.0 m/s² for 8.0 seconds. (a) What is its final velocity? (b) How far does it travel?',
+        solution: [
+          'Given: v₀ = 0, a = 3.0 m/s², t = 8.0 s',
+          '(a) Use v = v₀ + at',
+          'v = 0 + (3.0)(8.0) = 24 m/s',
+          '(b) Use Δx = v₀t + ½at²',
+          'Δx = 0 + ½(3.0)(64) = 96 m',
+          '✓ Check: Average velocity = (0+24)/2 = 12 m/s, distance = 12×8 = 96 m ✓'
+        ]
+      },
+      {
+        title: 'Example 2: Projectile Motion',
+        problem: 'A ball is kicked at 20 m/s at 37° above horizontal. Find (a) time in air, (b) max height, (c) range.',
+        solution: [
+          'Given: v₀ = 20 m/s, θ = 37°, g = 9.8 m/s²',
+          'v₀ₓ = 20cos(37°) = 16 m/s, v₀ᵧ = 20sin(37°) = 12 m/s',
+          '(a) Time to peak: t = v₀ᵧ/g = 12/9.8 = 1.22 s',
+          'Total time = 2t = 2.44 s',
+          '(b) Max height: h = v₀ᵧ²/(2g) = 144/19.6 = 7.35 m',
+          '(c) Range: R = v₀ₓ × total time = 16 × 2.44 = 39.0 m'
+        ]
+      },
+      {
+        title: 'Example 3: Graph Analysis',
+        problem: 'A position-time graph shows a parabola opening upward. What does this tell us about the motion?',
+        solution: [
+          'Parabola means position changes quadratically with time',
+          'This indicates CONSTANT ACCELERATION',
+          'Opening upward (concave up) means acceleration is POSITIVE',
+          'Slope at any point = instantaneous velocity',
+          'Slope is increasing → velocity is increasing → positive acceleration'
+        ]
+      }
+    ],
+    practiceProblems: [
+      { q: 'A rock is dropped from a 45 m cliff. How long until it hits the ground?', a: 'Use Δy = ½gt² → 45 = ½(9.8)t² → t = √(90/9.8) = 3.03 s' },
+      { q: 'A car going 25 m/s brakes to a stop in 5.0 s. What is its acceleration?', a: 'a = (v-v₀)/t = (0-25)/5 = -5.0 m/s² (negative = decelerating)' },
+      { q: 'A ball thrown straight up takes 3.0 s to reach its peak. What was its initial velocity?', a: 'At peak v = 0. Use v = v₀ - gt → 0 = v₀ - 9.8(3) → v₀ = 29.4 m/s' },
+      { q: 'Two balls are dropped from the same height, one 1 second after the other. Does the distance between them increase, decrease, or stay the same?', a: 'INCREASES. The first ball always has a head start in velocity, so it pulls away. Both accelerate at g, but v₁ > v₂ at all times.' }
+    ]
   },
   { 
     num: 2, name: 'Force and Translational Dynamics', color: '#f472b6', weight: '18-23%',
@@ -715,52 +718,7 @@ const UNITS = [
         '🏷️ Static friction can vary from 0 to μₛN; kinetic friction is fixed at μₖN',
         '🏷️ "At rest" does NOT mean no forces — it means F_net = 0'
       ],
-      key_equations: ['F_net = ma', 'f_k = μₖN', 'f_s ≤ μₛN', 'F_gravity = mg', 'F_spring = -kx', 'F_c = mv²/r = mω²r', 'F_g = Gm₁m₂/r²'],
-      worked_examples: [
-        {
-          title: 'Example 1: Inclined Plane',
-          problem: 'A 10 kg block slides down a frictionless incline at 30°. Find acceleration.',
-          solution: [
-            'Step 1: Draw FBD → mg down, N perpendicular to surface',
-            'Step 2: Resolve mg into components parallel and perpendicular to incline',
-            'Step 3: Parallel component = mg sinθ = 10(9.8)sin30° = 49 N down the incline',
-            'Step 4: Perpendicular component = mg cosθ (balances N)',
-            'Step 5: F_net = ma → mg sinθ = ma → a = g sinθ = 9.8(0.5) = 4.9 m/s²',
-            'Answer: a = 4.9 m/s² down the incline'
-          ]
-        },
-        {
-          title: 'Example 2: Atwood Machine',
-          problem: 'Two masses connected by string over pulley: m₁ = 4 kg, m₂ = 6 kg. Find acceleration and tension.',
-          solution: [
-            'Step 1: Heavier mass (m₂) goes down. Define down for m₂ as positive.',
-            'Step 2: Write equations: m₂g - T = m₂a, T - m₁g = m₁a',
-            'Step 3: Add equations: (m₂ - m₁)g = (m₁ + m₂)a',
-            'Step 4: a = (6-4)(9.8)/(4+6) = 1.96 m/s²',
-            'Step 5: T = m₁(g + a) = 4(9.8 + 1.96) = 47.04 N',
-            'Answers: a = 1.96 m/s², T = 47.0 N'
-          ]
-        },
-        {
-          title: 'Example 3: Friction on Horizontal Surface',
-          problem: 'A 5 kg box is pushed with 20 N. μₛ = 0.5, μₖ = 0.3. Does it move? If so, find acceleration.',
-          solution: [
-            'Step 1: Find max static friction: f_s,max = μₛN = 0.5(5)(9.8) = 24.5 N',
-            'Step 2: Applied force = 20 N < 24.5 N → NO MOTION (static friction = 20 N)',
-            'Step 3: If applied force were 30 N > 24.5 N → box moves, use kinetic friction',
-            'Step 4: f_k = μₖN = 0.3(5)(9.8) = 14.7 N',
-            'Step 5: F_net = 30 - 14.7 = 15.3 N → a = F_net/m = 15.3/5 = 3.06 m/s²',
-            'Answer: Box does NOT move with 20 N. With 30 N, a = 3.06 m/s²'
-          ]
-        }
-      ],
-      practice_questions: [
-        { q: 'A block rests on a table. The normal force is equal to:', options: ['mg', 'The weight of the table', 'The force the block exerts on the table', 'Depends on surface area'], correct: 0, expl: 'On flat horizontal surface, N = mg (Newton\'s 1st Law, F_net = 0 vertically).' },
-        { q: 'Newton\'s 3rd Law force pairs act on:', options: ['The same object', 'Different objects', 'Any object', 'Only moving objects'], correct: 1, expl: 'Action-reaction pairs always act on DIFFERENT objects.' },
-        { q: 'A car goes around a curve at constant speed. The centripetal force is provided by:', options: ['Engine', 'Gravity', 'Friction', 'Normal force'], correct: 2, expl: 'On flat road, static friction provides centripetal force toward center.' },
-        { q: 'Static friction:', options: ['Is always μₛN', 'Can be 0 to μₛN', 'Is greater than kinetic friction', 'Always equals applied force'], correct: 1, expl: 'Static friction adjusts from 0 up to max μₛN to prevent motion.' },
-        { q: 'A 2 kg block on a 30° incline (μₖ = 0.2). What is acceleration?', options: ['4.9 m/s²', '3.3 m/s²', '2.9 m/s²', '1.9 m/s²'], correct: 1, expl: 'a = g(sinθ - μₖcosθ) = 9.8(0.5 - 0.2×0.866) = 9.8(0.5-0.173) = 3.2 m/s² ≈ 3.3 m/s²' }
-      ]
+      key_equations: ['F_net = ma', 'f_k = μₖN', 'f_s ≤ μₛN', 'F_gravity = mg', 'F_spring = -kx', 'F_c = mv²/r = mω²r', 'F_g = Gm₁m₂/r²']
     },
     deepContent: {
       intuition: 'Forces aren\'t things objects HAVE — they\'re things that HAPPEN TO objects between interactions. Think of force as a conversation between two objects.',
@@ -772,7 +730,67 @@ const UNITS = [
         'Mixing up Newton\'s 2nd and 3rd law pairs'
       ],
       why_it_matters: 'Every bridge, building, vehicle, and device you use was designed using these principles. Engineers literally calculate F = ma millions of times when designing anything.'
-    }
+    },
+    workedExamples: [
+      {
+        title: 'Example 1: Block on Inclined Plane',
+        problem: 'A 5.0 kg block rests on a 30° incline with μₖ = 0.20. Find the acceleration as it slides down.',
+        solution: [
+          'Step 1: Draw FBD — mg down, N perpendicular to surface, f_k up the incline',
+          'Step 2: Choose coordinates — x along incline (down = +), y perpendicular',
+          'Step 3: Resolve weight: mg_x = mg sin(30°), mg_y = mg cos(30°)',
+          'Step 4: Find normal force: N = mg cos(30°) = 5(9.8)(0.866) = 42.4 N',
+          'Step 5: Find friction: f_k = μₖN = 0.20(42.4) = 8.48 N',
+          'Step 6: Apply F_net = ma along incline: mg sin(30°) - f_k = ma',
+          '5(9.8)(0.5) - 8.48 = 5a → 24.5 - 8.48 = 5a → a = 3.2 m/s²'
+        ]
+      },
+      {
+        title: 'Example 2: Atwood Machine (Pulley System)',
+        problem: 'Two masses (m₁ = 3 kg, m₂ = 5 kg) hang from a massless, frictionless pulley. Find acceleration and tension.',
+        solution: [
+          'Step 1: Heavier mass (m₂) accelerates down, lighter (m₁) accelerates up',
+          'Step 2: FBD for m₁: T - m₁g = m₁a (up is +)',
+          'Step 3: FBD for m₂: m₂g - T = m₂a (down is +)',
+          'Step 4: Add equations: m₂g - m₁g = (m₁ + m₂)a',
+          'a = (m₂ - m₁)g/(m₁ + m₂) = (5-3)(9.8)/(8) = 2.45 m/s²',
+          'Step 5: Find tension: T = m₁(g + a) = 3(9.8 + 2.45) = 36.8 N',
+          '✓ Check with m₂: T = m₂(g - a) = 5(9.8 - 2.45) = 36.8 N ✓'
+        ]
+      },
+      {
+        title: 'Example 3: Circular Motion — Car on Curve',
+        problem: 'A 1200 kg car rounds a curve of radius 50 m at 15 m/s. What friction force is needed?',
+        solution: [
+          'For circular motion, need centripetal force toward center',
+          'F_c = mv²/r = (1200)(15²)/50 = (1200)(225)/50 = 5400 N',
+          'This force is provided by static friction between tires and road',
+          'If μₛ = 0.7, max friction = μₛmg = 0.7(1200)(9.8) = 8232 N',
+          'Since 5400 N < 8232 N, the car can make the turn safely',
+          'Max safe speed: v_max = √(μₛgr) = √(0.7×9.8×50) = 18.5 m/s'
+        ]
+      },
+      {
+        title: 'Example 4: Elevator Problem',
+        problem: 'A 70 kg person stands on a scale in an elevator accelerating upward at 2.0 m/s². What does the scale read?',
+        solution: [
+          'Scale reads NORMAL FORCE, not weight!',
+          'FBD: N up, mg down, acceleration up',
+          'Apply F_net = ma: N - mg = ma',
+          'N = m(g + a) = 70(9.8 + 2.0) = 70(11.8) = 826 N',
+          'Scale reads 826 N (or 826/9.8 = 84.3 kg equivalent)',
+          'Person feels HEAVIER because N > mg',
+          'If elevator accelerated down: N = m(g - a) = 70(7.8) = 546 N (feels lighter)'
+        ]
+      }
+    ],
+    practiceProblems: [
+      { q: 'A 10 kg box is pushed with 50 N horizontal force. If μₖ = 0.3, what is the acceleration?', a: 'F_net = F_applied - f_k = 50 - 0.3(10)(9.8) = 50 - 29.4 = 20.6 N. a = F_net/m = 20.6/10 = 2.06 m/s²' },
+      { q: 'What is the tension in a rope supporting a 25 kg mass hanging at rest?', a: 'At rest means F_net = 0, so T = mg = 25(9.8) = 245 N' },
+      { q: 'A spring stretches 0.15 m when a 3 kg mass hangs from it. What is the spring constant?', a: 'At equilibrium: kx = mg → k = mg/x = 3(9.8)/0.15 = 196 N/m' },
+      { q: 'A 1500 kg car travels at 20 m/s around a 100 m radius curve. What is the minimum μₛ needed?', a: 'Need: μₛmg ≥ mv²/r → μₛ ≥ v²/(gr) = 400/(9.8×100) = 0.41' },
+      { q: 'Two forces act on an object: 30 N east and 40 N north. What is the net force?', a: 'F_net = √(30² + 40²) = 50 N at angle θ = tan⁻¹(40/30) = 53.1° north of east' }
+    ]
   },
   { 
     num: 3, name: 'Work, Energy, and Power', color: '#34d399', weight: '18-23%',
@@ -808,7 +826,59 @@ const UNITS = [
         'Confusing energy and power (power is energy per TIME)'
       ],
       why_it_matters: 'Energy is the universal currency of physics. From nuclear reactions to metabolism, from car engines to solar panels — everything is energy conversion.'
-    }
+    },
+    workedExamples: [
+      {
+        title: 'Example 1: Roller Coaster Energy',
+        problem: 'A 500 kg roller coaster car starts from rest at height 40 m. Find its speed at the bottom (ignore friction).',
+        solution: [
+          'Use conservation of energy: E_initial = E_final',
+          'Initial: K_i = 0, U_i = mgh = 500(9.8)(40) = 196,000 J',
+          'Final: K_f = ½mv², U_f = 0 (at bottom, h = 0)',
+          'mgh = ½mv² → gh = ½v² → v = √(2gh)',
+          'v = √(2×9.8×40) = √784 = 28 m/s',
+          '✓ Note: Mass cancels out! All objects fall at same rate.'
+        ]
+      },
+      {
+        title: 'Example 2: Spring Launch',
+        problem: 'A 0.5 kg block compresses a spring (k = 800 N/m) by 0.20 m. When released, how fast is the block moving?',
+        solution: [
+          'Initial energy: U_s = ½kx² = ½(800)(0.20)² = 16 J',
+          'Final energy: K = ½mv² (all spring energy converts to kinetic)',
+          '½kx² = ½mv² → v = x√(k/m)',
+          'v = 0.20√(800/0.5) = 0.20√1600 = 0.20(40) = 8.0 m/s'
+        ]
+      },
+      {
+        title: 'Example 3: Work with Friction',
+        problem: 'A 10 kg box is pushed 5.0 m with 50 N force. Friction is 20 N. Find (a) work by applied force, (b) work by friction, (c) final speed starting from rest.',
+        solution: [
+          '(a) W_applied = Fd cos(0°) = 50(5) = 250 J',
+          '(b) W_friction = fd cos(180°) = 20(5)(-1) = -100 J (negative!)',
+          '(c) W_net = 250 - 100 = 150 J',
+          'By work-energy theorem: W_net = ΔK = ½mv² - 0',
+          '150 = ½(10)v² → v² = 30 → v = 5.48 m/s'
+        ]
+      },
+      {
+        title: 'Example 4: Power Calculation',
+        problem: 'A motor lifts a 100 kg mass 10 m in 5.0 s at constant speed. What is the power output?',
+        solution: [
+          'Work done: W = mgh = 100(9.8)(10) = 9800 J',
+          'Power: P = W/t = 9800/5 = 1960 W = 1.96 kW',
+          'Alternative: P = Fv, where F = mg = 980 N, v = 10/5 = 2 m/s',
+          'P = 980(2) = 1960 W ✓'
+        ]
+      }
+    ],
+    practiceProblems: [
+      { q: 'A 2 kg object moves at 6 m/s. What is its kinetic energy?', a: 'K = ½mv² = ½(2)(36) = 36 J' },
+      { q: 'How much work is done lifting a 50 kg box 2.0 m vertically?', a: 'W = mgh = 50(9.8)(2) = 980 J' },
+      { q: 'A spring (k = 200 N/m) is compressed 0.10 m. What energy is stored?', a: 'U_s = ½kx² = ½(200)(0.01) = 1.0 J' },
+      { q: 'A 1000 kg car accelerates from 10 m/s to 20 m/s. How much work was done?', a: 'W = ΔK = ½m(v_f² - v_i²) = ½(1000)(400-100) = 150,000 J = 150 kJ' },
+      { q: 'If you double the speed of an object, what happens to its kinetic energy?', a: 'K ∝ v², so doubling speed QUADRUPLES the kinetic energy (2² = 4)' }
+    ]
   },
   { 
     num: 4, name: 'Linear Momentum', color: '#fb923c', weight: '10-15%',
@@ -843,7 +913,62 @@ const UNITS = [
         'Confusing impulse (J) with momentum (p)'
       ],
       why_it_matters: 'Car safety, sports equipment design, rocket science — all built on momentum conservation. The Apollo astronauts got to the moon by ejecting momentum rearward.'
-    }
+    },
+    workedExamples: [
+      {
+        title: 'Example 1: Perfectly Inelastic Collision',
+        problem: 'A 2.0 kg cart moving at 4.0 m/s collides with a stationary 3.0 kg cart. They stick together. Find final velocity.',
+        solution: [
+          'Define direction: right = positive',
+          'Before: p₁ = (2)(4) = 8 kg·m/s, p₂ = 0',
+          'Total initial momentum: p_i = 8 kg·m/s',
+          'After: combined mass = 5 kg, velocity = v_f',
+          'Conservation: p_i = p_f → 8 = 5v_f',
+          'v_f = 1.6 m/s (to the right)',
+          '✓ Check: KE is NOT conserved (inelastic collision)'
+        ]
+      },
+      {
+        title: 'Example 2: Impulse from Force-Time Graph',
+        problem: 'A force of 50 N acts on a 2 kg object for 0.4 s. The object was initially at rest. Find final velocity.',
+        solution: [
+          'Impulse: J = FΔt = 50(0.4) = 20 N·s',
+          'Impulse = change in momentum: J = Δp = mv_f - mv_i',
+          'Since v_i = 0: 20 = 2v_f',
+          'v_f = 10 m/s',
+          'Alternative: a = F/m = 50/2 = 25 m/s², v = at = 25(0.4) = 10 m/s ✓'
+        ]
+      },
+      {
+        title: 'Example 3: Elastic Collision',
+        problem: 'A 1 kg ball moving at 6 m/s hits a stationary 2 kg ball elastically. Find both final velocities.',
+        solution: [
+          'Conserve momentum: 1(6) + 0 = 1v₁ + 2v₂ → 6 = v₁ + 2v₂',
+          'Conserve KE: ½(1)(36) = ½(1)v₁² + ½(2)v₂² → 36 = v₁² + 2v₂²',
+          'From momentum: v₁ = 6 - 2v₂',
+          'Substitute: 36 = (6-2v₂)² + 2v₂² = 36 - 24v₂ + 4v₂² + 2v₂²',
+          '0 = -24v₂ + 6v₂² → v₂(6v₂ - 24) = 0',
+          'v₂ = 4 m/s, v₁ = 6 - 8 = -2 m/s',
+          'The 1 kg ball bounces backward at 2 m/s!'
+        ]
+      },
+      {
+        title: 'Example 4: 2D Collision',
+        problem: 'A 0.5 kg puck moving east at 4 m/s collides with a 0.5 kg puck moving north at 3 m/s. They stick. Find final velocity.',
+        solution: [
+          'Conserve momentum in x: (0.5)(4) + 0 = (1.0)v_x → v_x = 2 m/s',
+          'Conserve momentum in y: 0 + (0.5)(3) = (1.0)v_y → v_y = 1.5 m/s',
+          'Magnitude: v = √(2² + 1.5²) = √6.25 = 2.5 m/s',
+          'Direction: θ = tan⁻¹(1.5/2) = 36.9° north of east'
+        ]
+      }
+    ],
+    practiceProblems: [
+      { q: 'What is the momentum of a 1500 kg car moving at 20 m/s?', a: 'p = mv = 1500(20) = 30,000 kg·m/s' },
+      { q: 'A 0.1 kg ball bounces off a wall, reversing from 10 m/s to -8 m/s. What is the impulse?', a: 'J = Δp = m(v_f - v_i) = 0.1(-8 - 10) = -1.8 N·s (magnitude 1.8 N·s)' },
+      { q: 'Two skaters push off. If the 60 kg skater moves at 2 m/s, what speed does the 80 kg skater have?', a: 'Conservation: 0 = 60(2) + 80v → v = -120/80 = -1.5 m/s (opposite direction)' },
+      { q: 'A 5 kg object at rest explodes into two pieces: 2 kg moving at 10 m/s and 3 kg. Find the 3 kg piece velocity.', a: '0 = 2(10) + 3v → v = -20/3 = -6.67 m/s (opposite direction)' }
+    ]
   },
   { 
     num: 5, name: 'Torque and Rotational Dynamics', color: '#a78bfa', weight: '10-15%',
@@ -878,7 +1003,61 @@ const UNITS = [
         'Including all forces in τ equation when some have zero torque'
       ],
       why_it_matters: 'Every motor, engine, gear system, and lever uses these principles. The entire industrial revolution was built on understanding torque.'
-    }
+    },
+    workedExamples: [
+      {
+        title: 'Example 1: Seesaw Balance',
+        problem: 'A 4.0 m long seesaw is pivoted at its center. A 30 kg child sits 1.5 m from the pivot. Where must a 40 kg child sit to balance?',
+        solution: [
+          'For balance: Στ = 0 (rotational equilibrium)',
+          'Choose pivot at center (eliminates seesaw weight torque)',
+          'τ₁ = (30)(9.8)(1.5) = 441 N·m (CCW, positive)',
+          'τ₂ = (40)(9.8)(d) = 392d N·m (CW, negative)',
+          'Set equal: 441 = 392d → d = 1.125 m from pivot',
+          '✓ The heavier child sits closer to balance'
+        ]
+      },
+      {
+        title: 'Example 2: Beam with Cable',
+        problem: 'A uniform 6.0 m beam (mass 20 kg) is hinged at a wall. A cable at the end makes 30° with horizontal. Find tension.',
+        solution: [
+          'Choose pivot at hinge (eliminates unknown hinge forces)',
+          'Beam weight acts at center (3.0 m from hinge)',
+          'τ_weight = (20)(9.8)(3.0) = 588 N·m (CW)',
+          'τ_cable = T(6.0)sin(30°) = 3T (CCW)',
+          'Set equal: 3T = 588 → T = 196 N',
+          'Note: Only perpendicular component of T creates torque'
+        ]
+      },
+      {
+        title: 'Example 3: Rotational Dynamics',
+        problem: 'A solid disk (I = ½MR²) with M = 4 kg, R = 0.5 m has a 10 N tangential force applied at the rim. Find angular acceleration.',
+        solution: [
+          'Torque: τ = rF = (0.5)(10) = 5 N·m',
+          'Moment of inertia: I = ½MR² = ½(4)(0.25) = 0.5 kg·m²',
+          'Apply Στ = Iα: 5 = 0.5α',
+          'α = 10 rad/s²',
+          'Tangential acceleration at rim: a_t = rα = 0.5(10) = 5 m/s²'
+        ]
+      },
+      {
+        title: 'Example 4: Comparing Moments of Inertia',
+        problem: 'A hoop and a solid disk have the same mass and radius. Which is harder to spin? Why?',
+        solution: [
+          'Hoop: I = MR² (all mass at distance R)',
+          'Disk: I = ½MR² (mass distributed from 0 to R)',
+          'Hoop has 2× the moment of inertia',
+          'Harder to spin = more torque needed for same α',
+          'Physical reason: Hoop\'s mass is all at max distance, contributing maximally to I'
+        ]
+      }
+    ],
+    practiceProblems: [
+      { q: 'A 20 N force is applied perpendicular to a wrench 0.25 m from the bolt. What is the torque?', a: 'τ = rF = 0.25(20) = 5 N·m' },
+      { q: 'A 2 kg mass is attached 0.5 m from a pivot. What is its moment of inertia?', a: 'I = mr² = 2(0.5)² = 0.5 kg·m²' },
+      { q: 'A torque of 10 N·m is applied to an object with I = 2 kg·m². What is α?', a: 'α = τ/I = 10/2 = 5 rad/s²' },
+      { q: 'A 3 m beam is supported at one end. A 60 N weight hangs at the other end. What torque does it create about the support?', a: 'τ = rF = 3(60) = 180 N·m (CW)' }
+    ]
   },
   { 
     num: 6, name: 'Energy and Momentum of Rotating Systems', color: '#fbbf24', weight: '5-8%',
@@ -912,7 +1091,64 @@ const UNITS = [
         'Assuming angular momentum is conserved when there IS external torque'
       ],
       why_it_matters: 'Satellites, planetary orbits, gyroscopes in phones, hard drives — all use these principles. GPS requires precise orbital mechanics.'
-    }
+    },
+    workedExamples: [
+      {
+        title: 'Example 1: Figure Skater Spin',
+        problem: 'A skater spinning at 2 rev/s with arms extended (I = 4 kg·m²) pulls in her arms (I = 2 kg·m²). What is her new angular velocity?',
+        solution: [
+          'Conservation of angular momentum: L_i = L_f',
+          'I₁ω₁ = I₂ω₂',
+          '(4)(2) = (2)ω₂',
+          'ω₂ = 4 rev/s',
+          '✓ She spins twice as fast when I is halved',
+          'Where does extra KE come from? Work done by skater pulling arms in!'
+        ]
+      },
+      {
+        title: 'Example 2: Rolling Down a Ramp',
+        problem: 'A solid sphere rolls down a 2.0 m high ramp without slipping. Find its speed at the bottom.',
+        solution: [
+          'Energy conservation: mgh = ½mv² + ½Iω²',
+          'For solid sphere: I = (2/5)mr²',
+          'Rolling condition: ω = v/r',
+          'mgh = ½mv² + ½(2/5)mr²(v/r)² = ½mv² + (1/5)mv² = (7/10)mv²',
+          'gh = (7/10)v² → v = √(10gh/7)',
+          'v = √(10×9.8×2/7) = √28 = 5.29 m/s',
+          'Compare to sliding (no rotation): v = √(2gh) = 6.26 m/s (faster!)'
+        ]
+      },
+      {
+        title: 'Example 3: Satellite Orbital Speed',
+        problem: 'A satellite orbits Earth at radius 7000 km from Earth\'s center. Find its orbital speed. (M_E = 5.97×10²⁴ kg)',
+        solution: [
+          'Gravity provides centripetal force: GMm/r² = mv²/r',
+          'Solve for v: v = √(GM/r)',
+          'v = √((6.67×10⁻¹¹)(5.97×10²⁴)/(7×10⁶))',
+          'v = √(5.69×10⁷) = 7540 m/s = 7.54 km/s',
+          'Period: T = 2πr/v = 2π(7×10⁶)/7540 = 5830 s ≈ 97 min'
+        ]
+      },
+      {
+        title: 'Example 4: Comparing Rolling Objects',
+        problem: 'A hoop, disk, and sphere (same mass and radius) roll down the same ramp. Which reaches the bottom first?',
+        solution: [
+          'Energy: mgh = ½mv² + ½Iω² = ½mv²(1 + I/mr²)',
+          'v = √(2gh/(1 + I/mr²))',
+          'Hoop: I = mr² → v = √(gh) (slowest)',
+          'Disk: I = ½mr² → v = √(4gh/3)',
+          'Sphere: I = (2/5)mr² → v = √(10gh/7) (fastest)',
+          'Order: Sphere > Disk > Hoop',
+          'Reason: Less rotational inertia = more energy goes to translation'
+        ]
+      }
+    ],
+    practiceProblems: [
+      { q: 'A disk (I = 0.5 kg·m²) spins at 10 rad/s. What is its angular momentum?', a: 'L = Iω = 0.5(10) = 5 kg·m²/s' },
+      { q: 'A rolling object has v = 4 m/s and r = 0.2 m. What is ω?', a: 'ω = v/r = 4/0.2 = 20 rad/s (for pure rolling)' },
+      { q: 'If a satellite doubles its orbital radius, what happens to its speed?', a: 'v ∝ 1/√r, so v becomes v/√2 (about 71% of original)' },
+      { q: 'What fraction of a rolling sphere\'s total KE is rotational?', a: 'K_rot/K_total = (1/5)mv² / (7/10)mv² = 2/7 ≈ 28.6%' }
+    ]
   },
   { 
     num: 7, name: 'Oscillations', color: '#22d3ee', weight: '5-8%',
@@ -948,7 +1184,61 @@ const UNITS = [
         'Confusing which variables affect period'
       ],
       why_it_matters: 'From clocks to music to seismology to quantum mechanics — oscillation is a universal phenomenon. The math of SHM appears in literally every branch of physics.'
-    }
+    },
+    workedExamples: [
+      {
+        title: 'Example 1: Spring-Mass Period',
+        problem: 'A 0.5 kg mass on a spring (k = 200 N/m) oscillates. Find (a) period, (b) frequency, (c) angular frequency.',
+        solution: [
+          '(a) T = 2π√(m/k) = 2π√(0.5/200) = 2π√0.0025 = 2π(0.05) = 0.314 s',
+          '(b) f = 1/T = 1/0.314 = 3.18 Hz',
+          '(c) ω = 2πf = √(k/m) = √400 = 20 rad/s',
+          '✓ Check: ω = 2π/T = 2π/0.314 = 20 rad/s ✓'
+        ]
+      },
+      {
+        title: 'Example 2: Pendulum on Different Planets',
+        problem: 'A pendulum has period 2.0 s on Earth. What is its period on Mars (g_Mars = 3.7 m/s²)?',
+        solution: [
+          'T ∝ 1/√g (from T = 2π√(L/g))',
+          'T_Mars/T_Earth = √(g_Earth/g_Mars)',
+          'T_Mars = 2.0 × √(9.8/3.7) = 2.0 × 1.63 = 3.26 s',
+          'Pendulum swings SLOWER on Mars (weaker gravity)',
+          'Note: Same pendulum on Moon (g = 1.6) would have T = 4.9 s!'
+        ]
+      },
+      {
+        title: 'Example 3: Energy in SHM',
+        problem: 'A 0.2 kg mass on a spring (k = 80 N/m) oscillates with amplitude 0.10 m. Find (a) total energy, (b) max speed, (c) speed at x = 0.05 m.',
+        solution: [
+          '(a) E = ½kA² = ½(80)(0.01) = 0.4 J',
+          '(b) At equilibrium, all energy is KE: ½mv_max² = 0.4',
+          'v_max = √(0.8/0.2) = √4 = 2.0 m/s',
+          '(c) At x = 0.05 m: PE = ½kx² = ½(80)(0.0025) = 0.1 J',
+          'KE = E - PE = 0.4 - 0.1 = 0.3 J',
+          'v = √(2×0.3/0.2) = √3 = 1.73 m/s'
+        ]
+      },
+      {
+        title: 'Example 4: SHM Graph Analysis',
+        problem: 'A position-time graph for SHM shows amplitude 0.15 m and period 0.50 s. Write the equation of motion.',
+        solution: [
+          'General form: x(t) = A cos(ωt + φ)',
+          'A = 0.15 m (from graph)',
+          'ω = 2π/T = 2π/0.50 = 4π rad/s',
+          'If starts at max displacement: φ = 0',
+          'x(t) = 0.15 cos(4πt) meters',
+          'v(t) = -Aω sin(ωt) = -0.6π sin(4πt) m/s',
+          'a(t) = -Aω² cos(ωt) = -2.4π² cos(4πt) m/s²'
+        ]
+      }
+    ],
+    practiceProblems: [
+      { q: 'A spring-mass system has T = 0.4 s. What is its frequency?', a: 'f = 1/T = 1/0.4 = 2.5 Hz' },
+      { q: 'If you quadruple the mass on a spring, what happens to the period?', a: 'T ∝ √m, so T doubles (√4 = 2)' },
+      { q: 'A pendulum has L = 1.0 m. What is its period on Earth?', a: 'T = 2π√(L/g) = 2π√(1/9.8) = 2.0 s (the "seconds pendulum")' },
+      { q: 'At what position is the speed half its maximum in SHM?', a: 'Use energy: ½kA² = ½mv² + ½kx². When v = v_max/2, solve: x = A√3/2 ≈ 0.866A' }
+    ]
   },
   { 
     num: 8, name: 'Fluids', color: '#60a5fa', weight: '10-15%',
@@ -984,7 +1274,68 @@ const UNITS = [
         'Assuming Bernoulli applies with friction (it assumes ideal fluid)'
       ],
       why_it_matters: 'Fluids are everywhere: blood circulation, weather, swimming, flying, plumbing, weather balloons. Understanding fluids is understanding how most of the world works.'
-    }
+    },
+    workedExamples: [
+      {
+        title: 'Example 1: Pressure at Depth',
+        problem: 'A diver is 15 m below the surface of a lake. What is the absolute pressure? (P_atm = 101,325 Pa, ρ_water = 1000 kg/m³)',
+        solution: [
+          'P = P_atm + ρgh',
+          'P = 101,325 + (1000)(9.8)(15)',
+          'P = 101,325 + 147,000 = 248,325 Pa',
+          'In atmospheres: 248,325/101,325 = 2.45 atm',
+          'Rule of thumb: Every 10 m of water ≈ 1 atm of pressure'
+        ]
+      },
+      {
+        title: 'Example 2: Buoyancy — Will It Float?',
+        problem: 'A wooden block (ρ = 600 kg/m³) with volume 0.02 m³ is placed in water. (a) Will it float? (b) What fraction is submerged?',
+        solution: [
+          '(a) ρ_wood < ρ_water (600 < 1000), so YES it floats',
+          '(b) For floating: F_b = mg → ρ_water × V_sub = ρ_wood × V_total',
+          'V_sub/V_total = ρ_wood/ρ_water = 600/1000 = 0.6',
+          '60% of the block is submerged, 40% above water'
+        ]
+      },
+      {
+        title: 'Example 3: Hydraulic Lift',
+        problem: 'A hydraulic lift has pistons with areas A₁ = 0.01 m² and A₂ = 0.5 m². What force on the small piston lifts a 2000 kg car?',
+        solution: [
+          'Pascal\'s principle: P₁ = P₂ → F₁/A₁ = F₂/A₂',
+          'F₂ = weight = 2000(9.8) = 19,600 N',
+          'F₁ = F₂(A₁/A₂) = 19,600(0.01/0.5) = 392 N',
+          'Mechanical advantage: 50× — lift 2000 kg with just 40 kg of force!'
+        ]
+      },
+      {
+        title: 'Example 4: Bernoulli\'s Equation',
+        problem: 'Water flows horizontally. At point 1: v₁ = 2 m/s, P₁ = 50,000 Pa. At point 2, v₂ = 8 m/s. Find P₂.',
+        solution: [
+          'Bernoulli (horizontal): P₁ + ½ρv₁² = P₂ + ½ρv₂²',
+          '50,000 + ½(1000)(4) = P₂ + ½(1000)(64)',
+          '50,000 + 2,000 = P₂ + 32,000',
+          'P₂ = 20,000 Pa',
+          'Faster fluid = LOWER pressure!'
+        ]
+      },
+      {
+        title: 'Example 5: Continuity Equation',
+        problem: 'Water flows through a pipe that narrows from diameter 10 cm to 5 cm. If v₁ = 1 m/s, what is v₂?',
+        solution: [
+          'Continuity: A₁v₁ = A₂v₂',
+          'A ∝ d², so A₁/A₂ = (10/5)² = 4',
+          'v₂ = v₁(A₁/A₂) = 1(4) = 4 m/s',
+          'Halving diameter QUADRUPLES speed!'
+        ]
+      }
+    ],
+    practiceProblems: [
+      { q: 'What is the density of an object with mass 500 g and volume 200 cm³?', a: 'ρ = m/V = 500/200 = 2.5 g/cm³ = 2500 kg/m³' },
+      { q: 'A 2 m² surface experiences 500 N of force. What is the pressure?', a: 'P = F/A = 500/2 = 250 Pa' },
+      { q: 'An object with density 800 kg/m³ floats in water. What fraction is above the surface?', a: 'Fraction submerged = 800/1000 = 0.8, so 20% is above water' },
+      { q: 'Water flows at 3 m/s through a 0.1 m² pipe that widens to 0.3 m². What is the new speed?', a: 'A₁v₁ = A₂v₂ → v₂ = 3(0.1/0.3) = 1 m/s' },
+      { q: 'What is the pressure at 5 m depth in water (ignore atmospheric)?', a: 'P = ρgh = 1000(9.8)(5) = 49,000 Pa ≈ 0.48 atm' }
+    ]
   }
 ];
 
@@ -1379,60 +1730,46 @@ function openLesson(unitNum) {
       </div>
     </div>
   `;
-
-  // Worked Examples (NEW - Detailed Practice)
-  if (content.worked_examples && content.worked_examples.length > 0) {
+  
+  // Worked Examples (shown in both modes)
+  if (unit.workedExamples && unit.workedExamples.length > 0) {
     html += `
       <div class="card mb-4" style="border-color:var(--green);">
-        <div class="font-semibold text-sm mb-4">✏️ Worked Examples (Step-by-Step)</div>
-    `;
-    content.worked_examples.forEach((ex, idx) => {
-      html += `
-        <div class="mb-6 pb-6 border-b last:border-b-0 last:pb-0" style="border-color:var(--border);">
-          <div class="font-semibold mb-2 text-sm" style="color:var(--accent);">${ex.title}</div>
-          <div class="p-3 rounded-xl mb-3" style="background:var(--bg-secondary);">
-            <div class="text-xs font-semibold mb-1" style="color:var(--text-muted);">PROBLEM:</div>
-            <div class="text-sm">${ex.problem}</div>
-          </div>
-          <div>
-            <div class="text-xs font-semibold mb-2" style="color:var(--green);">SOLUTION:</div>
-            <ol class="space-y-2 text-sm" style="color:var(--text-secondary);">
-              ${ex.solution.map(step => `<li class="pl-4">${step}</li>`).join('')}
-            </ol>
-          </div>
+        <div class="font-semibold text-sm mb-4">📝 Worked Examples</div>
+        <div class="space-y-4">
+          ${unit.workedExamples.map((ex, i) => `
+            <div class="p-4 rounded-xl" style="background:var(--bg-secondary);">
+              <div class="font-semibold text-sm mb-2" style="color:var(--accent);">${ex.title}</div>
+              <div class="text-sm mb-3" style="color:var(--text-secondary);"><strong>Problem:</strong> ${ex.problem}</div>
+              <div class="text-xs space-y-1 font-mono" style="color:var(--text-muted);">
+                ${ex.solution.map(step => `<div class="pl-3 border-l-2" style="border-color:var(--accent);">${step}</div>`).join('')}
+              </div>
+            </div>
+          `).join('')}
         </div>
-      `;
-    });
-    html += `</div>`;
+      </div>
+    `;
   }
-
-  // Practice Questions (NEW - Interactive MCQs)
-  if (content.practice_questions && content.practice_questions.length > 0) {
+  
+  // Practice Problems (shown in both modes)
+  if (unit.practiceProblems && unit.practiceProblems.length > 0) {
     html += `
-      <div class="card mb-4">
-        <div class="font-semibold text-sm mb-4">📝 Practice Questions — Test Yourself</div>
-        <div id="lesson-practice-${unit.num}" class="space-y-4">
-    `;
-    content.practice_questions.forEach((pq, idx) => {
-      html += `
-        <div class="p-4 rounded-xl border" style="background:var(--bg-secondary);border-color:var(--border);" id="pq-${unit.num}-${idx}">
-          <div class="text-sm mb-3">${idx+1}. ${pq.q}</div>
-          <div class="grid grid-cols-2 gap-2">
-            ${pq.options.map((opt, optIdx) => `
-              <button class="text-left p-2 text-sm rounded-lg border transition-all option-btn"
-                      style="border-color:var(--border);background:var(--bg-card);"
-                      onclick="checkLessonAnswer(${unit.num}, ${idx}, ${optIdx}, ${pq.correct}, '${pq.expl.replace(/'/g, "\\'")}')">
-                ${String.fromCharCode(65+optIdx)}. ${opt}
-              </button>
-            `).join('')}
-          </div>
-          <div id="pq-feedback-${unit.num}-${idx}" class="mt-2 text-sm hidden"></div>
+      <div class="card mb-4" style="border-color:var(--cyan);">
+        <div class="font-semibold text-sm mb-4">✏️ Practice Problems</div>
+        <div class="space-y-3">
+          ${unit.practiceProblems.map((prob, i) => `
+            <details class="group p-3 rounded-xl" style="background:var(--bg-secondary);">
+              <summary class="cursor-pointer text-sm font-medium flex items-center gap-2 list-none">
+                <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background:var(--accent);color:#fff;">${i+1}</span>
+                <span style="color:var(--text-primary);">${prob.q}</span>
+                <span class="ml-auto text-xs" style="color:var(--text-muted);">Click to reveal answer ▼</span>
+              </summary>
+              <div class="mt-3 pl-8 text-sm" style="color:var(--green);">
+                <strong>Answer:</strong> ${prob.a}
+              </div>
+            </details>
+          `).join('')}
         </div>
-      `;
-    });
-    html += `
-        </div>
-        <div class="mt-3 text-xs" style="color:var(--text-muted);">Click an answer to check. Green = correct, Red = wrong.</div>
       </div>
     `;
   }
@@ -1503,25 +1840,6 @@ function backToUnits() {
 
 function startUnitQuiz(unitNum) {
   navigateTo('quiz');
-}
-
-// Interactive lesson practice question checker
-function checkLessonAnswer(unitNum, qIdx, selectedIdx, correctIdx, explanation) {
-  const feedbackId = `pq-feedback-${unitNum}-${qIdx}`;
-  const feedback = document.getElementById(feedbackId);
-  const container = document.getElementById(`pq-${unitNum}-${qIdx}`);
-  
-  // Disable all buttons
-  container.querySelectorAll('button').forEach(btn => btn.disabled = true);
-  
-  if (selectedIdx === correctIdx) {
-    feedback.innerHTML = `<span style="color:var(--green);">✅ Correct! ${explanation}</span>`;
-    container.style.borderColor = 'var(--green)';
-  } else {
-    feedback.innerHTML = `<span style="color:var(--red);">❌ Wrong. ${explanation}</span>`;
-    container.style.borderColor = 'var(--red)';
-  }
-  feedback.classList.remove('hidden');
 }
 
 // ============ UNIT NOTES ============
