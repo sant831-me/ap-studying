@@ -25,18 +25,24 @@
     --cyan: #22d3ee;
     --pink: #f472b6;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; }
   body {
     font-family: 'Inter', system-ui, sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
+    margin: 0;
     min-height: 100vh;
     overflow-x: hidden;
   }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg-primary); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #3a3a50; }
+
+  /* Card styles */
   .card {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -49,134 +55,240 @@
     border-color: #303050;
     box-shadow: 0 4px 24px rgba(0,0,0,0.3);
   }
-  .glow-border { box-shadow: 0 0 0 1px var(--accent), 0 0 20px var(--accent-glow); }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 14px;
-    cursor: pointer; transition: all 0.2s; border: none; font-family: inherit;
+  .card-glass {
+    background: rgba(22,22,31,0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
   }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: #6d4ff0; box-shadow: 0 4px 20px var(--accent-glow); }
-  .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: var(--bg-card-hover); border-color: #404060; }
-  .btn-ghost { background: transparent; color: var(--text-secondary); }
-  .btn-ghost:hover { background: var(--bg-card); color: var(--text-primary); }
-  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
-  .progress-bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
-  .progress-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.5s ease; }
+
+  /* Glow accent */
+  .glow-border {
+    box-shadow: 0 0 0 1px var(--accent), 0 0 20px var(--accent-glow);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: #6d4ff0;
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: #404060;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+  }
+  .btn-ghost:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+    transition: width 0.5s ease;
+  }
+
+  /* Nav */
   .nav-item {
-    display: flex; align-items: center; gap: 10px; padding: 10px 14px;
-    border-radius: 10px; cursor: pointer; transition: all 0.2s;
-    color: var(--text-secondary); font-weight: 500; font-size: 14px;
-    border: none; background: none; width: 100%; text-align: left; font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 14px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
   }
   .nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
   .nav-item.active { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
   .animate-in { animation: fadeIn 0.3s ease forwards; }
-  .stat-number { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
-  .flashcard-container { perspective: 1000px; }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 8px var(--accent-glow); }
+    50% { box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(124,92,252,0.15); }
+  }
+  .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+  /* Stat number */
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  /* Flashcard flip */
+  .flashcard-container {
+    perspective: 1000px;
+  }
   .flashcard-inner {
-    position: relative; width: 100%; min-height: 220px;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d;
+    position: relative;
+    width: 100%;
+    min-height: 220px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
   }
-  .flashcard-inner.flipped { transform: rotateY(180deg); }
+  .flashcard-inner.flipped {
+    transform: rotateY(180deg);
+  }
   .flashcard-front, .flashcard-back {
-    position: absolute; width: 100%; height: 100%;
-    backface-visibility: hidden; border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px; text-align: center; font-size: 18px; font-weight: 500;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
   }
-  .flashcard-front { background: var(--bg-card); border: 1px solid var(--border); }
-  .flashcard-back { background: var(--bg-card); border: 1px solid var(--accent); transform: rotateY(180deg); box-shadow: 0 0 32px var(--accent-glow); }
+  .flashcard-front {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+  }
+  .flashcard-back {
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    transform: rotateY(180deg);
+    box-shadow: 0 0 32px var(--accent-glow);
+  }
+
+  /* Concept map nodes */
+  .map-node {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .map-node:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+    box-shadow: 0 0 20px var(--accent-glow);
+    transform: scale(1.1);
+    z-index: 10;
+  }
+
+  /* Toast */
   .toast {
-    position: fixed; bottom: 24px; right: 24px;
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 20px; z-index: 100;
-    animation: fadeIn 0.3s ease; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    z-index: 100;
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   }
-  .mode-card { border: 2px solid transparent; cursor: pointer; transition: all 0.25s; }
-  .mode-card.selected { border-color: var(--accent); box-shadow: 0 0 24px var(--accent-glow); }
-  .pomodoro-ring { transform: rotate(-90deg); }
 
-  /* Lesson viewer */
-  .lesson-content { line-height: 1.8; }
-  .lesson-content h3 { font-size: 1.2rem; font-weight: 700; margin: 1.5em 0 0.5em; color: var(--text-primary); }
-  .lesson-content h4 { font-size: 1rem; font-weight: 600; margin: 1.2em 0 0.4em; color: var(--accent); }
-  .lesson-content p { margin-bottom: 0.8em; color: var(--text-secondary); }
-  .lesson-content ul { margin: 0.5em 0 1em 1.5em; color: var(--text-secondary); }
-  .lesson-content li { margin-bottom: 0.4em; }
-  .lesson-content .formula-box {
-    background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
-    padding: 16px 20px; margin: 1em 0; font-family: 'JetBrains Mono', monospace;
-    font-size: 15px; text-align: center; color: var(--cyan);
+  /* Pomodoro ring */
+  .pomodoro-ring {
+    transform: rotate(-90deg);
   }
-  .lesson-content .tip-box {
-    background: rgba(124,92,252,0.08); border-left: 3px solid var(--accent);
-    border-radius: 0 12px 12px 0; padding: 14px 18px; margin: 1em 0;
-    font-size: 14px; color: var(--text-secondary);
-  }
-  .lesson-content .exam-tip {
-    background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow);
-    border-radius: 0 12px 12px 0; padding: 14px 18px; margin: 1em 0;
-    font-size: 14px;
-  }
-  .lesson-content .exam-tip strong { color: var(--yellow); }
-  .lesson-content .key-term { color: var(--cyan); font-weight: 600; }
-  .lesson-content .highlight { color: var(--accent); font-weight: 600; }
 
-  /* Topic accordion */
-  .topic-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; overflow: hidden; }
-  .topic-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px; cursor: pointer; transition: background 0.2s;
-    background: var(--bg-secondary);
+  /* Selected mode */
+  .mode-card {
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s;
   }
-  .topic-header:hover { background: var(--bg-card-hover); }
-  .topic-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-  .topic-body.open { max-height: 3000px; }
-  .topic-body-inner { padding: 16px 18px; }
-
-  /* Mobile sidebar */
-  @media (max-width: 768px) {
-    aside { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 50; transition: left 0.3s; }
-    aside.open { left: 0; }
-    .mobile-toggle { display: flex !important; }
-    main { padding-left: 16px !important; padding-right: 16px !important; }
+  .mode-card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 24px var(--accent-glow);
   }
-  .mobile-toggle { display: none; }
 </style>
 </head>
 <body class="flex h-screen overflow-hidden">
-
-<!-- Mobile menu button -->
-<button class="mobile-toggle fixed top-3 left-3 z-[60] btn btn-secondary p-2" onclick="document.querySelector('aside').classList.toggle('open')">☰</button>
 
 <!-- Sidebar -->
 <aside class="w-64 flex-shrink-0 border-r flex flex-col" style="background:var(--bg-secondary);border-color:var(--border);">
   <div class="p-5 border-b flex items-center gap-3" style="border-color:var(--border);">
     <div class="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm" style="background:var(--accent);">⚛</div>
-    <div><div class="font-bold text-sm">PhysicsOS</div><div class="text-xs" style="color:var(--text-muted);">AP Physics 1</div></div>
+    <div>
+      <div class="font-bold text-sm">PhysicsOS</div>
+      <div class="text-xs" style="color:var(--text-muted);">AP Physics 1</div>
+    </div>
   </div>
   <nav class="flex-1 overflow-y-auto p-3 space-y-0.5" id="nav">
     <button class="nav-item active" data-page="dashboard">📋 Dashboard</button>
     <button class="nav-item" data-page="plan">📅 Study Plan</button>
     <button class="nav-item" data-page="lessons">📖 Lessons</button>
     <button class="nav-item" data-page="notes">📝 Unit Notes</button>
+    <button class="nav-item" data-page="concept-map">🗺 Concept Map</button>
     <button class="nav-item" data-page="formulas">📐 Formula Sheet</button>
     <button class="nav-item" data-page="flashcards">🃏 Flashcards</button>
     <button class="nav-item" data-page="frq">✍️ FRQ Practice</button>
     <button class="nav-item" data-page="quiz">⚡ Quiz</button>
-    <button class="nav-item" data-page="challenge">🏆 Challenge</button>
-    <button class="nav-item" data-page="wrong-log">❌ Wrong Answers</button>
-    <button class="nav-item" data-page="flagged">🚩 Flagged</button>
+    <button class="nav-item" data-page="challenge">🏆 Challenge Mode</button>
+    <button class="nav-item" data-page="wrong-log">❌ Wrong Answer Log</button>
+    <button class="nav-item" data-page="flagged">🚩 Flagged Questions</button>
     <button class="nav-item" data-page="night-before">🌙 Night Before</button>
     <button class="nav-item" data-page="pomodoro">🍅 Pomodoro</button>
   </nav>
   <div class="p-4 border-t text-xs" style="border-color:var(--border);color:var(--text-muted);">
     <div class="flex items-center gap-2 mb-2">
       <div class="w-2 h-2 rounded-full" style="background:var(--green);"></div>
-      Streak: <span class="font-bold text-sm" style="color:var(--text-primary);" id="sidebar-streak">0</span> days
+      Study streak: <span class="font-bold text-sm" style="color:var(--text-primary);" id="sidebar-streak">0</span> days
     </div>
     <div class="progress-bar mb-1"><div class="progress-fill" id="sidebar-progress" style="width:0%"></div></div>
     <span id="sidebar-xp">0 XP</span> total
@@ -186,39 +298,68 @@
 <!-- Main Content -->
 <main class="flex-1 overflow-y-auto p-6 lg:p-8" id="main-content">
 
-  <!-- ===== DASHBOARD ===== -->
+  <!-- DASHBOARD -->
   <section id="page-dashboard" class="animate-in">
     <h1 class="text-2xl font-bold mb-1">Good to see you 👋</h1>
     <p class="mb-6" style="color:var(--text-secondary);">Your AP Physics 1 command center. Study consistently — the streak is your most important number.</p>
-    <div class="card mb-5 flex items-center justify-between flex-wrap gap-4">
+
+    <!-- Today's Study Plan -->
+    <div class="card mb-5 flex items-center justify-between">
       <div>
         <div class="text-sm font-semibold" style="color:var(--text-muted);">📋 TODAY'S STUDY PLAN</div>
         <div class="stat-number mt-1" id="cards-today">0</div>
         <div class="text-sm" style="color:var(--text-secondary);">Cards today</div>
       </div>
-      <div class="flex gap-5 flex-wrap">
-        <div class="text-center"><div class="stat-number" id="accuracy-today" style="font-size:1.6rem;">—</div><div class="text-xs" style="color:var(--text-muted);">Accuracy ✅</div></div>
-        <div class="text-center"><div class="stat-number" id="streak-display" style="font-size:1.6rem;color:var(--orange);">0</div><div class="text-xs" style="color:var(--text-muted);">Streak 🔥</div></div>
+      <div class="flex gap-5">
+        <div class="text-center"><div class="stat-number" id="accuracy-today" style="font-size:1.6rem;">—</div><div class="text-xs" style="color:var(--text-muted);">Accuracy today ✅</div></div>
+        <div class="text-center"><div class="stat-number" id="streak-display" style="font-size:1.6rem;color:var(--orange);">0</div><div class="text-xs" style="color:var(--text-muted);">Day streak 🔥</div></div>
         <div class="text-center"><div class="stat-number" id="xp-display" style="font-size:1.6rem;color:var(--accent);">0</div><div class="text-xs" style="color:var(--text-muted);">Total XP ⚡</div></div>
-        <div class="text-center"><div class="stat-number" id="avg-time" style="font-size:1.6rem;">—</div><div class="text-xs" style="color:var(--text-muted);">Avg time ⏱</div></div>
+        <div class="text-center"><div class="stat-number" id="avg-time" style="font-size:1.6rem;">—</div><div class="text-xs" style="color:var(--text-muted);">Avg time/question ⏱</div></div>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-      <div class="card"><div class="font-semibold text-sm mb-1">⚠ Focus here</div><p style="color:var(--text-muted);font-size:14px;" id="focus-text">Complete quizzes to see weak spots.</p></div>
-      <div class="card"><div class="font-semibold text-sm mb-1">Recent activity</div><p style="color:var(--text-muted);font-size:14px;" id="activity-text">👋 Welcome! Start studying to see activity.</p></div>
+
+    <!-- Focus & Activity Row -->
+    <div class="grid grid-cols-2 gap-5 mb-5">
+      <div class="card">
+        <div class="font-semibold text-sm mb-1">⚠ Focus here</div>
+        <p style="color:var(--text-muted);font-size:14px;" id="focus-text">Complete quizzes to see weak spots.</p>
+      </div>
+      <div class="card">
+        <div class="font-semibold text-sm mb-1">Recent activity</div>
+        <p style="color:var(--text-muted);font-size:14px;" id="activity-text">👋 Welcome! Start studying to see activity.</p>
+      </div>
     </div>
-    <div class="card mb-5"><div class="font-semibold text-sm mb-3">📅 Lesson reviews due</div><p style="color:var(--text-muted);font-size:14px;" id="reviews-due">Study some lessons to see what needs review.</p></div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <div class="card cursor-pointer" onclick="navigateTo('quiz')"><div class="text-2xl mb-2">⚡</div><div class="font-semibold">Start Quiz</div><div class="text-sm" style="color:var(--text-muted);">Test your knowledge</div></div>
-      <div class="card cursor-pointer" onclick="navigateTo('flashcards')"><div class="text-2xl mb-2">🃏</div><div class="font-semibold">Review Flashcards</div><div class="text-sm" style="color:var(--text-muted);">0 due</div></div>
-      <div class="card cursor-pointer" onclick="navigateTo('frq')"><div class="text-2xl mb-2">✍️</div><div class="font-semibold">Practice FRQ</div><div class="text-sm" style="color:var(--text-muted);">50% of your score</div></div>
+
+    <!-- Lesson Reviews Due -->
+    <div class="card mb-5">
+      <div class="font-semibold text-sm mb-3">📅 Lesson reviews due</div>
+      <p style="color:var(--text-muted);font-size:14px;" id="reviews-due">Study some lessons to see what needs review.</p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-3 gap-5">
+      <div class="card cursor-pointer hover:glow-border" onclick="navigateTo('quiz')">
+        <div class="text-2xl mb-2">⚡</div>
+        <div class="font-semibold">Start Quiz</div>
+        <div class="text-sm" style="color:var(--text-muted);">Test your knowledge</div>
+      </div>
+      <div class="card cursor-pointer hover:glow-border" onclick="navigateTo('flashcards')">
+        <div class="text-2xl mb-2">🃏</div>
+        <div class="font-semibold">Review Flashcards</div>
+        <div class="text-sm" style="color:var(--text-muted);">0 due</div>
+      </div>
+      <div class="card cursor-pointer hover:glow-border" onclick="navigateTo('frq')">
+        <div class="text-2xl mb-2">✍️</div>
+        <div class="font-semibold">Practice FRQ</div>
+        <div class="text-sm" style="color:var(--text-muted);">50% of your score</div>
+      </div>
     </div>
   </section>
 
-  <!-- ===== STUDY PLAN ===== -->
+  <!-- STUDY PLAN -->
   <section id="page-plan" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">📅 Study Plan</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">Enter your exam date and daily availability. We'll build you a day-by-day schedule.</p>
+    <p class="mb-6" style="color:var(--text-secondary);">Enter your exam date and daily availability. We'll build you a day-by-day schedule based on your weak spots.</p>
     <div class="card max-w-lg">
       <div class="font-semibold mb-4">Set up your plan</div>
       <div class="mb-4">
@@ -227,7 +368,7 @@
       </div>
       <div class="mb-4">
         <label class="block text-sm mb-2" style="color:var(--text-secondary);">Study time per day (minutes)</label>
-        <input type="range" id="study-time" min="15" max="120" value="30" step="5" class="w-full">
+        <input type="range" id="study-time" min="15" max="120" value="30" step="5" class="w-full accent-purple-500">
         <div class="flex justify-between text-xs mt-1" style="color:var(--text-muted);"><span>15 min</span><span id="study-time-val">30 min</span><span>120 min</span></div>
       </div>
       <button class="btn btn-primary" onclick="generatePlan()">Generate Plan</button>
@@ -235,50 +376,60 @@
     </div>
   </section>
 
-  <!-- ===== LESSONS ===== -->
+  <!-- LESSONS -->
   <section id="page-lessons" class="hidden animate-in">
-    <div id="lessons-list">
+    <div id="lessons-overview">
       <h1 class="text-2xl font-bold mb-4">📖 Lessons</h1>
-      <p class="mb-6" style="color:var(--text-secondary);">Learn AP Physics 1 from scratch or go deep. Pick your mode, pick your unit.</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+      <p class="mb-6" style="color:var(--text-secondary);">Learn AP Physics 1 from scratch or go deep. Pick your mode, pick your unit, and learn at your own pace.</p>
+      <div class="grid grid-cols-2 gap-5 mb-6">
         <div class="card mode-card selected" id="mode-ap" onclick="selectMode('ap')">
           <div class="text-2xl mb-2">🎯</div>
           <div class="font-semibold mb-1">AP Exam Mode</div>
-          <p style="color:var(--text-muted);font-size:14px;">Focused. Efficient. Only what you need for the exam. 5–15 min per lesson.</p>
+          <p style="color:var(--text-muted);font-size:14px;">Focused. Efficient. Only what you need to pass the AP exam. 5–15 min per lesson.</p>
+          <button class="btn btn-primary mt-3">PASS THE EXAM →</button>
         </div>
         <div class="card mode-card" id="mode-deep" onclick="selectMode('deep')">
           <div class="text-2xl mb-2">🔬</div>
           <div class="font-semibold mb-1">Deep Learning Mode</div>
           <p style="color:var(--text-muted);font-size:14px;">Full understanding. Intuition, real-world examples, the why behind everything. 15–30 min.</p>
+          <button class="btn btn-secondary mt-3">TRULY UNDERSTAND →</button>
         </div>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="unit-grid"></div>
     </div>
     <div id="lesson-viewer" class="hidden">
-      <button class="btn btn-ghost mb-4" onclick="closeLessonViewer()">← Back to Units</button>
-      <div id="lesson-header" class="mb-4"></div>
-      <div id="lesson-topics" class="space-y-2"></div>
+      <button class="btn btn-ghost mb-4" onclick="backToUnits()">← Back to all units</button>
+      <div id="lesson-content"></div>
     </div>
   </section>
 
-  <!-- ===== UNIT NOTES ===== -->
+  <!-- UNIT NOTES -->
   <section id="page-notes" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">📝 Unit Notes</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">All 8 units — cheat sheet tips integrated. Flag anything confusing.</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="notes-grid"></div>
+    <p class="mb-6" style="color:var(--text-secondary);">All 8 units — cheat sheet tips integrated. Flag anything confusing for targeted practice.</p>
+    <div class="grid grid-cols-2 gap-4" id="notes-grid"></div>
   </section>
 
-  <!-- ===== FORMULAS ===== -->
+  <!-- CONCEPT MAP -->
+  <section id="page-concept-map" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🗺 Concept Connection Map</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">See how AP Physics 1 units connect. Click any node to jump to that unit's notes.</p>
+    <div class="card relative" style="height:500px;" id="concept-map-container">
+      <svg class="absolute inset-0 w-full h-full" id="concept-svg"></svg>
+    </div>
+  </section>
+
+  <!-- FORMULAS -->
   <section id="page-formulas" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">📐 Formula Sheet</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">Every formula organized by unit — exactly what's on the AP exam reference table.</p>
+    <p class="mb-6" style="color:var(--text-secondary);">Every formula organized by unit.</p>
     <div class="space-y-4" id="formula-list"></div>
   </section>
 
-  <!-- ===== FLASHCARDS ===== -->
+  <!-- FLASHCARDS -->
   <section id="page-flashcards" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">🃏 Flashcards</h1>
-    <div class="flex gap-8 mb-4 text-sm"><span id="fc-due">0 due</span><span id="fc-hard">0 hard</span><span id="fc-known">0 known</span></div>
+    <div class="flex gap-8 mb-4 text-sm"><span id="fc-due">0 due</span> <span id="fc-hard">0 hard</span> <span id="fc-known">0 known</span></div>
     <div class="card flashcard-container mb-4" style="min-height:260px;">
       <div class="flashcard-inner" id="flashcard-inner" onclick="flipFlashcard()">
         <div class="flashcard-front" id="fc-front">Loading...</div>
@@ -291,7 +442,7 @@
       <button class="btn btn-secondary btn-sm" onclick="rateCard(3)">3 — OK</button>
       <button class="btn btn-secondary btn-sm" onclick="rateCard(5)">5 — Easy</button>
     </div>
-    <p class="text-xs mt-2" style="color:var(--text-muted);" id="fc-xp">⚡ +0 XP</p>
+    <p class="text-xs mt-2" style="color:var(--text-muted);">⚡ +0 XP</p>
     <div class="mt-6">
       <div class="font-semibold mb-2 text-sm">📥 Import from anywhere</div>
       <p class="text-xs mb-3" style="color:var(--text-muted);">Paste tab-separated or comma-separated text (Question, Answer per line), or drag a .csv/.txt file.</p>
@@ -304,7 +455,7 @@
     </div>
   </section>
 
-  <!-- ===== FRQ ===== -->
+  <!-- FRQ -->
   <section id="page-frq" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">✍️ FRQ Practice</h1>
     <p class="mb-6" style="color:var(--text-secondary);">Free Response Questions — worth 50% of your AP score. Write your answer, then reveal the rubric point by point.</p>
@@ -315,7 +466,7 @@
     <textarea id="frq-answer" placeholder="Write your answer here..." rows="6" class="w-full p-4 rounded-xl border text-white text-sm mb-3" style="background:var(--bg-secondary);border-color:var(--border);font-family:inherit;resize:vertical;"></textarea>
     <div class="flex gap-3">
       <button class="btn btn-primary" onclick="revealRubric()">Reveal Rubric</button>
-      <button class="btn btn-secondary" onclick="generateFRQ()">🤖 New FRQ</button>
+      <button class="btn btn-secondary" onclick="generateFRQ()">🤖 Generate New FRQ</button>
     </div>
     <div id="frq-rubric" class="mt-4 hidden card">
       <div class="font-semibold mb-2">Rubric Points:</div>
@@ -323,13 +474,14 @@
     </div>
   </section>
 
-  <!-- ===== QUIZ ===== -->
+  <!-- QUIZ -->
   <section id="page-quiz" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">⚡ Quiz</h1>
-    <div class="flex gap-6 text-sm mb-6 flex-wrap" id="quiz-stats">
+    <div class="flex gap-6 text-sm mb-6" id="quiz-stats">
       <span>Score: <b id="qz-score">0/0</b></span>
       <span>Q <b id="qz-qnum">1</b></span>
       <span>Accuracy: <b id="qz-acc">—</b></span>
+      <span>Avg time: <b id="qz-time">—</b></span>
     </div>
     <div class="card mb-4" id="quiz-card">
       <div class="text-xs mb-2" style="color:var(--text-muted);" id="qz-unit-label"></div>
@@ -343,14 +495,26 @@
     <div id="qz-feedback" class="mt-3 text-sm hidden"></div>
   </section>
 
-  <!-- ===== CHALLENGE ===== -->
+  <!-- CHALLENGE MODE -->
   <section id="page-challenge" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-2">🏆 Challenge Mode</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">Race against the clock. Score points for speed AND accuracy.</p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <div class="card text-center cursor-pointer" onclick="startChallenge('speed')"><div class="text-3xl mb-2">🏃</div><div class="font-semibold">Speed Run</div><p class="text-sm" style="color:var(--text-muted);">10 questions, 60 seconds</p></div>
-      <div class="card text-center cursor-pointer" onclick="startChallenge('streak')"><div class="text-3xl mb-2">🔥</div><div class="font-semibold">Streak</div><p class="text-sm" style="color:var(--text-muted);">Keep going until you miss</p></div>
-      <div class="card text-center cursor-pointer" onclick="startChallenge('death')"><div class="text-3xl mb-2">💀</div><div class="font-semibold">Sudden Death</div><p class="text-sm" style="color:var(--text-muted);">One wrong = game over</p></div>
+    <p class="mb-6" style="color:var(--text-secondary);">Race against the clock. Score points for speed AND accuracy. Build a streak for bonus XP.</p>
+    <div class="grid grid-cols-3 gap-5">
+      <div class="card text-center cursor-pointer" onclick="startChallenge('speed')">
+        <div class="text-3xl mb-2">🏃</div>
+        <div class="font-semibold">Speed Run</div>
+        <p class="text-sm" style="color:var(--text-muted);">10 questions, 60 seconds</p>
+      </div>
+      <div class="card text-center cursor-pointer" onclick="startChallenge('streak')">
+        <div class="text-3xl mb-2">🔥</div>
+        <div class="font-semibold">Streak</div>
+        <p class="text-sm" style="color:var(--text-muted);">Keep going until you miss</p>
+      </div>
+      <div class="card text-center cursor-pointer" onclick="startChallenge('death')">
+        <div class="text-3xl mb-2">💀</div>
+        <div class="font-semibold">Sudden Death</div>
+        <p class="text-sm" style="color:var(--text-muted);">One wrong = game over</p>
+      </div>
     </div>
     <div id="challenge-active" class="hidden mt-6 card">
       <div class="flex justify-between items-center mb-4">
@@ -363,36 +527,39 @@
     </div>
   </section>
 
-  <!-- ===== WRONG LOG ===== -->
+  <!-- WRONG ANSWER LOG -->
   <section id="page-wrong-log" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">❌ Wrong Answer Log</h1>
     <p class="mb-6" style="color:var(--text-secondary);">Every question you've gotten wrong. Drill them until you can explain why the correct answer is right.</p>
     <div id="wrong-log-list" class="space-y-3"></div>
   </section>
 
-  <!-- ===== FLAGGED ===== -->
+  <!-- FLAGGED QUESTIONS -->
   <section id="page-flagged" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">🚩 Flagged Questions</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">Questions you flagged as confusing. Review and practice these specifically.</p>
+    <p class="mb-6" style="color:var(--text-secondary);">Questions you flagged as confusing during study. Review and practice these specifically.</p>
     <div id="flagged-list" class="space-y-3"></div>
   </section>
 
-  <!-- ===== NIGHT BEFORE ===== -->
+  <!-- NIGHT BEFORE -->
   <section id="page-night-before" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">🌙 Night Before Review</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">Everything you need in one scroll. No questions, no timers — just the knowledge.</p>
+    <p class="mb-6" style="color:var(--text-secondary);">Everything you need in one scroll. No questions, no timers — just the knowledge. Read this the night before the exam.</p>
     <div class="card mb-4" style="border-color:var(--yellow);">
       <div class="font-semibold mb-2">📋 Exam day reminders</div>
       <ul class="text-sm space-y-1" style="color:var(--text-secondary);">
-        <li>• Section I: 40 MCQ (80 min) · Section II: 4 FRQ (100 min)</li>
-        <li>• Show ALL work on FRQ · Define variables · Units required</li>
-        <li>• FBD for any forces problem · Box your final answer</li>
+        <li>• 90 minutes total</li>
+        <li>• Section 1: 50 MCQ (90 min) · Section 2: 5 FRQ (90 min)</li>
+        <li>• Show ALL work on FRQ</li>
+        <li>• Define variables</li>
+        <li>• Units required</li>
+        <li>• FBD for any forces problem</li>
       </ul>
     </div>
     <div id="night-before-content" class="space-y-4"></div>
   </section>
 
-  <!-- ===== POMODORO ===== -->
+  <!-- POMODORO -->
   <section id="page-pomodoro" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">🍅 Pomodoro</h1>
     <p class="mb-6" style="color:var(--text-secondary);">25 min focus → 5 min break → repeat. Most proven study rhythm.</p>
@@ -413,1108 +580,553 @@
 
 </main>
 
+<!-- Toast container -->
 <div id="toast-container"></div>
 
 <script>
-// ==================== STATE ====================
+// ============ STATE ============
 const state = {
-  streak: 0, xp: 0, cardsToday: 0, accuracyToday: null, avgTime: null,
-  totalAnswered: 0, totalCorrect: 0, selectedMode: 'ap',
-  flashcards: [], fcIndex: 0, fcFlipped: false,
-  wrongLog: [], flagged: [],
-  quizIndex: 0, quizCorrect: 0, quizAnswered: 0, quizSelected: null,
-  challengeMode: null, challengeTimer: null, challengeRemaining: 0,
-  challengeScore: 0, challengeStreak: 0, challengeQIndex: 0,
-  pomodoroActive: false, pomodoroInterval: null, pomodoroSeconds: 25*60,
-  pomodoroIsBreak: false, pomodoroSessions: 0, currentPage: 'dashboard',
-  lessonsCompleted: [],
+  streak: 0,
+  xp: 0,
+  cardsToday: 0,
+  accuracyToday: null,
+  avgTime: null,
+  totalAnswered: 0,
+  totalCorrect: 0,
+  selectedMode: 'ap',
+  flashcards: [],
+  fcIndex: 0,
+  fcFlipped: false,
+  wrongLog: [],
+  flagged: [],
+  quizIndex: 0,
+  quizCorrect: 0,
+  quizAnswered: 0,
+  quizSelected: null,
+  challengeMode: null,
+  challengeTimer: null,
+  challengeRemaining: 0,
+  challengeScore: 0,
+  challengeStreak: 0,
+  challengeQIndex: 0,
+  pomodoroActive: false,
+  pomodoroInterval: null,
+  pomodoroSeconds: 25 * 60,
+  pomodoroIsBreak: false,
+  pomodoroSessions: 0,
+  currentPage: 'dashboard',
 };
 
-// ==================== OFFICIAL AP PHYSICS 1 UNITS (College Board CED 2024-25) ====================
+// Official AP Physics 1 Units (College Board CED 2024-2025)
 const UNITS = [
-  {
-    num: 1, name: 'Kinematics', color: '#7c5cfc', weight: '10–15%',
-    desc: 'Motion in 1D & 2D — the language of physics',
-    topics: [
-      {
-        title: '1.1 Scalars and Vectors in One Dimension',
-        ap: `<h3>Scalars vs. Vectors</h3>
-<p>A <span class="key-term">scalar</span> has only magnitude (e.g., distance, speed, mass, time). A <span class="key-term">vector</span> has both magnitude AND direction (e.g., displacement, velocity, acceleration, force).</p>
-<div class="formula-box">Distance (scalar) vs. Displacement (vector): Δx = x_f − x_i</div>
-<p>In 1D, direction is indicated by a positive (+) or negative (−) sign. Choose a coordinate system and stick with it.</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> The AP exam frequently tests the difference between distance and displacement. An object that returns to its starting point has zero displacement but nonzero distance.</div>`,
-        deep: `<h3>Scalars and Vectors: The Foundation</h3>
-<p>Physics describes the world using quantities that either have direction or don't. Think of it this way:</p>
-<ul>
-<li><span class="key-term">Scalars</span> answer "how much?" — temperature (72°F), time (5 s), mass (3 kg), distance (100 m)</li>
-<li><span class="key-term">Vectors</span> answer "how much and which way?" — velocity (20 m/s east), force (10 N downward), displacement (50 m north)</li>
-</ul>
-<h4>Why Direction Matters</h4>
-<p>Imagine walking 3 m east, then 3 m west. Your <span class="highlight">distance</span> is 6 m, but your <span class="highlight">displacement</span> is 0 m. This distinction is fundamental — displacement tells you where you ended up relative to where you started.</p>
-<div class="formula-box">Δx = x_f − x_i (final position minus initial position)</div>
-<p>In one dimension, we use positive and negative signs to indicate direction. By convention, right/up is usually positive and left/down is negative — but you can choose any convention as long as you're consistent.</p>
-<div class="tip-box"><strong>💡 Intuition:</strong> Your car's odometer measures distance (scalar). A GPS giving directions uses displacement (vector). They give different answers for the same trip!</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> On the AP exam, always define your positive direction at the start of a problem. This prevents sign errors — the #1 mistake in kinematics.</div>`
-      },
-      {
-        title: '1.2 Displacement, Velocity, and Acceleration',
-        ap: `<h3>The Big Three Kinematic Quantities</h3>
-<div class="formula-box">v_avg = Δx/Δt &nbsp;&nbsp;|&nbsp;&nbsp; a_avg = Δv/Δt</div>
-<p><span class="key-term">Velocity</span> is the rate of change of position. <span class="key-term">Acceleration</span> is the rate of change of velocity.</p>
-<ul>
-<li><strong>Speed</strong> = |velocity| (always positive scalar)</li>
-<li><strong>Instantaneous velocity</strong> = slope of position-time graph</li>
-<li><strong>Instantaneous acceleration</strong> = slope of velocity-time graph</li>
-</ul>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Acceleration and velocity can have opposite signs. If v > 0 and a < 0, the object is slowing down. If they have the same sign, it's speeding up.</div>`,
-        deep: `<h3>Understanding Motion Through Rates of Change</h3>
-<p>Think of these three quantities as a chain of relationships:</p>
-<h4>Position → Velocity → Acceleration</h4>
-<p>Each step asks: "How fast is the previous quantity changing?"</p>
-<ul>
-<li><span class="key-term">Velocity</span> (v): How fast is position changing? v = Δx/Δt</li>
-<li><span class="key-term">Acceleration</span> (a): How fast is velocity changing? a = Δv/Δt</li>
-</ul>
-<div class="formula-box">v_avg = Δx/Δt &nbsp;&nbsp;|&nbsp;&nbsp; a_avg = Δv/Δt &nbsp;&nbsp;|&nbsp;&nbsp; v_avg = (v_i + v_f)/2 (constant a only)</div>
-<h4>Speeding Up vs. Slowing Down</h4>
-<p>This is one of the most tested concepts:</p>
-<ul>
-<li>Same sign (v and a both + or both −) → <span class="highlight">speeding up</span></li>
-<li>Opposite signs → <span class="highlight">slowing down</span></li>
-<li>a = 0 → constant velocity</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> Think of a car. Velocity is which way you're going. Acceleration is which way the gas/brake is pushing. If you're going forward (v > 0) and hit the brakes (a < 0), you slow down.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Zero velocity does NOT mean zero acceleration. At the top of a ball's trajectory, v = 0 but a = −9.8 m/s². This appears on nearly every AP exam.</div>`
-      },
-      {
-        title: '1.3 Representing Motion',
-        ap: `<h3>Motion Graphs</h3>
-<p>The AP exam loves graphs. Know these relationships cold:</p>
-<ul>
-<li><strong>Position-time graph:</strong> slope = velocity</li>
-<li><strong>Velocity-time graph:</strong> slope = acceleration; area under curve = displacement</li>
-<li><strong>Acceleration-time graph:</strong> area under curve = change in velocity</li>
-</ul>
-<div class="formula-box">slope of x-t = v &nbsp;|&nbsp; slope of v-t = a &nbsp;|&nbsp; area under v-t = Δx</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> A curved position-time graph means acceleration. Concave up = positive acceleration. Concave down = negative acceleration.</div>`,
-        deep: `<h3>Reading the Story of Motion from Graphs</h3>
-<p>Every motion graph tells a story. Here's how to read them:</p>
-<h4>Position vs. Time (x-t)</h4>
-<ul>
-<li>Horizontal line → at rest (v = 0)</li>
-<li>Straight diagonal line → constant velocity</li>
-<li>Curved line → acceleration</li>
-<li>Slope at any point = instantaneous velocity</li>
-</ul>
-<h4>Velocity vs. Time (v-t)</h4>
-<ul>
-<li>Horizontal line → constant velocity (a = 0)</li>
-<li>Straight diagonal line → constant acceleration</li>
-<li>Slope = acceleration</li>
-<li>Area between curve and axis = displacement</li>
-<li>Above axis = positive displacement; below = negative</li>
-</ul>
-<div class="formula-box">slope of x-t = v &nbsp;|&nbsp; slope of v-t = a &nbsp;|&nbsp; area under v-t = Δx &nbsp;|&nbsp; area under a-t = Δv</div>
-<div class="tip-box"><strong>💡 Intuition:</strong> Think of graphs as translations. The x-t graph shows WHERE. The v-t graph shows HOW FAST. The a-t graph shows HOW THE SPEED IS CHANGING. Each is the derivative (slope) of the one above it.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> The AP exam often asks you to sketch one graph given another. Practice going from x-t → v-t → a-t and back. Remember: the slope of one graph gives the value of the next.</div>`
-      },
-      {
-        title: '1.4 Reference Frames and Relative Motion',
-        ap: `<h3>Reference Frames</h3>
-<p>All motion is measured relative to a <span class="key-term">reference frame</span>. An <span class="key-term">inertial reference frame</span> is one that is not accelerating.</p>
-<div class="formula-box">v_AC = v_AB + v_BC (relative velocity)</div>
-<p>The laws of physics are the same in all inertial reference frames. This means a ball dropped in a moving train behaves the same as one dropped on the ground (from the train's perspective).</p>`,
-        deep: `<h3>Everything is Relative (But Physics Isn't)</h3>
-<p>Imagine you're on a train moving at 60 mph. You toss a ball straight up. From your perspective, it goes straight up and down. From someone on the platform, it traces a parabola. <span class="highlight">Both are correct.</span></p>
-<h4>Key Principle</h4>
-<p>The laws of physics work identically in all <span class="key-term">inertial reference frames</span> (frames moving at constant velocity). This is why you can pour coffee normally on a smooth-flying airplane.</p>
-<div class="formula-box">v_object/ground = v_object/frame + v_frame/ground</div>
-<h4>How to Solve Relative Motion Problems</h4>
-<ol>
-<li>Identify all reference frames</li>
-<li>Write velocities with clear subscripts (v_A/B means "velocity of A relative to B")</li>
-<li>Use vector addition: v_A/C = v_A/B + v_B/C</li>
-<li>For 2D problems, break into components</li>
-</ol>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> The AP exam often tests this with a boat crossing a river or a plane in wind. Draw the velocity vectors head-to-tail. The resultant is the actual path.</div>`
-      },
-      {
-        title: '1.5 Vectors and Motion in Two Dimensions',
-        ap: `<h3>Projectile Motion</h3>
-<p>Projectile motion = independent horizontal and vertical motions.</p>
-<div class="formula-box">Horizontal: x = v₀ₓt (constant velocity)
-Vertical: y = v₀ᵧt − ½gt² (constant acceleration)</div>
-<ul>
-<li>Horizontal velocity is constant (no air resistance on AP exam)</li>
-<li>Vertical acceleration = −g = −9.8 m/s²</li>
-<li>Time is the same for both directions — it connects them</li>
-</ul>
-<div class="formula-box">v₀ₓ = v₀ cos θ &nbsp;&nbsp;|&nbsp;&nbsp; v₀ᵧ = v₀ sin θ</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> At the peak of projectile motion, v_y = 0 but v_x is unchanged. The velocity at the peak is purely horizontal. Acceleration is ALWAYS g downward.</div>`,
-        deep: `<h3>Projectile Motion: Two Independent Stories</h3>
-<p>The most powerful idea in 2D kinematics: <span class="highlight">horizontal and vertical motion are completely independent.</span> Gravity only affects the vertical direction.</p>
-<h4>The Horizontal Story</h4>
-<p>No horizontal forces → no horizontal acceleration → constant horizontal velocity.</p>
-<div class="formula-box">x = v₀ₓt &nbsp;&nbsp;where&nbsp;&nbsp; v₀ₓ = v₀ cos θ</div>
-<h4>The Vertical Story</h4>
-<p>Gravity acts downward → constant downward acceleration of g = 9.8 m/s².</p>
-<div class="formula-box">v_y = v₀ᵧ − gt &nbsp;&nbsp;|&nbsp;&nbsp; y = v₀ᵧt − ½gt² &nbsp;&nbsp;|&nbsp;&nbsp; v₀ᵧ = v₀ sin θ</div>
-<h4>The Bridge: Time</h4>
-<p>Time is the same for both motions. This is the key that connects them. Find time from one direction, use it in the other.</p>
-<h4>Key Results to Know</h4>
-<ul>
-<li>Time to peak: t_peak = v₀ᵧ/g</li>
-<li>Max height: h = v₀ᵧ²/(2g)</li>
-<li>Range (level ground): R = v₀²sin(2θ)/g</li>
-<li>Maximum range at θ = 45°</li>
-<li>Complementary angles (30° and 60°) give same range</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> Drop a bullet and fire one horizontally at the same time. They hit the ground simultaneously. Gravity doesn't care about horizontal motion.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> The AP exam loves asking about the velocity and acceleration at the peak. Remember: v_y = 0, v_x = v₀cosθ, and a = g downward. Always.</div>`
-      }
-    ]
+  { 
+    num: 1, name: 'Kinematics', color: '#7c5cfc', weight: '10-15%',
+    desc: 'Scalars, Vectors, and Motion in One and Two Dimensions',
+    topics: ['Scalars and Vectors in One Dimension', 'Displacement, Velocity, and Acceleration', 'Representing Motion (Graphs)', 'Reference Frames and Relative Motion', 'Vectors and Motion in Two Dimensions'],
+    apContent: {
+      key_ideas: [
+        'Scalars have magnitude only; vectors have magnitude AND direction',
+        'Velocity is rate of change of position; acceleration is rate of change of velocity',
+        'Position-time graphs slope gives velocity; velocity-time graphs slope gives acceleration; area under v-t graph gives displacement',
+        'For constant acceleration: Δx = v₀t + ½at², v = v₀ + at, v² = v₀² + 2aΔx',
+        'Free fall: a = g ≈ 9.8 m/s² downward (ALL objects near Earth\'s surface)',
+        'Projectile motion: horizontal (constant velocity) and vertical (constant acceleration g) are INDEPENDENT',
+        'At peak of projectile: v_y = 0, but a_y = g still! (Common AP trap)'
+      ],
+      exam_tips: [
+        '🏷️ AP loves graph interpretation — know what slope, area, and curvature represent',
+        '🏷️ "At highest point, acceleration = 0" is WRONG — it\'s still 9.8 m/s² down',
+        '🏷️ Time up equals time down for symmetric projectile launched from ground',
+        '🏷️ Range is max at 45° for level ground'
+      ],
+      key_equations: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'x-component: vₓ = v₀cosθ, y-component: vᵧ = v₀sinθ']
+    },
+    deepContent: {
+      intuition: 'Imagine watching a ball from a drone — horizontal and vertical motions are completely independent. The ball doesn\'t know it\'s been thrown; it just feels gravity pulling down.',
+      real_world: ['Air traffic control uses kinematics to land planes on runways', 'Video game physics engines solve these exact equations 60 times per second', 'Basketball players intuitively calculate projectile motion when shooting'],
+      common_mistakes: [
+        'Confusing velocity and speed (velocity has direction!)',
+        'Forgetting that negative acceleration doesn\'t always mean slowing down — depends on direction',
+        'Using a = 0 at the top of projectile trajectory'
+      ],
+      why_it_matters: 'Kinematics is the language of motion. Every car crash, every rocket launch, every sports moment — it\'s all described by these equations.'
+    }
   },
-  {
-    num: 2, name: 'Force & Translational Dynamics', color: '#f472b6', weight: '18–23%',
-    desc: 'Newton\'s Laws, FBDs, friction, circular motion',
-    topics: [
-      {
-        title: '2.1 Systems and Center of Mass',
-        ap: `<h3>Systems vs. Objects</h3>
-<p>The AP exam distinguishes between <span class="key-term">internal forces</span> (between objects within a system) and <span class="key-term">external forces</span> (from outside the system). Only external forces affect the system's acceleration.</p>
-<div class="formula-box">x_cm = (m₁x₁ + m₂x₂ + ...)/(m₁ + m₂ + ...)</div>
-<p>The center of mass moves as if all mass were concentrated there and all external forces acted on it.</p>`,
-        deep: `<h3>Thinking in Systems</h3>
-<p>One of the most important skills on the AP exam: choosing what counts as your <span class="key-term">system</span>. This choice determines which forces are "internal" (cancel out) and which are "external" (cause acceleration).</p>
-<h4>Center of Mass</h4>
-<p>The center of mass is the weighted average position of all mass in a system. It's the point that moves as if the entire system were a single particle.</p>
-<div class="formula-box">x_cm = (m₁x₁ + m₂x₂ + ...)/(m₁ + m₂ + ...)</div>
-<div class="tip-box"><strong>💡 Intuition:</strong> Throw a hammer spinning through the air. The handle and head trace complex paths, but the center of mass traces a perfect parabola — just like a point particle in free fall.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Internal forces always cancel in pairs (Newton's 3rd Law). When analyzing a system, only count forces from OUTSIDE the system.</div>`
-      },
-      {
-        title: '2.2 Forces and Free-Body Diagrams',
-        ap: `<h3>Free-Body Diagrams (FBDs)</h3>
-<p>Every forces problem starts with an FBD. Draw ONLY the forces acting ON the object (not forces the object exerts on other things).</p>
-<h4>Common Forces:</h4>
-<ul>
-<li><strong>Weight (F_g = mg)</strong> — always points straight down</li>
-<li><strong>Normal force (F_N)</strong> — perpendicular to the surface</li>
-<li><strong>Tension (T)</strong> — along the rope, away from the object</li>
-<li><strong>Friction (f)</strong> — parallel to surface, opposite motion</li>
-<li><strong>Applied force (F_app)</strong> — whatever is pushing/pulling</li>
-</ul>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> The AP exam requires FBDs on FRQs. Draw them clearly with labeled arrows. The length of each arrow should reflect the relative magnitude of the force.</div>`,
-        deep: `<h3>Mastering Free-Body Diagrams</h3>
-<p>An FBD is the single most important tool in mechanics. Get it wrong, and everything that follows is wrong.</p>
-<h4>Rules for Drawing FBDs</h4>
-<ol>
-<li>Draw the object as a dot or box</li>
-<li>Draw ONLY forces acting ON the object</li>
-<li>Each arrow starts at the object and points in the force direction</li>
-<li>Arrow length ≈ relative magnitude</li>
-<li>Label every force clearly</li>
-<li>Do NOT include velocity, acceleration, or "force of motion"</li>
-</ol>
-<h4>The Forces You'll See</h4>
-<ul>
-<li><span class="key-term">Gravity (mg)</span>: Always straight down. Never changes direction.</li>
-<li><span class="key-term">Normal force (F_N)</span>: Perpendicular to surface. NOT always equal to mg!</li>
-<li><span class="key-term">Tension (T)</span>: Pulls along rope. Same tension throughout a massless rope.</li>
-<li><span class="key-term">Friction (f)</span>: Parallel to surface, opposes sliding.</li>
-<li><span class="key-term">Spring force (F_s = kx)</span>: Opposite displacement from equilibrium.</li>
-</ul>
-<div class="tip-box"><strong>💡 Critical Insight:</strong> Normal force is NOT always mg. On an incline, F_N = mg cos θ. In an accelerating elevator, F_N = m(g + a). The normal force is whatever it needs to be to prevent the object from passing through the surface.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> "Centripetal force" is NOT a separate force on an FBD. It's the NET force toward the center. Label the actual forces (tension, gravity, friction, normal) that provide the centripetal force.</div>`
-      },
-      {
-        title: '2.3 Newton\'s Third Law',
-        ap: `<h3>Action-Reaction Pairs</h3>
-<div class="formula-box">F_A on B = −F_B on A</div>
-<p>For every force, there is an equal and opposite force on the OTHER object. Action-reaction pairs NEVER act on the same object, so they NEVER cancel each other in an FBD.</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Common trap: "If forces are equal and opposite, why does anything move?" Answer: The forces act on DIFFERENT objects. The horse pulls the cart forward; the cart pulls the horse backward. The cart moves because the horse's pull on the cart is unbalanced.</div>`,
-        deep: `<h3>Newton's Third Law: The Most Misunderstood Law</h3>
-<div class="formula-box">F_A on B = −F_B on A (equal magnitude, opposite direction, different objects)</div>
-<h4>The Key Insight</h4>
-<p>Forces always come in pairs. You cannot touch something without it touching you back with exactly the same force. But here's what confuses people: <span class="highlight">these forces act on different objects.</span></p>
-<h4>Why Things Can Move</h4>
-<p>If I push a wall with 100 N, the wall pushes back on me with 100 N. These don't cancel because one force acts on the wall and one acts on me. To determine if the wall moves, look at forces ON THE WALL only.</p>
-<h4>Common Action-Reaction Pairs</h4>
-<ul>
-<li>Earth pulls you down (mg) → You pull Earth up (mg)</li>
-<li>Book pushes on table → Table pushes on book (normal force)</li>
-<li>Tire pushes road backward → Road pushes tire forward (this is what makes cars move!)</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> When you walk, you push the ground backward. The ground pushes you forward. Without friction, you couldn't walk — there'd be no reaction force to push you forward. This is why walking on ice is hard.</div>`
-      },
-      {
-        title: '2.4 Newton\'s First Law',
-        ap: `<h3>Law of Inertia</h3>
-<p>If ΣF = 0, then a = 0, meaning velocity is constant. This includes being at rest (v = 0) or moving at constant velocity.</p>
-<div class="formula-box">ΣF = 0 → a = 0 → v = constant</div>
-<p><span class="key-term">Equilibrium</span>: Static (at rest) or dynamic (constant velocity). Both have ΣF = 0.</p>`,
-        deep: `<h3>The Law of Inertia: Why Things Keep Doing What They're Doing</h3>
-<p>Newton's First Law says: objects don't change their motion unless forced to. This seems obvious for objects at rest, but the revolutionary part is: <span class="highlight">an object in motion stays in motion at constant velocity without any force needed.</span></p>
-<h4>Why This Was Revolutionary</h4>
-<p>Aristotle thought objects naturally come to rest. Newton realized they only stop because of forces like friction. In space, a thrown rock travels forever at the same speed and direction.</p>
-<div class="formula-box">ΣF = 0 → a = 0 → v = constant (could be zero or nonzero)</div>
-<h4>Equilibrium</h4>
-<ul>
-<li><span class="key-term">Static equilibrium</span>: v = 0, a = 0, ΣF = 0</li>
-<li><span class="key-term">Dynamic equilibrium</span>: v = constant (≠ 0), a = 0, ΣF = 0</li>
-</ul>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Constant velocity means ΣF = 0. A car cruising at 60 mph has zero net force — the engine force exactly balances air resistance and friction. This is a very common AP exam concept.</div>`
-      },
-      {
-        title: '2.5 Newton\'s Second Law',
-        ap: `<h3>The Most Important Equation in Mechanics</h3>
-<div class="formula-box">ΣF = ma</div>
-<p>The net force equals mass times acceleration. Always apply this separately in x and y directions:</p>
-<div class="formula-box">ΣF_x = ma_x &nbsp;&nbsp;|&nbsp;&nbsp; ΣF_y = ma_y</div>
-<h4>Strategy for Solving:</h4>
-<ol><li>Draw FBD</li><li>Choose coordinates (align one axis with acceleration)</li><li>Resolve forces into components</li><li>Apply ΣF = ma in each direction</li><li>Solve the system of equations</li></ol>`,
-        deep: `<h3>ΣF = ma: The Engine of Mechanics</h3>
-<p>This single equation solves virtually every mechanics problem on the AP exam. The key is understanding that <span class="highlight">ΣF means the VECTOR SUM of all forces</span>.</p>
-<h4>The Problem-Solving Algorithm</h4>
-<ol>
-<li><strong>Draw the FBD</strong> — every single force on the object</li>
-<li><strong>Choose smart coordinates</strong> — align one axis with the direction of acceleration (e.g., parallel to an incline)</li>
-<li><strong>Break forces into components</strong> — every force not along an axis gets split</li>
-<li><strong>Write ΣF = ma for each axis</strong> — two equations, two unknowns usually</li>
-<li><strong>Solve algebraically first</strong> — plug numbers last</li>
-</ol>
-<h4>Inclined Plane Example</h4>
-<p>For a block on an incline at angle θ:</p>
-<div class="formula-box">Parallel to incline: mg sin θ − f = ma
-Perpendicular to incline: F_N − mg cos θ = 0</div>
-<div class="tip-box"><strong>💡 Pro Tip:</strong> Always align your axes with the acceleration. For inclines, use parallel/perpendicular instead of horizontal/vertical. This makes one equation have a = 0, simplifying everything.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> For systems of connected objects (like two blocks on a string), you can treat them as one system to find acceleration, then isolate individual objects to find tension. This saves enormous time on the exam.</div>`
-      },
-      {
-        title: '2.6 Gravitational Force',
-        ap: `<h3>Weight and Universal Gravitation</h3>
-<div class="formula-box">F_g = mg (near Earth's surface)
-F_g = Gm₁m₂/r² (universal)</div>
-<p>Weight = mg. Mass is intrinsic; weight depends on the gravitational field. On the Moon, mass is the same but weight is 1/6 of Earth's.</p>`,
-        deep: `<h3>Gravity: From Apples to Orbits</h3>
-<p>There are two ways to calculate gravitational force, depending on the situation:</p>
-<h4>Near a Planet's Surface</h4>
-<div class="formula-box">F_g = mg &nbsp;&nbsp;(g ≈ 9.8 m/s² on Earth)</div>
-<p>This is an approximation that works when you're close to the surface. The value of g changes with altitude and varies on different planets.</p>
-<h4>Universal Gravitation</h4>
-<div class="formula-box">F_g = Gm₁m₂/r² &nbsp;&nbsp;(G = 6.67 × 10⁻¹¹ N·m²/kg²)</div>
-<p>Every mass attracts every other mass. The force follows an <span class="highlight">inverse-square law</span> — double the distance, force becomes 1/4.</p>
-<div class="tip-box"><strong>💡 Intuition:</strong> You are gravitationally attracted to every object in the universe right now. The reason you only feel Earth's pull is that G is incredibly tiny — you need planet-sized masses for noticeable gravity.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Mass ≠ weight. Mass is the amount of stuff (kg). Weight is the gravitational force (N). An astronaut in orbit is weightless but still has mass and inertia.</div>`
-      },
-      {
-        title: '2.7 Kinetic and Static Friction',
-        ap: `<h3>Friction</h3>
-<div class="formula-box">f_k = μ_k · F_N (kinetic — sliding)
-f_s ≤ μ_s · F_N (static — not sliding)</div>
-<ul>
-<li>μ_s > μ_k always (harder to start sliding than to keep sliding)</li>
-<li>Static friction adjusts to match the applied force up to its maximum</li>
-<li>Friction is parallel to the surface, opposing sliding</li>
-</ul>`,
-        deep: `<h3>Friction: The Force That Makes Life Possible</h3>
-<p>Without friction, you couldn't walk, drive, or hold anything. It's the force that resists sliding between surfaces in contact.</p>
-<h4>Two Types of Friction</h4>
-<p><span class="key-term">Static friction</span> prevents sliding. It's a smart force — it adjusts to exactly match the applied force, up to a maximum:</p>
-<div class="formula-box">f_s ≤ μ_s · F_N (static friction matches applied force, up to max)</div>
-<p><span class="key-term">Kinetic friction</span> acts during sliding. It's constant:</p>
-<div class="formula-box">f_k = μ_k · F_N (constant during sliding)</div>
-<h4>Key Facts</h4>
-<ul>
-<li>μ_s > μ_k always (it's harder to start sliding than to keep sliding)</li>
-<li>Friction does NOT depend on surface area</li>
-<li>Friction does NOT depend on speed (approximately)</li>
-<li>Friction depends on the materials (μ) and how hard they're pressed together (F_N)</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> Think of static friction like a bodyguard — it matches any threat exactly, up to its limit. Once the limit is exceeded, kinetic friction takes over, and it's weaker (the bodyguard got overwhelmed).</div>`
-      },
-      {
-        title: '2.8 Spring Forces',
-        ap: `<h3>Hooke's Law</h3>
-<div class="formula-box">F_s = −kx</div>
-<p>The spring force is proportional to displacement from equilibrium. k is the spring constant (stiffness). The negative sign means the force always points back toward equilibrium.</p>`,
-        deep: `<h3>Spring Forces and Hooke's Law</h3>
-<div class="formula-box">F_s = −kx (restoring force proportional to displacement)</div>
-<p>The minus sign is crucial: the spring always pulls/pushes back toward equilibrium. Stretch it right → it pulls left. Compress it left → it pushes right.</p>
-<h4>Spring Constant (k)</h4>
-<p>k measures stiffness. A stiff spring has a large k (hard to stretch). A loose spring has a small k. Units: N/m.</p>
-<h4>Energy Stored in a Spring</h4>
-<div class="formula-box">U_s = ½kx²</div>
-<p>The work done to stretch/compress a spring is stored as elastic potential energy. This comes from the area under the F vs. x graph (a triangle).</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Springs appear in both force problems (F = kx) and energy problems (U = ½kx²). Know when to use which form. Force problems involve acceleration/equilibrium; energy problems involve speed/height changes.</div>`
-      },
-      {
-        title: '2.9 Circular Motion',
-        ap: `<h3>Uniform Circular Motion</h3>
-<div class="formula-box">a_c = v²/r &nbsp;&nbsp;|&nbsp;&nbsp; F_c = mv²/r</div>
-<p>In uniform circular motion, speed is constant but velocity changes (direction changes). Therefore, there IS acceleration — directed toward the center.</p>
-<ul>
-<li>Centripetal force is NOT a new force — it's the NET force toward center</li>
-<li>Could be provided by tension, gravity, friction, or normal force</li>
-</ul>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Never draw "centripetal force" on an FBD. Instead, identify which real force(s) point toward the center and set their sum equal to mv²/r.</div>`,
-        deep: `<h3>Circular Motion: Why Turning Requires Force</h3>
-<p>Here's the key insight: <span class="highlight">changing direction IS acceleration</span>, even at constant speed. Since velocity is a vector, changing its direction means velocity is changing, which means there's acceleration.</p>
-<h4>Centripetal Acceleration</h4>
-<div class="formula-box">a_c = v²/r (always directed toward the center)</div>
-<p>The faster you go or the tighter the turn, the more acceleration (and therefore force) you need.</p>
-<h4>What Provides the Centripetal Force?</h4>
-<p>"Centripetal force" is not a type of force — it's a <em>role</em> that real forces play:</p>
-<ul>
-<li>Car turning on flat road → <strong>friction</strong></li>
-<li>Car on banked curve → <strong>horizontal component of normal force</strong></li>
-<li>Satellite orbiting → <strong>gravity</strong></li>
-<li>Ball on a string → <strong>tension</strong></li>
-<li>Roller coaster loop → <strong>normal force + gravity</strong></li>
-</ul>
-<div class="formula-box">ΣF_toward_center = mv²/r</div>
-<div class="tip-box"><strong>💡 Intuition:</strong> When a car turns, you feel pushed outward. But there's no outward force! Your body wants to go straight (inertia). The car door pushes you inward to make you turn. The "outward force" you feel is just your inertia resisting the turn.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> For vertical circles (like a roller coaster loop), the normal force changes. At the top: F_N + mg = mv²/r. At the bottom: F_N − mg = mv²/r. Minimum speed at top: v = √(gr) (when F_N = 0).</div>`
-      }
-    ]
+  { 
+    num: 2, name: 'Force and Translational Dynamics', color: '#f472b6', weight: '18-23%',
+    desc: 'Newton\'s Laws, Free-Body Diagrams, Friction, and Forces',
+    topics: ['Systems and Center of Mass', 'Forces and Free-Body Diagrams', 'Newton\'s Third Law', 'Newton\'s First Law', 'Newton\'s Second Law', 'Gravitational Force', 'Kinetic and Static Friction', 'Spring Forces', 'Circular Motion'],
+    apContent: {
+      key_ideas: [
+        'NET force = mass × acceleration (F_net = ma) — THE core equation of this unit',
+        'Newton\'s 1st Law: Objects stay at rest or constant velocity UNLESS there\'s a net force',
+        'Newton\'s 3rd Law: Forces come in PAIRS — if A pushes B, B pushes A with equal but opposite force',
+        'Normal force is perpendicular to surface — it\'s a constraint force, NOT always equal to mg!',
+        'Free-body diagrams (FBDs) are MANDATORY for force problems on the AP exam',
+        'Friction opposes MOTION or INTENDED motion: f_k = μₖN (kinetic), f_s ≤ μₛN (static)',
+        'Spring force: F = -kx (Hooke\'s Law) — restorative force opposite to displacement',
+        'Circular motion requires NET force directed toward center: F_c = mv²/r'
+      ],
+      exam_tips: [
+        '🏷️ ALWAYS draw a free-body diagram — graders look for it on FRQs',
+        '🏷️ "Normal force = mg" ONLY on flat horizontal surface! On inclines or with other forces, it differs',
+        '🏷️ Newton\'s 3rd Law pairs act on DIFFERENT objects (not in same FBD)',
+        '🏷️ Static friction can vary from 0 to μₛN; kinetic friction is fixed at μₖN',
+        '🏷️ "At rest" does NOT mean no forces — it means F_net = 0'
+      ],
+      key_equations: ['F_net = ma', 'f_k = μₖN', 'f_s ≤ μₛN', 'F_gravity = mg', 'F_spring = -kx', 'F_c = mv²/r = mω²r', 'F_g = Gm₁m₂/r²']
+    },
+    deepContent: {
+      intuition: 'Forces aren\'t things objects HAVE — they\'re things that HAPPEN TO objects between interactions. Think of force as a conversation between two objects.',
+      real_world: ['Seatbelts work because of inertia — your body wants to keep moving at highway speed', 'Banks are angled because of circular motion physics', 'Rubber tires use static friction (kinetic friction would mean skidding)'],
+      common_mistakes: [
+        'Drawing forces not originating from a point on the object',
+        'Including "centrifugal force" in an inertial frame (it\'s fictitious!)',
+        'Forgetting that normal force can be less than mg (elevator, incline)',
+        'Mixing up Newton\'s 2nd and 3rd law pairs'
+      ],
+      why_it_matters: 'Every bridge, building, vehicle, and device you use was designed using these principles. Engineers literally calculate F = ma millions of times when designing anything.'
+    }
   },
-  {
-    num: 3, name: 'Work, Energy & Power', color: '#34d399', weight: '18–23%',
-    desc: 'Kinetic energy, potential energy, conservation, power',
-    topics: [
-      {
-        title: '3.1 Translational Kinetic Energy',
-        ap: `<h3>Kinetic Energy</h3>
-<div class="formula-box">K = ½mv²</div>
-<p>Kinetic energy is the energy of motion. It's always positive (v² is always positive). It's a scalar — no direction matters.</p>
-<p>KE depends on speed, not velocity. An object moving at 10 m/s east has the same KE as one moving at 10 m/s west.</p>`,
-        deep: `<h3>Kinetic Energy: The Energy of Motion</h3>
-<div class="formula-box">K = ½mv² (scalar, always ≥ 0, units: Joules)</div>
-<h4>Why ½mv²?</h4>
-<p>This formula comes from integrating F = ma over distance. The ½ factor ensures energy conservation works correctly.</p>
-<h4>Key Properties</h4>
-<ul>
-<li><span class="highlight">Scalar quantity</span> — no direction, always positive</li>
-<li>Proportional to v² — doubling speed quadruples KE</li>
-<li>This is why stopping distance quadruples when speed doubles</li>
-</ul>
-<div class="tip-box"><strong>💡 Real-world connection:</strong> A car at 60 mph has 4× the kinetic energy of a car at 30 mph. This is why high-speed crashes are so much more devastating — it's not linear, it's quadratic.</div>`
-      },
-      {
-        title: '3.2 Work',
-        ap: `<h3>Work</h3>
-<div class="formula-box">W = F · d · cos θ (constant force)
-W_net = ΔK (work-energy theorem)</div>
-<p>Work = force × displacement × cos(angle between them). Work is positive if force helps motion, negative if it opposes motion, zero if perpendicular.</p>
-<ul>
-<li>Work is the area under a Force vs. Displacement graph</li>
-<li>Net work = change in kinetic energy</li>
-</ul>`,
-        deep: `<h3>Work: The Transfer of Energy</h3>
-<p>Work is how energy gets transferred into or out of a system. Think of it as the "currency" of energy transactions.</p>
-<div class="formula-box">W = F · d · cos θ (for constant force)
-W = area under F vs. d graph (for any force)</div>
-<h4>Sign of Work</h4>
-<ul>
-<li><strong>Positive work:</strong> Force has a component in the direction of motion → speeds up the object</li>
-<li><strong>Negative work:</strong> Force opposes motion → slows down the object</li>
-<li><strong>Zero work:</strong> Force is perpendicular to motion (e.g., normal force on a horizontal surface)</li>
-</ul>
-<h4>The Work-Energy Theorem</h4>
-<div class="formula-box">W_net = ΔK = K_f − K_i</div>
-<p>The NET work done on an object equals its change in kinetic energy. This is incredibly powerful — it lets you find speed changes without knowing acceleration or time.</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Carrying a box horizontally: you do ZERO work on the box (your force is up, displacement is horizontal, θ = 90°, cos 90° = 0). This is a classic AP trick question.</div>`
-      },
-      {
-        title: '3.3 Potential Energy',
-        ap: `<h3>Potential Energy</h3>
-<div class="formula-box">U_g = mgh (gravitational, near surface)
-U_s = ½kx² (elastic/spring)</div>
-<p>Potential energy is stored energy. Gravitational PE depends on height. Spring PE depends on compression/stretch.</p>
-<p>Only <span class="key-term">conservative forces</span> (gravity, spring) have associated potential energy. Friction does not.</p>`,
-        deep: `<h3>Potential Energy: Stored Ability to Do Work</h3>
-<p>Potential energy represents energy that's "banked" — stored in a configuration and available to be converted into motion.</p>
-<h4>Gravitational Potential Energy</h4>
-<div class="formula-box">U_g = mgh</div>
-<p>The energy stored by lifting an object against gravity. The reference level (h = 0) is arbitrary — only CHANGES in U_g matter.</p>
-<h4>Elastic Potential Energy</h4>
-<div class="formula-box">U_s = ½kx²</div>
-<p>The energy stored by stretching or compressing a spring. Note: x is measured from the equilibrium (unstretched) position.</p>
-<h4>Conservative vs. Nonconservative Forces</h4>
-<ul>
-<li><span class="key-term">Conservative</span> (gravity, spring): Work done is path-independent. Energy can be stored and recovered.</li>
-<li><span class="key-term">Nonconservative</span> (friction, air resistance): Work depends on path. Energy is dissipated as heat.</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> Think of potential energy like money in a bank. Gravitational PE is money you deposited by lifting something. Spring PE is money you deposited by compressing a spring. You can withdraw it later as kinetic energy.</div>`
-      },
-      {
-        title: '3.4 Conservation of Energy',
-        ap: `<h3>Conservation of Energy</h3>
-<div class="formula-box">E_i = E_f (no friction)
-E_i + W_nc = E_f (with friction/nonconservative forces)</div>
-<p>Total mechanical energy E = K + U. If only conservative forces act, E is constant. If friction acts, some energy becomes thermal.</p>
-<h4>Strategy:</h4>
-<ol><li>Identify initial and final states</li><li>List all forms of energy at each state</li><li>Set E_i = E_f (or include W_nc)</li><li>Solve for unknown</li></ol>`,
-        deep: `<h3>Conservation of Energy: The Most Powerful Principle in Physics</h3>
-<p>Energy cannot be created or destroyed — only transformed. This single principle solves problems that would be extremely difficult with forces.</p>
-<h4>The Master Equation</h4>
-<div class="formula-box">K_i + U_i + W_nc = K_f + U_f</div>
-<p>Where W_nc is work done by nonconservative forces (friction, applied forces). If there's no friction and no external work, W_nc = 0 and mechanical energy is conserved.</p>
-<h4>When to Use Energy vs. Forces</h4>
-<ul>
-<li>Use <span class="highlight">energy</span> when: finding speed at different heights, springs, problems without time</li>
-<li>Use <span class="highlight">forces</span> when: finding acceleration, time, or when forces are the focus</li>
-</ul>
-<h4>Common Energy Transformations</h4>
-<ul>
-<li>Falling object: U_g → K</li>
-<li>Spring launching: U_s → K</li>
-<li>Pendulum: U_g ↔ K (continuous exchange)</li>
-<li>Block sliding with friction: K → thermal energy</li>
-</ul>
-<div class="tip-box"><strong>💡 Pro Strategy:</strong> Always draw "energy bar charts" (LOL diagrams) on FRQs. Show initial energy, work input/output, and final energy. The AP graders love these.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> For a roller coaster or pendulum, the speed at any height depends ONLY on the height difference, not the path taken. v = √(2gΔh). The shape of the track doesn't matter for speed (if frictionless).</div>`
-      },
-      {
-        title: '3.5 Power',
-        ap: `<h3>Power</h3>
-<div class="formula-box">P = W/t = F · v</div>
-<p>Power is the rate of energy transfer. Units: Watts (W) = J/s.</p>
-<p>Average power = W/t. Instantaneous power = F · v (force times instantaneous velocity).</p>`,
-        deep: `<h3>Power: How Fast Energy Moves</h3>
-<p>Energy tells you HOW MUCH work can be done. Power tells you HOW FAST it gets done.</p>
-<div class="formula-box">P_avg = W/t = ΔE/t &nbsp;&nbsp;|&nbsp;&nbsp; P_instant = F · v · cos θ</div>
-<h4>Intuition</h4>
-<p>Walking up stairs and running up stairs require the same energy (same mgh). But running requires more POWER because you do it faster.</p>
-<h4>Two Forms of the Power Equation</h4>
-<ul>
-<li><strong>P = W/t</strong> — use when you know total work and time</li>
-<li><strong>P = Fv</strong> — use for instantaneous power when you know force and velocity at a moment</li>
-</ul>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> P = Fv is frequently tested. A car engine producing constant force: power increases as speed increases. This is why engines need more power at highway speeds.</div>`
-      }
-    ]
+  { 
+    num: 3, name: 'Work, Energy, and Power', color: '#34d399', weight: '18-23%',
+    desc: 'Energy Conservation — The Most Powerful Principle in Physics',
+    topics: ['Translational Kinetic Energy', 'Work (by constant force)', 'Gravitational and Elastic Potential Energy', 'Conservation of Mechanical Energy', 'Power'],
+    apContent: {
+      key_ideas: [
+        'Work = Force × displacement in direction of force: W = Fd cosθ (θ is angle between F and d)',
+        'Kinetic energy: K = ½mv² — energy of motion, ALWAYS positive',
+        'Gravitational PE: U_g = mgh — depends on reference point (height)',
+        'Spring PE: U_s = ½kx² — stored in compressed/stretched spring',
+        'CONSERVATION OF MECHANICAL ENERGY: ΔK + ΔU = 0 (no non-conservative forces)',
+        'With friction: ΔK + ΔU = W_nc (non-conservative work is NEGATIVE)',
+        'Power = rate of energy transfer: P = W/t = Fv',
+        'Energy is a SCALAR — no direction! Makes problems easier than forces sometimes'
+      ],
+      exam_tips: [
+        '🏷️ Energy is almost ALWAYS easier than forces for FRQs — use it when possible',
+        '🏷️ You must DEFINE your reference point (usually ground = h = 0)',
+        '🏷️ Power problems: P = Fv for instantaneous power when force and velocity are parallel',
+        '🏷️ "Conservative" means path doesn\'t matter — gravity and springs; "non-conservative" means path matters — friction',
+        '🏷️ AP FRQs love asking "explain using energy" — mention initial and final states explicitly'
+      ],
+      key_equations: ['W = Fd cosθ', 'K = ½mv²', 'U_g = mgh', 'U_s = ½kx²', 'E_total = K + U', 'ΔE = W_nc', 'P = W/t = Fv']
+    },
+    deepContent: {
+      intuition: 'Energy is like an accounting system — it\'s always conserved, just moves between "accounts" (kinetic, potential, thermal). You can\'t create or destroy it, only transfer it.',
+      real_world: ['Roller coasters: all the height at the start must come from somewhere — converted to speed', 'Regenerative braking in electric cars converts kinetic energy back to electrical', 'Hydroelectric dams convert gravitational potential energy of water to electricity'],
+      common_mistakes: [
+        'Forgetting that friction does NEGATIVE work (takes energy out of the system)',
+        'Not defining your reference frame for potential energy',
+        'Using W = Fd when force isn\'t constant (AP only tests constant force)',
+        'Confusing energy and power (power is energy per TIME)'
+      ],
+      why_it_matters: 'Energy is the universal currency of physics. From nuclear reactions to metabolism, from car engines to solar panels — everything is energy conversion.'
+    }
   },
-  {
-    num: 4, name: 'Linear Momentum', color: '#fb923c', weight: '10–15%',
-    desc: 'Impulse, conservation, collisions',
-    topics: [
-      {
-        title: '4.1 Linear Momentum',
-        ap: `<h3>Momentum</h3>
-<div class="formula-box">p = mv (vector, same direction as velocity)</div>
-<p>Momentum is "mass in motion." It's a vector quantity — direction matters. Units: kg·m/s.</p>`,
-        deep: `<h3>Momentum: The Quantity of Motion</h3>
-<div class="formula-box">p = mv (vector, units: kg·m/s)</div>
-<p>Newton actually formulated his laws in terms of momentum, not force. He called it the "quantity of motion." It combines how much stuff is moving (mass) with how fast it's going (velocity).</p>
-<h4>Why Momentum Matters</h4>
-<p>Momentum is conserved in isolated systems. This makes it incredibly powerful for analyzing collisions and explosions where forces are complex but momentum is simple.</p>
-<div class="tip-box"><strong>💡 Intuition:</strong> A truck at 5 mph and a bullet at 1000 mph can have the same momentum. The truck has lots of mass, the bullet has lots of speed. Both are hard to stop — that's what momentum measures.</div>`
-      },
-      {
-        title: '4.2 Change in Momentum and Impulse',
-        ap: `<h3>Impulse-Momentum Theorem</h3>
-<div class="formula-box">J = F_avg · Δt = Δp = m(v_f − v_i)</div>
-<p>Impulse = change in momentum. Impulse is also the area under a Force vs. Time graph.</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Bouncing creates MORE impulse than stopping. If a ball hits a wall at v and stops: Δp = mv. If it bounces back at v: Δp = 2mv. The wall exerts twice the impulse.</div>`,
-        deep: `<h3>Impulse: How to Change Momentum</h3>
-<p>To change an object's momentum, you need to apply a force for some time. The product of force and time is called <span class="key-term">impulse</span>.</p>
-<div class="formula-box">J = F_avg · Δt = Δp = mΔv</div>
-<h4>The Trade-off: Force vs. Time</h4>
-<p>For a given momentum change, you can use a large force for a short time OR a small force for a long time. This is the physics behind:</p>
-<ul>
-<li><strong>Airbags:</strong> Increase Δt → decrease F (same Δp, less injury)</li>
-<li><strong>Bending knees when landing:</strong> Increase Δt → decrease F</li>
-<li><strong>Following through in sports:</strong> Increase Δt → increase Δp (more speed on the ball)</li>
-</ul>
-<h4>Impulse from a Graph</h4>
-<div class="formula-box">Impulse = area under F vs. t graph</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> The AP exam frequently gives Force vs. Time graphs and asks for the change in velocity. Find the area (impulse), then divide by mass: Δv = J/m.</div>`
-      },
-      {
-        title: '4.3 Conservation of Linear Momentum',
-        ap: `<h3>Conservation of Momentum</h3>
-<div class="formula-box">Σp_initial = Σp_final (when ΣF_external = 0)</div>
-<p>Total momentum of a system is conserved if no net external force acts. This applies to ALL collisions and explosions.</p>
-<p>In 2D: conserve momentum separately in x and y directions.</p>`,
-        deep: `<h3>Conservation of Momentum: The Universe's Accounting System</h3>
-<p>Momentum is never created or destroyed — only transferred between objects. In any collision or explosion, the total momentum before equals the total momentum after.</p>
-<div class="formula-box">m₁v₁i + m₂v₂i = m₁v₁f + m₂v₂f</div>
-<h4>When Is Momentum Conserved?</h4>
-<p>Momentum is conserved when the net EXTERNAL force on the system is zero. Internal forces (between objects in the system) always cancel in pairs.</p>
-<h4>2D Conservation</h4>
-<p>Conserve momentum independently in each direction:</p>
-<div class="formula-box">Σp_x,i = Σp_x,f &nbsp;&nbsp;and&nbsp;&nbsp; Σp_y,i = Σp_y,f</div>
-<div class="tip-box"><strong>💡 Intuition:</strong> When a cannon fires, the cannonball goes forward and the cannon recoils backward. Total momentum was zero before (both at rest) and must be zero after. The cannon's large mass means small recoil velocity.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> For "person jumps off cart" or "rain falls into cart" problems, momentum is conserved horizontally (no external horizontal forces). Vertical momentum is NOT conserved (gravity is external).</div>`
-      },
-      {
-        title: '4.4 Elastic and Inelastic Collisions',
-        ap: `<h3>Types of Collisions</h3>
-<p>Momentum is conserved in ALL collisions. Kinetic energy is conserved only in elastic collisions.</p>
-<ul>
-<li><strong>Elastic:</strong> KE conserved. Objects bounce without losing energy.</li>
-<li><strong>Inelastic:</strong> KE NOT conserved. Some energy becomes heat/sound/deformation.</li>
-<li><strong>Perfectly inelastic:</strong> Objects stick together. Maximum KE loss.</li>
-</ul>
-<div class="formula-box">Perfectly inelastic: m₁v₁ + m₂v₂ = (m₁ + m₂)v_f</div>`,
-        deep: `<h3>Collisions: Where Momentum Meets Energy</h3>
-<h4>The Three Types</h4>
-<ul>
-<li><span class="key-term">Elastic</span>: Both momentum AND kinetic energy are conserved. Objects bounce perfectly.</li>
-<li><span class="key-term">Inelastic</span>: Momentum conserved, KE not conserved. Some energy lost to heat/sound.</li>
-<li><span class="key-term">Perfectly inelastic</span>: Objects stick together. Maximum KE loss but momentum still conserved.</li>
-</ul>
-<h4>Perfectly Inelastic (Most Common on AP)</h4>
-<div class="formula-box">m₁v₁i + m₂v₂i = (m₁ + m₂)v_f</div>
-<p>Objects stick together and move as one. Just add the masses on the right side.</p>
-<h4>Elastic Collisions</h4>
-<p>Both momentum and KE are conserved. This gives two equations:</p>
-<div class="formula-box">m₁v₁i + m₂v₂i = m₁v₁f + m₂v₂f (momentum)
-½m₁v₁i² + ½m₂v₂i² = ½m₁v₁f² + ½m₂v₂f² (energy)</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> To check if a collision is elastic, calculate total KE before and after. If they're equal → elastic. If KE_after < KE_before → inelastic. The "missing" KE became thermal energy.</div>`
-      }
-    ]
+  { 
+    num: 4, name: 'Linear Momentum', color: '#fb923c', weight: '10-15%',
+    desc: 'Momentum, Impulse, Collisions, and Conservation',
+    topics: ['Linear Momentum (p = mv)', 'Change in Momentum and Impulse', 'Conservation of Linear Momentum', 'Elastic and Inelastic Collisions'],
+    apContent: {
+      key_ideas: [
+        'Momentum: p = mv — a VECTOR quantity (direction matters!)',
+        'Impulse: J = FΔt = Δp — force times time equals change in momentum',
+        'CONSERVATION: If no external net force, Σp_initial = Σp_final',
+        'Perfectly elastic collision: both momentum AND kinetic energy conserved',
+        'Perfectly inelastic collision: momentum conserved, KE is NOT — objects STICK',
+        'In 1D collisions: define positive direction first, then treat all velocities with correct signs',
+        'Center of mass motion depends only on EXTERNAL forces — internal forces don\'t change COM'
+      ],
+      exam_tips: [
+        '🏷️ Momentum is a VECTOR — in 2D problems, conserve separately in x and y',
+        '🏷️ "Sticks together" = perfectly inelastic — you CANNOT conserve kinetic energy',
+        '🏷️ Impulse-momentum is often easier than Newton\'s 2nd law for collision problems',
+        '🏷️ Graph of F vs t: AREA under curve = impulse = Δp',
+        '🏷️ Rocket propulsion: momentum of exhaust pushes rocket forward (Newton\'s 3rd Law)'
+      ],
+      key_equations: ['p = mv', 'J = FΔt = Δp', 'Σp_initial = Σp_final', 'v_cm = Σmᵢvᵢ / Σmᵢ']
+    },
+    deepContent: {
+      intuition: 'Momentum is the "oomph" an object carries. A heavy truck at 10 mph has the same momentum as a motorcycle at 100 mph — same impact potential.',
+      real_world: ['Crumple zones in cars increase collision TIME, reducing force (J = FΔt)', 'Airbags work the same way — extending the stopping time', 'Hitting a baseball: the longer the bat contact, the more impulse delivered'],
+      common_mistakes: [
+        'Forgetting momentum is a vector (signs matter in 1D!)',
+        'Using energy conservation for inelastic collisions (you can\'t!)',
+        'Not accounting for all objects in the system',
+        'Confusing impulse (J) with momentum (p)'
+      ],
+      why_it_matters: 'Car safety, sports equipment design, rocket science — all built on momentum conservation. The Apollo astronauts got to the moon by ejecting momentum rearward.'
+    }
   },
-  {
-    num: 5, name: 'Torque & Rotational Dynamics', color: '#a78bfa', weight: '10–15%',
-    desc: 'Rotational kinematics, torque, rotational inertia',
-    topics: [
-      {
-        title: '5.1 Rotational Kinematics',
-        ap: `<h3>Rotational Variables</h3>
-<p>Every linear variable has a rotational counterpart:</p>
-<div class="formula-box">x → θ (radians) &nbsp;|&nbsp; v → ω (rad/s) &nbsp;|&nbsp; a → α (rad/s²)</div>
-<p>The same kinematic equations work with rotational variables (for constant α).</p>`,
-        deep: `<h3>Rotational Kinematics: The Same Story, Different Language</h3>
-<p>Rotation is just translation in disguise. Every concept you know from linear motion has a rotational twin:</p>
-<div class="formula-box">
-Linear → Rotational
-x → θ (angular displacement, radians)
-v → ω (angular velocity, rad/s)
-a → α (angular acceleration, rad/s²)
-m → I (rotational inertia)
-F → τ (torque)
-p → L (angular momentum)
-K → ½Iω² (rotational KE)
-</div>
-<p>The "Big 4" kinematic equations work identically — just swap the variables.</p>
-<div class="tip-box"><strong>💡 Key conversion:</strong> 1 revolution = 2π radians. ω in rad/s = (RPM × 2π) / 60.</div>`
-      },
-      {
-        title: '5.2 Connecting Linear and Rotational Motion',
-        ap: `<h3>Linear-Rotational Relationships</h3>
-<div class="formula-box">s = rθ &nbsp;|&nbsp; v = rω &nbsp;|&nbsp; a_t = rα</div>
-<p>For a point at distance r from the axis of rotation. All points on a rigid body share the same ω and α, but v and a_t depend on r.</p>`,
-        deep: `<h3>Connecting the Two Worlds</h3>
-<p>When a rigid object rotates, every point has the same angular velocity ω, but points farther from the axis move faster linearly.</p>
-<div class="formula-box">s = rθ &nbsp;|&nbsp; v_t = rω &nbsp;|&nbsp; a_t = rα</div>
-<h4>Key Insight</h4>
-<p>Points farther from the axis travel a larger circular path in the same time, so they have higher linear speed. But they all complete the same angle in the same time.</p>
-<div class="tip-box"><strong>💡 Intuition:</strong> On a merry-go-round, a horse on the outside moves faster than one on the inside (higher v), but they both complete one revolution in the same time (same ω).</div>`
-      },
-      {
-        title: '5.3 Torque',
-        ap: `<h3>Torque</h3>
-<div class="formula-box">τ = rF sin θ = r_⊥ · F</div>
-<p>Torque is the rotational equivalent of force. It causes angular acceleration.</p>
-<ul>
-<li>r = distance from pivot to where force is applied</li>
-<li>θ = angle between r and F</li>
-<li>Maximum torque when force is perpendicular to lever arm (θ = 90°)</li>
-</ul>`,
-        deep: `<h3>Torque: The Rotational Push</h3>
-<p>Torque measures how effectively a force causes rotation. Three things matter:</p>
-<ol>
-<li><strong>How hard you push</strong> (F)</li>
-<li><strong>Where you push</strong> (r — farther from pivot = more torque)</li>
-<li><strong>What angle you push at</strong> (perpendicular is most effective)</li>
-</ol>
-<div class="formula-box">τ = rF sin θ = r_⊥ · F = F_⊥ · r</div>
-<h4>Two Ways to Think About It</h4>
-<ul>
-<li><strong>Lever arm method:</strong> τ = (perpendicular distance from pivot to force line) × F</li>
-<li><strong>Component method:</strong> τ = r × (component of force perpendicular to r)</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> Why are door handles far from the hinges? Maximum r = maximum torque for the same push. Pushing near the hinges requires much more force. This is torque in everyday life.</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> For equilibrium problems (seesaws, ladders, beams): Στ = 0 AND ΣF = 0. Choose your pivot point wisely — placing it where an unknown force acts eliminates that force from the torque equation.</div>`
-      },
-      {
-        title: '5.4 Rotational Inertia',
-        ap: `<h3>Rotational Inertia (Moment of Inertia)</h3>
-<div class="formula-box">I = Σmr² (for point masses)</div>
-<p>Rotational inertia measures resistance to angular acceleration. Mass farther from the axis contributes more (because of the r²).</p>
-<p>Common values: solid disk I = ½MR², hoop I = MR², solid sphere I = ⅖MR²</p>`,
-        deep: `<h3>Rotational Inertia: Mass Distribution Matters</h3>
-<p>In linear motion, only total mass matters for inertia. In rotation, <span class="highlight">where the mass is located</span> matters just as much.</p>
-<div class="formula-box">I = Σmr² &nbsp;&nbsp;(mass × distance² from axis, summed over all particles)</div>
-<h4>Why r²?</h4>
-<p>Mass farther from the axis is harder to rotate for two reasons: (1) it has to travel a larger circle, and (2) the torque from a given force is less effective at larger radii. These combine to give r² dependence.</p>
-<h4>Common Rotational Inertias (AP Exam)</h4>
-<ul>
-<li>Point mass at distance r: I = mr²</li>
-<li>Solid disk/cylinder: I = ½MR²</li>
-<li>Hoop/thin ring: I = MR²</li>
-<li>Solid sphere: I = ⅖MR²</li>
-<li>Hollow sphere: I = ⅔MR²</li>
-<li>Thin rod (center): I = ¹⁄₁₂ML²</li>
-<li>Thin rod (end): I = ⅓ML²</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> An ice skater spins faster when pulling arms in because I decreases (mass moves closer to axis). Since L = Iω is conserved, ω must increase. This is conservation of angular momentum.</div>`
-      },
-      {
-        title: '5.5 Rotational Equilibrium',
-        ap: `<h3>Rotational Equilibrium</h3>
-<div class="formula-box">Στ = 0 (no angular acceleration)
-ΣF = 0 (no linear acceleration)</div>
-<p>For complete equilibrium, BOTH conditions must be met. Choose a convenient pivot point to eliminate unknown forces from torque calculations.</p>`,
-        deep: `<h3>Rotational Equilibrium: When Everything Balances</h3>
-<p>An object is in complete equilibrium when it's neither translating nor rotating. This requires two independent conditions:</p>
-<div class="formula-box">ΣF = 0 (no linear acceleration)
-Στ = 0 (no angular acceleration)</div>
-<h4>Strategy for Equilibrium Problems</h4>
-<ol>
-<li>Draw an extended FBD (show where each force acts, not just direction)</li>
-<li>Choose a pivot point (best choice: where an unknown force acts)</li>
-<li>Calculate torque from each force about the pivot</li>
-<li>Set Στ = 0 and ΣF = 0</li>
-<li>Solve the system of equations</li>
-</ol>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> The AP exam loves seesaw/beam problems. The trick: choose your pivot at one of the support points. That support force creates zero torque, eliminating one unknown immediately.</div>`
-      },
-      {
-        title: '5.6 Newton\'s Second Law in Rotational Form',
-        ap: `<h3>Rotational Newton's Second Law</h3>
-<div class="formula-box">Στ = Iα</div>
-<p>Net torque equals rotational inertia times angular acceleration. This is the rotational version of ΣF = ma.</p>`,
-        deep: `<h3>Στ = Iα: The Rotational Engine</h3>
-<p>Just as ΣF = ma governs linear motion, Στ = Iα governs rotational motion. The structure is identical:</p>
-<div class="formula-box">
-Linear: ΣF = ma
-Rotational: Στ = Iα
-</div>
-<h4>How to Use It</h4>
-<ol>
-<li>Draw extended FBD showing all forces and where they act</li>
-<li>Calculate torque from each force about the axis of rotation</li>
-<li>Sum torques (clockwise vs. counterclockwise)</li>
-<li>Set equal to Iα</li>
-<li>Use a = rα to connect to linear motion if needed</li>
-</ol>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Many AP problems combine linear and rotational motion (like a falling mass attached to a pulley). Write ΣF = ma for the linear object and Στ = Iα for the rotating object, then connect them with a = rα.</div>`
-      }
-    ]
+  { 
+    num: 5, name: 'Torque and Rotational Dynamics', color: '#a78bfa', weight: '10-15%',
+    desc: 'Rotational Kinematics, Torque, and Newton\'s Laws for Rotation',
+    topics: ['Rotational Kinematics (angular variables)', 'Connecting Linear and Rotational Motion', 'Torque (τ = rF sinθ)', 'Rotational Inertia (Moment of Inertia)', 'Rotational Equilibrium', 'Newton\'s Second Law for Rotation (τ = Iα)'],
+    apContent: {
+      key_ideas: [
+        'Angular variables: θ (position), ω (velocity), α (acceleration) — analogous to x, v, a',
+        'Torque: τ = rF sinθ — r is distance from pivot, θ is angle between r and F',
+        'Torque is a VECTOR — use right-hand rule for direction; convention: CCW = positive',
+        'Rotational equilibrium: Στ = 0 (like ΣF = 0 but for rotation)',
+        'Moment of inertia I = Σmr² — rotational analog of mass, depends on mass distribution',
+        'Newton\'s 2nd Law for rotation: Στ = Iα (analog to F = ma)',
+        'Parallel axis theorem: I = I_cm + Md² (for axis not through center of mass)'
+      ],
+      exam_tips: [
+        '🏷️ Torque FRQs almost ALWAYS require a free-body diagram with distances labeled',
+        '🏷️ Point of rotation matters! Pick wisely (usually where unknown forces act to eliminate them)',
+        '🏷️ The force causing rotation must have a component PERPENDICULAR to r',
+        '🏷️ τ = rF sinθ = r⊥F = rF⊥ — all equivalent expressions',
+        '🏷️ When Στ = 0 about any pivot, the object is in rotational equilibrium'
+      ],
+      key_equations: ['τ = rF sinθ', 'Στ = Iα', 'I = Σmr²', 'v = rω', 'a_t = rα', 'a_c = ω²r = v²/r']
+    },
+    deepContent: {
+      intuition: 'Torque is like force, but for rotation. Push a door near the hinge vs. the handle — same force, very different results. Distance matters!',
+      real_world: ['Wrenches are long to maximize r (and thus torque)', 'Gears trade speed for torque — bicycle gears work this way', 'Gymnasts tuck to decrease I and spin faster (conservation of angular momentum)'],
+      common_mistakes: [
+        'Forgetting that torque depends on the PERPENDICULAR component of force',
+        'Not choosing a consistent sign convention (usually CCW = +)',
+        'Using the wrong distance in τ = rF (must be from pivot to point of force)',
+        'Including all forces in τ equation when some have zero torque'
+      ],
+      why_it_matters: 'Every motor, engine, gear system, and lever uses these principles. The entire industrial revolution was built on understanding torque.'
+    }
   },
-  {
-    num: 6, name: 'Energy & Momentum of Rotating Systems', color: '#60a5fa', weight: '5–8%',
-    desc: 'Rotational KE, angular momentum, rolling, orbits',
-    topics: [
-      {
-        title: '6.1 Rotational Kinetic Energy',
-        ap: `<h3>Rotational Kinetic Energy</h3>
-<div class="formula-box">K_rot = ½Iω²</div>
-<p>Rotating objects have kinetic energy even if their center of mass isn't moving. Total KE of a rolling object = K_trans + K_rot.</p>`,
-        deep: `<h3>Rotational Kinetic Energy</h3>
-<p>A spinning object has energy even if it's not going anywhere. This is rotational kinetic energy:</p>
-<div class="formula-box">K_rot = ½Iω²</div>
-<h4>Rolling Objects</h4>
-<p>A rolling object has BOTH translational and rotational KE:</p>
-<div class="formula-box">K_total = K_trans + K_rot = ½mv² + ½Iω²</div>
-<p>For rolling without slipping: v = Rω, so:</p>
-<div class="formula-box">K_total = ½mv² + ½I(v/R)²</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> A rolling object reaches the bottom of a ramp SLOWER than a sliding object because some energy goes into rotation. A hoop is slowest (most I), solid disk is faster, sphere is fastest.</div>`
-      },
-      {
-        title: '6.2 Torque and Work',
-        ap: `<h3>Work Done by Torque</h3>
-<div class="formula-box">W = τ · Δθ</div>
-<p>Torque doing work through an angular displacement changes rotational kinetic energy. The work-energy theorem applies: W_net = ΔK_rot.</p>`,
-        deep: `<h3>Work in Rotational Systems</h3>
-<div class="formula-box">W = τ · Δθ (work done by torque through angular displacement)</div>
-<p>Just as W = Fd in linear motion, W = τΔθ in rotation. The work-energy theorem works identically:</p>
-<div class="formula-box">W_net = ΔK_rot = ½Iω_f² − ½Iω_i²</div>
-<div class="tip-box"><strong>💡 Note:</strong> θ must be in radians for this formula to work.</div>`
-      },
-      {
-        title: '6.3 Angular Momentum and Angular Impulse',
-        ap: `<h3>Angular Momentum</h3>
-<div class="formula-box">L = Iω (rotating rigid body)
-L = mvr sin θ (point particle)</div>
-<p>Angular impulse = τ_avg · Δt = ΔL. Angular momentum is conserved when Στ_external = 0.</p>`,
-        deep: `<h3>Angular Momentum: The Rotational Momentum</h3>
-<div class="formula-box">L = Iω (for a rotating rigid body)
-L = r × p = mvr sin θ (for a point particle)</div>
-<h4>Conservation of Angular Momentum</h4>
-<p>When no external torque acts, angular momentum is conserved:</p>
-<div class="formula-box">L_i = L_f → I_iω_i = I_fω_f</div>
-<p>This explains why ice skaters spin faster when pulling arms in (I decreases → ω increases).</p>
-<h4>Angular Impulse</h4>
-<div class="formula-box">Angular impulse = τ_avg · Δt = ΔL</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> A common AP problem: a non-rotating disk drops onto a spinning disk. Angular momentum is conserved (no external torque). I₁ω₁ = (I₁ + I₂)ω_f.</div>`
-      },
-      {
-        title: '6.4 Conservation of Angular Momentum',
-        ap: `<h3>Conservation of Angular Momentum</h3>
-<div class="formula-box">L_i = L_f when Στ_ext = 0</div>
-<p>Applications: ice skater pulling arms in, planet in elliptical orbit, rotating platform with person moving.</p>`,
-        deep: `<h3>Conservation of Angular Momentum in Depth</h3>
-<p>Angular momentum is one of the fundamental conserved quantities in the universe. It's conserved whenever there's no external torque.</p>
-<h4>Classic Examples</h4>
-<ul>
-<li><strong>Ice skater:</strong> Arms in → smaller I → larger ω</li>
-<li><strong>Planet in elliptical orbit:</strong> Closer to sun → smaller r → faster v (Kepler's 2nd law)</li>
-<li><strong>Person on rotating platform:</strong> Walking outward → larger I → smaller ω</li>
-</ul>
-<div class="formula-box">I_iω_i = I_fω_f</div>
-<div class="tip-box"><strong>💡 Kepler Connection:</strong> Kepler's 2nd law (equal areas in equal times) is just conservation of angular momentum! When a planet is closer to the sun, r is smaller, so v must be larger.</div>`
-      },
-      {
-        title: '6.5 Rolling',
-        ap: `<h3>Rolling Without Slipping</h3>
-<div class="formula-box">v_cm = Rω &nbsp;&nbsp;|&nbsp;&nbsp; a_cm = Rα</div>
-<p>Rolling = translation + rotation. The point of contact with the ground is instantaneously at rest.</p>
-<p>Static friction provides the torque for rolling. Kinetic friction acts if slipping occurs.</p>`,
-        deep: `<h3>Rolling: Translation Meets Rotation</h3>
-<p>Rolling without slipping is a beautiful combination of two motions happening simultaneously:</p>
-<div class="formula-box">v_cm = Rω (the bridge between translation and rotation)</div>
-<h4>The Amazing Fact</h4>
-<p>The point of the wheel touching the ground is instantaneously at rest! The top of the wheel moves at 2v_cm. The center moves at v_cm.</p>
-<h4>Energy of Rolling</h4>
-<div class="formula-box">K_total = ½mv_cm² + ½Iω² = ½mv_cm² + ½I(v_cm/R)²</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Objects rolling down a ramp: the one with smaller I/mR² ratio reaches the bottom first. Order: solid sphere > solid disk > hollow sphere > hoop. Mass and radius don't matter — only the shape factor.</div>`
-      },
-      {
-        title: '6.6 Motion of Orbiting Satellites',
-        ap: `<h3>Orbital Motion</h3>
-<div class="formula-box">v_orbit = √(GM/r) &nbsp;&nbsp;|&nbsp;&nbsp; T² = (4π²/GM)r³ (Kepler's 3rd Law)</div>
-<p>Gravitational force provides centripetal force: GMm/r² = mv²/r. Orbital speed depends only on central mass and orbital radius.</p>`,
-        deep: `<h3>Orbital Mechanics</h3>
-<p>Satellites orbit because gravity provides exactly the centripetal force needed for circular motion:</p>
-<div class="formula-box">F_g = F_c → GMm/r² = mv²/r → v = √(GM/r)</div>
-<h4>Key Insights</h4>
-<ul>
-<li>Orbital speed does NOT depend on the satellite's mass</li>
-<li>Closer orbits are faster (smaller r → larger v)</li>
-<li>Orbital period: T = 2πr/v = 2π√(r³/GM)</li>
-</ul>
-<h4>Kepler's Third Law</h4>
-<div class="formula-box">T² ∝ r³ (period squared proportional to radius cubed)</div>
-<h4>Energy of an Orbit</h4>
-<div class="formula-box">E_total = K + U = ½mv² − GMm/r = −GMm/(2r)</div>
-<p>Total orbital energy is negative — the satellite is "bound" to the planet. To escape, you need E ≥ 0.</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Escape velocity: v_escape = √(2GM/r). Note it's √2 times the orbital velocity. This appears on FRQs.</div>`
-      }
-    ]
+  { 
+    num: 6, name: 'Energy and Momentum of Rotating Systems', color: '#fbbf24', weight: '5-8%',
+    desc: 'Rotational KE, Angular Momentum, and Rolling Motion',
+    topics: ['Rotational Kinetic Energy', 'Torque and Work', 'Angular Momentum and Angular Impulse', 'Conservation of Angular Momentum', 'Rolling Motion', 'Motion of Orbiting Satellites'],
+    apContent: {
+      key_ideas: [
+        'Rotational KE: K_rot = ½Iω² — separate from translational KE!',
+        'Total KE of rolling object: K_total = ½mv² + ½Iω² (both translation and rotation)',
+        'Angular momentum: L = Iω (for rigid bodies) — conserved if Στ_ext = 0',
+        'CONSERVATION: If no external torque, I₁ω₁ = I₂ω₂',
+        'Angular impulse: J_angular = τΔt = ΔL',
+        'Rolling without slipping: v = rω (links translation and rotation)',
+        'Satellites: centripetal force provided by gravity, GMm/r² = mv²/r'
+      ],
+      exam_tips: [
+        '🏷️ Angular momentum conservation is LIKE momentum conservation but for rotation',
+        '🏷️ When I decreases (figure skater pulling arms in), ω MUST increase to conserve L',
+        '🏷️ Rolling: if it\'s slipping, v ≠ rω; if pure rolling, v = rω',
+        '🏷️ For satellites: higher orbit = slower speed = longer period'
+      ],
+      key_equations: ['K_rot = ½Iω²', 'L = Iω', 'L_initial = L_final', 'v = rω (rolling)', 'T = 2π√(r³/GM)']
+    },
+    deepContent: {
+      intuition: 'Angular momentum is why spinning ice skaters speed up when they pull their arms in — they decrease I, so ω must increase to keep L constant.',
+      real_world: ['Figure skaters use conservation of angular momentum for spins', 'Satellites in higher orbits move slower (orbital mechanics)', 'Rolling vs sliding: rolling has less friction (more energy to KE, less to heat)'],
+      common_mistakes: [
+        'Forgetting that rolling objects have BOTH translational AND rotational KE',
+        'Not including both terms in energy equations for rolling',
+        'Confusing L = Iω with L = mvr (which is for point particles)',
+        'Assuming angular momentum is conserved when there IS external torque'
+      ],
+      why_it_matters: 'Satellites, planetary orbits, gyroscopes in phones, hard drives — all use these principles. GPS requires precise orbital mechanics.'
+    }
   },
-  {
-    num: 7, name: 'Oscillations', color: '#fbbf24', weight: '5–8%',
-    desc: 'Simple harmonic motion, springs, pendulums',
-    topics: [
-      {
-        title: '7.1 Defining Simple Harmonic Motion',
-        ap: `<h3>Simple Harmonic Motion (SHM)</h3>
-<p>SHM occurs when there's a <span class="key-term">restoring force</span> proportional to displacement from equilibrium.</p>
-<div class="formula-box">F_restoring = −kx (Hooke's Law type restoring force)</div>
-<p>Key features: motion repeats, period is constant, acceleration is proportional to displacement and opposite in direction.</p>`,
-        deep: `<h3>What Makes Something Oscillate?</h3>
-<p>SHM happens whenever a system has two ingredients:</p>
-<ol>
-<li><strong>A restoring force</strong> that pulls back toward equilibrium, proportional to how far you've displaced</li>
-<li><strong>Inertia</strong> that carries the object past equilibrium</li>
-</ol>
-<div class="formula-box">F = −kx → a = −(k/m)x</div>
-<p>The minus sign is crucial: acceleration always points toward equilibrium, opposite to displacement.</p>
-<h4>Where SHM Appears</h4>
-<ul>
-<li>Mass on a spring</li>
-<li>Pendulum (for small angles)</li>
-<li>Atoms vibrating in a solid</li>
-<li>AC electrical circuits</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> Think of a swing. At the highest point, you're farthest from equilibrium → maximum restoring force → maximum acceleration. At the bottom, you're at equilibrium → zero restoring force → maximum speed. The cycle repeats.</div>`
-      },
-      {
-        title: '7.2 Frequency and Period of SHM',
-        ap: `<h3>Period and Frequency</h3>
-<div class="formula-box">T = 1/f &nbsp;&nbsp;|&nbsp;&nbsp; T_spring = 2π√(m/k) &nbsp;&nbsp;|&nbsp;&nbsp; T_pendulum = 2π√(L/g)</div>
-<p>Period = time for one complete cycle. Frequency = cycles per second (Hz).</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Spring period depends on mass and k, NOT amplitude. Pendulum period depends on length and g, NOT mass or amplitude (for small angles). These are heavily tested.</div>`,
-        deep: `<h3>Period and Frequency: The Clockwork of Oscillation</h3>
-<div class="formula-box">T = 1/f &nbsp;&nbsp;(period and frequency are reciprocals)</div>
-<h4>Mass-Spring System</h4>
-<div class="formula-box">T = 2π√(m/k)</div>
-<p>More mass → slower oscillation (more inertia). Stiffer spring → faster oscillation (more restoring force). Amplitude does NOT affect period.</p>
-<h4>Simple Pendulum</h4>
-<div class="formula-box">T = 2π√(L/g)</div>
-<p>Longer pendulum → slower swing. Stronger gravity → faster swing. Mass does NOT matter. Amplitude does NOT matter (for angles ≤ 15°).</p>
-<h4>Small Angle Approximation</h4>
-<p>Pendulums are only truly SHM for small angles (≤ 15°). At larger angles, the restoring force isn't proportional to displacement.</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> A pendulum on the Moon has a LONGER period (smaller g → larger T). A spring on the Moon has the SAME period (T doesn't depend on g). This distinction is tested frequently.</div>`
-      },
-      {
-        title: '7.3 Representing and Analyzing SHM',
-        ap: `<h3>SHM Graphs and Equations</h3>
-<div class="formula-box">x(t) = A cos(2πt/T) or A sin(2πt/T)</div>
-<p>Position vs. time is a sine/cosine wave. Velocity is maximum at equilibrium, zero at extremes. Acceleration is maximum at extremes, zero at equilibrium.</p>`,
-        deep: `<h3>The Mathematics of SHM</h3>
-<p>SHM produces sinusoidal motion. Here's how the three key quantities relate:</p>
-<h4>Position</h4>
-<div class="formula-box">x(t) = A cos(ωt) = A cos(2πt/T)</div>
-<h4>Velocity</h4>
-<div class="formula-box">v(t) = −Aω sin(ωt) &nbsp;&nbsp;→&nbsp;&nbsp; v_max = Aω = A√(k/m)</div>
-<h4>Acceleration</h4>
-<div class="formula-box">a(t) = −Aω² cos(ωt) &nbsp;&nbsp;→&nbsp;&nbsp; a_max = Aω² = A(k/m)</div>
-<h4>Key Relationships</h4>
-<ul>
-<li>At equilibrium (x = 0): v = max, a = 0, F = 0, U = 0, K = max</li>
-<li>At extremes (x = ±A): v = 0, a = max, F = max, U = max, K = 0</li>
-</ul>
-<div class="tip-box"><strong>💡 Graph intuition:</strong> Position is cosine, velocity is negative sine (shifted 90°), acceleration is negative cosine (shifted 180° from position). When position is max, acceleration is max in the opposite direction.</div>`
-      },
-      {
-        title: '7.4 Energy of Simple Harmonic Oscillators',
-        ap: `<h3>Energy in SHM</h3>
-<div class="formula-box">E_total = ½kA² = K_max = U_max</div>
-<p>Total energy is constant. Energy oscillates between kinetic and potential:</p>
-<ul><li>At extremes: all potential (U = ½kA², K = 0)</li><li>At equilibrium: all kinetic (K = ½kA², U = 0)</li><li>Anywhere else: E = K + U = ½kA²</li></ul>`,
-        deep: `<h3>Energy Flow in SHM</h3>
-<p>In SHM, energy continuously flows between kinetic and potential, but the total stays constant:</p>
-<div class="formula-box">E_total = K + U = ½mv² + ½kx² = ½kA²</div>
-<h4>The Energy Cycle</h4>
-<ul>
-<li><strong>At x = ±A (extremes):</strong> U = ½kA² (maximum), K = 0</li>
-<li><strong>At x = 0 (equilibrium):</strong> K = ½kA² (maximum), U = 0</li>
-<li><strong>At any x:</strong> ½mv² + ½kx² = ½kA²</li>
-</ul>
-<h4>Maximum Speed</h4>
-<div class="formula-box">v_max = A√(k/m) = Aω</div>
-<p>This comes from setting K_max = E_total: ½mv_max² = ½kA²</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Doubling amplitude doubles max speed and doubles max acceleration, but does NOT change period or frequency. This is a very common AP concept question.</div>`
-      }
-    ]
+  { 
+    num: 7, name: 'Oscillations', color: '#22d3ee', weight: '5-8%',
+    desc: 'Simple Harmonic Motion, Springs, and Pendulums',
+    topics: ['Defining Simple Harmonic Motion (SHM)', 'Frequency and Period', 'Representing and Analyzing SHM (graphs, equations)', 'Energy of Simple Harmonic Oscillators'],
+    apContent: {
+      key_ideas: [
+        'SHM: motion where restoring force is proportional to displacement (F = -kx)',
+        'Period: time for one complete cycle; Frequency: cycles per second (f = 1/T)',
+        'Spring-mass system: T = 2π√(m/k) — independent of amplitude!',
+        'Pendulum: T = 2π√(L/g) — for small angles only, independent of mass!',
+        'At equilibrium: v is MAX, a is 0, KE is MAX, PE is 0',
+        'At extremes: v is 0, a is MAX, KE is 0, PE is MAX',
+        'Total energy: E = ½kA² (constant throughout oscillation)',
+        'x(t) = A cos(ωt) or A sin(ωt), where ω = √(k/m) = 2πf'
+      ],
+      exam_tips: [
+        '🏷️ Period of spring does NOT depend on g or amplitude — only on m and k',
+        '🏷️ Period of pendulum does NOT depend on mass — only on L and g',
+        '🏷️ SHM graphs: position is cosine/sine, velocity is shifted by 90°, acceleration is shifted by 180°',
+        '🏷️ Energy bar charts (KE vs PE) are popular FRQ formats',
+        '🏷️ At equilibrium, all energy is KE; at extremes, all energy is PE'
+      ],
+      key_equations: ['T_spring = 2π√(m/k)', 'T_pendulum = 2π√(L/g)', 'E_total = ½kA²', 'x = A cos(ωt)', 'v_max = Aω', 'a_max = Aω²', 'ω = √(k/m) = 2π/T']
+    },
+    deepContent: {
+      intuition: 'SHM is everywhere — a mass on a spring, a pendulum, sound waves, light. It\'s the simplest form of oscillation, and nature loves it because it\'s mathematically elegant.',
+      real_world: ['Car suspensions use spring-mass SHM', 'Grandfather clocks use pendulum periods for timekeeping', 'Guitar strings vibrate in SHM (each mode is a harmonic)'],
+      common_mistakes: [
+        'Thinking T depends on amplitude for springs (it doesn\'t!)',
+        'Using pendulum formula for large angles (only valid for small angles)',
+        'Forgetting that total energy = ½kA² (depends on amplitude!)',
+        'Confusing which variables affect period'
+      ],
+      why_it_matters: 'From clocks to music to seismology to quantum mechanics — oscillation is a universal phenomenon. The math of SHM appears in literally every branch of physics.'
+    }
   },
-  {
-    num: 8, name: 'Fluids', color: '#22d3ee', weight: '10–15%',
-    desc: 'Density, pressure, buoyancy, Bernoulli — NEW for 2025',
-    topics: [
-      {
-        title: '8.1 Internal Structure and Density',
-        ap: `<h3>Density</h3>
-<div class="formula-box">ρ = m/V (kg/m³)</div>
-<p>Density = mass per unit volume. Water: ρ = 1000 kg/m³. This is a fundamental property of materials.</p>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> Remember: ρ_water = 1000 kg/m³, NOT 1 kg/m³. The value 1 g/cm³ = 1000 kg/m³.</div>`,
-        deep: `<h3>Density: How Tightly Packed Is the Stuff?</h3>
-<div class="formula-box">ρ = m/V (mass per unit volume, SI: kg/m³)</div>
-<h4>Key Densities to Know</h4>
-<ul>
-<li>Water: 1000 kg/m³</li>
-<li>Air: ~1.2 kg/m³</li>
-<li>Ice: ~917 kg/m³ (less than water → ice floats!)</li>
-<li>Mercury: 13,600 kg/m³</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> Density determines whether things float. If ρ_object < ρ_fluid, it floats. If ρ_object > ρ_fluid, it sinks. The fraction submerged = ρ_object/ρ_fluid.</div>`
-      },
-      {
-        title: '8.2 Pressure',
-        ap: `<h3>Pressure in Fluids</h3>
-<div class="formula-box">P = F/A (definition)
-P = P₀ + ρgh (pressure at depth h)</div>
-<p>Pressure increases with depth. P₀ is usually atmospheric pressure (~101,300 Pa).</p>
-<ul>
-<li><strong>Absolute pressure:</strong> P = P₀ + ρgh</li>
-<li><strong>Gauge pressure:</strong> P_gauge = ρgh (pressure above atmospheric)</li>
-</ul>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> P₀ is NOT zero! Atmospheric pressure is ~100,000 Pa. Gauge pressure ignores atmospheric; absolute pressure includes it.</div>`,
-        deep: `<h3>Pressure: Force Spread Over Area</h3>
-<div class="formula-box">P = F/A (definition, units: Pa = N/m²)</div>
-<h4>Pressure at Depth</h4>
-<p>The deeper you go in a fluid, the more fluid is above you pushing down:</p>
-<div class="formula-box">P = P₀ + ρgh</div>
-<ul>
-<li>P₀ = pressure at surface (usually atmospheric ≈ 101,300 Pa)</li>
-<li>ρ = fluid density</li>
-<li>h = depth below surface</li>
-</ul>
-<h4>Gauge vs. Absolute Pressure</h4>
-<ul>
-<li><span class="key-term">Absolute pressure</span>: Total pressure including atmospheric (P = P₀ + ρgh)</li>
-<li><span class="key-term">Gauge pressure</span>: Pressure above atmospheric (P_gauge = ρgh)</li>
-</ul>
-<h4>Pascal's Principle</h4>
-<p>Pressure applied to an enclosed fluid is transmitted equally throughout the fluid. This is how hydraulic lifts work:</p>
-<div class="formula-box">F₁/A₁ = F₂/A₂ (same pressure, different areas → different forces)</div>
-<div class="tip-box"><strong>💡 Intuition:</strong> Pressure at a given depth depends only on depth, not the shape of the container. A narrow tube and a wide pool have the same pressure at the same depth.</div>`
-      },
-      {
-        title: '8.3 Fluids and Newton\'s Laws',
-        ap: `<h3>Buoyant Force</h3>
-<div class="formula-box">F_B = ρ_fluid · V_submerged · g (Archimedes' Principle)</div>
-<p>The buoyant force equals the weight of the displaced fluid. For floating objects: F_B = weight of object.</p>
-<ul>
-<li>Floating: ρ_object < ρ_fluid, fraction submerged = ρ_object/ρ_fluid</li>
-<li>Sinking: ρ_object > ρ_fluid, F_B < weight</li>
-</ul>`,
-        deep: `<h3>Buoyancy: Why Things Float</h3>
-<p>Pressure increases with depth. This means the bottom of a submerged object feels more pressure than the top, creating a net upward force.</p>
-<h4>Archimedes' Principle</h4>
-<div class="formula-box">F_B = ρ_fluid · V_submerged · g</div>
-<p>The buoyant force equals the weight of the fluid displaced. Note: it's the density of the FLUID and the volume SUBMERGED.</p>
-<h4>Three Cases</h4>
-<ul>
-<li><strong>Floating:</strong> F_B = mg. The object displaces exactly enough fluid to equal its own weight.</li>
-<li><strong>Neutrally buoyant:</strong> ρ_object = ρ_fluid. Object stays wherever placed.</li>
-<li><strong>Sinking:</strong> F_B < mg. Object is denser than fluid. Apparent weight = mg − F_B.</li>
-</ul>
-<div class="tip-box"><strong>💡 Intuition:</strong> A steel ship floats because it's hollow — its average density (steel + air) is less than water. A steel ball sinks because solid steel is denser than water. Shape matters for floating!</div>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> For floating objects, the fraction submerged = ρ_object/ρ_fluid. An iceberg (ρ ≈ 917) in seawater (ρ ≈ 1030) has 917/1030 ≈ 89% submerged. That's why "tip of the iceberg" is a thing.</div>`
-      },
-      {
-        title: '8.4 Fluids and Conservation Laws',
-        ap: `<h3>Continuity and Bernoulli</h3>
-<div class="formula-box">A₁v₁ = A₂v₂ (continuity equation)
-P₁ + ½ρv₁² + ρgh₁ = P₂ + ½ρv₂² + ρgh₂ (Bernoulli's equation)</div>
-<ul>
-<li>Continuity: narrower pipe → faster flow</li>
-<li>Bernoulli: faster flow → lower pressure</li>
-</ul>`,
-        deep: `<h3>Fluid Dynamics: Moving Fluids</h3>
-<h4>Continuity Equation (Conservation of Mass)</h4>
-<div class="formula-box">A₁v₁ = A₂v₂</div>
-<p>The same amount of fluid must pass every point per second. When a pipe narrows, the fluid speeds up. Think of putting your thumb over a garden hose.</p>
-<h4>Bernoulli's Equation (Conservation of Energy)</h4>
-<div class="formula-box">P + ½ρv² + ρgh = constant</div>
-<p>This is energy conservation for fluids. Each term represents energy per unit volume:</p>
-<ul>
-<li>P = pressure energy</li>
-<li>½ρv² = kinetic energy density</li>
-<li>ρgh = gravitational energy density</li>
-</ul>
-<h4>The Bernoulli Effect</h4>
-<p>Where fluid flows faster, pressure is lower. This explains:</p>
-<ul>
-<li>Airplane wings (faster air on top → lower pressure → lift)</li>
-<li>Shower curtain getting sucked inward</li>
-<li>Two ships being drawn together when passing close</li>
-</ul>
-<div class="exam-tip"><strong>🎯 Exam Tip:</strong> For fluid escaping from a hole in a tank: v = √(2gh) where h is the depth of the hole below the surface. This is Torricelli's theorem — it's just energy conservation!</div>`
-      }
-    ]
+  { 
+    num: 8, name: 'Fluids', color: '#60a5fa', weight: '10-15%',
+    desc: 'Density, Pressure, Buoyancy, and Fluid Dynamics',
+    topics: ['Internal Structure and Density', 'Pressure (in fluids, in solids, atmospheric)', 'Fluids and Newton\'s Laws (Archimedes, Pascal)', 'Fluids and Conservation Laws (Continuity, Bernoulli)'],
+    apContent: {
+      key_ideas: [
+        'Density: ρ = m/V — mass per unit volume (kg/m³)',
+        'Pressure: P = F/A — force per unit area (Pascals, Pa)',
+        'Pressure in fluid: P = P₀ + ρgh — increases linearly with depth',
+        'Pascal\'s Principle: Pressure applied to enclosed fluid transmits equally in all directions',
+        'Archimedes\' Principle: Buoyant force = weight of displaced fluid: F_b = ρ_fluid × V_submerged × g',
+        'If F_b > mg → object floats; if F_b < mg → object sinks; if F_b = mg → neutral buoyancy',
+        'Continuity equation: A₁v₁ = A₂v₂ — fluid speeds up in narrow sections',
+        'Bernoulli\'s equation: P₁ + ½ρv₁² + ρgh₁ = P₂ + ½ρv₂² + ρgh₂ — energy conservation for fluids'
+      ],
+      exam_tips: [
+        '🏷️ NEW unit (added 2025) — expect it on exam! ~10-15% of questions',
+        '🏷️ Pressure increases with depth: deeper = higher pressure (divers know this!)',
+        '🏷️ Buoyant force depends on VOLUME displaced, not the object\'s mass',
+        '🏷️ Continuity: fast fluid = low pressure (Bernoulli) — this is how planes fly',
+        '🏷️ Atmospheric pressure ≈ 101,325 Pa ≈ 1 atm — useful benchmark'
+      ],
+      key_equations: ['ρ = m/V', 'P = F/A', 'P = P₀ + ρgh', 'F_b = ρVg', 'A₁v₁ = A₂v₂', 'P + ½ρv² + ρgh = constant', 'ρ_object/ρ_fluid = V_submerged/V_total (floating)']
+    },
+    deepContent: {
+      intuition: 'Pressure is like weight spread over area — a sharp knife cuts because all force is on a tiny edge. Fluids push from ALL directions, not just down.',
+      real_world: ['Planes fly because wing shape creates pressure difference (Bernoulli)', 'Submarines control buoyancy by adjusting ballast tanks', 'Hydraulic brakes multiply force using Pascal\'s principle', 'Blood pressure is literally P = ρgh for your blood column height'],
+      common_mistakes: [
+        'Forgetting that pressure acts in ALL directions (not just down)',
+        'Using the wrong density in buoyancy (use FLUID density, not object density)',
+        'Not converting units (Pa = N/m²)',
+        'Assuming Bernoulli applies with friction (it assumes ideal fluid)'
+      ],
+      why_it_matters: 'Fluids are everywhere: blood circulation, weather, swimming, flying, plumbing, weather balloons. Understanding fluids is understanding how most of the world works.'
+    }
   }
 ];
 
-// ==================== FORMULAS ====================
 const FORMULAS = [
-  { unit: 1, name: 'Kinematics', formulas: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'Δx = ½(v + v₀)t', 'v₀ₓ = v₀cosθ', 'v₀ᵧ = v₀sinθ'] },
-  { unit: 2, name: 'Force & Dynamics', formulas: ['ΣF = ma', 'f_k = μ_kF_N', 'f_s ≤ μ_sF_N', 'F_g = mg', 'F_s = kx', 'a_c = v²/r', 'F_c = mv²/r', 'F_g = Gm₁m₂/r²'] },
-  { unit: 3, name: 'Work, Energy & Power', formulas: ['K = ½mv²', 'U_g = mgh', 'U_s = ½kx²', 'W = Fd cosθ', 'W_net = ΔK', 'P = W/t = Fv'] },
-  { unit: 4, name: 'Linear Momentum', formulas: ['p = mv', 'J = FΔt = Δp', 'Σp_i = Σp_f', 'm₁v₁ + m₂v₂ = (m₁+m₂)v_f'] },
-  { unit: 5, name: 'Torque & Rotation', formulas: ['τ = rF sinθ', 'Στ = Iα', 'I = Σmr²', 's = rθ, v = rω, a = rα'] },
-  { unit: 6, name: 'Rotating Systems', formulas: ['K_rot = ½Iω²', 'L = Iω', 'L_i = L_f', 'v_orbit = √(GM/r)', 'T² = (4π²/GM)r³'] },
-  { unit: 7, name: 'Oscillations', formulas: ['T = 2π√(m/k)', 'T = 2π√(L/g)', 'f = 1/T', 'E = ½kA²', 'v_max = A√(k/m)'] },
-  { unit: 8, name: 'Fluids', formulas: ['ρ = m/V', 'P = P₀ + ρgh', 'F_B = ρVg', 'A₁v₁ = A₂v₂', 'P₁+½ρv₁²+ρgh₁ = P₂+½ρv₂²+ρgh₂'] },
+  { unit: 1, name: 'Kinematics', weight: '10-15%', formulas: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'Δx = ½(v + v₀)t', 'vₓ = v₀cosθ', 'vᵧ = v₀sinθ - gt'] },
+  { unit: 2, name: 'Force and Translational Dynamics', weight: '18-23%', formulas: ['F_net = ma (Newton\'s 2nd Law)', 'f_k = μₖN (kinetic friction)', 'f_s ≤ μₛN (static friction)', 'F_g = mg', 'F_spring = -kx', 'F_c = mv²/r', 'F_g = Gm₁m₂/r²'] },
+  { unit: 3, name: 'Work, Energy, and Power', weight: '18-23%', formulas: ['W = Fd cosθ', 'K = ½mv²', 'U_g = mgh', 'U_s = ½kx²', 'E = K + U', 'ΔE = W_nc', 'P = W/t = Fv'] },
+  { unit: 4, name: 'Linear Momentum', weight: '10-15%', formulas: ['p = mv', 'J = FΔt = Δp', 'Σp_initial = Σp_final (isolated system)', 'v_cm = Σmᵢvᵢ / Σmᵢ'] },
+  { unit: 5, name: 'Torque and Rotational Dynamics', weight: '10-15%', formulas: ['τ = rF sinθ', 'Στ = Iα', 'I = Σmr²', 'v = rω', 'a_t = rα', 'a_c = ω²r = v²/r'] },
+  { unit: 6, name: 'Energy and Momentum of Rotating Systems', weight: '5-8%', formulas: ['K_rot = ½Iω²', 'K_total = ½mv² + ½Iω² (rolling)', 'L = Iω', 'L_initial = L_final', 'v = rω (rolling without slipping)'] },
+  { unit: 7, name: 'Oscillations', weight: '5-8%', formulas: ['T_spring = 2π√(m/k)', 'T_pendulum = 2π√(L/g)', 'E_total = ½kA²', 'ω = √(k/m) = 2π/T', 'v_max = Aω', 'a_max = Aω²'] },
+  { unit: 8, name: 'Fluids', weight: '10-15%', formulas: ['ρ = m/V', 'P = F/A', 'P = P₀ + ρgh', 'F_b = ρVg', 'A₁v₁ = A₂v₂', 'P + ½ρv² + ρgh = constant'] },
 ];
 
-// ==================== FRQs (based on past AP exams) ====================
+// Official AP Physics 1 FRQs (based on College Board released questions)
 const FRQS = [
-  {
-    title: 'Unit 1/2 — Projectile + Forces (2023 FRQ Style)',
-    question: 'A 0.50 kg ball is launched horizontally from a table 1.2 m high with speed 4.0 m/s. (a) Calculate the time to hit the floor. (b) Calculate the horizontal distance traveled. (c) Sketch the velocity-time graph for the vertical component. (d) If the ball were launched at 30° above horizontal with the same initial speed, would the time of flight be greater, less, or the same? Justify.',
+  { 
+    title: 'Unit 1: Kinematics — Experimental Design', 
+    question: 'A student needs to determine the acceleration of a cart on a ramp using only a meter stick and a stopwatch. Design an experiment to measure the acceleration.\n\n(a) Describe the experimental procedure you would use.\n(b) What measurements would you record?\n(c) How would you calculate acceleration from your measurements?\n(d) What assumptions are you making?',
     rubric: [
-      '(a) Use y = ½gt² → t = √(2y/g) = √(2×1.2/9.8) = 0.495 s [2 pts]',
-      '(b) x = v₀t = 4.0 × 0.495 = 1.98 m [2 pts]',
-      '(c) v_y vs t: straight line starting at 0 with slope −9.8 m/s², ending at −4.85 m/s [2 pts]',
-      '(d) GREATER. With upward component, v₀ᵧ > 0, so ball goes up first then falls further. More time. [2 pts]',
-      'Units and significant figures correct throughout [1 pt]'
-    ]
+      'Release cart from rest at top of ramp (v₀ = 0)',
+      'Measure distance d along ramp with meter stick',
+      'Time how long it takes cart to travel distance d',
+      'Record multiple trials for same distance to reduce error',
+      'Use kinematic equation: d = ½at² (since v₀ = 0)',
+      'Solve for acceleration: a = 2d/t²',
+      'Assumption: constant acceleration, negligible friction, point object',
+      'Could also vary distance and plot d vs t² to find a from slope'
+    ] 
   },
-  {
-    title: 'Unit 2/3 — Incline + Energy (2022 FRQ Style)',
-    question: 'A 2.0 kg block starts from rest at the top of a frictionless incline (height 3.0 m, angle 30°). At the bottom, it slides across a rough horizontal surface (μ_k = 0.25) for 4.0 m before hitting a spring (k = 500 N/m). (a) Find the speed at the bottom of the incline. (b) Find the speed after the rough surface. (c) Find the maximum spring compression. (d) Draw an energy bar chart for the system from top of incline to maximum compression.',
+  { 
+    title: 'Unit 2: Forces — Pulley System', 
+    question: 'Two blocks are connected by a massless string over a massless, frictionless pulley (Atwood machine). Block A (mass 3.0 kg) hangs on the left. Block B (mass 5.0 kg) hangs on the right.\n\n(a) Draw free-body diagrams for each block.\n(b) Determine the acceleration of the system.\n(c) Find the tension in the string.',
     rubric: [
-      '(a) Conservation of energy: mgh = ½mv² → v = √(2gh) = √(2×9.8×3.0) = 7.67 m/s [2 pts]',
-      '(b) Work by friction: W_f = −f_k·d = −μ_k·mg·d = −0.25×2.0×9.8×4.0 = −19.6 J [1 pt]',
-      '(b) K_bottom + W_f = K_after → ½(2)(7.67)² − 19.6 = ½(2)v² → v = 6.26 m/s [2 pts]',
-      '(c) ½mv² = ½kx² → x = √(mv²/k) = √(2×6.26²/500) = 0.396 m [2 pts]',
-      '(d) Bar chart: Initial = U_g, Middle = K + thermal, Final = U_s + thermal. Correct relative sizes. [2 pts]'
-    ]
+      'FBDs: Each block has weight down, tension up',
+      'Apply Newton\'s 2nd law to each: mₐg - T = mₐa (block A rises), mBg - T = -mBa (block B falls)',
+      'System accelerates in direction of heavier block (B down)',
+      'Add equations: (mB - mₐ)g = (mₐ + mB)a',
+      'a = (mB - mₐ)g/(mₐ + mB) = (5-3)(9.8)/(3+5) = 2.45 m/s²',
+      'Tension: T = mₐ(g + a) = 3(9.8 + 2.45) = 36.75 N',
+      'Or: T = mB(g - a) = 5(9.8 - 2.45) = 36.75 N (verifies answer)'
+    ] 
   },
-  {
-    title: 'Unit 4 — Collision + Experimental Design (2024 FRQ Style)',
-    question: 'Cart A (mass 0.50 kg) moves at 2.0 m/s toward stationary Cart B (mass unknown). They collide and stick together. A motion detector records the velocity before and after. (a) Derive an expression for m_B in terms of v_Ai, v_f, and m_A. (b) If v_f = 0.80 m/s, find m_B. (c) Design an experiment to verify conservation of momentum using available equipment (carts, track, motion sensor, stopwatch, meter stick). (d) Is the collision elastic or inelastic? Justify with calculations.',
+  { 
+    title: 'Unit 3: Energy — Loop-the-Loop', 
+    question: 'A block slides from rest down a frictionless ramp of height h, then goes around a frictionless vertical loop of radius R.\n\n(a) What is the minimum speed needed at the top of the loop for the block to stay on the track?\n(b) What is the minimum height h from which the block must be released?\n(c) Explain using energy.',
     rubric: [
-      '(a) m_A·v_Ai = (m_A + m_B)·v_f → m_B = m_A(v_Ai/v_f − 1) [2 pts]',
-      '(b) m_B = 0.50(2.0/0.80 − 1) = 0.50(1.5) = 0.75 kg [2 pts]',
-      '(c) Procedure: measure v_Ai with motion sensor, measure v_f after collision, calculate p_i and p_f, compare. Identify sources of uncertainty. [3 pts]',
-      '(d) K_i = ½(0.5)(2.0)² = 1.0 J. K_f = ½(1.25)(0.80)² = 0.40 J. K_f < K_i → INELASTIC [2 pts]'
-    ]
+      'At top of loop: centripetal force needed, F_c = mv²/R',
+      'Minimum case: normal force = 0, so mg = mv²/R → v² = gR',
+      'Use energy conservation: mgh = mg(2R) + ½mv²',
+      'Substitute v² = gR: mgh = 2mgR + ½mgR = 2.5mgR',
+      'h = 2.5R (minimum height)',
+      'Energy explanation: initial PE converts to PE at top of loop + KE at top',
+      'If h < 2.5R: block falls off track before completing loop'
+    ] 
   },
-  {
-    title: 'Unit 5/6 — Torque + Rotational Motion (2023 FRQ Style)',
-    question: 'A uniform disk (mass M, radius R, I = ½MR²) is mounted on a frictionless axle. A string is wrapped around the disk and attached to a hanging mass m. The system is released from rest. (a) Draw FBDs for both the disk and the hanging mass. (b) Derive the acceleration of the hanging mass. (c) Derive the tension in the string. (d) If M = 2.0 kg, R = 0.15 m, m = 0.50 kg, find the angular acceleration of the disk.',
+  { 
+    title: 'Unit 4: Momentum — Collision Analysis', 
+    question: 'A 2.0 kg cart moving at 3.0 m/s to the right collides with a 4.0 kg cart moving at 1.0 m/s to the left. They stick together after collision.\n\n(a) Find the velocity of the combined carts after collision.\n(b) Calculate the kinetic energy lost.\n(c) Is this collision elastic? Justify your answer.',
     rubric: [
-      '(a) Disk: tension (tangential), axle force, gravity. Mass: tension up, mg down. [2 pts]',
-      '(b) For mass: mg − T = ma. For disk: TR = Iα = ½MR²(a/R) → T = ½Ma. Substituting: mg − ½Ma = ma → a = mg/(m + ½M) [3 pts]',
-      '(c) T = ½Ma = ½M·mg/(m + ½M) = Mmg/(2m + M) [2 pts]',
-      '(d) a = 0.50×9.8/(0.50 + 1.0) = 3.27 m/s². α = a/R = 3.27/0.15 = 21.8 rad/s² [2 pts]'
-    ]
-  }
+      'Define direction: right = positive',
+      'Conservation of momentum: m₁v₁ + m₂v₂ = (m₁ + m₂)v_f',
+      '(2)(3) + (4)(-1) = (2 + 4)v_f → 6 - 4 = 6v_f → v_f = 1/3 m/s (right)',
+      'Initial KE: ½(2)(9) + ½(4)(1) = 9 + 2 = 11 J',
+      'Final KE: ½(6)(1/9) = 1/3 J',
+      'KE lost: 11 - 1/3 = 10.67 J',
+      'Not elastic: KE is not conserved (objects stuck together = perfectly inelastic)'
+    ] 
+  },
+  { 
+    title: 'Unit 5: Torque — Static Equilibrium', 
+    question: 'A 4.0 m long uniform beam (mass 10 kg) is supported by a cable at its right end and a hinge at the wall on the left end. A 20 kg sign hangs from the right end of the beam.\n\n(a) Draw a free-body diagram of the beam showing all forces.\n(b) Write the torque equation about the hinge.\n(c) Find the tension in the cable.',
+    rubric: [
+      'FBD: Weight of beam at center (2.0 m from hinge), weight of sign at right end, tension at right end (upward), hinge forces at left',
+      'Take torque about hinge to eliminate unknown hinge forces',
+      'Στ = 0: T(4.0) - m_beam·g(2.0) - m_sign·g(4.0) = 0',
+      'T(4.0) = (10)(9.8)(2.0) + (20)(9.8)(4.0) = 196 + 784 = 980 N·m',
+      'T = 980/4.0 = 245 N',
+      'Check: Tension is positive (upward as assumed)'
+    ] 
+  },
+  { 
+    title: 'Unit 7: Oscillations — Mass-Spring System', 
+    question: 'A 0.50 kg mass is attached to a spring with spring constant k = 200 N/m. The mass is pulled 0.10 m from equilibrium and released from rest.\n\n(a) Calculate the period of oscillation.\n(b) What is the maximum speed of the mass?\n(c) At what position is the kinetic energy maximum?\n(d) What is the total mechanical energy?',
+    rubric: [
+      'Period: T = 2π√(m/k) = 2π√(0.5/200) = 2π(0.05) ≈ 0.314 s',
+      'Angular frequency: ω = √(k/m) = √(400) = 20 rad/s',
+      'Max speed occurs at equilibrium: v_max = Aω = 0.1(20) = 2.0 m/s',
+      'KE is maximum at equilibrium position (x = 0)',
+      'Total energy: E = ½kA² = ½(200)(0.01) = 1.0 J',
+      'Or: E = ½mv_max² = ½(0.5)(4) = 1.0 J (verifies)'
+    ] 
+  },
+  { 
+    title: 'Unit 8: Fluids — Buoyancy and Pressure', 
+    question: 'A 5.0 kg block of wood (density 600 kg/m³) is placed in water (density 1000 kg/m³).\n\n(a) Will the block float or sink? Justify.\n(b) What fraction of the block\'s volume is submerged when floating?\n(c) What is the buoyant force on the floating block?',
+    rubric: [
+      'Block floats because density of wood (600 kg/m³) < density of water (1000 kg/m³)',
+      'For floating: ρ_object/ρ_fluid = V_sub/V_total',
+      'Fraction submerged: 600/1000 = 0.6 (60%)',
+      'Volume of block: V = m/ρ = 5.0/600 = 0.00833 m³',
+      'Buoyant force equals weight when floating: F_b = mg = 5(9.8) = 49 N',
+      'Alternative: F_b = ρ_water × V_sub × g = 1000 × (0.6 × 0.00833) × 9.8 = 49 N'
+    ] 
+  },
 ];
 
-// ==================== QUIZ QUESTIONS ====================
+// Official AP Physics 1 Quiz Questions (aligned with College Board CED)
 const QUIZ_QUESTIONS = [
+  // Unit 1: Kinematics
   { unit: 1, q: 'A car accelerates from rest at 4 m/s² for 5 seconds. How far does it travel?', options: ['20 m', '40 m', '50 m', '100 m'], correct: 2, explanation: 'Δx = v₀t + ½at² = 0 + ½(4)(25) = 50 m' },
   { unit: 1, q: 'An object is thrown straight up. At its highest point, what is its acceleration?', options: ['0 m/s²', '9.8 m/s² upward', '9.8 m/s² downward', 'Depends on initial velocity'], correct: 2, explanation: 'Gravity always acts downward with magnitude g = 9.8 m/s², even at the peak.' },
-  { unit: 1, q: 'A ball is dropped from a 45 m tall building. How long until it hits the ground?', options: ['2.1 s', '3.0 s', '4.5 s', '9.0 s'], correct: 1, explanation: 'y = ½gt² → t = √(2y/g) = √(90/9.8) ≈ 3.0 s' },
-  { unit: 1, q: 'Two balls are launched horizontally from the same height. Ball A at 5 m/s, Ball B at 10 m/s. Which hits the ground first?', options: ['Ball A', 'Ball B', 'Same time', 'Depends on mass'], correct: 2, explanation: 'Vertical motion is independent of horizontal. Both fall the same vertical distance with same acceleration, so same time.' },
-  { unit: 2, q: 'A 10 kg box sits on a horizontal surface with μ_k = 0.3. What force keeps it moving at constant velocity?', options: ['0 N', '29.4 N', '98 N', '3 N'], correct: 1, explanation: 'At constant velocity, F_net = 0. So F = f_k = μ_k·mg = 0.3(10)(9.8) = 29.4 N.' },
-  { unit: 2, q: 'A block slides down a frictionless 30° incline. What is its acceleration?', options: ['9.8 m/s²', '4.9 m/s²', '8.5 m/s²', '2.45 m/s²'], correct: 1, explanation: 'a = g sin(30°) = 9.8 × 0.5 = 4.9 m/s²' },
-  { unit: 2, q: 'An elevator accelerates upward at 2 m/s². A 60 kg person stands inside. What is the normal force?', options: ['588 N', '708 N', '468 N', '600 N'], correct: 1, explanation: 'F_N − mg = ma → F_N = m(g + a) = 60(9.8 + 2) = 708 N' },
-  { unit: 2, q: 'A car rounds a curve at constant speed. The net force on the car is directed:', options: ['Forward', 'Toward the center of the curve', 'Outward', 'Zero'], correct: 1, explanation: 'In circular motion, the net force (centripetal) always points toward the center of the curve.' },
-  { unit: 3, q: 'A 1000 kg car travels at 20 m/s. What is its kinetic energy?', options: ['10,000 J', '200,000 J', '400,000 J', '20,000 J'], correct: 1, explanation: 'K = ½mv² = 0.5(1000)(400) = 200,000 J' },
-  { unit: 3, q: 'A spring (k = 200 N/m) is compressed 0.10 m. How much energy is stored?', options: ['1 J', '2 J', '10 J', '20 J'], correct: 0, explanation: 'U_s = ½kx² = 0.5(200)(0.01) = 1 J' },
-  { unit: 3, q: 'A 2 kg block slides down a frictionless ramp from height 5 m. What is its speed at the bottom?', options: ['5 m/s', '7 m/s', '10 m/s', '14 m/s'], correct: 2, explanation: 'mgh = ½mv² → v = √(2gh) = √(2×9.8×5) ≈ 9.9 ≈ 10 m/s' },
-  { unit: 3, q: 'You carry a 10 kg box horizontally for 5 m at constant speed. How much work do you do on the box?', options: ['490 J', '50 J', '0 J', '5 J'], correct: 2, explanation: 'Your force is upward (against gravity), displacement is horizontal. θ = 90°, cos(90°) = 0, so W = 0.' },
-  { unit: 4, q: 'A 0.5 kg ball hits a wall at 10 m/s and rebounds at 6 m/s. What is the magnitude of the impulse?', options: ['2 N·s', '5 N·s', '8 N·s', '3 N·s'], correct: 2, explanation: 'J = |Δp| = |m(v_f − v_i)| = |0.5(−6 − 10)| = |0.5(−16)| = 8 N·s' },
-  { unit: 4, q: 'Cart A (2 kg, 3 m/s right) collides with Cart B (1 kg, 6 m/s left). They stick together. What is their final velocity?', options: ['0 m/s', '1 m/s right', '1 m/s left', '3 m/s right'], correct: 0, explanation: 'p_i = 2(3) + 1(−6) = 0. p_f = (2+1)v_f = 0. So v_f = 0 m/s.' },
-  { unit: 5, q: 'A force of 10 N is applied perpendicularly to a wrench 0.3 m from the bolt. What is the torque?', options: ['3 N·m', '10 N·m', '0.3 N·m', '30 N·m'], correct: 0, explanation: 'τ = rF sin(90°) = (0.3)(10)(1) = 3 N·m' },
-  { unit: 5, q: 'A solid disk and a hoop (same mass and radius) roll down the same ramp. Which reaches the bottom first?', options: ['Solid disk', 'Hoop', 'Same time', 'Depends on mass'], correct: 0, explanation: 'The disk has smaller I (½MR² vs MR²), so less energy goes into rotation, more into translation → faster.' },
-  { unit: 6, q: 'An ice skater pulls her arms in while spinning. What happens to her angular velocity?', options: ['Increases', 'Decreases', 'Stays the same', 'Becomes zero'], correct: 0, explanation: 'L = Iω is conserved. Arms in → smaller I → larger ω.' },
-  { unit: 6, q: 'A satellite in circular orbit doubles its orbital radius. Its orbital speed becomes:', options: ['Twice as fast', 'Half as fast', '1/√2 times as fast', '√2 times as fast'], correct: 2, explanation: 'v = √(GM/r). Doubling r: v_new = √(GM/2r) = v/√2.' },
-  { unit: 7, q: 'A mass-spring system has m = 0.5 kg and k = 200 N/m. What is the period?', options: ['0.1 s', '0.31 s', '0.63 s', '1.26 s'], correct: 1, explanation: 'T = 2π√(m/k) = 2π√(0.5/200) = 2π√(0.0025) = 2π(0.05) ≈ 0.314 s' },
-  { unit: 7, q: 'A pendulum on Earth has period T. On the Moon (g ≈ g_E/6), the period is:', options: ['T/6', 'T/√6', 'T√6', '6T'], correct: 2, explanation: 'T = 2π√(L/g). If g becomes g/6, T becomes T√6.' },
-  { unit: 8, q: 'An object with density 800 kg/m³ floats in water (1000 kg/m³). What fraction is submerged?', options: ['20%', '80%', '100%', '125%'], correct: 1, explanation: 'Fraction submerged = ρ_object/ρ_fluid = 800/1000 = 0.80 = 80%' },
-  { unit: 8, q: 'Water flows through a pipe that narrows to half its original diameter. The velocity in the narrow section is:', options: ['Half as fast', 'Twice as fast', '4 times as fast', 'Same speed'], correct: 2, explanation: 'A₁v₁ = A₂v₂. If d halves, A becomes ¼ (area ∝ d²). So v₂ = 4v₁.' },
-  { unit: 8, q: 'What is the gauge pressure at a depth of 5 m in water?', options: ['5,000 Pa', '49,000 Pa', '149,000 Pa', '101,300 Pa'], correct: 1, explanation: 'P_gauge = ρgh = 1000 × 9.8 × 5 = 49,000 Pa' },
+  { unit: 1, q: 'A ball is thrown horizontally from a cliff. What happens to its horizontal velocity as it falls?', options: ['It increases', 'It decreases', 'It stays constant', 'It depends on height'], correct: 2, explanation: 'Horizontal and vertical motions are independent. With no horizontal force, horizontal velocity is constant.' },
+  { unit: 1, q: 'Two objects are dropped from the same height — one is dropped, the other thrown horizontally. Which hits first?', options: ['Dropped object', 'Thrown object', 'Both hit at same time', 'Depends on throw speed'], correct: 2, explanation: 'Horizontal motion doesn\'t affect vertical motion. Both have the same vertical acceleration (g) and same initial vertical velocity (0). Same time!' },
+  { unit: 1, q: 'A position-time graph shows a straight line with negative slope. What does this mean?', options: ['Object is at rest', 'Object is accelerating', 'Object moves with constant negative velocity', 'Object moves with decreasing speed'], correct: 2, explanation: 'Straight line = constant velocity. Negative slope = negative velocity (moving in negative direction).' },
+  
+  // Unit 2: Force and Translational Dynamics
+  { unit: 2, q: 'A 10 kg box sits on a horizontal surface with μₖ = 0.3. What horizontal force is needed to keep it moving at constant velocity?', options: ['0 N', '29.4 N', '98 N', '3 N'], correct: 1, explanation: 'At constant velocity, F_net = 0. So F = fₖ = μₖmg = 0.3(10)(9.8) = 29.4 N.' },
   { unit: 2, q: 'Which of the following is NOT a force?', options: ['Weight', 'Tension', 'Mass', 'Friction'], correct: 2, explanation: 'Mass is a measure of inertia, not a force. Weight, tension, and friction are all forces.' },
+  { unit: 2, q: 'A book rests on a table. The force pair to gravity on the book is:', options: ['Normal force from table on book', 'Force of book on Earth', 'Normal force from book on table', 'There is no force pair'], correct: 1, explanation: 'Newton\'s 3rd Law pairs act on DIFFERENT objects. Gravity on book (by Earth) pairs with gravity on Earth (by book).' },
+  { unit: 2, q: 'An object moves at constant velocity. Which statement is TRUE?', options: ['No forces act on it', 'One force acts on it', 'Net force is zero', 'All forces must cancel in pairs'], correct: 2, explanation: 'Newton\'s 1st Law: constant velocity means F_net = 0. Forces could still be acting (like friction balanced by applied force).' },
+  { unit: 2, q: 'Static friction:', options: ['Is always equal to μₛN', 'Can range from 0 to μₛN', 'Is greater than kinetic friction', 'Is the same as kinetic friction'], correct: 1, explanation: 'Static friction adjusts to oppose motion up to a maximum of μₛN. It equals the applied force until motion begins.' },
+  { unit: 2, q: 'A car goes around a curve at constant speed. What provides the centripetal force?', options: ['Engine force', 'Gravity', 'Friction between tires and road', 'Normal force'], correct: 2, explanation: 'On a flat road, friction between tires and road provides the centripetal force needed for circular motion.' },
+  
+  // Unit 3: Work, Energy, and Power
+  { unit: 3, q: 'A 1000 kg car travels at 20 m/s. What is its kinetic energy?', options: ['10,000 J', '200,000 J', '400,000 J', '20,000 J'], correct: 1, explanation: 'K = ½mv² = 0.5(1000)(400) = 200,000 J.' },
+  { unit: 3, q: 'Which requires more work: lifting a 2 kg mass 3 m, or lifting a 3 kg mass 2 m?', options: ['2 kg × 3 m', '3 kg × 2 m', 'Same', 'Depends on speed'], correct: 2, explanation: 'W = mgh. Both equal (2)(9.8)(3) = 58.8 J and (3)(9.8)(2) = 58.8 J.' },
+  { unit: 3, q: 'A ball falls from height h. At what point is its kinetic energy equal to its potential energy?', options: ['At the top', 'At height h/2', 'At the bottom', 'Never'], correct: 1, explanation: 'Energy conservation: mgh = ½mv² + mgy. When KE = PE: ½mv² = mgh/2, so at y = h/2, KE = PE = mgh/2.' },
+  { unit: 3, q: 'A spring is compressed by 2 cm. If compressed by 4 cm instead, the stored energy:', options: ['Doubles', 'Quadruples', 'Stays the same', 'Increases by 4 cm'], correct: 1, explanation: 'U_s = ½kx². Energy is proportional to x². Doubling compression: (2)² = 4× the energy.' },
+  { unit: 3, q: 'A person lifts a box slowly at constant velocity. The net work done on the box is:', options: ['Positive', 'Negative', 'Zero', 'Depends on mass'], correct: 2, explanation: 'Constant velocity means ΔK = 0. By work-energy theorem, W_net = ΔK = 0.' },
+  
+  // Unit 4: Linear Momentum
+  { unit: 4, q: 'A 0.5 kg ball hits a wall at 10 m/s and rebounds at 6 m/s. What is the impulse delivered?', options: ['2 N·s', '5 N·s', '8 N·s', '3 N·s'], correct: 2, explanation: 'Impulse = Δp = m(v_f - v_i) = 0.5((-6) - 10) = 0.5(-16) = -8 N·s. Magnitude = 8 N·s.' },
+  { unit: 4, q: 'A heavy truck and a light motorcycle have the same momentum. Which has greater kinetic energy?', options: ['The truck', 'The motorcycle', 'They\'re equal', 'Cannot determine'], correct: 1, explanation: 'K = p²/(2m). Same momentum p but different masses: lighter object has greater KE.' },
+  { unit: 4, q: 'In a perfectly inelastic collision between two objects:', options: ['Both momentum and KE are conserved', 'Only momentum is conserved', 'Only KE is conserved', 'Neither is conserved'], correct: 1, explanation: 'In perfectly inelastic collisions, objects stick together. Momentum is conserved, but KE is lost.' },
+  { unit: 4, q: 'Two ice skaters push off from each other. The lighter skater:', options: ['Gets less momentum', 'Gets more momentum', 'Gets the same magnitude of momentum', 'Gets no momentum'], correct: 2, explanation: 'By conservation of momentum: 0 = m₁v₁ + m₂v₂, so m₁v₁ = -m₂v₂. Equal magnitude, opposite directions.' },
+  
+  // Unit 5: Torque and Rotational Dynamics
+  { unit: 5, q: 'A force of 10 N is applied perpendicularly to a wrench 0.3 m from the bolt. What is the torque?', options: ['3 N·m', '10 N·m', '0.3 N·m', '30 N·m'], correct: 0, explanation: 'τ = rF sinθ = (0.3)(10)(1) = 3 N·m when force is perpendicular.' },
+  { unit: 5, q: 'An object in rotational equilibrium has:', options: ['Zero angular velocity', 'Zero angular acceleration', 'Zero net force', 'Zero net torque'], correct: 3, explanation: 'Rotational equilibrium means Στ = 0 (net torque is zero), analogous to ΣF = 0 for translational equilibrium.' },
+  { unit: 5, q: 'To maximize torque with a given force, you should:', options: ['Push parallel to the lever arm', 'Push perpendicular to the lever arm', 'Push at 45° to the lever arm', 'Push at the pivot point'], correct: 1, explanation: 'τ = rF sinθ. Maximum torque when θ = 90°, so sinθ = 1 (perpendicular).' },
+  { unit: 5, q: 'A solid disk and a hoop have the same mass and radius. Which has greater moment of inertia?', options: ['Disk', 'Hoop', 'They\'re equal', 'Depends on rotation axis'], correct: 1, explanation: 'I = Σmr². Hoop: I = MR². Disk: I = ½MR². Mass farther from axis = larger I.' },
+  
+  // Unit 6: Energy and Momentum of Rotating Systems
+  { unit: 6, q: 'A figure skater pulls in her arms while spinning. Her angular velocity:', options: ['Decreases', 'Stays the same', 'Increases', 'Becomes zero'], correct: 2, explanation: 'Conservation of angular momentum: L = Iω. Pulling arms in decreases I, so ω must increase to keep L constant.' },
+  { unit: 6, q: 'A ball rolls without slipping. Its total kinetic energy includes:', options: ['Only translational KE', 'Only rotational KE', 'Both translational and rotational KE', 'Neither'], correct: 2, explanation: 'Rolling = translation + rotation. K_total = ½mv² + ½Iω².' },
+  { unit: 6, q: 'For pure rolling motion (no slipping):', options: ['v > rω', 'v < rω', 'v = rω', 'v and ω are unrelated'], correct: 2, explanation: 'Pure rolling condition: v = rω. This links translational and rotational motion.' },
+  
+  // Unit 7: Oscillations
+  { unit: 7, q: 'A mass-spring system has m = 0.5 kg and k = 200 N/m. What is the period?', options: ['0.1 s', '0.31 s', '0.63 s', '1.26 s'], correct: 1, explanation: 'T = 2π√(m/k) = 2π√(0.5/200) = 2π√(0.0025) = 2π(0.05) ≈ 0.314 s.' },
+  { unit: 7, q: 'The period of a pendulum depends on:', options: ['Mass and length', 'Length and g only', 'Mass and g only', 'Amplitude and mass'], correct: 1, explanation: 'T = 2π√(L/g). Period depends only on length and gravitational acceleration — NOT mass or amplitude (for small angles).' },
+  { unit: 7, q: 'At what point in SHM is the kinetic energy maximum?', options: ['At maximum displacement', 'At equilibrium position', 'At ½ amplitude', 'KE is constant'], correct: 1, explanation: 'At equilibrium (x = 0), all energy is kinetic. At extremes (x = ±A), all energy is potential.' },
+  { unit: 7, q: 'If you double the mass of a spring-mass system, the period:', options: ['Doubles', 'Quadruples', 'Increases by √2', 'Decreases'], correct: 2, explanation: 'T = 2π√(m/k). Period is proportional to √m. Doubling mass: T → T√2.' },
+  
+  // Unit 8: Fluids
+  { unit: 8, q: 'Pressure at depth h in a fluid depends on:', options: ['Container shape', 'Fluid density and depth only', 'Volume of fluid above', 'Surface area of container'], correct: 1, explanation: 'P = P₀ + ρgh. Pressure depends on fluid density (ρ), depth (h), and surface pressure (P₀) — not container shape.' },
+  { unit: 8, q: 'An object floats when:', options: ['Its weight equals buoyant force', 'Its density equals fluid density', 'Its mass is less than fluid mass', 'Its volume is less than displaced volume'], correct: 0, explanation: 'For floating: F_b = mg (equilibrium). Since F_b = ρ_fluid × V_sub × g, this means ρ_object × V_total = ρ_fluid × V_sub.' },
+  { unit: 8, q: 'Water flows through a pipe that narrows. In the narrow section:', options: ['Speed decreases, pressure increases', 'Speed increases, pressure increases', 'Speed increases, pressure decreases', 'Both stay the same'], correct: 2, explanation: 'Continuity (A₁v₁ = A₂v₂): smaller area → faster. Bernoulli: faster fluid → lower pressure.' },
+  { unit: 8, q: 'A hydraulic press uses:', options: ['Archimedes\' principle', 'Pascal\'s principle', 'Bernoulli\'s equation', 'Continuity equation'], correct: 1, explanation: 'Pascal\'s principle: pressure applied to enclosed fluid transmits equally. Small force on small area → large force on large area.' },
 ];
 
-// ==================== DEFAULT FLASHCARDS ====================
+// Official AP Physics 1 Flashcards (based on College Board CED)
 const DEFAULT_FLASHCARDS = [
-  { q: 'What is the SI unit of force?', a: 'Newton (N) = kg·m/s²' },
-  { q: 'State Newton\'s First Law', a: 'An object at rest stays at rest, and an object in motion stays in motion with constant velocity, unless acted upon by a net external force.' },
-  { q: 'Define acceleration', a: 'The rate of change of velocity with respect to time. a = Δv/Δt' },
-  { q: 'What is g near Earth\'s surface?', a: 'g ≈ 9.8 m/s² downward' },
-  { q: 'Formula for centripetal acceleration', a: 'a_c = v²/r, directed toward the center' },
-  { q: 'Work-Energy Theorem', a: 'W_net = ΔK — the net work done on an object equals its change in kinetic energy' },
-  { q: 'Conservation of Momentum condition', a: 'Momentum is conserved when the net external force on the system is zero' },
-  { q: 'Torque formula', a: 'τ = rF sinθ = r_⊥ · F (force × lever arm)' },
-  { q: 'Period of a mass-spring system', a: 'T = 2π√(m/k) — depends on mass and spring constant, NOT amplitude' },
-  { q: 'Period of a simple pendulum', a: 'T = 2π√(L/g) — depends on length and gravity, NOT mass' },
-  { q: 'Archimedes\' Principle', a: 'Buoyant force = weight of displaced fluid: F_B = ρ_fluid · V_submerged · g' },
-  { q: 'Bernoulli\'s Equation', a: 'P + ½ρv² + ρgh = constant — faster flow means lower pressure' },
+  // Unit 1: Kinematics
+  { q: 'What is the difference between a scalar and a vector?', a: 'A scalar has only magnitude (e.g., speed, distance). A vector has both magnitude AND direction (e.g., velocity, displacement).' },
+  { q: 'At the highest point of a projectile\'s path, what is its acceleration?', a: 'g ≈ 9.8 m/s² downward. Gravity NEVER stops acting! The vertical velocity is zero, but acceleration is NOT zero.' },
+  { q: 'Are horizontal and vertical motions of a projectile independent?', a: 'YES! The horizontal motion (constant velocity) and vertical motion (constant acceleration g) are completely independent of each other.' },
+  { q: 'What does the slope of a position-time graph represent?', a: 'Slope = velocity. Steeper slope = faster speed. Negative slope = negative velocity (moving backward).' },
+  { q: 'What does the area under a velocity-time graph represent?', a: 'Area = displacement. Area above t-axis = positive displacement; below = negative displacement.' },
+  
+  // Unit 2: Dynamics
+  { q: 'State Newton\'s 2nd Law', a: 'F_net = ma. The net force on an object equals its mass times its acceleration. Direction of acceleration = direction of net force.' },
+  { q: 'State Newton\'s 3rd Law and identify the key property', a: 'For every action, there is an equal and opposite reaction. KEY: The two forces act on DIFFERENT objects.' },
+  { q: 'What is the maximum static friction?', a: 'f_s,max = μₛN. Static friction can vary from 0 to this maximum value. It equals the applied force until motion begins.' },
+  { q: 'What provides centripetal force for a car turning on a flat road?', a: 'Friction between the tires and the road provides the centripetal force directed toward the center of the turn.' },
+  { q: 'What is the spring force formula?', a: 'F_spring = -kx (Hooke\'s Law). The force is RESTORATIVE — always directed toward equilibrium, opposite to displacement.' },
+  
+  // Unit 3: Work, Energy, Power
+  { q: 'What is the work-energy theorem?', a: 'W_net = ΔK = K_f - K_i. The net work done on an object equals its change in kinetic energy.' },
+  { q: 'What is the formula for elastic potential energy?', a: 'U_s = ½kx². Energy stored in a compressed or stretched spring. Depends on x² (not linear!).' },
+  { q: 'When is mechanical energy conserved?', a: 'When only conservative forces (gravity, springs) do work. If friction or air resistance does work, mechanical energy is NOT conserved.' },
+  { q: 'What is power?', a: 'P = W/t = Fv. Rate of energy transfer. Units: Watts (W) = Joules/second.' },
+  { q: 'If you double the compression of a spring, what happens to stored energy?', a: 'Quadruples! U = ½kx². Since energy is proportional to x², doubling x means (2)² = 4× the energy.' },
+  
+  // Unit 4: Momentum
+  { q: 'What is momentum?', a: 'p = mv. A VECTOR quantity with units kg·m/s. Heavier objects or faster objects have more momentum.' },
+  { q: 'What is impulse?', a: 'J = FΔt = Δp. Impulse equals change in momentum. Units: N·s (which equals kg·m/s).' },
+  { q: 'What is conserved in an isolated system?', a: 'LINEAR MOMENTUM is conserved (Σp_initial = Σp_final) when no external net force acts on the system.' },
+  { q: 'In a perfectly inelastic collision, what is conserved?', a: 'Only MOMENTUM is conserved. Kinetic energy is NOT conserved (some converts to heat, sound, deformation).' },
+  
+  // Unit 5: Torque
+  { q: 'What is torque?', a: 'τ = rF sinθ. Rotational analog of force. r = distance from pivot, θ = angle between r and F. Units: N·m.' },
+  { q: 'How do you maximize torque with a given force?', a: 'Push perpendicular to the lever arm (θ = 90°, sinθ = 1) as far from the pivot as possible (maximize r).' },
+  { q: 'What is Newton\'s 2nd Law for rotation?', a: 'Στ = Iα. Net torque equals moment of inertia times angular acceleration. Analog of F = ma.' },
+  { q: 'What is the moment of inertia?', a: 'I = Σmr². Measures resistance to angular acceleration. Depends on mass distribution — more mass farther from axis = larger I.' },
+  
+  // Unit 6: Rotating Systems
+  { q: 'What is angular momentum?', a: 'L = Iω. Rotational analog of linear momentum. Conserved if no external torque acts on system.' },
+  { q: 'A figure skater pulls in her arms — what happens and why?', a: 'She spins FASTER. Pulling arms in decreases I, so ω must increase to conserve angular momentum (L = Iω = constant).' },
+  { q: 'What is the condition for pure rolling (no slipping)?', a: 'v = rω. The translational velocity of the center of mass equals r times the angular velocity.' },
+  { q: 'What is the total KE of a rolling object?', a: 'K_total = ½mv² + ½Iω². It has BOTH translational AND rotational kinetic energy.' },
+  
+  // Unit 7: Oscillations
+  { q: 'What is the period of a spring-mass system?', a: 'T = 2π√(m/k). Depends on mass and spring constant — NOT on amplitude!' },
+  { q: 'What is the period of a simple pendulum?', a: 'T = 2π√(L/g). Depends on length and gravity — NOT on mass or amplitude (for small angles)!' },
+  { q: 'Where in SHM is speed maximum? Acceleration maximum?', a: 'Speed max at equilibrium (x = 0). Acceleration max at extremes (x = ±A). They occur at different positions!' },
+  { q: 'What is total energy in SHM?', a: 'E = ½kA². Constant throughout oscillation. At extremes: all PE. At equilibrium: all KE.' },
+  
+  // Unit 8: Fluids
+  { q: 'What is the pressure at depth h in a fluid?', a: 'P = P₀ + ρgh. Pressure increases linearly with depth. Depends on fluid density, not container shape.' },
+  { q: 'State Archimedes\' Principle', a: 'Buoyant force equals the weight of displaced fluid: F_b = ρ_fluid × V_submerged × g.' },
+  { q: 'When does an object float?', a: 'When buoyant force ≥ weight. Equivalently, when object\'s density ≤ fluid\'s density.' },
+  { q: 'What is the continuity equation for fluids?', a: 'A₁v₁ = A₂v₂. Fluid speeds up in narrow sections, slows in wide sections (for incompressible flow).' },
+  { q: 'What does Bernoulli\'s equation tell us?', a: 'P + ½ρv² + ρgh = constant. Where fluid moves faster, pressure is LOWER. Explains how planes fly!' },
 ];
 
-// ==================== HELPERS ====================
+// ============ HELPERS ============
 function $(id) { return document.getElementById(id); }
 function showToast(msg) {
-  const c = $('toast-container');
-  const t = document.createElement('div');
-  t.className = 'toast'; t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.3s'; setTimeout(() => t.remove(), 300); }, 2500);
+  const container = $('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
 }
 
-// ==================== NAVIGATION ====================
+// ============ NAVIGATION ============
 function navigateTo(page) {
   state.currentPage = page;
   document.querySelectorAll('#nav .nav-item').forEach(n => n.classList.remove('active'));
@@ -1522,7 +1134,9 @@ function navigateTo(page) {
   document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
   const section = $(`page-${page}`);
   if (section) { section.classList.remove('hidden'); section.classList.add('animate-in'); }
+  // Initialize pages
   if (page === 'notes') renderNotes();
+  if (page === 'concept-map') renderConceptMap();
   if (page === 'formulas') renderFormulas();
   if (page === 'flashcards') initFlashcards();
   if (page === 'frq') generateFRQ();
@@ -1530,16 +1144,14 @@ function navigateTo(page) {
   if (page === 'wrong-log') renderWrongLog();
   if (page === 'flagged') renderFlagged();
   if (page === 'night-before') renderNightBefore();
-  if (page === 'lessons') { $('lessons-list').classList.remove('hidden'); $('lesson-viewer').classList.add('hidden'); renderLessons(); }
-  document.querySelector('aside').classList.remove('open');
-  $('main-content').scrollTop = 0;
+  if (page === 'lessons') renderLessons();
 }
 
 document.querySelectorAll('#nav .nav-item').forEach(btn => {
   btn.addEventListener('click', () => navigateTo(btn.dataset.page));
 });
 
-// ==================== DASHBOARD ====================
+// ============ DASHBOARD UPDATE ============
 function updateDashboard() {
   $('cards-today').textContent = state.cardsToday;
   $('accuracy-today').textContent = state.accuracyToday !== null ? Math.round(state.accuracyToday) + '%' : '—';
@@ -1548,30 +1160,38 @@ function updateDashboard() {
   $('avg-time').textContent = state.avgTime !== null ? state.avgTime.toFixed(1) + 's' : '—';
   $('sidebar-streak').textContent = state.streak;
   $('sidebar-xp').textContent = state.xp + ' XP';
-  $('sidebar-progress').style.width = Math.min(100, state.xp / 10) + '%';
+  const progressPct = Math.min(100, state.xp / 10);
+  $('sidebar-progress').style.width = progressPct + '%';
+
   if (state.wrongLog.length > 0) {
-    const last = state.wrongLog[state.wrongLog.length - 1];
-    $('focus-text').textContent = `⚠ Review: Unit ${last.unit} — ${UNITS[last.unit-1].name}`;
+    const lastWrong = state.wrongLog[state.wrongLog.length - 1];
+    $('focus-text').textContent = `⚠ Review: Unit ${lastWrong.unit} — ${UNITS[lastWrong.unit-1].topics[0]}`;
   }
-  if (state.cardsToday > 0) $('activity-text').textContent = `📚 Reviewed ${state.cardsToday} cards today!`;
-  if (state.lessonsCompleted.length > 0) $('reviews-due').textContent = `${state.lessonsCompleted.length} lessons completed. Review them soon!`;
+  if (state.cardsToday > 0) {
+    $('activity-text').textContent = `📚 Reviewed ${state.cardsToday} cards today. Keep going!`;
+  }
+  if (state.flashcards.length > 0) {
+    $('reviews-due').textContent = `${state.flashcards.length} cards in deck. ${Math.min(state.flashcards.length, 5)} suggested for review.`;
+  }
 }
 
-// ==================== STUDY PLAN ====================
+// ============ STUDY PLAN ============
 $('study-time').addEventListener('input', function() { $('study-time-val').textContent = this.value + ' min'; });
+
 function generatePlan() {
   const examDate = $('exam-date').value;
   const minutesPerDay = parseInt($('study-time').value);
   if (!examDate) { showToast('Please select an exam date'); return; }
-  const daysUntil = Math.max(1, Math.ceil((new Date(examDate) - new Date()) / (1000*60*60*24)));
+  const daysUntil = Math.max(1, Math.ceil((new Date(examDate) - new Date()) / (1000 * 60 * 60 * 24)));
   const totalMinutes = daysUntil * minutesPerDay;
-  const sessionsPerUnit = Math.max(1, Math.floor(daysUntil / 8));
-  let html = `<div class="text-sm mb-3" style="color:var(--green);">📅 ${daysUntil} days until exam · ${totalMinutes} total study minutes</div><div class="space-y-2">`;
+  const sessionsPerUnit = Math.floor(daysUntil / 8);
+  let html = `<div class="text-sm mb-2" style="color:var(--green);">📅 ${daysUntil} days until exam · ${totalMinutes} total study minutes</div>`;
+  html += '<div class="space-y-2">';
   UNITS.forEach((u, i) => {
     const startDay = i * sessionsPerUnit + 1;
-    const endDay = Math.min((i + 1) * sessionsPerUnit, daysUntil);
+    const endDay = (i + 1) * sessionsPerUnit;
     html += `<div class="flex justify-between items-center p-3 rounded-xl text-sm" style="background:var(--bg-secondary);">
-      <span style="color:${u.color};">Unit ${u.num}: ${u.name} (${u.weight})</span>
+      <span>🔹 Unit ${u.num}: ${u.name}</span>
       <span style="color:var(--text-muted);">Days ${startDay}–${endDay}</span>
     </div>`;
   });
@@ -1580,7 +1200,7 @@ function generatePlan() {
   showToast('Study plan generated! 📅');
 }
 
-// ==================== LESSONS ====================
+// ============ LESSONS ============
 function selectMode(mode) {
   state.selectedMode = mode;
   $('mode-ap').classList.toggle('selected', mode === 'ap');
@@ -1588,92 +1208,255 @@ function selectMode(mode) {
 }
 
 function renderLessons() {
+  $('lessons-overview').classList.remove('hidden');
+  $('lesson-viewer').classList.add('hidden');
   $('unit-grid').innerHTML = UNITS.map(u => `
-    <div class="card cursor-pointer" onclick="openUnit(${u.num})">
-      <div class="text-xs font-mono mb-1" style="color:${u.color};">UNIT ${u.num} · ${u.weight}</div>
+    <div class="card cursor-pointer" onclick="openLesson(${u.num})">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-xs font-mono font-bold px-2 py-0.5 rounded" style="background:${u.color}20;color:${u.color};">UNIT ${u.num}</div>
+        <div class="text-xs font-mono" style="color:var(--text-muted);">${u.weight}</div>
+      </div>
       <div class="font-semibold text-sm mb-1">${u.name}</div>
-      <div class="text-xs" style="color:var(--text-muted);">${u.desc}</div>
-      <div class="text-xs mt-2" style="color:var(--text-muted);">${u.topics.length} topics · ${state.selectedMode === 'ap' ? '5–15 min' : '15–30 min'}</div>
-      ${state.lessonsCompleted.includes(u.num) ? '<div class="text-xs mt-1" style="color:var(--green);">✅ Completed</div>' : ''}
+      <div class="text-xs mb-2" style="color:var(--text-muted);">${u.desc}</div>
+      <div class="text-xs" style="color:var(--accent);">${state.selectedMode === 'ap' ? '🎯 5–15 min AP Review' : '🔬 15–30 min Deep Dive'}</div>
     </div>
   `).join('');
 }
 
-function openUnit(num) {
-  const unit = UNITS[num - 1];
-  $('lessons-list').classList.add('hidden');
+function openLesson(unitNum) {
+  const unit = UNITS.find(u => u.num === unitNum);
+  if (!unit) return;
+  
+  $('lessons-overview').classList.add('hidden');
   $('lesson-viewer').classList.remove('hidden');
-  $('lesson-header').innerHTML = `
-    <div class="text-xs font-mono mb-1" style="color:${unit.color};">UNIT ${unit.num} · ${unit.weight} EXAM WEIGHT</div>
-    <h1 class="text-2xl font-bold mb-1">${unit.name}</h1>
-    <p style="color:var(--text-secondary);">${unit.desc} · ${unit.topics.length} topics · ${state.selectedMode === 'ap' ? 'AP Exam Mode' : 'Deep Learning Mode'}</p>
-  `;
-  $('lesson-topics').innerHTML = unit.topics.map((topic, i) => `
-    <div class="topic-item">
-      <div class="topic-header" onclick="toggleTopic(this)">
-        <span class="font-medium text-sm">${topic.title}</span>
-        <span class="text-xs" style="color:var(--text-muted);">▼</span>
+  
+  const content = unit.apContent;
+  const deep = unit.deepContent;
+  const isAP = state.selectedMode === 'ap';
+  
+  let html = `
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold" style="background:${unit.color}20;color:${unit.color};">${unit.num}</div>
+      <div>
+        <h1 class="text-2xl font-bold">${unit.name}</h1>
+        <p class="text-sm" style="color:var(--text-muted);">${unit.desc} · ${unit.weight} of exam</p>
       </div>
-      <div class="topic-body">
-        <div class="topic-body-inner lesson-content">
-          ${state.selectedMode === 'ap' ? topic.ap : topic.deep}
-        </div>
+      <div class="ml-auto text-xs px-3 py-1 rounded-full" style="background:${isAP ? 'var(--accent)' : 'var(--cyan)'};color:#fff;">
+        ${isAP ? '🎯 AP Exam Mode' : '🔬 Deep Learning Mode'}
       </div>
     </div>
-  `).join('');
-  $('main-content').scrollTop = 0;
+  `;
+  
+  // Topics list
+  html += `
+    <div class="card mb-4">
+      <div class="font-semibold text-sm mb-3">📚 Topics in this unit</div>
+      <div class="flex flex-wrap gap-2">
+        ${unit.topics.map((t, i) => `<span class="text-xs px-3 py-1.5 rounded-full" style="background:var(--bg-secondary);border:1px solid var(--border);">${i+1}. ${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+  
+  // Key Ideas
+  html += `
+    <div class="card mb-4">
+      <div class="font-semibold text-sm mb-3">💡 Key Ideas ${isAP ? '(AP Exam Focus)' : '(Conceptual Understanding)'}</div>
+      <ul class="space-y-3">
+        ${content.key_ideas.map(idea => `
+          <li class="flex gap-3 text-sm">
+            <span class="text-lg" style="color:var(--green);">✓</span>
+            <span style="color:var(--text-secondary);">${idea}</span>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+  
+  // Exam Tips
+  html += `
+    <div class="card mb-4" style="border-color:var(--yellow);">
+      <div class="font-semibold text-sm mb-3">🎯 AP Exam Tips</div>
+      <ul class="space-y-2">
+        ${content.exam_tips.map(tip => `<li class="text-sm" style="color:var(--text-secondary);">${tip}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+  
+  // Key Equations
+  html += `
+    <div class="card mb-4">
+      <div class="font-semibold text-sm mb-3">📐 Key Equations</div>
+      <div class="grid grid-cols-2 gap-2">
+        ${content.key_equations.map(eq => `
+          <div class="font-mono text-sm p-3 rounded-xl text-center" style="background:var(--bg-secondary);border:1px solid var(--border);">${eq}</div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  
+  // Deep Learning Content (only shown in deep mode)
+  if (!isAP) {
+    html += `
+      <div class="card mb-4" style="border-color:var(--cyan);">
+        <div class="font-semibold text-sm mb-3">🧠 Intuition</div>
+        <p class="text-sm" style="color:var(--text-secondary);">${deep.intuition}</p>
+      </div>
+    `;
+    
+    html += `
+      <div class="card mb-4">
+        <div class="font-semibold text-sm mb-3">🌍 Real-World Examples</div>
+        <ul class="space-y-2">
+          ${deep.real_world.map(example => `
+            <li class="flex gap-2 text-sm">
+              <span style="color:var(--cyan);">•</span>
+              <span style="color:var(--text-secondary);">${example}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `;
+    
+    html += `
+      <div class="card mb-4" style="border-color:var(--red);">
+        <div class="font-semibold text-sm mb-3">⚠️ Common Mistakes to Avoid</div>
+        <ul class="space-y-2">
+          ${deep.common_mistakes.map(mistake => `
+            <li class="flex gap-2 text-sm">
+              <span style="color:var(--red);">✗</span>
+              <span style="color:var(--text-secondary);">${mistake}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `;
+    
+    html += `
+      <div class="card mb-4" style="border-color:var(--green);">
+        <div class="font-semibold text-sm mb-3">🚀 Why This Matters</div>
+        <p class="text-sm" style="color:var(--text-secondary);">${deep.why_it_matters}</p>
+      </div>
+    `;
+  }
+  
+  // Quiz button
+  html += `
+    <div class="flex gap-3 mt-6">
+      <button class="btn btn-primary" onclick="startUnitQuiz(${unit.num})">Take Unit Quiz ⚡</button>
+      <button class="btn btn-secondary" onclick="flagUnit(${unit.num});showToast('Unit ${unit.num} flagged for review 🚩')">Flag for Review 🚩</button>
+      <button class="btn btn-secondary" onclick="backToUnits()">← All Units</button>
+    </div>
+  `;
+  
+  $('lesson-content').innerHTML = html;
+  $('lesson-content').scrollTo(0, 0);
 }
 
-function toggleTopic(header) {
-  const body = header.nextElementSibling;
-  const arrow = header.querySelector('span:last-child');
-  body.classList.toggle('open');
-  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
-}
-
-function closeLessonViewer() {
-  $('lessons-list').classList.remove('hidden');
+function backToUnits() {
+  $('lessons-overview').classList.remove('hidden');
   $('lesson-viewer').classList.add('hidden');
   renderLessons();
 }
 
-// ==================== UNIT NOTES ====================
+function startUnitQuiz(unitNum) {
+  navigateTo('quiz');
+}
+
+// ============ UNIT NOTES ============
 function renderNotes() {
   $('notes-grid').innerHTML = UNITS.map(u => `
     <div class="card">
       <div class="flex items-center gap-2 mb-2">
         <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style="background:${u.color}20;color:${u.color};">${u.num}</div>
-        <div class="font-semibold">${u.name} <span class="text-xs" style="color:var(--text-muted);">(${u.weight})</span></div>
+        <div class="font-semibold">${u.name}</div>
       </div>
+      <p class="text-sm mb-2" style="color:var(--text-muted);">${u.desc}</p>
       <ul class="text-sm space-y-1" style="color:var(--text-secondary);">
-        ${u.topics.map(t => `<li>· ${t.title.split('. ').slice(1).join('. ')}</li>`).join('')}
+        ${u.topics.map(t => `<li>· ${t}</li>`).join('')}
       </ul>
-      <button class="btn btn-ghost btn-sm mt-2 text-xs" onclick="flagUnit(${u.num})">${state.flagged.includes(u.num) ? '🚩 Flagged' : '🚩 Flag confusing'}</button>
+      <button class="btn btn-ghost btn-sm mt-2 text-xs" onclick="flagUnit(${u.num})">🚩 Flag confusing topics</button>
     </div>
   `).join('');
 }
 
-function flagUnit(num) {
-  if (!state.flagged.includes(num)) { state.flagged.push(num); showToast(`Unit ${num} flagged 🚩`); }
-  else { state.flagged = state.flagged.filter(f => f !== num); showToast(`Unit ${num} unflagged`); }
-  renderNotes();
+function flagUnit(unitNum) {
+  if (!state.flagged.includes(unitNum)) {
+    state.flagged.push(unitNum);
+    showToast(`Unit ${unitNum} flagged for review 🚩`);
+  } else {
+    state.flagged = state.flagged.filter(f => f !== unitNum);
+    showToast(`Unit ${unitNum} unflagged`);
+  }
 }
 
-// ==================== FORMULAS ====================
+// ============ CONCEPT MAP ============
+function renderConceptMap() {
+  const container = $('concept-map-container');
+  const svg = $('concept-svg');
+  const w = container.offsetWidth;
+  const h = 500;
+  const cx = w / 2;
+  const cy = 250;
+  const radius = 170;
+  const positions = UNITS.map((_, i) => {
+    const angle = (i / 8) * 2 * Math.PI - Math.PI / 2;
+    return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+  });
+
+  // Draw SVG connections
+  let svgContent = '';
+  for (let i = 0; i < 8; i++) {
+    for (let j = i + 1; j < 8; j++) {
+      const dx = positions[j].x - positions[i].x;
+      const dy = positions[j].y - positions[i].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 250) {
+        svgContent += `<line x1="${positions[i].x}" y1="${positions[i].y}" x2="${positions[j].x}" y2="${positions[j].y}" stroke="var(--border)" stroke-width="1" opacity="0.6"/>`;
+      }
+    }
+  }
+  // Highlight connections between adjacent units
+  for (let i = 0; i < 8; i++) {
+    const j = (i + 1) % 8;
+    svgContent += `<line x1="${positions[i].x}" y1="${positions[i].y}" x2="${positions[j].x}" y2="${positions[j].y}" stroke="var(--accent)" stroke-width="2" opacity="0.4" stroke-dasharray="6,4"/>`;
+  }
+  svg.innerHTML = svgContent;
+
+  // Position node divs
+  // Remove old nodes
+  container.querySelectorAll('.map-node').forEach(n => n.remove());
+  positions.forEach((pos, i) => {
+    const node = document.createElement('div');
+    node.className = 'map-node';
+    node.textContent = 'U' + (i + 1);
+    node.style.left = (pos.x - 28) + 'px';
+    node.style.top = (pos.y - 28) + 'px';
+    node.title = UNITS[i].name;
+    node.onclick = () => { navigateTo('notes'); setTimeout(() => { const el = document.querySelector(`#notes-grid .card:nth-child(${i+1})`); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200); };
+    container.appendChild(node);
+  });
+}
+
+window.addEventListener('resize', () => { if (state.currentPage === 'concept-map') renderConceptMap(); });
+
+// ============ FORMULAS ============
 function renderFormulas() {
   $('formula-list').innerHTML = FORMULAS.map(f => `
     <div class="card">
       <div class="font-semibold mb-2">Unit ${f.unit}: ${f.name}</div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-        ${f.formulas.map(fm => `<div class="font-mono text-sm p-2 rounded-lg text-center" style="background:var(--bg-secondary);color:var(--cyan);">${fm}</div>`).join('')}
+      <div class="grid grid-cols-2 gap-2">
+        ${f.formulas.map(fm => `<div class="font-mono text-sm p-2 rounded-lg text-center" style="background:var(--bg-secondary);">${fm}</div>`).join('')}
       </div>
     </div>
   `).join('');
 }
 
-// ==================== FLASHCARDS ====================
+// ============ FLASHCARDS ============
 function initFlashcards() {
-  if (state.flashcards.length === 0) { state.flashcards = [...DEFAULT_FLASHCARDS]; state.fcIndex = 0; }
+  if (state.flashcards.length === 0) {
+    state.flashcards = [...DEFAULT_FLASHCARDS];
+    state.fcIndex = 0;
+  }
   updateFlashcardUI();
 }
 
@@ -1681,7 +1464,11 @@ function updateFlashcardUI() {
   $('fc-due').textContent = state.flashcards.length + ' total';
   $('fc-hard').textContent = '0 hard';
   $('fc-known').textContent = '0 known';
-  if (state.flashcards.length === 0) { $('fc-front').textContent = 'No cards yet'; $('fc-back').textContent = 'Import some!'; return; }
+  if (state.flashcards.length === 0) {
+    $('fc-front').textContent = 'No cards yet';
+    $('fc-back').textContent = 'Import some!';
+    return;
+  }
   const card = state.flashcards[state.fcIndex % state.flashcards.length];
   $('fc-front').textContent = card.q;
   $('fc-back').textContent = card.a;
@@ -1702,11 +1489,10 @@ function rateCard(rating) {
   state.totalAnswered++;
   state.totalCorrect += rating >= 3 ? 1 : 0;
   state.accuracyToday = state.totalAnswered > 0 ? (state.totalCorrect / state.totalAnswered) * 100 : null;
-  if (state.cardsToday >= 5 && state.streak === 0) state.streak = 1;
+  if (state.cardsToday >= 10 && state.streak === 0) state.streak = 1;
   state.fcIndex = (state.fcIndex + 1) % state.flashcards.length;
   updateFlashcardUI();
   updateDashboard();
-  $('fc-xp').textContent = `⚡ +${xpGain} XP`;
   showToast(`Rated ${rating}/5 · +${xpGain} XP ⚡`);
 }
 
@@ -1731,17 +1517,22 @@ function handleFileImport(event) {
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(e) { $('fc-import').value = e.target.result; importFlashcards(); };
+  reader.onload = function(e) {
+    $('fc-import').value = e.target.result;
+    importFlashcards();
+  };
   reader.readAsText(file);
 }
 
 document.addEventListener('keydown', (e) => {
   if (state.currentPage !== 'flashcards') return;
   if (e.code === 'Space') { e.preventDefault(); flipFlashcard(); }
+  if (e.code === 'ArrowLeft') { state.fcIndex = (state.fcIndex - 1 + state.flashcards.length) % state.flashcards.length; updateFlashcardUI(); }
+  if (e.code === 'ArrowRight') { state.fcIndex = (state.fcIndex + 1) % state.flashcards.length; updateFlashcardUI(); }
   if (e.key >= '1' && e.key <= '5') { const r = parseInt(e.key); if (state.fcFlipped) rateCard(r); }
 });
 
-// ==================== FRQ ====================
+// ============ FRQ ============
 let currentFRQ = 0;
 function generateFRQ() {
   currentFRQ = Math.floor(Math.random() * FRQS.length);
@@ -1752,26 +1543,32 @@ function generateFRQ() {
 }
 
 function revealRubric() {
-  $('frq-rubric-list').innerHTML = FRQS[currentFRQ].rubric.map((r, i) => `<li class="flex gap-2"><span style="color:var(--accent);">${i+1}.</span> ${r}</li>`).join('');
+  const rubric = FRQS[currentFRQ].rubric;
+  $('frq-rubric-list').innerHTML = rubric.map((r, i) => `<li class="flex gap-2"><span style="color:var(--accent);">${i+1}.</span> ${r}</li>`).join('');
   $('frq-rubric').classList.remove('hidden');
   state.xp += 15;
   updateDashboard();
-  showToast('Rubric revealed! +15 XP ⚡');
+  showToast('Rubric revealed! Self-grade your answer. +15 XP ⚡');
 }
 
-// ==================== QUIZ ====================
+// ============ QUIZ ============
 let quizQuestions = [];
 function initQuiz() {
-  quizQuestions = [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 10);
-  state.quizIndex = 0; state.quizCorrect = 0; state.quizAnswered = 0; state.quizSelected = null;
+  quizQuestions = [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 5);
+  state.quizIndex = 0;
+  state.quizCorrect = 0;
+  state.quizAnswered = 0;
+  state.quizSelected = null;
   renderQuizQuestion();
 }
 
 function renderQuizQuestion() {
   if (state.quizIndex >= quizQuestions.length) {
-    const acc = quizQuestions.length > 0 ? Math.round((state.quizCorrect / quizQuestions.length) * 100) : 0;
-    $('quiz-card').innerHTML = `<div class="text-center py-8"><div class="text-4xl mb-2">🎉</div><div class="font-semibold text-lg">Quiz Complete!</div><p class="text-sm" style="color:var(--text-secondary);">Score: ${state.quizCorrect}/${quizQuestions.length} (${acc}%)</p><button class="btn btn-primary mt-4" onclick="initQuiz()">New Quiz</button></div>`;
+    $('quiz-card').innerHTML = `<div class="text-center py-8"><div class="text-4xl mb-2">🎉</div><div class="font-semibold text-lg">Quiz Complete!</div><p class="text-sm" style="color:var(--text-secondary);">Score: ${state.quizCorrect}/${quizQuestions.length}</p></div>`;
+    $('qz-options').innerHTML = '';
     $('qz-submit').classList.add('hidden');
+    $('qz-feedback').classList.add('hidden');
+    const acc = quizQuestions.length > 0 ? Math.round((state.quizCorrect / quizQuestions.length) * 100) : 0;
     state.xp += state.quizCorrect * 10;
     state.accuracyToday = state.totalAnswered > 0 ? (state.totalCorrect / state.totalAnswered) * 100 : acc;
     if (state.streak === 0) state.streak = 1;
@@ -1784,11 +1581,12 @@ function renderQuizQuestion() {
   $('qz-options').innerHTML = q.options.map((o, i) => `
     <div class="p-3 rounded-xl cursor-pointer border transition-all text-sm option-item" data-idx="${i}"
       style="border-color:var(--border);background:var(--bg-secondary);"
-      onclick="selectQuizOption(${i}, this)">${o}</div>
+      onclick="selectQuizOption(${i}, this)">
+      ${o}
+    </div>
   `).join('');
   $('qz-submit').classList.remove('hidden');
   $('qz-submit').textContent = 'Submit';
-  $('qz-submit').onclick = submitQuiz;
   $('qz-feedback').classList.add('hidden');
   state.quizSelected = null;
   updateQuizStats();
@@ -1805,13 +1603,17 @@ function submitQuiz() {
   if (state.quizSelected === null) { showToast('Select an answer first'); return; }
   const q = quizQuestions[state.quizIndex];
   const correct = state.quizSelected === q.correct;
-  state.quizAnswered++; state.totalAnswered++;
+  state.quizAnswered++;
+  state.totalAnswered++;
   if (correct) { state.quizCorrect++; state.totalCorrect++; }
-  if (!correct) state.wrongLog.push({ unit: q.unit, question: q.q, options: q.options, correct: q.correct, explanation: q.explanation, yourAnswer: state.quizSelected });
+  if (!correct) { state.wrongLog.push({ unit: q.unit, question: q.q, options: q.options, correct: q.correct, explanation: q.explanation, yourAnswer: state.quizSelected }); }
   $('qz-feedback').classList.remove('hidden');
-  $('qz-feedback').innerHTML = correct ? `<span style="color:var(--green);">✅ Correct! ${q.explanation}</span>` : `<span style="color:var(--red);">❌ Wrong. ${q.explanation}</span>`;
+  $('qz-feedback').innerHTML = correct
+    ? `<span style="color:var(--green);">✅ Correct! ${q.explanation}</span>`
+    : `<span style="color:var(--red);">❌ Wrong. ${q.explanation}</span>`;
   $('qz-submit').textContent = 'Next →';
   $('qz-submit').onclick = nextQuizQuestion;
+  // Highlight correct answer
   document.querySelectorAll('.option-item').forEach((o, i) => {
     o.style.pointerEvents = 'none';
     if (i === q.correct) { o.style.borderColor = 'var(--green)'; o.style.background = 'rgba(52,211,153,0.1)'; }
@@ -1821,22 +1623,30 @@ function submitQuiz() {
   updateDashboard();
 }
 
-function nextQuizQuestion() { state.quizIndex++; state.quizSelected = null; renderQuizQuestion(); }
+function nextQuizQuestion() {
+  state.quizIndex++;
+  state.quizSelected = null;
+  $('qz-submit').onclick = submitQuiz;
+  renderQuizQuestion();
+}
 
 function updateQuizStats() {
   $('qz-score').textContent = `${state.quizCorrect}/${state.quizAnswered}`;
   $('qz-qnum').textContent = Math.min(state.quizIndex + 1, quizQuestions.length);
   $('qz-acc').textContent = state.quizAnswered > 0 ? Math.round((state.quizCorrect / state.quizAnswered) * 100) + '%' : '—';
+  $('qz-time').textContent = '—';
 }
 
-// ==================== CHALLENGE ====================
+// ============ CHALLENGE ============
 function startChallenge(mode) {
   state.challengeMode = mode;
-  state.challengeScore = 0; state.challengeStreak = 0; state.challengeQIndex = 0;
+  state.challengeScore = 0;
+  state.challengeStreak = 0;
+  state.challengeQIndex = 0;
   $('challenge-active').classList.remove('hidden');
   $('challenge-title').textContent = mode === 'speed' ? '🏃 Speed Run' : mode === 'streak' ? '🔥 Streak' : '💀 Sudden Death';
-  state.challengeRemaining = mode === 'speed' ? 60 : 9999;
-  state._challengeAnswered = false;
+  if (mode === 'speed') state.challengeRemaining = 60;
+  else state.challengeRemaining = 9999;
   renderChallengeQuestion();
   clearInterval(state.challengeTimer);
   state.challengeTimer = setInterval(() => {
@@ -1852,7 +1662,9 @@ function renderChallengeQuestion() {
   $('challenge-question').textContent = q.q;
   $('challenge-options').innerHTML = q.options.map((o, i) => `
     <div class="p-3 rounded-xl cursor-pointer border transition-all text-sm" style="border-color:var(--border);background:var(--bg-secondary);"
-      onclick="answerChallenge(${i}, this, ${q.correct})">${o}</div>
+      onclick="answerChallenge(${i}, this, ${q.correct})">
+      ${o}
+    </div>
   `).join('');
   $('challenge-score').textContent = state.challengeScore;
   $('challenge-streak').textContent = state.challengeStreak;
@@ -1866,10 +1678,13 @@ function answerChallenge(idx, el, correctIdx) {
     state.challengeStreak++;
     const bonus = state.challengeStreak > 1 ? state.challengeStreak * 5 : 0;
     state.challengeScore += 10 + bonus;
+    showToast(`Correct! +${10 + bonus} XP`);
   } else {
     if (state.challengeMode === 'death') { endChallenge(); return; }
     state.challengeStreak = 0;
+    showToast('Wrong! Streak reset.');
   }
+  // Highlight
   document.querySelectorAll('#challenge-options > div').forEach((o, i) => {
     o.style.pointerEvents = 'none';
     if (i === correctIdx) { o.style.borderColor = 'var(--green)'; o.style.background = 'rgba(52,211,153,0.1)'; }
@@ -1895,10 +1710,13 @@ function endChallenge() {
   showToast(`Challenge over! Score: ${state.challengeScore} · +${state.challengeScore} XP ⚡`);
 }
 
-// ==================== WRONG LOG ====================
+// ============ WRONG LOG ============
 function renderWrongLog() {
-  if (state.wrongLog.length === 0) { $('wrong-log-list').innerHTML = '<p style="color:var(--text-muted);">No wrong answers yet! Keep studying.</p>'; return; }
-  $('wrong-log-list').innerHTML = state.wrongLog.map(w => `
+  if (state.wrongLog.length === 0) {
+    $('wrong-log-list').innerHTML = '<p style="color:var(--text-muted);">No wrong answers yet! Keep studying.</p>';
+    return;
+  }
+  $('wrong-log-list').innerHTML = state.wrongLog.map((w, i) => `
     <div class="card">
       <div class="text-xs mb-1" style="color:var(--text-muted);">Unit ${w.unit}</div>
       <div class="font-semibold text-sm mb-2">${w.question}</div>
@@ -1909,31 +1727,61 @@ function renderWrongLog() {
   `).join('');
 }
 
-// ==================== FLAGGED ====================
+// ============ FLAGGED ============
 function renderFlagged() {
-  if (state.flagged.length === 0) { $('flagged-list').innerHTML = '<p style="color:var(--text-muted);">No flagged items yet.</p>'; return; }
+  if (state.flagged.length === 0) {
+    $('flagged-list').innerHTML = '<p style="color:var(--text-muted);">No flagged items yet. Flag confusing topics from Unit Notes.</p>';
+    return;
+  }
   $('flagged-list').innerHTML = state.flagged.map(f => `
     <div class="card flex justify-between items-center">
-      <div><div class="font-semibold">Unit ${f}: ${UNITS[f-1].name}</div><div class="text-sm" style="color:var(--text-muted);">${UNITS[f-1].desc}</div></div>
-      <button class="btn btn-ghost btn-sm" onclick="state.flagged=state.flagged.filter(x=>x!==${f});renderFlagged();showToast('Unflagged')">✕</button>
+      <div>
+        <div class="font-semibold">Unit ${f}: ${UNITS[f-1].name}</div>
+        <div class="text-sm" style="color:var(--text-muted);">${UNITS[f-1].desc}</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="state.flagged=state.flagged.filter(x=>x!==${f});renderFlagged();showToast('Unflagged Unit ${f}')">✕</button>
     </div>
   `).join('');
 }
 
-// ==================== NIGHT BEFORE ====================
+// ============ NIGHT BEFORE ============
 function renderNightBefore() {
   let html = '';
   UNITS.forEach(u => {
+    const content = u.apContent;
     const formulas = FORMULAS.find(f => f.unit === u.num);
-    html += `<div class="card"><div class="font-semibold mb-2" style="color:${u.color};">Unit ${u.num}: ${u.name} (${u.weight})</div>`;
-    html += `<ul class="text-sm space-y-1" style="color:var(--text-secondary);">${u.topics.map(t => `<li>· ${t.title.split('. ').slice(1).join('. ')}</li>`).join('')}</ul>`;
-    if (formulas) html += `<div class="mt-2 flex flex-wrap gap-2">${formulas.formulas.map(f => `<code class="text-xs p-1.5 rounded font-mono" style="background:var(--bg-secondary);color:var(--cyan);">${f}</code>`).join('')}</div>`;
-    html += '</div>';
+    html += `
+      <div class="card">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style="background:${u.color}20;color:${u.color};">${u.num}</div>
+          <div class="font-semibold">${u.name}</div>
+          <div class="ml-auto text-xs px-2 py-0.5 rounded" style="background:var(--bg-secondary);color:var(--text-muted);">${u.weight}</div>
+        </div>
+        <ul class="text-sm space-y-1 mb-3" style="color:var(--text-secondary);">
+          ${u.topics.map(t => `<li>• ${t}</li>`).join('')}
+        </ul>
+        <div class="mb-3">
+          <div class="text-xs font-semibold mb-2" style="color:var(--green);">Key Ideas:</div>
+          <ul class="text-xs space-y-1" style="color:var(--text-muted);">
+            ${content.key_ideas.map(idea => `<li>→ ${idea}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="mb-2">
+          <div class="text-xs font-semibold mb-2" style="color:var(--accent);">AP Exam Tips:</div>
+          <ul class="text-xs space-y-1" style="color:var(--text-muted);">
+            ${content.exam_tips.slice(0, 3).map(tip => `<li>${tip}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="flex flex-wrap gap-1 mt-3">
+          ${formulas.formulas.map(f => `<code class="text-xs px-2 py-1 rounded font-mono" style="background:var(--bg-secondary);">${f}</code>`).join('')}
+        </div>
+      </div>
+    `;
   });
   $('night-before-content').innerHTML = html;
 }
 
-// ==================== POMODORO ====================
+// ============ POMODORO ============
 function togglePomodoro() {
   if (state.pomodoroActive) { pausePomodoro(); return; }
   state.pomodoroActive = true;
@@ -1945,14 +1793,18 @@ function togglePomodoro() {
       clearInterval(state.pomodoroInterval);
       state.pomodoroActive = false;
       if (state.pomodoroIsBreak) {
-        state.pomodoroSessions++; state.pomodoroIsBreak = false; state.pomodoroSeconds = 25*60;
+        state.pomodoroSessions++;
+        state.pomodoroIsBreak = false;
+        state.pomodoroSeconds = 25 * 60;
         $('pomodoro-state').textContent = 'Focus';
         showToast('Break over! Time to focus 🍅');
       } else {
-        state.pomodoroIsBreak = true; state.pomodoroSeconds = 5*60;
+        state.pomodoroIsBreak = true;
+        state.pomodoroSeconds = 5 * 60;
         $('pomodoro-state').textContent = 'Break';
         showToast('Focus session done! Take a break ☕');
-        state.xp += 25; if (state.streak === 0) state.streak = 1;
+        state.xp += 25;
+        if (state.streak === 0) state.streak = 1;
         updateDashboard();
       }
       $('pomo-start').textContent = 'Start';
@@ -1962,26 +1814,35 @@ function togglePomodoro() {
   }, 1000);
 }
 
-function pausePomodoro() { state.pomodoroActive = false; clearInterval(state.pomodoroInterval); $('pomo-start').textContent = 'Resume'; }
+function pausePomodoro() {
+  state.pomodoroActive = false;
+  clearInterval(state.pomodoroInterval);
+  $('pomo-start').textContent = 'Resume';
+}
 
 function resetPomodoro() {
   clearInterval(state.pomodoroInterval);
-  state.pomodoroActive = false; state.pomodoroSeconds = 25*60; state.pomodoroIsBreak = false; state.pomodoroSessions = 0;
-  $('pomo-start').textContent = 'Start'; $('pomodoro-state').textContent = 'Focus'; $('pomo-sessions').textContent = '0';
+  state.pomodoroActive = false;
+  state.pomodoroSeconds = 25 * 60;
+  state.pomodoroIsBreak = false;
+  state.pomodoroSessions = 0;
+  $('pomo-start').textContent = 'Start';
+  $('pomodoro-state').textContent = 'Focus';
+  $('pomo-sessions').textContent = '0';
   updatePomodoroDisplay();
 }
 
 function updatePomodoroDisplay() {
   const mins = Math.floor(state.pomodoroSeconds / 60);
   const secs = state.pomodoroSeconds % 60;
-  $('pomodoro-time').textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-  const total = state.pomodoroIsBreak ? 5*60 : 25*60;
+  $('pomodoro-time').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  const total = state.pomodoroIsBreak ? 5 * 60 : 25 * 60;
   const progress = state.pomodoroSeconds / total;
-  const circumference = 2 * Math.PI * 90;
+  const circumference = 2 * Math.PI * 90; // ~565.49
   $('pomodoro-ring').style.strokeDashoffset = circumference * (1 - progress);
 }
 
-// ==================== INIT ====================
+// ============ INIT ============
 function init() {
   state.flashcards = [...DEFAULT_FLASHCARDS];
   updateDashboard();
@@ -1989,6 +1850,7 @@ function init() {
   updatePomodoroDisplay();
   generateFRQ();
 }
+
 init();
 </script>
 </body>
