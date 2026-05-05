@@ -1,1815 +1,1237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PhysicsOS — AP Physics 1 Command Center</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style type="text/tailwindcss">
-    @theme {
-      --font-sans: 'Inter', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-      --color-bg: #0a0f1a;
-      --color-surface: #111827;
-      --color-surface-2: #1a2236;
-      --color-surface-3: #243044;
-      --color-accent: #3b82f6;
-      --color-accent-glow: #60a5fa;
-      --color-success: #22c55e;
-      --color-warning: #f59e0b;
-      --color-danger: #ef4444;
-      --color-text: #e2e8f0;
-      --color-text-muted: #94a3b8;
-    }
-  </style>
-  <style>
-    body { font-family: 'Inter', sans-serif; background: #0a0f1a; color: #e2e8f0; }
-    .glass { background: rgba(17,24,39,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(59,130,246,0.1); }
-    .card-hover { transition: all 0.2s ease; }
-    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.3); }
-    .glow-text { text-shadow: 0 0 20px rgba(59,130,246,0.3); }
-    .nav-item.active { background: rgba(59,130,246,0.15); color: #60a5fa; border-right: 3px solid #3b82f6; }
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 5px rgba(59,130,246,0.2); } 50% { box-shadow: 0 0 20px rgba(59,130,246,0.4); } }
-    .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-    @keyframes flip-in { from { transform: rotateY(90deg); opacity: 0; } to { transform: rotateY(0); opacity: 1; } }
-    .flip-in { animation: flip-in 0.4s ease; }
-    .progress-ring { transform: rotate(-90deg); }
-    .formula-card { font-family: 'JetBrains Mono', monospace; }
-    .shimmer { background: linear-gradient(90deg, transparent, rgba(59,130,246,0.1), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
-    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-    .node-circle { transition: all 0.3s ease; cursor: pointer; }
-    .node-circle:hover { filter: drop-shadow(0 0 8px rgba(59,130,246,0.6)); transform: scale(1.1); }
-    .connection-line { stroke-dasharray: 4; animation: dash 20s linear infinite; }
-    @keyframes dash { to { stroke-dashoffset: -100; } }
-    .timer-ring { transition: stroke-dashoffset 0.1s linear; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhysicsOS — AP Physics 1</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+  :root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #111118;
+    --bg-card: #16161f;
+    --bg-card-hover: #1c1c28;
+    --border: #252535;
+    --text-primary: #f0f0f5;
+    --text-secondary: #a0a0b8;
+    --text-muted: #6b6b80;
+    --accent: #7c5cfc;
+    --accent-glow: rgba(124, 92, 252, 0.3);
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --orange: #fb923c;
+    --cyan: #22d3ee;
+    --pink: #f472b6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3a3a50; }
+
+  /* Card styles */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.2s ease;
+  }
+  .card:hover {
+    background: var(--bg-card-hover);
+    border-color: #303050;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .card-glass {
+    background: rgba(22,22,31,0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  /* Glow accent */
+  .glow-border {
+    box-shadow: 0 0 0 1px var(--accent), 0 0 20px var(--accent-glow);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: #6d4ff0;
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: #404060;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+  }
+  .btn-ghost:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+    transition: width 0.5s ease;
+  }
+
+  /* Nav */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 14px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+  }
+  .nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
+  .nav-item.active { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
+
+  /* Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in { animation: fadeIn 0.3s ease forwards; }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 8px var(--accent-glow); }
+    50% { box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(124,92,252,0.15); }
+  }
+  .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+  /* Stat number */
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  /* Flashcard flip */
+  .flashcard-container {
+    perspective: 1000px;
+  }
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    min-height: 220px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flashcard-inner.flipped {
+    transform: rotateY(180deg);
+  }
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .flashcard-front {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+  }
+  .flashcard-back {
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    transform: rotateY(180deg);
+    box-shadow: 0 0 32px var(--accent-glow);
+  }
+
+  /* Concept map nodes */
+  .map-node {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .map-node:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+    box-shadow: 0 0 20px var(--accent-glow);
+    transform: scale(1.1);
+    z-index: 10;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    z-index: 100;
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  /* Pomodoro ring */
+  .pomodoro-ring {
+    transform: rotate(-90deg);
+  }
+
+  /* Selected mode */
+  .mode-card {
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .mode-card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 24px var(--accent-glow);
+  }
+</style>
 </head>
-<body class="min-h-screen bg-bg text-text overflow-x-hidden">
+<body class="flex h-screen overflow-hidden">
 
-<!-- App Container -->
-<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 flex-shrink-0 border-r flex flex-col" style="background:var(--bg-secondary);border-color:var(--border);">
+  <div class="p-5 border-b flex items-center gap-3" style="border-color:var(--border);">
+    <div class="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm" style="background:var(--accent);">⚛</div>
+    <div>
+      <div class="font-bold text-sm">PhysicsOS</div>
+      <div class="text-xs" style="color:var(--text-muted);">AP Physics 1</div>
+    </div>
+  </div>
+  <nav class="flex-1 overflow-y-auto p-3 space-y-0.5" id="nav">
+    <button class="nav-item active" data-page="dashboard">📋 Dashboard</button>
+    <button class="nav-item" data-page="plan">📅 Study Plan</button>
+    <button class="nav-item" data-page="lessons">📖 Lessons</button>
+    <button class="nav-item" data-page="notes">📝 Unit Notes</button>
+    <button class="nav-item" data-page="concept-map">🗺 Concept Map</button>
+    <button class="nav-item" data-page="formulas">📐 Formula Sheet</button>
+    <button class="nav-item" data-page="flashcards">🃏 Flashcards</button>
+    <button class="nav-item" data-page="frq">✍️ FRQ Practice</button>
+    <button class="nav-item" data-page="quiz">⚡ Quiz</button>
+    <button class="nav-item" data-page="challenge">🏆 Challenge Mode</button>
+    <button class="nav-item" data-page="wrong-log">❌ Wrong Answer Log</button>
+    <button class="nav-item" data-page="flagged">🚩 Flagged Questions</button>
+    <button class="nav-item" data-page="night-before">🌙 Night Before</button>
+    <button class="nav-item" data-page="pomodoro">🍅 Pomodoro</button>
+  </nav>
+  <div class="p-4 border-t text-xs" style="border-color:var(--border);color:var(--text-muted);">
+    <div class="flex items-center gap-2 mb-2">
+      <div class="w-2 h-2 rounded-full" style="background:var(--green);"></div>
+      Study streak: <span class="font-bold text-sm" style="color:var(--text-primary);" id="sidebar-streak">0</span> days
+    </div>
+    <div class="progress-bar mb-1"><div class="progress-fill" id="sidebar-progress" style="width:0%"></div></div>
+    <span id="sidebar-xp">0 XP</span> total
+  </div>
+</aside>
 
-  <!-- Sidebar -->
-  <aside class="w-64 bg-surface border-r border-surface-3 flex flex-col shrink-0 z-20">
-    <div class="p-5 border-b border-surface-3">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-lg bg-accent/20 flex items-center justify-center">
-          <i data-lucide="atom" class="w-5 h-5 text-accent"></i>
-        </div>
-        <div>
-          <h1 class="font-bold text-lg tracking-tight">Physics<span class="text-accent">OS</span></h1>
-          <p class="text-[10px] text-text-muted uppercase tracking-wider">AP Physics 1</p>
-        </div>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto p-6 lg:p-8" id="main-content">
+
+  <!-- DASHBOARD -->
+  <section id="page-dashboard" class="animate-in">
+    <h1 class="text-2xl font-bold mb-1">Good to see you 👋</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Your AP Physics 1 command center. Study consistently — the streak is your most important number.</p>
+
+    <!-- Today's Study Plan -->
+    <div class="card mb-5 flex items-center justify-between">
+      <div>
+        <div class="text-sm font-semibold" style="color:var(--text-muted);">📋 TODAY'S STUDY PLAN</div>
+        <div class="stat-number mt-1" id="cards-today">0</div>
+        <div class="text-sm" style="color:var(--text-secondary);">Cards today</div>
+      </div>
+      <div class="flex gap-5">
+        <div class="text-center"><div class="stat-number" id="accuracy-today" style="font-size:1.6rem;">—</div><div class="text-xs" style="color:var(--text-muted);">Accuracy today ✅</div></div>
+        <div class="text-center"><div class="stat-number" id="streak-display" style="font-size:1.6rem;color:var(--orange);">0</div><div class="text-xs" style="color:var(--text-muted);">Day streak 🔥</div></div>
+        <div class="text-center"><div class="stat-number" id="xp-display" style="font-size:1.6rem;color:var(--accent);">0</div><div class="text-xs" style="color:var(--text-muted);">Total XP ⚡</div></div>
+        <div class="text-center"><div class="stat-number" id="avg-time" style="font-size:1.6rem;">—</div><div class="text-xs" style="color:var(--text-muted);">Avg time/question ⏱</div></div>
       </div>
     </div>
-    <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-0.5" id="sidebar-nav">
-      <button onclick="showSection('dashboard')" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="dashboard">
-        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-      </button>
-      <button onclick="showSection('studyplan')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="studyplan">
-        <i data-lucide="calendar-days" class="w-4 h-4"></i> Study Plan
-      </button>
-      <button onclick="showSection('lessons')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="lessons">
-        <i data-lucide="book-open" class="w-4 h-4"></i> Lessons
-      </button>
-      <button onclick="showSection('notes')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="notes">
-        <i data-lucide="file-text" class="w-4 h-4"></i> Unit Notes
-      </button>
-      <button onclick="showSection('map')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="map">
-        <i data-lucide="network" class="w-4 h-4"></i> Concept Map
-      </button>
-      <button onclick="showSection('formulas')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="formulas">
-        <i data-lucide="sigma" class="w-4 h-4"></i> Formula Sheet
-      </button>
-      <button onclick="showSection('flashcards')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="flashcards">
-        <i data-lucide="layers" class="w-4 h-4"></i> Flashcards
-      </button>
-      <button onclick="showSection('frq')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="frq">
-        <i data-lucide="pen-tool" class="w-4 h-4"></i> FRQ Practice
-      </button>
-      <button onclick="showSection('quiz')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="quiz">
-        <i data-lucide="help-circle" class="w-4 h-4"></i> Quiz
-      </button>
-      <button onclick="showSection('challenge')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="challenge">
-        <i data-lucide="zap" class="w-4 h-4"></i> Challenge
-      </button>
-      <button onclick="showSection('exam')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="exam">
-        <i data-lucide="timer" class="w-4 h-4"></i> Exam Mode
-      </button>
-      <button onclick="showSection('wrong')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="wrong">
-        <i data-lucide="x-circle" class="w-4 h-4"></i> Wrong Answers
-      </button>
-      <button onclick="showSection('flagged')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="flagged">
-        <i data-lucide="flag" class="w-4 h-4"></i> Flagged
-      </button>
-      <button onclick="showSection('night')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="night">
-        <i data-lucide="moon" class="w-4 h-4"></i> Night Before
-      </button>
-      <button onclick="showSection('pomodoro')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-text hover:bg-surface-2 transition-colors text-left" data-section="pomodoro">
-        <i data-lucide="tomato" class="w-4 h-4"></i> Pomodoro
-      </button>
-    </nav>
-    <div class="p-4 border-t border-surface-3">
-      <div class="flex items-center gap-2 text-xs text-text-muted">
-        <div class="w-2 h-2 rounded-full bg-success animate-pulse"></div>
-        <span>All systems operational</span>
+
+    <!-- Focus & Activity Row -->
+    <div class="grid grid-cols-2 gap-5 mb-5">
+      <div class="card">
+        <div class="font-semibold text-sm mb-1">⚠ Focus here</div>
+        <p style="color:var(--text-muted);font-size:14px;" id="focus-text">Complete quizzes to see weak spots.</p>
+      </div>
+      <div class="card">
+        <div class="font-semibold text-sm mb-1">Recent activity</div>
+        <p style="color:var(--text-muted);font-size:14px;" id="activity-text">👋 Welcome! Start studying to see activity.</p>
       </div>
     </div>
-  </aside>
 
-  <!-- Main Content -->
-  <main class="flex-1 overflow-y-auto relative" id="main-content">
+    <!-- Lesson Reviews Due -->
+    <div class="card mb-5">
+      <div class="font-semibold text-sm mb-3">📅 Lesson reviews due</div>
+      <p style="color:var(--text-muted);font-size:14px;" id="reviews-due">Study some lessons to see what needs review.</p>
+    </div>
 
-    <!-- DASHBOARD -->
-    <section id="dashboard" class="p-8 max-w-6xl mx-auto">
-      <div class="mb-8">
-        <h2 class="text-3xl font-bold mb-1">Good to see you <span class="text-2xl">👋</span></h2>
-        <p class="text-text-muted">Your AP Physics 1 command center. Study consistently — the streak is your most important number.</p>
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-3 gap-5">
+      <div class="card cursor-pointer hover:glow-border" onclick="navigateTo('quiz')">
+        <div class="text-2xl mb-2">⚡</div>
+        <div class="font-semibold">Start Quiz</div>
+        <div class="text-sm" style="color:var(--text-muted);">Test your knowledge</div>
       </div>
-
-      <!-- Stats Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        <div class="glass rounded-xl p-4 card-hover">
-          <div class="text-2xl font-bold text-accent" id="dash-cards">0</div>
-          <div class="text-xs text-text-muted mt-1">Cards today 🧠</div>
-        </div>
-        <div class="glass rounded-xl p-4 card-hover">
-          <div class="text-2xl font-bold text-success" id="dash-accuracy">—</div>
-          <div class="text-xs text-text-muted mt-1">Accuracy today ✅</div>
-        </div>
-        <div class="glass rounded-xl p-4 card-hover">
-          <div class="text-2xl font-bold text-warning" id="dash-streak">0</div>
-          <div class="text-xs text-text-muted mt-1">Day streak 🔥</div>
-        </div>
-        <div class="glass rounded-xl p-4 card-hover">
-          <div class="text-2xl font-bold text-accent-glow" id="dash-xp">0</div>
-          <div class="text-xs text-text-muted mt-1">Total XP ⚡</div>
-        </div>
-        <div class="glass rounded-xl p-4 card-hover">
-          <div class="text-2xl font-bold text-text" id="dash-time">—</div>
-          <div class="text-xs text-text-muted mt-1">Avg time/question ⏱</div>
-        </div>
+      <div class="card cursor-pointer hover:glow-border" onclick="navigateTo('flashcards')">
+        <div class="text-2xl mb-2">🃏</div>
+        <div class="font-semibold">Review Flashcards</div>
+        <div class="text-sm" style="color:var(--text-muted);">0 due</div>
       </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        <!-- Today's Study Plan -->
-        <div class="md:col-span-2 glass rounded-xl p-6 card-hover">
-          <div class="flex items-center gap-2 mb-4">
-            <i data-lucide="clipboard-list" class="w-5 h-5 text-accent"></i>
-            <h3 class="font-semibold text-lg">Today's Study Plan</h3>
-          </div>
-          <div id="today-plan-content" class="space-y-3">
-            <p class="text-text-muted text-sm">No study plan configured yet. Set up your plan to get a personalized schedule.</p>
-            <button onclick="showSection('studyplan')" class="text-accent text-sm hover:underline">Set up your plan →</button>
-          </div>
-        </div>
-
-        <!-- Focus / Activity -->
-        <div class="space-y-6">
-          <div class="glass rounded-xl p-6 card-hover border-l-4 border-warning">
-            <div class="flex items-start gap-3">
-              <i data-lucide="alert-triangle" class="w-5 h-5 text-warning shrink-0 mt-0.5"></i>
-              <div>
-                <h4 class="font-semibold text-warning mb-1">Focus here</h4>
-                <p class="text-sm text-text-muted">Complete quizzes to see weak spots.</p>
-              </div>
-            </div>
-          </div>
-          <div class="glass rounded-xl p-6 card-hover">
-            <h4 class="font-semibold mb-3">Recent activity</h4>
-            <div id="recent-activity" class="space-y-2 text-sm">
-              <div class="flex items-center gap-2 text-text-muted">
-                <i data-lucide="hand" class="w-4 h-4"></i>
-                <span>Welcome! Start studying to see activity.</span>
-                <span class="ml-auto text-xs">now</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="card cursor-pointer hover:glow-border" onclick="navigateTo('frq')">
+        <div class="text-2xl mb-2">✍️</div>
+        <div class="font-semibold">Practice FRQ</div>
+        <div class="text-sm" style="color:var(--text-muted);">50% of your score</div>
       </div>
+    </div>
+  </section>
 
-      <!-- Lesson Reviews Due -->
-      <div class="mt-6 glass rounded-xl p-6 card-hover">
-        <div class="flex items-center gap-2 mb-4">
-          <i data-lucide="calendar-check" class="w-5 h-5 text-accent"></i>
-          <h3 class="font-semibold text-lg">Lesson reviews due</h3>
-        </div>
-        <p class="text-text-muted text-sm">Study some lessons to see what needs review.</p>
+  <!-- STUDY PLAN -->
+  <section id="page-plan" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">📅 Study Plan</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Enter your exam date and daily availability. We'll build you a day-by-day schedule based on your weak spots.</p>
+    <div class="card max-w-lg">
+      <div class="font-semibold mb-4">Set up your plan</div>
+      <div class="mb-4">
+        <label class="block text-sm mb-2" style="color:var(--text-secondary);">AP Exam date</label>
+        <input type="date" id="exam-date" class="w-full p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary);border-color:var(--border);font-family:inherit;">
       </div>
-    </section>
-
-    <!-- STUDY PLAN -->
-    <section id="studyplan" class="hidden p-8 max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">📅 Study Plan</h2>
-      <p class="text-text-muted mb-8">Enter your exam date and daily availability. We'll build you a day-by-day schedule based on your weak spots.</p>
-
-      <div class="glass rounded-xl p-8 mb-8">
-        <div class="grid md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <label class="block text-sm font-medium mb-2">AP Exam date</label>
-            <input type="date" id="exam-date" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-accent">
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-2">Study time per day (minutes)</label>
-            <input type="number" id="study-time" value="60" min="15" max="300" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-accent">
-          </div>
-        </div>
-        <button onclick="generateStudyPlan()" class="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-          Generate my plan
-        </button>
+      <div class="mb-4">
+        <label class="block text-sm mb-2" style="color:var(--text-secondary);">Study time per day (minutes)</label>
+        <input type="range" id="study-time" min="15" max="120" value="30" step="5" class="w-full accent-purple-500">
+        <div class="flex justify-between text-xs mt-1" style="color:var(--text-muted);"><span>15 min</span><span id="study-time-val">30 min</span><span>120 min</span></div>
       </div>
+      <button class="btn btn-primary" onclick="generatePlan()">Generate Plan</button>
+      <div id="plan-output" class="mt-4 space-y-2"></div>
+    </div>
+  </section>
 
-      <div id="study-plan-result" class="hidden">
-        <h3 class="font-semibold text-lg mb-4">Your Personalized Schedule</h3>
-        <div id="plan-days" class="space-y-3"></div>
+  <!-- LESSONS -->
+  <section id="page-lessons" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">📖 Lessons</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Learn AP Physics 1 from scratch or go deep. Pick your mode, pick your unit, and learn at your own pace.</p>
+    <div class="grid grid-cols-2 gap-5 mb-6">
+      <div class="card mode-card selected" id="mode-ap" onclick="selectMode('ap')">
+        <div class="text-2xl mb-2">🎯</div>
+        <div class="font-semibold mb-1">AP Exam Mode</div>
+        <p style="color:var(--text-muted);font-size:14px;">Focused. Efficient. Only what you need to pass the AP exam. 5–15 min per lesson.</p>
+        <button class="btn btn-primary mt-3">PASS THE EXAM →</button>
       </div>
-    </section>
-
-    <!-- LESSONS -->
-    <section id="lessons" class="hidden p-8 max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">📖 Lessons</h2>
-      <p class="text-text-muted mb-8">Learn AP Physics 1 from scratch or go deep. Pick your mode, pick your unit, and learn at your own pace.</p>
-
-      <div class="grid md:grid-cols-2 gap-6 mb-10">
-        <div class="glass rounded-xl p-8 card-hover border border-accent/20 cursor-pointer" onclick="setLessonMode('exam')">
-          <div class="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center mb-4">
-            <span class="text-2xl">🎯</span>
-          </div>
-          <h3 class="text-xl font-bold mb-2">AP Exam Mode</h3>
-          <p class="text-text-muted text-sm mb-4">Focused. Efficient. Only what you need to pass the AP exam. 5–15 min per lesson.</p>
-          <span class="text-accent text-sm font-medium">PASS THE EXAM →</span>
-        </div>
-        <div class="glass rounded-xl p-8 card-hover border border-success/20 cursor-pointer" onclick="setLessonMode('deep')">
-          <div class="w-14 h-14 rounded-xl bg-success/10 flex items-center justify-center mb-4">
-            <span class="text-2xl">🔬</span>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Deep Learning Mode</h3>
-          <p class="text-text-muted text-sm mb-4">Full understanding. Intuition, real-world examples, the why behind everything. 15–30 min.</p>
-          <span class="text-success text-sm font-medium">TRULY UNDERSTAND →</span>
-        </div>
+      <div class="card mode-card" id="mode-deep" onclick="selectMode('deep')">
+        <div class="text-2xl mb-2">🔬</div>
+        <div class="font-semibold mb-1">Deep Learning Mode</div>
+        <p style="color:var(--text-muted);font-size:14px;">Full understanding. Intuition, real-world examples, the why behind everything. 15–30 min.</p>
+        <button class="btn btn-secondary mt-3">TRULY UNDERSTAND →</button>
       </div>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="unit-grid">
+    </div>
+  </section>
 
-      <div id="lesson-units" class="hidden">
-        <h3 class="font-semibold text-lg mb-4" id="lesson-mode-title">Select a Unit</h3>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="lesson-unit-grid"></div>
+  <!-- UNIT NOTES -->
+  <section id="page-notes" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">📝 Unit Notes</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">All 8 units — cheat sheet tips integrated. Flag anything confusing for targeted practice.</p>
+    <div class="grid grid-cols-2 gap-4" id="notes-grid"></div>
+  </section>
+
+  <!-- CONCEPT MAP -->
+  <section id="page-concept-map" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🗺 Concept Connection Map</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">See how AP Physics 1 units connect. Click any node to jump to that unit's notes.</p>
+    <div class="card relative" style="height:500px;" id="concept-map-container">
+      <svg class="absolute inset-0 w-full h-full" id="concept-svg"></svg>
+    </div>
+  </section>
+
+  <!-- FORMULAS -->
+  <section id="page-formulas" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">📐 Formula Sheet</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Every formula organized by unit.</p>
+    <div class="space-y-4" id="formula-list"></div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section id="page-flashcards" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🃏 Flashcards</h1>
+    <div class="flex gap-8 mb-4 text-sm"><span id="fc-due">0 due</span> <span id="fc-hard">0 hard</span> <span id="fc-known">0 known</span></div>
+    <div class="card flashcard-container mb-4" style="min-height:260px;">
+      <div class="flashcard-inner" id="flashcard-inner" onclick="flipFlashcard()">
+        <div class="flashcard-front" id="fc-front">Loading...</div>
+        <div class="flashcard-back" id="fc-back">—</div>
       </div>
-
-      <div id="lesson-content" class="hidden glass rounded-xl p-8">
-        <button onclick="backToLessonUnits()" class="text-text-muted text-sm mb-4 hover:text-text flex items-center gap-1">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to units
-        </button>
-        <div id="lesson-body"></div>
+    </div>
+    <p class="text-sm mb-3" style="color:var(--text-muted);">space or tap to flip</p>
+    <div class="flex gap-2 flex-wrap" id="fc-rating">
+      <button class="btn btn-secondary btn-sm" onclick="rateCard(1)">1 — Hard</button>
+      <button class="btn btn-secondary btn-sm" onclick="rateCard(3)">3 — OK</button>
+      <button class="btn btn-secondary btn-sm" onclick="rateCard(5)">5 — Easy</button>
+    </div>
+    <p class="text-xs mt-2" style="color:var(--text-muted);">⚡ +0 XP</p>
+    <div class="mt-6">
+      <div class="font-semibold mb-2 text-sm">📥 Import from anywhere</div>
+      <p class="text-xs mb-3" style="color:var(--text-muted);">Paste tab-separated or comma-separated text (Question, Answer per line), or drag a .csv/.txt file.</p>
+      <textarea id="fc-import" placeholder="Question&#9;Answer" rows="4" class="w-full p-3 rounded-xl border text-white text-sm mb-2" style="background:var(--bg-secondary);border-color:var(--border);font-family:'JetBrains Mono',monospace;resize:vertical;"></textarea>
+      <button class="btn btn-primary btn-sm" onclick="importFlashcards()">Import</button>
+      <div class="mt-3 p-4 border-2 border-dashed rounded-xl text-center text-sm cursor-pointer" style="border-color:var(--border);color:var(--text-muted);" id="drop-zone">
+        Drop file here or click to browse (.csv, .txt)
+        <input type="file" id="fc-file" accept=".csv,.txt" class="hidden" onchange="handleFileImport(event)">
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- UNIT NOTES -->
-    <section id="notes" class="hidden p-8 max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">Unit Notes</h2>
-      <p class="text-text-muted mb-8">All 8 units — cheat sheet tips integrated. Flag anything confusing for targeted practice.</p>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="notes-grid"></div>
-      <div id="notes-detail" class="hidden mt-6 glass rounded-xl p-8">
-        <button onclick="closeNotesDetail()" class="text-text-muted text-sm mb-4 hover:text-text flex items-center gap-1">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
-        </button>
-        <div id="notes-detail-body"></div>
+  <!-- FRQ -->
+  <section id="page-frq" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">✍️ FRQ Practice</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Free Response Questions — worth 50% of your AP score. Write your answer, then reveal the rubric point by point.</p>
+    <div class="card mb-4">
+      <div class="font-semibold mb-2" id="frq-title">Loading FRQ...</div>
+      <p style="color:var(--text-secondary);font-size:14px;" id="frq-question"></p>
+    </div>
+    <textarea id="frq-answer" placeholder="Write your answer here..." rows="6" class="w-full p-4 rounded-xl border text-white text-sm mb-3" style="background:var(--bg-secondary);border-color:var(--border);font-family:inherit;resize:vertical;"></textarea>
+    <div class="flex gap-3">
+      <button class="btn btn-primary" onclick="revealRubric()">Reveal Rubric</button>
+      <button class="btn btn-secondary" onclick="generateFRQ()">🤖 Generate New FRQ</button>
+    </div>
+    <div id="frq-rubric" class="mt-4 hidden card">
+      <div class="font-semibold mb-2">Rubric Points:</div>
+      <ul id="frq-rubric-list" class="space-y-2 text-sm"></ul>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="page-quiz" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">⚡ Quiz</h1>
+    <div class="flex gap-6 text-sm mb-6" id="quiz-stats">
+      <span>Score: <b id="qz-score">0/0</b></span>
+      <span>Q <b id="qz-qnum">1</b></span>
+      <span>Accuracy: <b id="qz-acc">—</b></span>
+      <span>Avg time: <b id="qz-time">—</b></span>
+    </div>
+    <div class="card mb-4" id="quiz-card">
+      <div class="text-xs mb-2" style="color:var(--text-muted);" id="qz-unit-label"></div>
+      <div class="font-semibold mb-4" id="qz-question"></div>
+      <div class="space-y-2" id="qz-options"></div>
+    </div>
+    <div class="flex gap-3">
+      <button class="btn btn-primary" id="qz-submit" onclick="submitQuiz()">Submit</button>
+      <button class="btn btn-secondary" onclick="nextQuizQuestion()">Skip →</button>
+    </div>
+    <div id="qz-feedback" class="mt-3 text-sm hidden"></div>
+  </section>
+
+  <!-- CHALLENGE MODE -->
+  <section id="page-challenge" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-2">🏆 Challenge Mode</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Race against the clock. Score points for speed AND accuracy. Build a streak for bonus XP.</p>
+    <div class="grid grid-cols-3 gap-5">
+      <div class="card text-center cursor-pointer" onclick="startChallenge('speed')">
+        <div class="text-3xl mb-2">🏃</div>
+        <div class="font-semibold">Speed Run</div>
+        <p class="text-sm" style="color:var(--text-muted);">10 questions, 60 seconds</p>
       </div>
-    </section>
-
-    <!-- CONCEPT MAP -->
-    <section id="map" class="hidden p-8 max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">🗺 Concept Connection Map</h2>
-      <p class="text-text-muted mb-8">See how AP Physics 1 units connect. Click any node to jump to that unit's notes.</p>
-      <div class="glass rounded-xl p-8 flex justify-center">
-        <svg id="concept-svg" width="800" height="500" viewBox="0 0 800 500"></svg>
+      <div class="card text-center cursor-pointer" onclick="startChallenge('streak')">
+        <div class="text-3xl mb-2">🔥</div>
+        <div class="font-semibold">Streak</div>
+        <p class="text-sm" style="color:var(--text-muted);">Keep going until you miss</p>
       </div>
-    </section>
-
-    <!-- FORMULA SHEET -->
-    <section id="formulas" class="hidden p-8 max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">Formula Sheet</h2>
-      <p class="text-text-muted mb-8">Every formula organized by unit.</p>
-      <div class="space-y-6" id="formulas-container"></div>
-    </section>
-
-    <!-- FLASHCARDS -->
-    <section id="flashcards" class="hidden p-8 max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">Flashcards</h2>
-      <div class="flex gap-6 mb-8 text-sm">
-        <div><span class="text-accent font-bold" id="fc-due">0</span> <span class="text-text-muted">due</span></div>
-        <div><span class="text-danger font-bold" id="fc-hard">0</span> <span class="text-text-muted">hard</span></div>
-        <div><span class="text-success font-bold" id="fc-known">0</span> <span class="text-text-muted">known</span></div>
-        <div><span class="text-text-muted font-bold" id="fc-total">—</span> <span class="text-text-muted">total</span></div>
+      <div class="card text-center cursor-pointer" onclick="startChallenge('death')">
+        <div class="text-3xl mb-2">💀</div>
+        <div class="font-semibold">Sudden Death</div>
+        <p class="text-sm" style="color:var(--text-muted);">One wrong = game over</p>
       </div>
-
-      <div class="glass rounded-xl p-8 mb-8 min-h-[320px] flex flex-col items-center justify-center relative" id="flashcard-area">
-        <div id="flashcard-display" class="w-full max-w-lg text-center cursor-pointer" onclick="flipFlashcard()">
-          <div id="fc-front" class="text-xl font-medium">Loading...</div>
-          <div id="fc-back" class="hidden text-lg text-accent-glow flip-in"></div>
-          <p class="text-xs text-text-muted mt-6">space or tap to flip</p>
-        </div>
-        <div id="fc-rating" class="hidden mt-6 flex gap-3">
-          <button onclick="rateFlashcard(1)" class="px-4 py-2 rounded-lg bg-danger/20 text-danger text-sm hover:bg-danger/30">Again (1)</button>
-          <button onclick="rateFlashcard(2)" class="px-4 py-2 rounded-lg bg-warning/20 text-warning text-sm hover:bg-warning/30">Hard (2)</button>
-          <button onclick="rateFlashcard(3)" class="px-4 py-2 rounded-lg bg-accent/20 text-accent text-sm hover:bg-accent/30">Good (3)</button>
-          <button onclick="rateFlashcard(4)" class="px-4 py-2 rounded-lg bg-success/20 text-success text-sm hover:bg-success/30">Easy (4)</button>
-        </div>
-        <div id="fc-empty" class="hidden text-center">
-          <p class="text-text-muted mb-4">No flashcards due right now!</p>
-          <button onclick="resetFlashcards()" class="text-accent text-sm hover:underline">Review all cards</button>
-        </div>
+    </div>
+    <div id="challenge-active" class="hidden mt-6 card">
+      <div class="flex justify-between items-center mb-4">
+        <div class="font-semibold" id="challenge-title"></div>
+        <div class="font-mono text-xl font-bold" id="challenge-timer" style="color:var(--accent);"></div>
       </div>
+      <div id="challenge-question" class="mb-3 font-semibold"></div>
+      <div id="challenge-options" class="space-y-2 mb-3"></div>
+      <div class="text-sm" style="color:var(--text-muted);">Score: <b id="challenge-score">0</b> · Streak: <b id="challenge-streak">0</b></div>
+    </div>
+  </section>
 
-      <div class="flex items-center justify-between mb-4">
-        <div class="text-sm text-text-muted">Space to flip · ← prev · 1–5 to rate</div>
-        <div class="text-sm"><span id="fc-current">0</span> / <span id="fc-count">0</span></div>
+  <!-- WRONG ANSWER LOG -->
+  <section id="page-wrong-log" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">❌ Wrong Answer Log</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Every question you've gotten wrong. Drill them until you can explain why the correct answer is right.</p>
+    <div id="wrong-log-list" class="space-y-3"></div>
+  </section>
+
+  <!-- FLAGGED QUESTIONS -->
+  <section id="page-flagged" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🚩 Flagged Questions</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Questions you flagged as confusing during study. Review and practice these specifically.</p>
+    <div id="flagged-list" class="space-y-3"></div>
+  </section>
+
+  <!-- NIGHT BEFORE -->
+  <section id="page-night-before" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🌙 Night Before Review</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Everything you need in one scroll. No questions, no timers — just the knowledge. Read this the night before the exam.</p>
+    <div class="card mb-4" style="border-color:var(--yellow);">
+      <div class="font-semibold mb-2">📋 Exam day reminders</div>
+      <ul class="text-sm space-y-1" style="color:var(--text-secondary);">
+        <li>• 90 minutes total</li>
+        <li>• Section 1: 50 MCQ (90 min) · Section 2: 5 FRQ (90 min)</li>
+        <li>• Show ALL work on FRQ</li>
+        <li>• Define variables</li>
+        <li>• Units required</li>
+        <li>• FBD for any forces problem</li>
+      </ul>
+    </div>
+    <div id="night-before-content" class="space-y-4"></div>
+  </section>
+
+  <!-- POMODORO -->
+  <section id="page-pomodoro" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🍅 Pomodoro</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">25 min focus → 5 min break → repeat. Most proven study rhythm.</p>
+    <div class="card text-center max-w-sm mx-auto">
+      <svg width="200" height="200" viewBox="0 0 200 200" class="mx-auto mb-4">
+        <circle cx="100" cy="100" r="90" fill="none" stroke="var(--border)" stroke-width="10"/>
+        <circle cx="100" cy="100" r="90" fill="none" stroke="var(--accent)" stroke-width="10" stroke-dasharray="565.49" stroke-dashoffset="0" id="pomodoro-ring" class="pomodoro-ring" style="transition: stroke-dashoffset 1s linear;"/>
+      </svg>
+      <div class="text-5xl font-bold font-mono mb-3" id="pomodoro-time">25:00</div>
+      <div class="text-sm mb-4 font-semibold" id="pomodoro-state">Focus</div>
+      <div class="flex gap-3 justify-center">
+        <button class="btn btn-primary" id="pomo-start" onclick="togglePomodoro()">Start</button>
+        <button class="btn btn-secondary" onclick="resetPomodoro()">Reset</button>
       </div>
+      <div class="text-sm mt-3" style="color:var(--text-muted);">Sessions: <b id="pomo-sessions">0</b>/4</div>
+    </div>
+  </section>
 
-      <div class="glass rounded-xl p-6 mb-6">
-        <h3 class="font-semibold mb-4">📝 Your cards (<span id="fc-user-count">0</span>)</h3>
-        <div class="mb-4">
-          <p class="text-sm text-text-muted mb-2">📥 Import from anywhere</p>
-          <p class="text-xs text-text-muted mb-3">Paste tab-separated or comma-separated text (Question, Answer per line), or drag a .csv/.txt file.</p>
-          <div id="drop-zone" class="border-2 border-dashed border-surface-3 rounded-lg p-6 text-center hover:border-accent transition-colors cursor-pointer" onclick="document.getElementById('file-input').click()">
-            <p class="text-sm text-text-muted">Drop file here or click to browse (.csv, .txt)</p>
-            <input type="file" id="file-input" class="hidden" accept=".csv,.txt" onchange="handleFileImport(event)">
-          </div>
-        </div>
-        <textarea id="fc-import-area" rows="4" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-accent mb-3" placeholder="Question, Answer&#10;What is Newton's 1st Law?, An object remains at rest or in uniform motion unless acted upon by a net force"></textarea>
-        <button onclick="importFlashcards()" class="bg-accent hover:bg-accent/90 text-white px-4 py-2 rounded-lg text-sm font-medium">Import Cards</button>
-      </div>
-    </section>
+</main>
 
-    <!-- FRQ PRACTICE -->
-    <section id="frq" class="hidden p-8 max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">FRQ Practice</h2>
-      <p class="text-text-muted mb-8">Free Response Questions — worth 50% of your AP score. Write your answer, then reveal the rubric point by point.</p>
-
-      <div class="glass rounded-xl p-6 mb-6">
-        <div class="flex items-center gap-2 mb-4">
-          <span class="text-xl">🤖</span>
-          <span class="font-medium">Generate a new FRQ with AI — pick a unit and get a fresh question instantly.</span>
-        </div>
-        <div class="flex gap-3 flex-wrap">
-          <select id="frq-unit" class="bg-surface-2 border border-surface-3 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-accent">
-            <option value="all">All Units</option>
-            <option value="1">Unit 1: Kinematics</option>
-            <option value="2">Unit 2: Dynamics</option>
-            <option value="3">Unit 3: Circular Motion & Gravitation</option>
-            <option value="4">Unit 4: Energy</option>
-            <option value="5">Unit 5: Momentum</option>
-            <option value="6">Unit 6: Simple Harmonic Motion</option>
-            <option value="7">Unit 7: Torque & Rotational Motion</option>
-            <option value="8">Unit 8: Electric Charge & Force</option>
-          </select>
-          <button onclick="generateFRQ()" class="bg-accent hover:bg-accent/90 text-white px-4 py-2 rounded-lg text-sm font-medium">Generate FRQ</button>
-        </div>
-      </div>
-
-      <div id="frq-display" class="hidden glass rounded-xl p-8">
-        <div class="flex items-center gap-2 mb-4">
-          <span class="px-2 py-1 rounded bg-accent/20 text-accent text-xs font-medium" id="frq-unit-tag">Unit 1</span>
-        </div>
-        <div id="frq-question" class="text-lg mb-6 leading-relaxed"></div>
-        <textarea id="frq-answer" rows="6" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-accent mb-4" placeholder="Write your answer here..."></textarea>
-        <button onclick="revealRubric()" class="bg-surface-3 hover:bg-surface-2 text-white px-4 py-2 rounded-lg text-sm font-medium mb-6">Reveal Rubric</button>
-        <div id="frq-rubric" class="hidden space-y-3">
-          <h4 class="font-semibold">Rubric Points</h4>
-          <div id="frq-rubric-content"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- QUIZ -->
-    <section id="quiz" class="hidden p-8 max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">Quiz</h2>
-      <div class="flex gap-4 text-sm text-text-muted mb-8">
-        <span>Score: <span class="text-text font-medium" id="quiz-score">0</span>/<span id="quiz-total">0</span></span>
-        <span>Q <span id="quiz-qnum">1</span></span>
-        <span>Accuracy: <span id="quiz-accuracy">—</span></span>
-        <span>Avg time: <span id="quiz-avgtime">—</span></span>
-      </div>
-
-      <div id="quiz-area" class="glass rounded-xl p-8">
-        <div id="quiz-setup">
-          <p class="text-text-muted mb-4">Configure your quiz:</p>
-          <div class="grid md:grid-cols-3 gap-4 mb-6">
-            <div>
-              <label class="block text-xs text-text-muted mb-1">Unit</label>
-              <select id="quiz-unit" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-3 py-2 text-sm">
-                <option value="all">All Units</option>
-                <option value="1">Unit 1</option>
-                <option value="2">Unit 2</option>
-                <option value="3">Unit 3</option>
-                <option value="4">Unit 4</option>
-                <option value="5">Unit 5</option>
-                <option value="6">Unit 6</option>
-                <option value="7">Unit 7</option>
-                <option value="8">Unit 8</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs text-text-muted mb-1">Questions</label>
-              <select id="quiz-count" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-3 py-2 text-sm">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="20">20</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs text-text-muted mb-1">Difficulty</label>
-              <select id="quiz-diff" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-3 py-2 text-sm">
-                <option value="mixed" selected>Mixed</option>
-                <option value="easy">Easy</option>
-                <option value="hard">Hard</option>
-              </select>
-            </div>
-          </div>
-          <button onclick="startQuiz()" class="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-lg font-medium">Start Quiz</button>
-        </div>
-        <div id="quiz-question-area" class="hidden">
-          <div id="quiz-question-text" class="text-lg font-medium mb-6"></div>
-          <div id="quiz-options" class="space-y-3"></div>
-          <div id="quiz-explanation" class="hidden mt-6 p-4 rounded-lg bg-surface-2 border border-surface-3"></div>
-          <div class="flex gap-3 mt-6">
-            <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden bg-accent hover:bg-accent/90 text-white px-4 py-2 rounded-lg text-sm font-medium">Next</button>
-            <button onclick="flagCurrentQuestion()" class="text-text-muted hover:text-warning text-sm flex items-center gap-1">
-              <i data-lucide="flag" class="w-4 h-4"></i> Flag
-            </button>
-          </div>
-        </div>
-        <div id="quiz-results" class="hidden text-center py-8">
-          <div class="text-5xl font-bold text-accent mb-2" id="quiz-final-score">0/0</div>
-          <p class="text-text-muted mb-6" id="quiz-final-msg">Great job!</p>
-          <button onclick="resetQuiz()" class="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-lg font-medium">Try Again</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- CHALLENGE MODE -->
-    <section id="challenge" class="hidden p-8 max-w-4xl mx-auto">
-      <div class="flex items-center gap-3 mb-2">
-        <span class="text-3xl">⚡</span>
-        <h2 class="text-3xl font-bold">Challenge Mode</h2>
-      </div>
-      <p class="text-text-muted mb-8">Race against the clock. Score points for speed AND accuracy. Build a streak for bonus XP. Compete against your own best.</p>
-
-      <div class="grid md:grid-cols-3 gap-6 mb-8">
-        <div class="glass rounded-xl p-6 card-hover text-center cursor-pointer border border-accent/20" onclick="startChallenge('speed')">
-          <div class="text-3xl mb-3">🏃</div>
-          <h3 class="font-bold mb-1">Speed Run</h3>
-          <p class="text-sm text-text-muted">10 questions, 60 seconds</p>
-        </div>
-        <div class="glass rounded-xl p-6 card-hover text-center cursor-pointer border border-warning/20" onclick="startChallenge('streak')">
-          <div class="text-3xl mb-3">🔥</div>
-          <h3 class="font-bold mb-1">Streak</h3>
-          <p class="text-sm text-text-muted">Keep going until you miss</p>
-        </div>
-        <div class="glass rounded-xl p-6 card-hover text-center cursor-pointer border border-danger/20" onclick="startChallenge('sudden')">
-          <div class="text-3xl mb-3">💀</div>
-          <h3 class="font-bold mb-1">Sudden Death</h3>
-          <p class="text-sm text-text-muted">One wrong = game over</p>
-        </div>
-      </div>
-
-      <div id="challenge-game" class="hidden glass rounded-xl p-8">
-        <div class="flex items-center justify-between mb-6">
-          <div class="text-2xl font-mono font-bold" id="challenge-timer">60</div>
-          <div class="text-lg">Score: <span class="text-accent font-bold" id="challenge-score">0</span></div>
-          <div class="text-lg">Streak: <span class="text-warning font-bold" id="challenge-streak">0</span></div>
-        </div>
-        <div id="challenge-question" class="text-lg font-medium mb-6"></div>
-        <div id="challenge-options" class="space-y-3"></div>
-      </div>
-
-      <div id="challenge-over" class="hidden glass rounded-xl p-8 text-center">
-        <h3 class="text-2xl font-bold mb-2">Game Over!</h3>
-        <div class="text-4xl font-bold text-accent mb-2" id="challenge-final-score">0</div>
-        <p class="text-text-muted mb-2">Best streak: <span id="challenge-best-streak">0</span></p>
-        <p class="text-text-muted mb-6">XP earned: <span class="text-warning font-bold" id="challenge-xp">+0</span></p>
-        <button onclick="resetChallenge()" class="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-lg font-medium">Play Again</button>
-      </div>
-    </section>
-
-    <!-- EXAM MODE -->
-    <section id="exam" class="hidden p-8 max-w-4xl mx-auto">
-      <div class="flex items-center gap-3 mb-2">
-        <span class="text-3xl">⏱️</span>
-        <h2 class="text-3xl font-bold">Exam Mode</h2>
-      </div>
-      <p class="text-text-muted mb-8">Simulate AP Physics 1 MCQ conditions. Timed. No hints unless you choose Normal mode.</p>
-
-      <div id="exam-setup" class="glass rounded-xl p-8">
-        <div class="grid md:grid-cols-4 gap-4 mb-6">
-          <div>
-            <label class="block text-xs text-text-muted mb-1">Questions</label>
-            <select id="exam-qcount" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-3 py-2 text-sm">
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50" selected>50</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs text-text-muted mb-1">Time (min)</label>
-            <select id="exam-time" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-3 py-2 text-sm">
-              <option value="15">15</option>
-              <option value="45">45</option>
-              <option value="90" selected>90</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs text-text-muted mb-1">Unit</label>
-            <select id="exam-unit" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-3 py-2 text-sm">
-              <option value="all">All Units</option>
-              <option value="1">Unit 1</option>
-              <option value="2">Unit 2</option>
-              <option value="3">Unit 3</option>
-              <option value="4">Unit 4</option>
-              <option value="5">Unit 5</option>
-              <option value="6">Unit 6</option>
-              <option value="7">Unit 7</option>
-              <option value="8">Unit 8</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs text-text-muted mb-1">Mode</label>
-            <select id="exam-mode" class="w-full bg-surface-2 border border-surface-3 rounded-lg px-3 py-2 text-sm">
-              <option value="strict">Strict (no hints)</option>
-              <option value="normal">Normal</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="startExam()" class="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-lg font-medium">Start Exam</button>
-      </div>
-
-      <div id="exam-game" class="hidden">
-        <div class="glass rounded-xl p-4 mb-4 flex items-center justify-between">
-          <div class="text-lg font-mono font-bold" id="exam-timer">90:00</div>
-          <div class="text-sm"><span id="exam-current">1</span> / <span id="exam-totalq">50</span></div>
-        </div>
-        <div class="glass rounded-xl p-8">
-          <div id="exam-question" class="text-lg font-medium mb-6"></div>
-          <div id="exam-options" class="space-y-3"></div>
-        </div>
-      </div>
-
-      <div id="exam-results" class="hidden glass rounded-xl p-8 text-center">
-        <h3 class="text-2xl font-bold mb-2">Exam Complete!</h3>
-        <div class="text-5xl font-bold text-accent mb-2" id="exam-final-score">0/50</div>
-        <p class="text-text-muted mb-2" id="exam-percent">0%</p>
-        <p class="text-text-muted mb-6" id="exam-grade">Grade: —</p>
-        <button onclick="resetExam()" class="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-lg font-medium">New Exam</button>
-      </div>
-    </section>
-
-    <!-- WRONG ANSWERS -->
-    <section id="wrong" class="hidden p-8 max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">Wrong Answer Log</h2>
-      <p class="text-text-muted mb-8">Every question you've gotten wrong. Drill them until you can explain why the correct answer is right.</p>
-      <div id="wrong-list" class="space-y-4"></div>
-      <div id="wrong-empty" class="glass rounded-xl p-8 text-center text-text-muted">
-        No wrong answers yet. Keep studying!
-      </div>
-    </section>
-
-    <!-- FLAGGED -->
-    <section id="flagged" class="hidden p-8 max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">🚩 Flagged Questions</h2>
-      <p class="text-text-muted mb-8">Questions you flagged as confusing during study. Review and practice these specifically.</p>
-      <div id="flagged-list" class="space-y-4"></div>
-      <div id="flagged-empty" class="glass rounded-xl p-8 text-center text-text-muted">
-        No flagged questions yet. Flag questions during quizzes to see them here.
-      </div>
-    </section>
-
-    <!-- NIGHT BEFORE -->
-    <section id="night" class="hidden p-8 max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-2">🌙 Night Before Review</h2>
-      <p class="text-text-muted mb-6">Everything you need in one scroll. No questions, no timers — just the knowledge. Read this the night before the exam.</p>
-
-      <div class="glass rounded-xl p-6 mb-6 border-l-4 border-accent">
-        <h3 class="font-semibold mb-2">📋 Exam day reminders</h3>
-        <ul class="text-sm text-text-muted space-y-1 list-disc list-inside">
-          <li>90 minutes total</li>
-          <li>Section 1: 50 MCQ (90 min)</li>
-          <li>Section 2: 5 FRQ (90 min)</li>
-          <li>Show ALL work on FRQ</li>
-          <li>Define variables</li>
-          <li>Units required</li>
-          <li>FBD for any forces problem</li>
-        </ul>
-      </div>
-
-      <div id="night-content" class="space-y-6"></div>
-    </section>
-
-    <!-- POMODORO -->
-    <section id="pomodoro" class="hidden p-8 max-w-md mx-auto">
-      <h2 class="text-3xl font-bold mb-2 text-center">🍅 Pomodoro</h2>
-      <p class="text-text-muted mb-8 text-center">25 min focus → 5 min break → repeat. Most proven study rhythm.</p>
-
-      <div class="glass rounded-xl p-8 text-center">
-        <div class="relative w-48 h-48 mx-auto mb-6">
-          <svg class="w-full h-full progress-ring" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#1a2236" stroke-width="6"/>
-            <circle id="pomo-ring" cx="50" cy="50" r="45" fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round"
-              stroke-dasharray="283" stroke-dashoffset="0" class="timer-ring"/>
-          </svg>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="text-4xl font-mono font-bold" id="pomo-time">25:00</div>
-          </div>
-        </div>
-        <div class="text-lg font-medium mb-6" id="pomo-label">Focus</div>
-        <div class="flex justify-center gap-3 mb-6">
-          <button onclick="togglePomodoro()" id="pomo-btn" class="bg-accent hover:bg-accent/90 text-white px-6 py-2 rounded-lg font-medium">Start</button>
-          <button onclick="resetPomodoro()" class="bg-surface-2 hover:bg-surface-3 text-white px-4 py-2 rounded-lg text-sm">Reset</button>
-        </div>
-        <div class="text-sm text-text-muted">Sessions: <span class="text-text font-medium" id="pomo-sessions">0</span>/4</div>
-      </div>
-    </section>
-
-  </main>
-</div>
+<!-- Toast container -->
+<div id="toast-container"></div>
 
 <script>
-// ===================== DATA =====================
-const units = [
-  { id: 1, name: "Kinematics", icon: "📐", color: "#3b82f6", desc: "Motion in one and two dimensions" },
-  { id: 2, name: "Dynamics", icon: "⚖️", color: "#22c55e", desc: "Forces and Newton's Laws" },
-  { id: 3, name: "Circular Motion & Gravitation", icon: "🌍", color: "#f59e0b", desc: "Orbits, centripetal force, universal gravitation" },
-  { id: 4, name: "Energy", icon: "⚡", color: "#a855f7", desc: "Work, kinetic & potential energy, conservation" },
-  { id: 5, name: "Momentum", icon: "💥", color: "#ef4444", desc: "Impulse, collisions, conservation of momentum" },
-  { id: 6, name: "Simple Harmonic Motion", icon: "〰️", color: "#06b6d4", desc: "Springs, pendulums, oscillations" },
-  { id: 7, name: "Torque & Rotational Motion", icon: "🔄", color: "#ec4899", desc: "Rotational kinematics, torque, angular momentum" },
-  { id: 8, name: "Electric Charge & Force", icon: "⚡", color: "#eab308", desc: "Coulomb's Law, electric fields" }
-];
-
-const formulas = {
-  1: [
-    { name: "Average velocity", eq: "v̄ = Δx / Δt" },
-    { name: "Average acceleration", eq: "ā = Δv / Δt" },
-    { name: "Kinematic (no t)", eq: "v² = v₀² + 2aΔx" },
-    { name: "Kinematic (no v)", eq: "x = x₀ + v₀t + ½at²" },
-    { name: "Kinematic (no a)", eq: "x = x₀ + ½(v₀ + v)t" }
-  ],
-  2: [
-    { name: "Newton's 2nd Law", eq: "F = ma" },
-    { name: "Friction (kinetic)", eq: "f = μN" },
-    { name: "Spring force", eq: "F = -kx" },
-    { name: "Weight", eq: "F = mg" }
-  ],
-  3: [
-    { name: "Centripetal acceleration", eq: "a = v²/r = ω²r" },
-    { name: "Centripetal force", eq: "F = mv²/r" },
-    { name: "Newton's gravitation", eq: "F = Gm₁m₂/r²" },
-    { name: "Gravitational field", eq: "g = GM/r²" }
-  ],
-  4: [
-    { name: "Kinetic energy", eq: "K = ½mv²" },
-    { name: "Gravitational PE", eq: "U = mgh" },
-    { name: "Elastic PE", eq: "U = ½kx²" },
-    { name: "Work", eq: "W = Fd cosθ" },
-    { name: "Power", eq: "P = W/t = Fv" },
-    { name: "Conservation", eq: "Kᵢ + Uᵢ = Kբ + Uբ" }
-  ],
-  5: [
-    { name: "Momentum", eq: "p = mv" },
-    { name: "Impulse", eq: "J = FΔt = Δp" },
-    { name: "Conservation", eq: "m₁v₁ + m₂v₂ = m₁v₁' + m₂v₂'" }
-  ],
-  6: [
-    { name: "Period (spring)", eq: "T = 2π√(m/k)" },
-    { name: "Period (pendulum)", eq: "T = 2π√(L/g)" },
-    { name: "Frequency", eq: "f = 1/T" }
-  ],
-  7: [
-    { name: "Torque", eq: "τ = rF sinθ = r⊥F" },
-    { name: "Rotational inertia", eq: "I = Σmr²" },
-    { name: "Newton's 2nd (rot)", eq: "τ = Iα" },
-    { name: "Angular momentum", eq: "L = Iω = mvr" },
-    { name: "Rotational KE", eq: "K = ½Iω²" }
-  ],
-  8: [
-    { name: "Coulomb's Law", eq: "F = kq₁q₂/r²" },
-    { name: "Electric field", eq: "E = F/q = kQ/r²" }
-  ]
+// ============ STATE ============
+const state = {
+  streak: 0,
+  xp: 0,
+  cardsToday: 0,
+  accuracyToday: null,
+  avgTime: null,
+  totalAnswered: 0,
+  totalCorrect: 0,
+  selectedMode: 'ap',
+  flashcards: [],
+  fcIndex: 0,
+  fcFlipped: false,
+  wrongLog: [],
+  flagged: [],
+  quizIndex: 0,
+  quizCorrect: 0,
+  quizAnswered: 0,
+  quizSelected: null,
+  challengeMode: null,
+  challengeTimer: null,
+  challengeRemaining: 0,
+  challengeScore: 0,
+  challengeStreak: 0,
+  challengeQIndex: 0,
+  pomodoroActive: false,
+  pomodoroInterval: null,
+  pomodoroSeconds: 25 * 60,
+  pomodoroIsBreak: false,
+  pomodoroSessions: 0,
+  currentPage: 'dashboard',
 };
 
-const unitNotes = {
-  1: `<h3 class="text-xl font-bold mb-4">Unit 1: Kinematics</h3>
-  <div class="space-y-4 text-sm leading-relaxed">
-    <p><strong>Position (x):</strong> Where an object is relative to an origin.</p>
-    <p><strong>Displacement (Δx):</strong> Change in position. Vector — has direction.</p>
-    <p><strong>Velocity (v):</strong> Rate of change of position. Slope of x-t graph.</p>
-    <p><strong>Acceleration (a):</strong> Rate of change of velocity. Slope of v-t graph.</p>
-    <div class="bg-surface-2 p-4 rounded-lg mt-4">
-      <p class="font-semibold mb-2">🎯 Cheat Sheet Tips:</p>
-      <ul class="list-disc list-inside space-y-1 text-text-muted">
-        <li>Area under a-t graph = Δv</li>
-        <li>Area under v-t graph = Δx</li>
-        <li>Slope of x-t = v; slope of v-t = a</li>
-        <li>For projectiles: horizontal v is constant, vertical a = -g</li>
-      </ul>
-    </div>
-  </div>`,
-  2: `<h3 class="text-xl font-bold mb-4">Unit 2: Dynamics</h3>
-  <div class="space-y-4 text-sm leading-relaxed">
-    <p><strong>Newton's 1st:</strong> Object stays at rest or constant velocity unless net force acts.</p>
-    <p><strong>Newton's 2nd:</strong> F_net = ma. Net force causes acceleration.</p>
-    <p><strong>Newton's 3rd:</strong> For every action there is an equal and opposite reaction.</p>
-    <div class="bg-surface-2 p-4 rounded-lg mt-4">
-      <p class="font-semibold mb-2">🎯 Cheat Sheet Tips:</p>
-      <ul class="list-disc list-inside space-y-1 text-text-muted">
-        <li>Always draw a Free Body Diagram first</li>
-        <li>Components: F_x = F cosθ, F_y = F sinθ</li>
-        <li>Tension is the same throughout a massless string</li>
-        <li>Apparent weight = normal force (not always mg!)</li>
-      </ul>
-    </div>
-  </div>`,
-  3: `<h3 class="text-xl font-bold mb-4">Unit 3: Circular Motion & Gravitation</h3>
-  <div class="space-y-4 text-sm leading-relaxed">
-    <p><strong>Centripetal acceleration:</strong> Always points toward center. a = v²/r</p>
-    <p><strong>Centripetal force:</strong> Not a new force — it's the net force toward center.</p>
-    <p><strong>Universal Gravitation:</strong> F = Gm₁m₂/r². Always attractive.</p>
-    <div class="bg-surface-2 p-4 rounded-lg mt-4">
-      <p class="font-semibold mb-2">🎯 Cheat Sheet Tips:</p>
-      <ul class="list-disc list-inside space-y-1 text-text-muted">
-        <li>For satellites: gravity provides centripetal force</li>
-        <li>g decreases with altitude: g = GM/r²</li>
-        <li>Orbital speed depends only on radius and central mass</li>
-      </ul>
-    </div>
-  </div>`,
-  4: `<h3 class="text-xl font-bold mb-4">Unit 4: Energy</h3>
-  <div class="space-y-4 text-sm leading-relaxed">
-    <p><strong>Work:</strong> W = Fd cosθ. Force must cause displacement.</p>
-    <p><strong>Kinetic Energy:</strong> K = ½mv². Energy of motion.</p>
-    <p><strong>Potential Energy:</strong> U = mgh (gravitational), U = ½kx² (spring)</p>
-    <p><strong>Conservation of Energy:</strong> E_initial = E_final + W_nc</p>
-    <div class="bg-surface-2 p-4 rounded-lg mt-4">
-      <p class="font-semibold mb-2">🎯 Cheat Sheet Tips:</p>
-      <ul class="list-disc list-inside space-y-1 text-text-muted">
-        <li>Choose reference point (h=0) wisely</li>
-        <li>Non-conservative work (friction) removes energy</li>
-        <li>Power = rate of energy transfer</li>
-      </ul>
-    </div>
-  </div>`,
-  5: `<h3 class="text-xl font-bold mb-4">Unit 5: Momentum</h3>
-  <div class="space-y-4 text-sm leading-relaxed">
-    <p><strong>Momentum:</strong> p = mv. Vector in direction of velocity.</p>
-    <p><strong>Impulse:</strong> J = FΔt = Δp. Area under F-t graph.</p>
-    <p><strong>Conservation:</strong> Total p before = total p after (if no external force).</p>
-    <div class="bg-surface-2 p-4 rounded-lg mt-4">
-      <p class="font-semibold mb-2">🎯 Cheat Sheet Tips:</p>
-      <ul class="list-disc list-inside space-y-1 text-text-muted">
-        <li>Elastic: KE conserved. Inelastic: KE not conserved.</li>
-        <li>Perfectly inelastic: objects stick together</li>
-        <li>Explosions: internal forces, momentum conserved</li>
-      </ul>
-    </div>
-  </div>`,
-  6: `<h3 class="text-xl font-bold mb-4">Unit 6: Simple Harmonic Motion</h3>
-  <div class="space-y-4 text-sm leading-relaxed">
-    <p><strong>Restoring force:</strong> F = -kx. Proportional to displacement, opposite direction.</p>
-    <p><strong>Period:</strong> T = 2π√(m/k) for spring; T = 2π√(L/g) for pendulum.</p>
-    <p><strong>Energy in SHM:</strong> Constant total E, oscillates between K and U.</p>
-    <div class="bg-surface-2 p-4 rounded-lg mt-4">
-      <p class="font-semibold mb-2">🎯 Cheat Sheet Tips:</p>
-      <ul class="list-disc list-inside space-y-1 text-text-muted">
-        <li>Max speed at equilibrium (x=0)</li>
-        <li>Max acceleration at amplitude (x=A)</li>
-        <li>Pendulum period independent of mass</li>
-      </ul>
-    </div>
-  </div>`,
-  7: `<h3 class="text-xl font-bold mb-4">Unit 7: Torque & Rotational Motion</h3>
-  <div class="space-y-4 text-sm leading-relaxed">
-    <p><strong>Torque:</strong> τ = rF sinθ = r⊥F. Causes angular acceleration.</p>
-    <p><strong>Rotational Inertia (I):</strong> Resistance to angular acceleration. Depends on mass distribution.</p>
-    <p><strong>Angular momentum:</strong> L = Iω. Conserved when no external torque.</p>
-    <div class="bg-surface-2 p-4 rounded-lg mt-4">
-      <p class="font-semibold mb-2">🎯 Cheat Sheet Tips:</p>
-      <ul class="list-disc list-inside space-y-1 text-text-muted">
-        <li>Equilibrium: ΣF = 0 AND Στ = 0</li>
-        <li>Pick pivot to eliminate unknown forces</li>
-        <li>Conservation of L: I₁ω₁ = I₂ω₂</li>
-      </ul>
-    </div>
-  </div>`,
-  8: `<h3 class="text-xl font-bold mb-4">Unit 8: Electric Charge & Electric Force</h3>
-  <div class="space-y-4 text-sm leading-relaxed">
-    <p><strong>Coulomb's Law:</strong> F = kq₁q₂/r². Like charges repel, opposite attract.</p>
-    <p><strong>Electric Field:</strong> E = F/q = kQ/r². Direction: away from +, toward −.</p>
-    <p><strong>Superposition:</strong> Net field is vector sum of all individual fields.</p>
-    <div class="bg-surface-2 p-4 rounded-lg mt-4">
-      <p class="font-semibold mb-2">🎯 Cheat Sheet Tips:</p>
-      <ul class="list-disc list-inside space-y-1 text-text-muted">
-        <li>k = 8.99 × 10⁹ N·m²/C²</li>
-        <li>Field lines: denser = stronger field</li>
-        <li>Force on a charge in a field: F = qE</li>
-      </ul>
-    </div>
-  </div>`
-};
-
-const allQuestions = [
-  { unit: 1, q: "A car accelerates uniformly from rest to 20 m/s in 5 s. What is its acceleration?", options: ["2 m/s²", "4 m/s²", "5 m/s²", "10 m/s²"], a: 1, expl: "a = Δv/Δt = (20-0)/5 = 4 m/s²" },
-  { unit: 1, q: "An object is thrown upward. At its maximum height, which is true?", options: ["Velocity and acceleration are zero", "Velocity is zero, acceleration is g downward", "Acceleration is zero, velocity is g upward", "Both are g upward"], a: 1, expl: "At max height, v = 0 but a = -g (gravity still acts)." },
-  { unit: 1, q: "A projectile is launched horizontally. What is its initial vertical velocity?", options: ["Equal to launch speed", "Zero", "g", "Depends on angle"], a: 1, expl: "Horizontal launch means initial vertical velocity is zero." },
-  { unit: 2, q: "Newton's First Law is also called the law of:", options: ["Acceleration", "Inertia", "Action-Reaction", "Gravity"], a: 1, expl: "Newton's First Law defines inertia — resistance to change in motion." },
-  { unit: 2, q: "A 10 kg box is pushed with 50 N on a frictionless surface. Its acceleration is:", options: ["2 m/s²", "5 m/s²", "10 m/s²", "500 m/s²"], a: 1, expl: "F = ma → a = F/m = 50/10 = 5 m/s²" },
-  { unit: 2, q: "Two blocks of mass 2 kg and 3 kg are pushed together with 10 N force on the 2 kg block. What force does the 2 kg block exert on the 3 kg block?", options: ["4 N", "6 N", "10 N", "2 N"], a: 1, expl: "Total a = 10/5 = 2 m/s². Force on 3 kg = 3 × 2 = 6 N." },
-  { unit: 3, q: "A car rounds a curve at constant speed. Is it accelerating?", options: ["No, speed is constant", "Yes, direction changes", "Only if speed changes", "Only on a banked curve"], a: 1, expl: "Acceleration occurs when velocity changes. Velocity includes direction, so changing direction means accelerating." },
-  { unit: 3, q: "If the distance between two masses doubles, the gravitational force becomes:", options: ["Half", "One-fourth", "Double", "Four times"], a: 1, expl: "F ∝ 1/r². Double r → F becomes 1/4." },
-  { unit: 4, q: "A 2 kg object moving at 3 m/s has kinetic energy of:", options: ["3 J", "6 J", "9 J", "18 J"], a: 2, expl: "K = ½mv² = ½(2)(9) = 9 J" },
-  { unit: 4, q: "A ball is dropped from height h. Just before hitting the ground, its speed is proportional to:", options: ["h", "√h", "h²", "1/h"], a: 1, expl: "From mgh = ½mv², v = √(2gh) ∝ √h" },
-  { unit: 5, q: "In an isolated system, total momentum is always:", options: ["Zero", "Increasing", "Conserved", "Decreasing"], a: 2, expl: "In an isolated system with no external forces, total momentum is conserved." },
-  { unit: 5, q: "A 0.5 kg ball moving at 4 m/s hits a wall and bounces back at 4 m/s. What is its impulse?", options: ["0", "2 kg·m/s", "4 kg·m/s", "8 kg·m/s"], a: 2, expl: "Δp = m(v_f - v_i) = 0.5(-4 - 4) = -4. Magnitude = 4 kg·m/s." },
-  { unit: 6, q: "A mass on a spring oscillates with period T. If mass quadruples, the new period is:", options: ["T/2", "T", "2T", "4T"], a: 2, expl: "T ∝ √m. 4× mass → √4 = 2× period." },
-  { unit: 6, q: "At the equilibrium position of a mass-spring system, which is maximum?", options: ["Potential energy", "Acceleration", "Kinetic energy", "Displacement"], a: 2, expl: "At equilibrium, x = 0 so U = 0 and a = 0, but v is max so K is max." },
-  { unit: 7, q: "Torque depends on all EXCEPT:", options: ["Force magnitude", "Distance from pivot", "Angle between r and F", "Mass of object"], a: 3, expl: "τ = rF sinθ. Mass is not in the torque equation." },
-  { unit: 7, q: "A spinning ice skater pulls arms in. What happens to angular velocity?", options: ["Decreases", "Stays same", "Increases", "Becomes zero"], a: 2, expl: "I decreases, L = Iω is conserved, so ω increases." },
-  { unit: 8, q: "Two positive charges are placed near each other. The force between them is:", options: ["Attractive", "Repulsive", "Zero", "Depends on mass"], a: 1, expl: "Like charges repel." },
-  { unit: 8, q: "The electric field at a point points in the direction a ___ test charge would move.", options: ["Negative", "Positive", "Neutral", "Any"], a: 1, expl: "By convention, E-field direction is the direction a positive test charge would move." },
-  { unit: 1, q: "Which graph shows constant positive acceleration?", options: ["Horizontal line on v-t", "Straight line with positive slope on v-t", "Parabola on v-t", "Horizontal line on x-t"], a: 1, expl: "Constant acceleration means constant slope on v-t graph — a straight line with positive slope." },
-  { unit: 2, q: "On an inclined plane at angle θ, the component of gravity parallel to the plane is:", options: ["mg", "mg sin θ", "mg cos θ", "mg tan θ"], a: 1, expl: "The parallel component is mg sin θ; perpendicular is mg cos θ." },
-  { unit: 3, q: "For a satellite in circular orbit, what provides the centripetal force?", options: ["Thrusters", "Gravity", "Normal force", "Friction"], a: 1, expl: "Gravity is the only force acting, and it provides the necessary centripetal force." },
-  { unit: 4, q: "A spring with k = 200 N/m is compressed 0.1 m. Stored energy is:", options: ["1 J", "2 J", "10 J", "20 J"], a: 0, expl: "U = ½kx² = ½(200)(0.01) = 1 J" },
-  { unit: 5, q: "In a perfectly inelastic collision:", options: ["Both momentum and KE conserved", "Momentum conserved, KE not", "KE conserved, momentum not", "Neither conserved"], a: 1, expl: "In all collisions with no external forces, momentum is conserved. KE is only conserved in elastic collisions." },
-  { unit: 6, q: "The frequency of a pendulum depends on:", options: ["Mass and length", "Length and g", "Mass and amplitude", "Only amplitude"], a: 1, expl: "f = 1/T and T = 2π√(L/g), so f depends on L and g but NOT mass." },
-  { unit: 7, q: "Two forces produce zero net torque about a pivot. This means:", options: ["Forces are equal", "Forces are opposite", "Sum of torques is zero", "No forces act"], a: 2, expl: "Rotational equilibrium requires Στ = 0." },
-  { unit: 8, q: "If charge q is doubled and distance r is doubled, the electric force:", options: ["Stays same", "Doubles", "Halves", "Quadruples"], a: 0, expl: "F ∝ q₁q₂/r². q doubles (2× effect) and r doubles (¼ effect). Net: 2 × ¼ = ½? Wait — if both charges double: (2)(2)=4, r²=4, so 4/4=1. Stays same." }
+const UNITS = [
+  { num: 1, name: 'Kinematics', color: '#7c5cfc', desc: 'Motion in 1D & 2D', topics: ['Displacement, velocity, acceleration', 'Kinematic equations', 'Free fall', 'Projectile motion', 'Position-time & velocity-time graphs'] },
+  { num: 2, name: 'Dynamics', color: '#f472b6', desc: 'Forces & Newton\'s Laws', topics: ['Newton\'s 3 laws', 'Free-body diagrams', 'Friction', 'Tension & normal force', 'Inclined planes', 'Atwood machines'] },
+  { num: 3, name: 'Circular Motion & Gravitation', color: '#22d3ee', desc: 'Orbits & rotation', topics: ['Uniform circular motion', 'Centripetal force', 'Newton\'s law of gravitation', 'Orbital velocity', 'Kepler\'s laws'] },
+  { num: 4, name: 'Energy', color: '#34d399', desc: 'Work, energy & power', topics: ['Kinetic & potential energy', 'Work-energy theorem', 'Conservation of energy', 'Power', 'Spring potential energy'] },
+  { num: 5, name: 'Momentum', color: '#fb923c', desc: 'Impulse & collisions', topics: ['Momentum & impulse', 'Conservation of momentum', 'Elastic & inelastic collisions', 'Center of mass'] },
+  { num: 6, name: 'Simple Harmonic Motion', color: '#fbbf24', desc: 'Oscillations', topics: ['Period & frequency', 'Spring-mass systems', 'Pendulums', 'Energy in SHM'] },
+  { num: 7, name: 'Torque & Rotational Motion', color: '#a78bfa', desc: 'Rotation dynamics', topics: ['Torque', 'Rotational inertia', 'Angular momentum', 'Rotational kinematics', 'Rolling'] },
+  { num: 8, name: 'Fluids (AP Only)', color: '#60a5fa', desc: 'Pressure & buoyancy', topics: ['Pressure & depth', 'Buoyant force', 'Continuity equation', 'Bernoulli\'s principle'] },
 ];
 
-const defaultFlashcards = [
-  { q: "What is Newton's First Law?", a: "An object remains at rest or in uniform motion unless acted upon by a net force.", level: 0, due: Date.now() },
-  { q: "What is the formula for kinetic energy?", a: "K = ½mv²", level: 0, due: Date.now() },
-  { q: "What is impulse?", a: "J = FΔt = Δp. It equals the change in momentum.", level: 0, due: Date.now() },
-  { q: "What is centripetal acceleration?", a: "a = v²/r = ω²r. It always points toward the center of circular motion.", level: 0, due: Date.now() },
-  { q: "State Coulomb's Law.", a: "F = kq₁q₂/r². The electric force between two point charges is proportional to the product of charges and inversely proportional to the square of distance.", level: 0, due: Date.now() },
-  { q: "What is torque?", a: "τ = rF sinθ = r⊥F. It causes angular acceleration.", level: 0, due: Date.now() },
-  { q: "What is the period of a mass-spring system?", a: "T = 2π√(m/k)", level: 0, due: Date.now() },
-  { q: "What is the work-energy theorem?", a: "W_net = ΔK. The net work done on an object equals its change in kinetic energy.", level: 0, due: Date.now() }
+const FORMULAS = [
+  { unit: 1, name: 'Kinematics', formulas: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'Δx = ½(v + v₀)t'] },
+  { unit: 2, name: 'Dynamics', formulas: ['F = ma', 'fₖ = μₖF_N', 'fₛ ≤ μₛF_N', 'F_g = mg'] },
+  { unit: 3, name: 'Circular Motion & Gravitation', formulas: ['a_c = v²/r', 'F_c = mv²/r', 'F_g = Gm₁m₂/r²', 'v_orbit = √(GM/r)'] },
+  { unit: 4, name: 'Energy', formulas: ['K = ½mv²', 'U_g = mgh', 'U_s = ½kx²', 'W = Fd cosθ', 'P = W/t = Fv'] },
+  { unit: 5, name: 'Momentum', formulas: ['p = mv', 'J = FΔt = Δp', 'Σp_initial = Σp_final'] },
+  { unit: 6, name: 'Simple Harmonic Motion', formulas: ['T_spring = 2π√(m/k)', 'T_pendulum = 2π√(L/g)', 'E_total = ½kA²'] },
+  { unit: 7, name: 'Torque & Rotational Motion', formulas: ['τ = rF sinθ', 'τ = Iα', 'L = Iω', 'I = Σmr²'] },
+  { unit: 8, name: 'Fluids', formulas: ['P = P₀ + ρgh', 'F_b = ρgV', 'A₁v₁ = A₂v₂', 'P₁ + ½ρv₁² + ρgh₁ = P₂ + ½ρv₂² + ρgh₂'] },
 ];
 
-const frqBank = [
-  { unit: 1, question: "A ball is thrown vertically upward from the ground with an initial speed of 15 m/s. (a) How high does it go? (b) How long is it in the air before returning to the ground? (c) Sketch the velocity-time graph for the entire motion.", rubric: ["Correctly uses v² = v₀² + 2aΔy for part (a)", "Correctly calculates maximum height (≈11.5 m)", "Correctly uses v = v₀ + at for time to max height", "Correctly doubles time for total flight (≈3.06 s)", "Velocity-time graph shows straight line with negative slope crossing t-axis"] },
-  { unit: 2, question: "A 5.0 kg block sits on a horizontal surface. A horizontal force of 20 N is applied. The coefficient of kinetic friction is 0.3. (a) Draw a free-body diagram. (b) Find the acceleration of the block.", rubric: ["Free-body diagram shows all four forces (gravity, normal, applied, friction)", "Correctly calculates normal force = mg = 49 N", "Correctly calculates friction force = μN = 14.7 N", "Correctly applies F_net = ma: 20 - 14.7 = 5a", "Correctly finds acceleration ≈ 1.06 m/s²"] },
-  { unit: 3, question: "A 1000 kg car rounds a flat curve of radius 50 m at 20 m/s. (a) What is the minimum coefficient of static friction needed? (b) If the road is banked at 15°, what speed allows the car to round without friction?", rubric: ["Recognizes friction provides centripetal force", "Sets μmg = mv²/r", "Correctly solves μ = v²/(gr) = 0.82", "For banked curve: tanθ = v²/(gr)", "Correctly solves v = √(gr tanθ) ≈ 11.5 m/s"] },
-  { unit: 4, question: "A 2.0 kg block slides down a frictionless incline from height 3.0 m. At the bottom, it compresses a spring (k = 400 N/m). (a) Find the speed just before hitting the spring. (b) Find the maximum compression of the spring.", rubric: ["Uses conservation of energy: mgh = ½mv²", "Correctly finds v = √(2gh) ≈ 7.67 m/s", "Sets ½mv² = ½kx² for spring compression", "Correctly solves x = √(mv²/k)", "Correctly finds x ≈ 0.54 m"] },
-  { unit: 5, question: "A 0.5 kg ball moving at 4 m/s collides head-on with a stationary 1.0 kg ball. The collision is elastic. (a) Find the velocities after collision. (b) Verify kinetic energy is conserved.", rubric: ["Applies conservation of momentum: m₁v₁ = m₁v₁' + m₂v₂'", "Applies conservation of KE for elastic collision", "Correctly solves v₁' = -1.33 m/s", "Correctly solves v₂' = 2.67 m/s", "Shows initial KE = final KE = 4 J"] },
-  { unit: 6, question: "A 0.5 kg mass oscillates on a spring with k = 200 N/m and amplitude 0.1 m. (a) Find the period. (b) Find the maximum speed. (c) Find the total mechanical energy.", rubric: ["Correctly uses T = 2π√(m/k) ≈ 0.31 s", "Correctly uses v_max = A√(k/m) ≈ 2.0 m/s", "Correctly calculates E = ½kA² = 1.0 J", "Shows understanding that E is constant", "Shows K_max occurs at x = 0"] },
-  { unit: 7, question: "A uniform rod of length 2.0 m and mass 3.0 kg is pivoted at one end. A 10 N force is applied perpendicular to the rod at its midpoint. (a) Find the torque. (b) Find the angular acceleration if the rod's moment of inertia about the pivot is 4.0 kg·m².", rubric: ["Correctly identifies r = 1.0 m (midpoint)", "Correctly calculates τ = rF = 1.0 N·m", "Uses τ = Iα", "Correctly finds α = τ/I = 2.5 rad/s²", "Correct direction of angular acceleration stated"] },
-  { unit: 8, question: "Two point charges, +3 μC and -5 μC, are placed 0.4 m apart. (a) Find the magnitude and direction of the force on the +3 μC charge. (b) Find the electric field at the midpoint between them.", rubric: ["Correctly uses F = kq₁q₂/r²", "Correctly calculates F ≈ 0.84 N", "States force is attractive (toward -5 μC)", "Calculates E from each charge at midpoint", "Correctly finds net E by vector addition"] }
+const FRQS = [
+  { title: 'Kinematics — Projectile Motion', question: 'A ball is launched from ground level with an initial speed of 20 m/s at an angle of 30° above the horizontal. (a) How long is the ball in the air? (b) What is its maximum height? (c) How far does it travel horizontally?', rubric: ['Find v₀y = 20 sin(30°) = 10 m/s', 'Time to peak: t = v₀y/g = 10/9.8 ≈ 1.02 s', 'Total time = 2t ≈ 2.04 s', 'Max height: h = v₀y²/(2g) = 100/19.6 ≈ 5.1 m', 'Range: x = v₀x · total_time = 17.32 × 2.04 ≈ 35.3 m'] },
+  { title: 'Dynamics — Inclined Plane', question: 'A 5.0 kg block slides down a frictionless incline that makes an angle of 25° with the horizontal. (a) Draw and label a free-body diagram. (b) Find the acceleration of the block. (c) If the incline is 3.0 m long, how fast is the block moving at the bottom?', rubric: ['FBD: mg down, N perpendicular to incline', 'Component along incline: mg sin(25°)', 'a = g sin(25°) = 9.8 × 0.423 ≈ 4.14 m/s²', 'v² = 2aΔx = 2(4.14)(3.0) = 24.84', 'v ≈ 4.98 m/s'] },
+  { title: 'Energy — Conservation', question: 'A 2.0 kg block compresses a spring (k = 500 N/m) by 0.15 m on a frictionless horizontal surface. When released, the block slides up a frictionless ramp. How high does it go?', rubric: ['Initial elastic energy: U_s = ½kx² = 0.5(500)(0.15)² = 5.625 J', 'Energy converts to gravitational: U_g = mgh', 'Set equal: 5.625 = (2.0)(9.8)h', 'h = 5.625/19.6 ≈ 0.287 m'] },
 ];
 
-// ===================== STATE =====================
-let state = {
-  xp: parseInt(localStorage.getItem('physicsos_xp')) || 0,
-  streak: parseInt(localStorage.getItem('physicsos_streak')) || 0,
-  cardsToday: parseInt(localStorage.getItem('physicsos_cardsToday')) || 0,
-  correctToday: parseInt(localStorage.getItem('physicsos_correctToday')) || 0,
-  totalToday: parseInt(localStorage.getItem('physicsos_totalToday')) || 0,
-  timeSum: parseInt(localStorage.getItem('physicsos_timeSum')) || 0,
-  wrongAnswers: JSON.parse(localStorage.getItem('physicsos_wrong')) || [],
-  flagged: JSON.parse(localStorage.getItem('physicsos_flagged')) || [],
-  flashcards: JSON.parse(localStorage.getItem('physicsos_flashcards')) || JSON.parse(JSON.stringify(defaultFlashcards)),
-  activity: JSON.parse(localStorage.getItem('physicsos_activity')) || [],
-  studyPlan: JSON.parse(localStorage.getItem('physicsos_plan')) || null,
-  pomodoroSessions: parseInt(localStorage.getItem('physicsos_pomo')) || 0
-};
+const QUIZ_QUESTIONS = [
+  { unit: 1, q: 'A car accelerates from rest at 4 m/s² for 5 seconds. How far does it travel?', options: ['20 m', '40 m', '50 m', '100 m'], correct: 2, explanation: 'Δx = v₀t + ½at² = 0 + ½(4)(25) = 50 m' },
+  { unit: 1, q: 'An object is thrown straight up. At its highest point, what is its acceleration?', options: ['0 m/s²', '9.8 m/s² upward', '9.8 m/s² downward', 'Depends on initial velocity'], correct: 2, explanation: 'Gravity always acts downward with magnitude g = 9.8 m/s², even at the peak.' },
+  { unit: 2, q: 'A 10 kg box sits on a horizontal surface with μₖ = 0.3. What horizontal force is needed to keep it moving at constant velocity?', options: ['0 N', '29.4 N', '98 N', '3 N'], correct: 1, explanation: 'At constant velocity, F_net = 0. So F = fₖ = μₖmg = 0.3(10)(9.8) = 29.4 N.' },
+  { unit: 2, q: 'Which of the following is NOT a force?', options: ['Weight', 'Tension', 'Mass', 'Friction'], correct: 2, explanation: 'Mass is a measure of inertia, not a force. Weight, tension, and friction are all forces.' },
+  { unit: 3, q: 'A satellite in circular orbit doubles its orbital radius. Its orbital speed becomes:', options: ['Twice as fast', 'Half as fast', '1/√2 times as fast', '√2 times as fast'], correct: 2, explanation: 'v = √(GM/r). Doubling r makes v → v/√2.' },
+  { unit: 4, q: 'A 1000 kg car travels at 20 m/s. What is its kinetic energy?', options: ['10,000 J', '200,000 J', '400,000 J', '20,000 J'], correct: 1, explanation: 'K = ½mv² = 0.5(1000)(400) = 200,000 J.' },
+  { unit: 4, q: 'Which requires more work: lifting a 2 kg mass 3 m, or lifting a 3 kg mass 2 m?', options: ['2 kg × 3 m', '3 kg × 2 m', 'Same', 'Depends on speed'], correct: 2, explanation: 'W = mgh. Both equal (2)(9.8)(3) = 58.8 J and (3)(9.8)(2) = 58.8 J.' },
+  { unit: 5, q: 'A 0.5 kg ball hits a wall at 10 m/s and rebounds at 6 m/s. What is the impulse delivered?', options: ['2 N·s', '5 N·s', '8 N·s', '3 N·s'], correct: 2, explanation: 'Impulse = Δp = m(v_f - v_i) = 0.5((-6) - 10) = 0.5(-16) = -8 N·s. Magnitude = 8 N·s.' },
+  { unit: 6, q: 'A mass-spring system has m = 0.5 kg and k = 200 N/m. What is the period?', options: ['0.1 s', '0.31 s', '0.63 s', '1.26 s'], correct: 1, explanation: 'T = 2π√(m/k) = 2π√(0.5/200) = 2π√(0.0025) = 2π(0.05) ≈ 0.314 s.' },
+  { unit: 7, q: 'A force of 10 N is applied perpendicularly to a wrench 0.3 m from the bolt. What is the torque?', options: ['3 N·m', '10 N·m', '0.3 N·m', '30 N·m'], correct: 0, explanation: 'τ = rF sinθ = (0.3)(10)(1) = 3 N·m when force is perpendicular.' },
+];
 
-let currentSection = 'dashboard';
-let quizState = null;
-let challengeState = null;
-let examState = null;
-let fcState = { idx: 0, due: [], flipped: false };
-let lessonMode = null;
-let pomoTimer = null;
-let pomoTimeLeft = 25 * 60;
-let pomoRunning = false;
-let pomoBreak = false;
+// Initialize with some flashcards
+const DEFAULT_FLASHCARDS = [
+  { q: 'What is the SI unit of force?', a: 'Newton (N) = kg·m/s²' },
+  { q: 'State Newton\'s First Law', a: 'An object at rest stays at rest, and an object in motion stays in motion with constant velocity, unless acted upon by a net external force.' },
+  { q: 'Define acceleration', a: 'The rate of change of velocity with respect to time. a = Δv/Δt' },
+  { q: 'What is the acceleration due to gravity near Earth\'s surface?', a: 'g ≈ 9.8 m/s² downward' },
+  { q: 'Formula for centripetal acceleration', a: 'a_c = v²/r, directed toward the center of the circle' },
+];
 
-// ===================== INIT =====================
-function init() {
-  lucide.createIcons();
-  updateDashboard();
-  renderNotesGrid();
-  renderFormulas();
-  renderConceptMap();
-  renderNightBefore();
-  renderWrongAnswers();
-  renderFlagged();
-  updateFlashcardStats();
-  loadStudyPlan();
+// ============ HELPERS ============
+function $(id) { return document.getElementById(id); }
+function showToast(msg) {
+  const container = $('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
 }
 
-function saveState() {
-  localStorage.setItem('physicsos_xp', state.xp);
-  localStorage.setItem('physicsos_streak', state.streak);
-  localStorage.setItem('physicsos_cardsToday', state.cardsToday);
-  localStorage.setItem('physicsos_correctToday', state.correctToday);
-  localStorage.setItem('physicsos_totalToday', state.totalToday);
-  localStorage.setItem('physicsos_timeSum', state.timeSum);
-  localStorage.setItem('physicsos_wrong', JSON.stringify(state.wrongAnswers));
-  localStorage.setItem('physicsos_flagged', JSON.stringify(state.flagged));
-  localStorage.setItem('physicsos_flashcards', JSON.stringify(state.flashcards));
-  localStorage.setItem('physicsos_activity', JSON.stringify(state.activity));
-  localStorage.setItem('physicsos_plan', JSON.stringify(state.studyPlan));
-  localStorage.setItem('physicsos_pomo', state.pomodoroSessions);
-}
-
-function addActivity(text) {
-  state.activity.unshift({ text, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
-  if (state.activity.length > 10) state.activity.pop();
-  saveState();
-  updateDashboard();
-}
-
-function addXP(amount) {
-  state.xp += amount;
-  saveState();
-  updateDashboard();
-}
-
-// ===================== NAVIGATION =====================
-function showSection(id) {
+// ============ NAVIGATION ============
+function navigateTo(page) {
+  state.currentPage = page;
+  document.querySelectorAll('#nav .nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
   document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelector(`.nav-item[data-section="${id}"]`)?.classList.add('active');
-  currentSection = id;
-  lucide.createIcons();
-  if (id === 'dashboard') updateDashboard();
-  if (id === 'flashcards') initFlashcards();
-  if (id === 'wrong') renderWrongAnswers();
-  if (id === 'flagged') renderFlagged();
+  const section = $(`page-${page}`);
+  if (section) { section.classList.remove('hidden'); section.classList.add('animate-in'); }
+  // Initialize pages
+  if (page === 'notes') renderNotes();
+  if (page === 'concept-map') renderConceptMap();
+  if (page === 'formulas') renderFormulas();
+  if (page === 'flashcards') initFlashcards();
+  if (page === 'frq') generateFRQ();
+  if (page === 'quiz') initQuiz();
+  if (page === 'wrong-log') renderWrongLog();
+  if (page === 'flagged') renderFlagged();
+  if (page === 'night-before') renderNightBefore();
+  if (page === 'lessons') renderLessons();
 }
 
-// ===================== DASHBOARD =====================
+document.querySelectorAll('#nav .nav-item').forEach(btn => {
+  btn.addEventListener('click', () => navigateTo(btn.dataset.page));
+});
+
+// ============ DASHBOARD UPDATE ============
 function updateDashboard() {
-  document.getElementById('dash-cards').textContent = state.cardsToday;
-  document.getElementById('dash-streak').textContent = state.streak;
-  document.getElementById('dash-xp').textContent = state.xp;
-  const acc = state.totalToday > 0 ? Math.round(state.correctToday / state.totalToday * 100) + '%' : '—';
-  document.getElementById('dash-accuracy').textContent = acc;
-  const avg = state.totalToday > 0 ? Math.round(state.timeSum / state.totalToday) + 's' : '—';
-  document.getElementById('dash-time').textContent = avg;
+  $('cards-today').textContent = state.cardsToday;
+  $('accuracy-today').textContent = state.accuracyToday !== null ? Math.round(state.accuracyToday) + '%' : '—';
+  $('streak-display').textContent = state.streak;
+  $('xp-display').textContent = state.xp;
+  $('avg-time').textContent = state.avgTime !== null ? state.avgTime.toFixed(1) + 's' : '—';
+  $('sidebar-streak').textContent = state.streak;
+  $('sidebar-xp').textContent = state.xp + ' XP';
+  const progressPct = Math.min(100, state.xp / 10);
+  $('sidebar-progress').style.width = progressPct + '%';
 
-  const actEl = document.getElementById('recent-activity');
-  if (state.activity.length > 0) {
-    actEl.innerHTML = state.activity.slice(0, 5).map(a =>
-      `<div class="flex items-center gap-2 text-text-muted">
-        <i data-lucide="activity" class="w-4 h-4"></i>
-        <span>${a.text}</span>
-        <span class="ml-auto text-xs">${a.time}</span>
-      </div>`
-    ).join('');
+  if (state.wrongLog.length > 0) {
+    const lastWrong = state.wrongLog[state.wrongLog.length - 1];
+    $('focus-text').textContent = `⚠ Review: Unit ${lastWrong.unit} — ${UNITS[lastWrong.unit-1].topics[0]}`;
   }
+  if (state.cardsToday > 0) {
+    $('activity-text').textContent = `📚 Reviewed ${state.cardsToday} cards today. Keep going!`;
+  }
+  if (state.flashcards.length > 0) {
+    $('reviews-due').textContent = `${state.flashcards.length} cards in deck. ${Math.min(state.flashcards.length, 5)} suggested for review.`;
+  }
+}
 
-  const planEl = document.getElementById('today-plan-content');
-  if (state.studyPlan) {
-    const today = new Date().toDateString();
-    const dayPlan = state.studyPlan.days.find(d => new Date(d.date).toDateString() === today);
-    if (dayPlan) {
-      planEl.innerHTML = `
-        <div class="space-y-2">
-          ${dayPlan.tasks.map(t => `<div class="flex items-center gap-2 text-sm"><div class="w-2 h-2 rounded-full bg-accent"></div><span>${t}</span></div>`).join('')}
-        </div>`;
-    } else {
-      planEl.innerHTML = `<p class="text-text-muted text-sm">No tasks scheduled for today. You're ahead!</p>`;
+// ============ STUDY PLAN ============
+$('study-time').addEventListener('input', function() { $('study-time-val').textContent = this.value + ' min'; });
+
+function generatePlan() {
+  const examDate = $('exam-date').value;
+  const minutesPerDay = parseInt($('study-time').value);
+  if (!examDate) { showToast('Please select an exam date'); return; }
+  const daysUntil = Math.max(1, Math.ceil((new Date(examDate) - new Date()) / (1000 * 60 * 60 * 24)));
+  const totalMinutes = daysUntil * minutesPerDay;
+  const sessionsPerUnit = Math.floor(daysUntil / 8);
+  let html = `<div class="text-sm mb-2" style="color:var(--green);">📅 ${daysUntil} days until exam · ${totalMinutes} total study minutes</div>`;
+  html += '<div class="space-y-2">';
+  UNITS.forEach((u, i) => {
+    const startDay = i * sessionsPerUnit + 1;
+    const endDay = (i + 1) * sessionsPerUnit;
+    html += `<div class="flex justify-between items-center p-3 rounded-xl text-sm" style="background:var(--bg-secondary);">
+      <span>🔹 Unit ${u.num}: ${u.name}</span>
+      <span style="color:var(--text-muted);">Days ${startDay}–${endDay}</span>
+    </div>`;
+  });
+  html += '</div>';
+  $('plan-output').innerHTML = html;
+  showToast('Study plan generated! 📅');
+}
+
+// ============ LESSONS ============
+function selectMode(mode) {
+  state.selectedMode = mode;
+  $('mode-ap').classList.toggle('selected', mode === 'ap');
+  $('mode-deep').classList.toggle('selected', mode === 'deep');
+}
+
+function renderLessons() {
+  $('unit-grid').innerHTML = UNITS.map(u => `
+    <div class="card cursor-pointer" onclick="showToast('Opening Unit ${u.num}: ${u.name} in ${state.selectedMode === 'ap' ? 'AP Exam' : 'Deep Learning'} mode')">
+      <div class="text-xs font-mono mb-1" style="color:${u.color};">UNIT ${u.num}</div>
+      <div class="font-semibold text-sm mb-1">${u.name}</div>
+      <div class="text-xs" style="color:var(--text-muted);">${u.desc}</div>
+      <div class="text-xs mt-2" style="color:var(--text-muted);">${state.selectedMode === 'ap' ? '5–15 min' : '15–30 min'}</div>
+    </div>
+  `).join('');
+}
+
+// ============ UNIT NOTES ============
+function renderNotes() {
+  $('notes-grid').innerHTML = UNITS.map(u => `
+    <div class="card">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style="background:${u.color}20;color:${u.color};">${u.num}</div>
+        <div class="font-semibold">${u.name}</div>
+      </div>
+      <p class="text-sm mb-2" style="color:var(--text-muted);">${u.desc}</p>
+      <ul class="text-sm space-y-1" style="color:var(--text-secondary);">
+        ${u.topics.map(t => `<li>· ${t}</li>`).join('')}
+      </ul>
+      <button class="btn btn-ghost btn-sm mt-2 text-xs" onclick="flagUnit(${u.num})">🚩 Flag confusing topics</button>
+    </div>
+  `).join('');
+}
+
+function flagUnit(unitNum) {
+  if (!state.flagged.includes(unitNum)) {
+    state.flagged.push(unitNum);
+    showToast(`Unit ${unitNum} flagged for review 🚩`);
+  } else {
+    state.flagged = state.flagged.filter(f => f !== unitNum);
+    showToast(`Unit ${unitNum} unflagged`);
+  }
+}
+
+// ============ CONCEPT MAP ============
+function renderConceptMap() {
+  const container = $('concept-map-container');
+  const svg = $('concept-svg');
+  const w = container.offsetWidth;
+  const h = 500;
+  const cx = w / 2;
+  const cy = 250;
+  const radius = 170;
+  const positions = UNITS.map((_, i) => {
+    const angle = (i / 8) * 2 * Math.PI - Math.PI / 2;
+    return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+  });
+
+  // Draw SVG connections
+  let svgContent = '';
+  for (let i = 0; i < 8; i++) {
+    for (let j = i + 1; j < 8; j++) {
+      const dx = positions[j].x - positions[i].x;
+      const dy = positions[j].y - positions[i].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 250) {
+        svgContent += `<line x1="${positions[i].x}" y1="${positions[i].y}" x2="${positions[j].x}" y2="${positions[j].y}" stroke="var(--border)" stroke-width="1" opacity="0.6"/>`;
+      }
     }
   }
-  lucide.createIcons();
-}
-
-// ===================== STUDY PLAN =====================
-function generateStudyPlan() {
-  const dateStr = document.getElementById('exam-date').value;
-  const mins = parseInt(document.getElementById('study-time').value);
-  if (!dateStr) { alert('Please select an exam date'); return; }
-
-  const examDate = new Date(dateStr);
-  const today = new Date();
-  const diffDays = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
-  if (diffDays <= 0) { alert('Exam date must be in the future'); return; }
-
-  const days = [];
-  const topics = [
-    "Review Kinematics graphs and equations",
-    "Practice projectile motion problems",
-    "Newton's Laws deep dive + FBD practice",
-    "Inclined planes and pulley systems",
-    "Circular motion + centripetal force",
-    "Universal gravitation problems",
-    "Work, energy, and power",
-    "Conservation of energy problems",
-    "Momentum and impulse",
-    "Collision problems (elastic & inelastic)",
-    "Simple harmonic motion basics",
-    "Springs and pendulums",
-    "Torque and rotational equilibrium",
-    "Angular momentum conservation",
-    "Electric charge and Coulomb's Law",
-    "Electric fields and superposition",
-    "Mixed practice: Units 1-4",
-    "Mixed practice: Units 5-8",
-    "Full-length timed MCQ practice",
-    "FRQ practice with rubric scoring",
-    "Weak spot review (check Wrong Answer Log)",
-    "Final formula sheet review",
-    "Night Before Review scroll-through"
-  ];
-
-  for (let i = 0; i < diffDays; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() + i);
-    const topicIdx = i % topics.length;
-    days.push({
-      date: d.toISOString(),
-      tasks: [
-        topics[topicIdx],
-        `${Math.max(5, Math.floor(mins / 10))} flashcards`,
-        mins >= 45 ? "10 quiz questions" : "5 quiz questions"
-      ]
-    });
+  // Highlight connections between adjacent units
+  for (let i = 0; i < 8; i++) {
+    const j = (i + 1) % 8;
+    svgContent += `<line x1="${positions[i].x}" y1="${positions[i].y}" x2="${positions[j].x}" y2="${positions[j].y}" stroke="var(--accent)" stroke-width="2" opacity="0.4" stroke-dasharray="6,4"/>`;
   }
+  svg.innerHTML = svgContent;
 
-  state.studyPlan = { examDate: dateStr, dailyMins: mins, days };
-  saveState();
-  loadStudyPlan();
-  addActivity('Generated a new study plan');
-}
-
-function loadStudyPlan() {
-  const res = document.getElementById('study-plan-result');
-  if (!state.studyPlan) { res.classList.add('hidden'); return; }
-  res.classList.remove('hidden');
-  const container = document.getElementById('plan-days');
-  container.innerHTML = state.studyPlan.days.slice(0, 14).map((d, i) => {
-    const date = new Date(d.date);
-    const isToday = date.toDateString() === new Date().toDateString();
-    return `
-      <div class="glass rounded-lg p-4 ${isToday ? 'border-l-4 border-accent' : ''}">
-        <div class="flex items-center justify-between mb-2">
-          <span class="font-medium text-sm">${date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-          ${isToday ? '<span class="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded">TODAY</span>' : ''}
-        </div>
-        <ul class="text-sm text-text-muted space-y-1">
-          ${d.tasks.map(t => `<li>• ${t}</li>`).join('')}
-        </ul>
-      </div>`;
-  }).join('');
-}
-
-// ===================== LESSONS =====================
-function setLessonMode(mode) {
-  lessonMode = mode;
-  document.getElementById('lesson-units').classList.remove('hidden');
-  document.getElementById('lesson-mode-title').textContent = mode === 'exam' ? 'AP Exam Mode — Select Unit' : 'Deep Learning Mode — Select Unit';
-  const grid = document.getElementById('lesson-unit-grid');
-  grid.innerHTML = units.map(u => `
-    <div class="glass rounded-xl p-5 card-hover cursor-pointer" onclick="openLesson(${u.id})">
-      <div class="text-2xl mb-2">${u.icon}</div>
-      <h4 class="font-semibold text-sm mb-1">Unit ${u.id}</h4>
-      <p class="text-xs text-text-muted">${u.name}</p>
-    </div>
-  `).join('');
-}
-
-function openLesson(unitId) {
-  document.getElementById('lesson-units').classList.add('hidden');
-  document.getElementById('lesson-content').classList.remove('hidden');
-  const u = units.find(x => x.id === unitId);
-  const isExam = lessonMode === 'exam';
-  document.getElementById('lesson-body').innerHTML = `
-    <div class="flex items-center gap-3 mb-6">
-      <span class="text-3xl">${u.icon}</span>
-      <div>
-        <h3 class="text-2xl font-bold">${u.name}</h3>
-        <p class="text-text-muted text-sm">${isExam ? 'AP Exam Mode' : 'Deep Learning Mode'}</p>
-      </div>
-    </div>
-    <div class="space-y-6">
-      ${isExam ? getExamLesson(unitId) : getDeepLesson(unitId)}
-    </div>
-    <div class="mt-8 flex gap-3">
-      <button onclick="addXP(10); addActivity('Completed ${u.name} lesson'); alert('+10 XP!')" class="bg-accent hover:bg-accent/90 text-white px-4 py-2 rounded-lg text-sm font-medium">Mark Complete (+10 XP)</button>
-    </div>
-  `;
-}
-
-function backToLessonUnits() {
-  document.getElementById('lesson-content').classList.add('hidden');
-  document.getElementById('lesson-units').classList.remove('hidden');
-}
-
-function getExamLesson(id) {
-  const quick = {
-    1: `<div class="bg-surface-2 p-4 rounded-lg"><p class="font-semibold mb-2">Must-Know Equations:</p><ul class="text-sm space-y-1 text-text-muted"><li>• v = v₀ + at</li><li>• x = x₀ + v₀t + ½at²</li><li>• v² = v₀² + 2aΔx</li></ul><p class="font-semibold mt-3 mb-1">Common Trap:</p><p class="text-sm text-text-muted">Don't forget that at max height of a projectile, v_y = 0 but a = -g still.</p></div>`,
-    2: `<div class="bg-surface-2 p-4 rounded-lg"><p class="font-semibold mb-2">Must-Know:</p><ul class="text-sm space-y-1 text-text-muted"><li>• F_net = ma</li><li>• f = μN</li><li>• Always draw FBD first</li></ul><p class="font-semibold mt-3 mb-1">Common Trap:</p><p class="text-sm text-text-muted">Normal force is NOT always mg! On inclines it's mg cosθ. In elevators it changes.</p></div>`,
-    3: `<div class="bg-surface-2 p-4 rounded-lg"><p class="font-semibold mb-2">Must-Know:</p><ul class="text-sm space-y-1 text-text-muted"><li>• a_c = v²/r</li><li>• F = Gm₁m₂/r²</li><li>• g = GM/r²</li></ul><p class="font-semibold mt-3 mb-1">Common Trap:</p><p class="text-sm text-text-muted">Centripetal force is not a new force — it's whatever net force points to center.</p></div>`,
-    4: `<div class="bg-surface-2 p-4 rounded-lg"><p class="font-semibold mb-2">Must-Know:</p><ul class="text-sm space-y-1 text-text-muted"><li>• K = ½mv²</li><li>• U_g = mgh</li><li>• W = Fd cosθ</li><li>• E_i = E_f (conservation)</li></ul><p class="font-semibold mt-3 mb-1">Common Trap:</p><p class="text-sm text-text-muted">Work done by friction is negative and removes mechanical energy.</p></div>`,
-    5: `<div class="bg-surface-2 p-4 rounded-lg"><p class="font-semibold mb-2">Must-Know:</p><ul class="text-sm space-y-1 text-text-muted"><li>• p = mv</li><li>• J = Δp = FΔt</li><li>• p_before = p_after</li></ul><p class="font-semibold mt-3 mb-1">Common Trap:</p><p class="text-sm text-text-muted">Momentum is a vector! Direction matters in collisions.</p></div>`,
-    6: `<div class="bg-surface-2 p-4 rounded-lg"><p class="font-semibold mb-2">Must-Know:</p><ul class="text-sm space-y-1 text-text-muted"><li>• T = 2π√(m/k)</li><li>• T = 2π√(L/g)</li><li>• E_total = ½kA²</li></ul><p class="font-semibold mt-3 mb-1">Common Trap:</p><p class="text-sm text-text-muted">Pendulum period does NOT depend on mass or amplitude (for small angles).</p></div>`,
-    7: `<div class="bg-surface-2 p-4 rounded-lg"><p class="font-semibold mb-2">Must-Know:</p><ul class="text-sm space-y-1 text-text-muted"><li>• τ = rF sinθ</li><li>• τ = Iα</li><li>• L = Iω</li></ul><p class="font-semibold mt-3 mb-1">Common Trap:</p><p class="text-sm text-text-muted">For equilibrium, BOTH ΣF = 0 and Στ = 0 must be true.</p></div>`,
-    8: `<div class="bg-surface-2 p-4 rounded-lg"><p class="font-semibold mb-2">Must-Know:</p><ul class="text-sm space-y-1 text-text-muted"><li>• F = kq₁q₂/r²</li><li>• E = kQ/r²</li><li>• E-field points away from +</li></ul><p class="font-semibold mt-3 mb-1">Common Trap:</p><p class="text-sm text-text-muted">Electric force can be attractive or repulsive; gravitational force is always attractive.</p></div>`
-  };
-  return quick[id] || '';
-}
-
-function getDeepLesson(id) {
-  return unitNotes[id] || '';
-}
-
-// ===================== UNIT NOTES =====================
-function renderNotesGrid() {
-  const grid = document.getElementById('notes-grid');
-  grid.innerHTML = units.map(u => `
-    <div class="glass rounded-xl p-5 card-hover cursor-pointer" onclick="openNotes(${u.id})">
-      <div class="text-2xl mb-2">${u.icon}</div>
-      <h4 class="font-semibold text-sm">Unit ${u.id}: ${u.name}</h4>
-      <p class="text-xs text-text-muted mt-1">${u.desc}</p>
-    </div>
-  `).join('');
-}
-
-function openNotes(id) {
-  document.getElementById('notes-grid').classList.add('hidden');
-  document.getElementById('notes-detail').classList.remove('hidden');
-  const u = units.find(x => x.id === id);
-  document.getElementById('notes-detail-body').innerHTML = `
-    <div class="flex items-center gap-3 mb-6">
-      <span class="text-3xl">${u.icon}</span>
-      <h3 class="text-2xl font-bold">Unit ${u.id}: ${u.name}</h3>
-    </div>
-    ${unitNotes[id]}
-    <div class="mt-6 flex gap-3">
-      <button onclick="flagNotes(${id})" class="text-warning text-sm flex items-center gap-1 hover:underline">
-        <i data-lucide="flag" class="w-4 h-4"></i> Flag as confusing
-      </button>
-    </div>
-  `;
-  lucide.createIcons();
-}
-
-function closeNotesDetail() {
-  document.getElementById('notes-grid').classList.remove('hidden');
-  document.getElementById('notes-detail').classList.add('hidden');
-}
-
-function flagNotes(id) {
-  const u = units.find(x => x.id === id);
-  if (!state.flagged.includes(`notes-${id}`)) {
-    state.flagged.push({ id: `notes-${id}`, text: `Unit ${id}: ${u.name} notes`, type: 'notes' });
-    saveState();
-    alert('Flagged for review!');
-  }
-}
-
-// ===================== CONCEPT MAP =====================
-function renderConceptMap() {
-  const svg = document.getElementById('concept-svg');
-  const cx = 400, cy = 250;
-  const r = 180;
-  const nodes = units.map((u, i) => {
-    const angle = (i * 2 * Math.PI / 8) - Math.PI / 2;
-    return { ...u, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), angle };
+  // Position node divs
+  // Remove old nodes
+  container.querySelectorAll('.map-node').forEach(n => n.remove());
+  positions.forEach((pos, i) => {
+    const node = document.createElement('div');
+    node.className = 'map-node';
+    node.textContent = 'U' + (i + 1);
+    node.style.left = (pos.x - 28) + 'px';
+    node.style.top = (pos.y - 28) + 'px';
+    node.title = UNITS[i].name;
+    node.onclick = () => { navigateTo('notes'); setTimeout(() => { const el = document.querySelector(`#notes-grid .card:nth-child(${i+1})`); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200); };
+    container.appendChild(node);
   });
-
-  let html = '';
-  // Connections
-  const connections = [[0,1],[1,2],[1,4],[3,4],[0,3],[4,5],[5,6],[6,7],[2,3],[1,3]];
-  connections.forEach(([a,b]) => {
-    html += `<line x1="${nodes[a].x}" y1="${nodes[a].y}" x2="${nodes[b].x}" y2="${nodes[b].y}" stroke="${nodes[a].color}40" stroke-width="1.5" class="connection-line"/>`;
-  });
-
-  // Center node
-  html += `<circle cx="${cx}" cy="${cy}" r="30" fill="#1a2236" stroke="#3b82f6" stroke-width="2" class="node-circle" onclick="showSection('dashboard')"/>
-           <text x="${cx}" y="${cy+5}" text-anchor="middle" fill="#3b82f6" font-size="10" font-weight="600">AP PHYS 1</text>`;
-
-  // Unit nodes
-  nodes.forEach(n => {
-    html += `<circle cx="${n.x}" cy="${n.y}" r="28" fill="#111827" stroke="${n.color}" stroke-width="2" class="node-circle" onclick="openNotes(${n.id})"/>
-             <text x="${n.x}" y="${n.y-5}" text-anchor="middle" fill="${n.color}" font-size="16">${n.icon}</text>
-             <text x="${n.x}" y="${n.y+12}" text-anchor="middle" fill="#94a3b8" font-size="8">U${n.id}</text>`;
-  });
-
-  svg.innerHTML = html;
 }
 
-// ===================== FORMULAS =====================
+window.addEventListener('resize', () => { if (state.currentPage === 'concept-map') renderConceptMap(); });
+
+// ============ FORMULAS ============
 function renderFormulas() {
-  const container = document.getElementById('formulas-container');
-  container.innerHTML = units.map(u => `
-    <div class="glass rounded-xl p-6">
-      <div class="flex items-center gap-2 mb-4">
-        <span class="text-xl">${u.icon}</span>
-        <h3 class="font-semibold text-lg">Unit ${u.id}: ${u.name}</h3>
-      </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-        ${(formulas[u.id] || []).map(f => `
-          <div class="bg-surface-2 rounded-lg p-4 formula-card card-hover">
-            <div class="text-xs text-text-muted mb-1">${f.name}</div>
-            <div class="text-accent-glow font-medium">${f.eq}</div>
-          </div>
-        `).join('')}
+  $('formula-list').innerHTML = FORMULAS.map(f => `
+    <div class="card">
+      <div class="font-semibold mb-2">Unit ${f.unit}: ${f.name}</div>
+      <div class="grid grid-cols-2 gap-2">
+        ${f.formulas.map(fm => `<div class="font-mono text-sm p-2 rounded-lg text-center" style="background:var(--bg-secondary);">${fm}</div>`).join('')}
       </div>
     </div>
   `).join('');
 }
 
-// ===================== FLASHCARDS =====================
-function updateFlashcardStats() {
-  const now = Date.now();
-  const due = state.flashcards.filter(c => c.due <= now);
-  const hard = state.flashcards.filter(c => c.level === 1).length;
-  const known = state.flashcards.filter(c => c.level >= 3).length;
-  document.getElementById('fc-due').textContent = due.length;
-  document.getElementById('fc-hard').textContent = hard;
-  document.getElementById('fc-known').textContent = known;
-  document.getElementById('fc-total').textContent = state.flashcards.length;
-  document.getElementById('fc-user-count').textContent = state.flashcards.length;
-}
-
+// ============ FLASHCARDS ============
 function initFlashcards() {
-  const now = Date.now();
-  fcState.due = state.flashcards.filter(c => c.due <= now);
-  fcState.idx = 0;
-  fcState.flipped = false;
-  updateFlashcardStats();
-  showFlashcard();
+  if (state.flashcards.length === 0) {
+    state.flashcards = [...DEFAULT_FLASHCARDS];
+    state.fcIndex = 0;
+  }
+  updateFlashcardUI();
 }
 
-function showFlashcard() {
-  const display = document.getElementById('flashcard-display');
-  const rating = document.getElementById('fc-rating');
-  const empty = document.getElementById('fc-empty');
-  const front = document.getElementById('fc-front');
-  const back = document.getElementById('fc-back');
-
-  document.getElementById('fc-count').textContent = fcState.due.length;
-  document.getElementById('fc-current').textContent = fcState.due.length > 0 ? fcState.idx + 1 : 0;
-
-  if (fcState.due.length === 0) {
-    display.classList.add('hidden');
-    rating.classList.add('hidden');
-    empty.classList.remove('hidden');
+function updateFlashcardUI() {
+  $('fc-due').textContent = state.flashcards.length + ' total';
+  $('fc-hard').textContent = '0 hard';
+  $('fc-known').textContent = '0 known';
+  if (state.flashcards.length === 0) {
+    $('fc-front').textContent = 'No cards yet';
+    $('fc-back').textContent = 'Import some!';
     return;
   }
-
-  display.classList.remove('hidden');
-  rating.classList.add('hidden');
-  empty.classList.add('hidden');
-  front.classList.remove('hidden');
-  back.classList.add('hidden');
-
-  const card = fcState.due[fcState.idx];
-  front.textContent = card.q;
-  back.textContent = card.a;
-  fcState.flipped = false;
+  const card = state.flashcards[state.fcIndex % state.flashcards.length];
+  $('fc-front').textContent = card.q;
+  $('fc-back').textContent = card.a;
+  state.fcFlipped = false;
+  $('flashcard-inner').classList.remove('flipped');
 }
 
 function flipFlashcard() {
-  if (fcState.due.length === 0) return;
-  fcState.flipped = !fcState.flipped;
-  document.getElementById('fc-front').classList.toggle('hidden');
-  document.getElementById('fc-back').classList.toggle('hidden');
-  document.getElementById('fc-rating').classList.toggle('hidden');
+  state.fcFlipped = !state.fcFlipped;
+  $('flashcard-inner').classList.toggle('flipped', state.fcFlipped);
 }
 
-function rateFlashcard(rating) {
-  if (fcState.due.length === 0) return;
-  const card = fcState.due[fcState.idx];
-  const realIdx = state.flashcards.findIndex(c => c.q === card.q && c.a === card.a);
-  if (realIdx >= 0) {
-    state.flashcards[realIdx].level = rating;
-    const intervals = [60000, 300000, 86400000, 604800000]; // 1m, 5m, 1d, 7d
-    state.flashcards[realIdx].due = Date.now() + (intervals[rating - 1] || 60000);
-  }
+function rateCard(rating) {
+  if (state.flashcards.length === 0) return;
+  const xpGain = rating === 5 ? 20 : rating === 3 ? 10 : 5;
+  state.xp += xpGain;
   state.cardsToday++;
-  addXP(rating);
-  saveState();
-  fcState.idx++;
-  if (fcState.idx >= fcState.due.length) {
-    initFlashcards();
-  } else {
-    showFlashcard();
-  }
-  updateFlashcardStats();
-}
-
-function resetFlashcards() {
-  fcState.due = [...state.flashcards];
-  fcState.idx = 0;
-  showFlashcard();
+  state.totalAnswered++;
+  state.totalCorrect += rating >= 3 ? 1 : 0;
+  state.accuracyToday = state.totalAnswered > 0 ? (state.totalCorrect / state.totalAnswered) * 100 : null;
+  if (state.cardsToday >= 10 && state.streak === 0) state.streak = 1;
+  state.fcIndex = (state.fcIndex + 1) % state.flashcards.length;
+  updateFlashcardUI();
+  updateDashboard();
+  showToast(`Rated ${rating}/5 · +${xpGain} XP ⚡`);
 }
 
 function importFlashcards() {
-  const text = document.getElementById('fc-import-area').value.trim();
-  if (!text) return;
-  const lines = text.split('\n');
-  let added = 0;
-  lines.forEach(line => {
-    const parts = line.includes('\t') ? line.split('\t') : line.split(',');
-    if (parts.length >= 2) {
-      state.flashcards.push({
-        q: parts[0].trim(),
-        a: parts[1].trim(),
-        level: 0,
-        due: Date.now()
-      });
-      added++;
-    }
-  });
-  document.getElementById('fc-import-area').value = '';
-  saveState();
-  updateFlashcardStats();
-  initFlashcards();
-  alert(`Imported ${added} flashcards!`);
+  const text = $('fc-import').value.trim();
+  if (!text) { showToast('Paste some data first'); return; }
+  const lines = text.split('\n').filter(l => l.trim());
+  const newCards = lines.map(line => {
+    const parts = line.split(/\t|,/);
+    return { q: (parts[0] || '').trim(), a: (parts[1] || '').trim() };
+  }).filter(c => c.q && c.a);
+  if (newCards.length === 0) { showToast('No valid Q&A pairs found'); return; }
+  state.flashcards = [...state.flashcards, ...newCards];
+  state.fcIndex = 0;
+  updateFlashcardUI();
+  $('fc-import').value = '';
+  showToast(`Imported ${newCards.length} flashcards! 📥`);
 }
 
-function handleFileImport(e) {
-  const file = e.target.files[0];
+$('drop-zone').addEventListener('click', () => $('fc-file').click());
+function handleFileImport(event) {
+  const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(ev) {
-    document.getElementById('fc-import-area').value = ev.target.result;
+  reader.onload = function(e) {
+    $('fc-import').value = e.target.result;
     importFlashcards();
   };
   reader.readAsText(file);
 }
 
-// Drag and drop
-const dropZone = document.getElementById('drop-zone');
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('border-accent'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-accent'));
-dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.classList.remove('border-accent');
-  const file = e.dataTransfer.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = ev => { document.getElementById('fc-import-area').value = ev.target.result; importFlashcards(); };
-    reader.readAsText(file);
-  }
-});
-
-// Keyboard shortcuts for flashcards
-document.addEventListener('keydown', e => {
-  if (currentSection !== 'flashcards') return;
+document.addEventListener('keydown', (e) => {
+  if (state.currentPage !== 'flashcards') return;
   if (e.code === 'Space') { e.preventDefault(); flipFlashcard(); }
-  if (fcState.flipped) {
-    if (e.key === '1') rateFlashcard(1);
-    if (e.key === '2') rateFlashcard(2);
-    if (e.key === '3') rateFlashcard(3);
-    if (e.key === '4') rateFlashcard(4);
-  }
+  if (e.code === 'ArrowLeft') { state.fcIndex = (state.fcIndex - 1 + state.flashcards.length) % state.flashcards.length; updateFlashcardUI(); }
+  if (e.code === 'ArrowRight') { state.fcIndex = (state.fcIndex + 1) % state.flashcards.length; updateFlashcardUI(); }
+  if (e.key >= '1' && e.key <= '5') { const r = parseInt(e.key); if (state.fcFlipped) rateCard(r); }
 });
 
-// ===================== FRQ =====================
+// ============ FRQ ============
+let currentFRQ = 0;
 function generateFRQ() {
-  const unitSel = document.getElementById('frq-unit').value;
-  let pool = frqBank;
-  if (unitSel !== 'all') pool = frqBank.filter(f => f.unit == unitSel);
-  const frq = pool[Math.floor(Math.random() * pool.length)];
-
-  document.getElementById('frq-display').classList.remove('hidden');
-  document.getElementById('frq-unit-tag').textContent = `Unit ${frq.unit}`;
-  document.getElementById('frq-question').textContent = frq.question;
-  document.getElementById('frq-answer').value = '';
-  document.getElementById('frq-rubric').classList.add('hidden');
-  document.getElementById('frq-rubric-content').innerHTML = '';
-
-  window.currentFRQ = frq;
+  currentFRQ = Math.floor(Math.random() * FRQS.length);
+  $('frq-title').textContent = FRQS[currentFRQ].title;
+  $('frq-question').textContent = FRQS[currentFRQ].question;
+  $('frq-answer').value = '';
+  $('frq-rubric').classList.add('hidden');
 }
 
 function revealRubric() {
-  if (!window.currentFRQ) return;
-  document.getElementById('frq-rubric').classList.remove('hidden');
-  document.getElementById('frq-rubric-content').innerHTML = window.currentFRQ.rubric.map((r, i) => `
-    <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-2">
-      <div class="w-6 h-6 rounded-full bg-accent/20 text-accent flex items-center justify-center text-xs font-bold shrink-0">${i+1}</div>
-      <span class="text-sm">${r}</span>
+  const rubric = FRQS[currentFRQ].rubric;
+  $('frq-rubric-list').innerHTML = rubric.map((r, i) => `<li class="flex gap-2"><span style="color:var(--accent);">${i+1}.</span> ${r}</li>`).join('');
+  $('frq-rubric').classList.remove('hidden');
+  state.xp += 15;
+  updateDashboard();
+  showToast('Rubric revealed! Self-grade your answer. +15 XP ⚡');
+}
+
+// ============ QUIZ ============
+let quizQuestions = [];
+function initQuiz() {
+  quizQuestions = [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 5);
+  state.quizIndex = 0;
+  state.quizCorrect = 0;
+  state.quizAnswered = 0;
+  state.quizSelected = null;
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  if (state.quizIndex >= quizQuestions.length) {
+    $('quiz-card').innerHTML = `<div class="text-center py-8"><div class="text-4xl mb-2">🎉</div><div class="font-semibold text-lg">Quiz Complete!</div><p class="text-sm" style="color:var(--text-secondary);">Score: ${state.quizCorrect}/${quizQuestions.length}</p></div>`;
+    $('qz-options').innerHTML = '';
+    $('qz-submit').classList.add('hidden');
+    $('qz-feedback').classList.add('hidden');
+    const acc = quizQuestions.length > 0 ? Math.round((state.quizCorrect / quizQuestions.length) * 100) : 0;
+    state.xp += state.quizCorrect * 10;
+    state.accuracyToday = state.totalAnswered > 0 ? (state.totalCorrect / state.totalAnswered) * 100 : acc;
+    if (state.streak === 0) state.streak = 1;
+    updateDashboard();
+    return;
+  }
+  const q = quizQuestions[state.quizIndex];
+  $('qz-unit-label').textContent = `Unit ${q.unit} · ${UNITS[q.unit-1].name}`;
+  $('qz-question').textContent = q.q;
+  $('qz-options').innerHTML = q.options.map((o, i) => `
+    <div class="p-3 rounded-xl cursor-pointer border transition-all text-sm option-item" data-idx="${i}"
+      style="border-color:var(--border);background:var(--bg-secondary);"
+      onclick="selectQuizOption(${i}, this)">
+      ${o}
     </div>
   `).join('');
-  addXP(5);
-  addActivity('Completed an FRQ practice');
+  $('qz-submit').classList.remove('hidden');
+  $('qz-submit').textContent = 'Submit';
+  $('qz-feedback').classList.add('hidden');
+  state.quizSelected = null;
+  updateQuizStats();
 }
 
-// ===================== QUIZ =====================
-function startQuiz() {
-  const unit = document.getElementById('quiz-unit').value;
-  const count = parseInt(document.getElementById('quiz-count').value);
-  let pool = unit === 'all' ? [...allQuestions] : allQuestions.filter(q => q.unit == unit);
-  pool = shuffle(pool).slice(0, count);
-
-  quizState = {
-    questions: pool,
-    current: 0,
-    score: 0,
-    startTime: Date.now(),
-    answered: false
-  };
-
-  document.getElementById('quiz-setup').classList.add('hidden');
-  document.getElementById('quiz-question-area').classList.remove('hidden');
-  document.getElementById('quiz-results').classList.add('hidden');
-  showQuizQuestion();
+function selectQuizOption(idx, el) {
+  document.querySelectorAll('.option-item').forEach(o => { o.style.borderColor = 'var(--border)'; o.style.background = 'var(--bg-secondary)'; });
+  el.style.borderColor = 'var(--accent)';
+  el.style.background = 'rgba(124,92,252,0.1)';
+  state.quizSelected = idx;
 }
 
-function showQuizQuestion() {
-  const q = quizState.questions[quizState.current];
-  document.getElementById('quiz-qnum').textContent = quizState.current + 1;
-  document.getElementById('quiz-score').textContent = quizState.score;
-  document.getElementById('quiz-total').textContent = quizState.questions.length;
-  document.getElementById('quiz-question-text').textContent = q.q;
-
-  const opts = document.getElementById('quiz-options');
-  opts.innerHTML = q.options.map((opt, i) => `
-    <button onclick="answerQuiz(${i})" class="w-full text-left p-4 rounded-lg bg-surface-2 hover:bg-surface-3 border border-surface-3 transition-colors quiz-opt" data-idx="${i}">
-      <span class="font-mono text-accent mr-2">${String.fromCharCode(65+i)}.</span> ${opt}
-    </button>
-  `).join('');
-
-  document.getElementById('quiz-explanation').classList.add('hidden');
-  document.getElementById('quiz-next-btn').classList.add('hidden');
-  quizState.answered = false;
-}
-
-function answerQuiz(idx) {
-  if (quizState.answered) return;
-  quizState.answered = true;
-  const q = quizState.questions[quizState.current];
-  const opts = document.querySelectorAll('.quiz-opt');
-
-  opts.forEach((btn, i) => {
-    btn.disabled = true;
-    if (i === q.a) btn.classList.add('bg-success/20', 'border-success');
-    else if (i === idx) btn.classList.add('bg-danger/20', 'border-danger');
+function submitQuiz() {
+  if (state.quizSelected === null) { showToast('Select an answer first'); return; }
+  const q = quizQuestions[state.quizIndex];
+  const correct = state.quizSelected === q.correct;
+  state.quizAnswered++;
+  state.totalAnswered++;
+  if (correct) { state.quizCorrect++; state.totalCorrect++; }
+  if (!correct) { state.wrongLog.push({ unit: q.unit, question: q.q, options: q.options, correct: q.correct, explanation: q.explanation, yourAnswer: state.quizSelected }); }
+  $('qz-feedback').classList.remove('hidden');
+  $('qz-feedback').innerHTML = correct
+    ? `<span style="color:var(--green);">✅ Correct! ${q.explanation}</span>`
+    : `<span style="color:var(--red);">❌ Wrong. ${q.explanation}</span>`;
+  $('qz-submit').textContent = 'Next →';
+  $('qz-submit').onclick = nextQuizQuestion;
+  // Highlight correct answer
+  document.querySelectorAll('.option-item').forEach((o, i) => {
+    o.style.pointerEvents = 'none';
+    if (i === q.correct) { o.style.borderColor = 'var(--green)'; o.style.background = 'rgba(52,211,153,0.1)'; }
+    if (i === state.quizSelected && !correct) { o.style.borderColor = 'var(--red)'; o.style.background = 'rgba(248,113,113,0.1)'; }
   });
-
-  if (idx === q.a) {
-    quizState.score++;
-    state.correctToday++;
-    addXP(5);
-  } else {
-    state.wrongAnswers.push({ q: q.q, correct: q.options[q.a], yourAnswer: q.options[idx], expl: q.expl, unit: q.unit });
-    saveState();
-  }
-  state.totalToday++;
-  const timeTaken = Math.round((Date.now() - quizState.startTime) / 1000);
-  state.timeSum += timeTaken;
-  saveState();
-
-  document.getElementById('quiz-explanation').innerHTML = `<strong>Explanation:</strong> ${q.expl}`;
-  document.getElementById('quiz-explanation').classList.remove('hidden');
-  document.getElementById('quiz-next-btn').classList.remove('hidden');
-  document.getElementById('quiz-accuracy').textContent = Math.round(state.correctToday / state.totalToday * 100) + '%';
-  document.getElementById('quiz-avgtime').textContent = Math.round(state.timeSum / state.totalToday) + 's';
+  updateQuizStats();
+  updateDashboard();
 }
 
 function nextQuizQuestion() {
-  quizState.current++;
-  if (quizState.current >= quizState.questions.length) {
-    document.getElementById('quiz-question-area').classList.add('hidden');
-    document.getElementById('quiz-results').classList.remove('hidden');
-    document.getElementById('quiz-final-score').textContent = `${quizState.score}/${quizState.questions.length}`;
-    const pct = Math.round(quizState.score / quizState.questions.length * 100);
-    document.getElementById('quiz-final-msg').textContent = pct >= 80 ? 'Excellent work!' : pct >= 60 ? 'Good job, keep practicing!' : 'Review your weak spots!';
-    addActivity(`Scored ${quizState.score}/${quizState.questions.length} on quiz`);
-  } else {
-    showQuizQuestion();
-  }
+  state.quizIndex++;
+  state.quizSelected = null;
+  $('qz-submit').onclick = submitQuiz;
+  renderQuizQuestion();
 }
 
-function resetQuiz() {
-  document.getElementById('quiz-setup').classList.remove('hidden');
-  document.getElementById('quiz-results').classList.add('hidden');
-  quizState = null;
+function updateQuizStats() {
+  $('qz-score').textContent = `${state.quizCorrect}/${state.quizAnswered}`;
+  $('qz-qnum').textContent = Math.min(state.quizIndex + 1, quizQuestions.length);
+  $('qz-acc').textContent = state.quizAnswered > 0 ? Math.round((state.quizCorrect / state.quizAnswered) * 100) + '%' : '—';
+  $('qz-time').textContent = '—';
 }
 
-function flagCurrentQuestion() {
-  if (!quizState || quizState.current >= quizState.questions.length) return;
-  const q = quizState.questions[quizState.current];
-  if (!state.flagged.find(f => f.text === q.q)) {
-    state.flagged.push({ id: `quiz-${Date.now()}`, text: q.q, type: 'quiz' });
-    saveState();
-    alert('Question flagged!');
-  }
-}
-
-// ===================== CHALLENGE =====================
+// ============ CHALLENGE ============
 function startChallenge(mode) {
-  challengeState = {
-    mode,
-    score: 0,
-    streak: 0,
-    timer: mode === 'speed' ? 60 : null,
-    questions: shuffle([...allQuestions]),
-    current: 0,
-    bestStreak: 0,
-    startTime: Date.now()
-  };
-
-  document.getElementById('challenge-game').classList.remove('hidden');
-  document.getElementById('challenge-over').classList.add('hidden');
-  showChallengeQuestion();
-
-  if (mode === 'speed') {
-    challengeState.interval = setInterval(() => {
-      challengeState.timer--;
-      document.getElementById('challenge-timer').textContent = challengeState.timer;
-      if (challengeState.timer <= 0) endChallenge();
-    }, 1000);
-  }
-}
-
-function showChallengeQuestion() {
-  const q = challengeState.questions[challengeState.current % challengeState.questions.length];
-  document.getElementById('challenge-score').textContent = challengeState.score;
-  document.getElementById('challenge-streak').textContent = challengeState.streak;
-  document.getElementById('challenge-question').textContent = q.q;
-
-  const opts = document.getElementById('challenge-options');
-  opts.innerHTML = q.options.map((opt, i) => `
-    <button onclick="answerChallenge(${i})" class="w-full text-left p-4 rounded-lg bg-surface-2 hover:bg-surface-3 border border-surface-3 transition-colors chall-opt" data-idx="${i}">
-      <span class="font-mono text-accent mr-2">${String.fromCharCode(65+i)}.</span> ${opt}
-    </button>
-  `).join('');
-}
-
-function answerChallenge(idx) {
-  const q = challengeState.questions[challengeState.current % challengeState.questions.length];
-  const correct = idx === q.a;
-
-  if (correct) {
-    challengeState.score += 10 + challengeState.streak;
-    challengeState.streak++;
-    if (challengeState.streak > challengeState.bestStreak) challengeState.bestStreak = challengeState.streak;
-    challengeState.current++;
-    showChallengeQuestion();
-  } else {
-    if (challengeState.mode === 'sudden') {
-      endChallenge();
-      return;
-    }
-    challengeState.streak = 0;
-    challengeState.current++;
-    showChallengeQuestion();
-  }
-}
-
-function endChallenge() {
-  if (challengeState.interval) clearInterval(challengeState.interval);
-  document.getElementById('challenge-game').classList.add('hidden');
-  document.getElementById('challenge-over').classList.remove('hidden');
-  document.getElementById('challenge-final-score').textContent = challengeState.score;
-  document.getElementById('challenge-best-streak').textContent = challengeState.bestStreak;
-  const xp = Math.floor(challengeState.score / 5);
-  document.getElementById('challenge-xp').textContent = `+${xp}`;
-  addXP(xp);
-  addActivity(`Challenge mode: ${challengeState.score} points`);
-}
-
-function resetChallenge() {
-  if (challengeState?.interval) clearInterval(challengeState.interval);
-  challengeState = null;
-  document.getElementById('challenge-game').classList.add('hidden');
-  document.getElementById('challenge-over').classList.add('hidden');
-}
-
-// ===================== EXAM MODE =====================
-function startExam() {
-  const count = parseInt(document.getElementById('exam-qcount').value);
-  const time = parseInt(document.getElementById('exam-time').value);
-  const unit = document.getElementById('exam-unit').value;
-  let pool = unit === 'all' ? [...allQuestions] : allQuestions.filter(q => q.unit == unit);
-  pool = shuffle(pool).slice(0, Math.min(count, pool.length));
-
-  examState = {
-    questions: pool,
-    current: 0,
-    score: 0,
-    timeLeft: time * 60,
-    answers: []
-  };
-
-  document.getElementById('exam-setup').classList.add('hidden');
-  document.getElementById('exam-game').classList.remove('hidden');
-  document.getElementById('exam-results').classList.add('hidden');
-  document.getElementById('exam-totalq').textContent = pool.length;
-  showExamQuestion();
-
-  examState.interval = setInterval(() => {
-    examState.timeLeft--;
-    const m = Math.floor(examState.timeLeft / 60);
-    const s = examState.timeLeft % 60;
-    document.getElementById('exam-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-    if (examState.timeLeft <= 0) endExam();
+  state.challengeMode = mode;
+  state.challengeScore = 0;
+  state.challengeStreak = 0;
+  state.challengeQIndex = 0;
+  $('challenge-active').classList.remove('hidden');
+  $('challenge-title').textContent = mode === 'speed' ? '🏃 Speed Run' : mode === 'streak' ? '🔥 Streak' : '💀 Sudden Death';
+  if (mode === 'speed') state.challengeRemaining = 60;
+  else state.challengeRemaining = 9999;
+  renderChallengeQuestion();
+  clearInterval(state.challengeTimer);
+  state.challengeTimer = setInterval(() => {
+    state.challengeRemaining--;
+    $('challenge-timer').textContent = mode === 'speed' ? state.challengeRemaining + 's' : '∞';
+    if (state.challengeRemaining <= 0) endChallenge();
   }, 1000);
 }
 
-function showExamQuestion() {
-  const q = examState.questions[examState.current];
-  document.getElementById('exam-current').textContent = examState.current + 1;
-  document.getElementById('exam-question').textContent = q.q;
-  document.getElementById('exam-options').innerHTML = q.options.map((opt, i) => `
-    <button onclick="answerExam(${i})" class="w-full text-left p-4 rounded-lg bg-surface-2 hover:bg-surface-3 border border-surface-3 transition-colors">
-      <span class="font-mono text-accent mr-2">${String.fromCharCode(65+i)}.</span> ${opt}
-    </button>
+function renderChallengeQuestion() {
+  const q = QUIZ_QUESTIONS[Math.floor(Math.random() * QUIZ_QUESTIONS.length)];
+  state._challengeQ = q;
+  $('challenge-question').textContent = q.q;
+  $('challenge-options').innerHTML = q.options.map((o, i) => `
+    <div class="p-3 rounded-xl cursor-pointer border transition-all text-sm" style="border-color:var(--border);background:var(--bg-secondary);"
+      onclick="answerChallenge(${i}, this, ${q.correct})">
+      ${o}
+    </div>
   `).join('');
+  $('challenge-score').textContent = state.challengeScore;
+  $('challenge-streak').textContent = state.challengeStreak;
 }
 
-function answerExam(idx) {
-  const q = examState.questions[examState.current];
-  if (idx === q.a) examState.score++;
-  else state.wrongAnswers.push({ q: q.q, correct: q.options[q.a], yourAnswer: q.options[idx], expl: q.expl, unit: q.unit });
-  examState.current++;
-  if (examState.current >= examState.questions.length) {
-    endExam();
+function answerChallenge(idx, el, correctIdx) {
+  if (state._challengeAnswered) return;
+  state._challengeAnswered = true;
+  const correct = idx === correctIdx;
+  if (correct) {
+    state.challengeStreak++;
+    const bonus = state.challengeStreak > 1 ? state.challengeStreak * 5 : 0;
+    state.challengeScore += 10 + bonus;
+    showToast(`Correct! +${10 + bonus} XP`);
   } else {
-    showExamQuestion();
+    if (state.challengeMode === 'death') { endChallenge(); return; }
+    state.challengeStreak = 0;
+    showToast('Wrong! Streak reset.');
   }
+  // Highlight
+  document.querySelectorAll('#challenge-options > div').forEach((o, i) => {
+    o.style.pointerEvents = 'none';
+    if (i === correctIdx) { o.style.borderColor = 'var(--green)'; o.style.background = 'rgba(52,211,153,0.1)'; }
+    if (i === idx && !correct) { o.style.borderColor = 'var(--red)'; o.style.background = 'rgba(248,113,113,0.1)'; }
+  });
+  $('challenge-score').textContent = state.challengeScore;
+  $('challenge-streak').textContent = state.challengeStreak;
+  setTimeout(() => {
+    state._challengeAnswered = false;
+    state.challengeQIndex++;
+    if (state.challengeMode === 'speed' && state.challengeQIndex >= 10) endChallenge();
+    else renderChallengeQuestion();
+  }, 800);
 }
 
-function endExam() {
-  if (examState.interval) clearInterval(examState.interval);
-  saveState();
-  document.getElementById('exam-game').classList.add('hidden');
-  document.getElementById('exam-results').classList.remove('hidden');
-  document.getElementById('exam-final-score').textContent = `${examState.score}/${examState.questions.length}`;
-  const pct = Math.round(examState.score / examState.questions.length * 100);
-  document.getElementById('exam-percent').textContent = `${pct}%`;
-  let grade = pct >= 80 ? '5' : pct >= 65 ? '4' : pct >= 50 ? '3' : pct >= 35 ? '2' : '1';
-  document.getElementById('exam-grade').textContent = `Estimated AP Grade: ${grade}`;
-  addXP(examState.score * 2);
-  addActivity(`Completed exam mode: ${examState.score}/${examState.questions.length}`);
+function endChallenge() {
+  clearInterval(state.challengeTimer);
+  state.xp += state.challengeScore;
+  state.totalAnswered += state.challengeQIndex;
+  if (state.challengeScore > 0 && state.streak === 0) state.streak = 1;
+  updateDashboard();
+  $('challenge-active').classList.add('hidden');
+  showToast(`Challenge over! Score: ${state.challengeScore} · +${state.challengeScore} XP ⚡`);
 }
 
-function resetExam() {
-  if (examState?.interval) clearInterval(examState.interval);
-  examState = null;
-  document.getElementById('exam-setup').classList.remove('hidden');
-  document.getElementById('exam-results').classList.add('hidden');
-}
-
-// ===================== WRONG ANSWERS =====================
-function renderWrongAnswers() {
-  const list = document.getElementById('wrong-list');
-  const empty = document.getElementById('wrong-empty');
-  if (state.wrongAnswers.length === 0) {
-    list.innerHTML = '';
-    empty.classList.remove('hidden');
+// ============ WRONG LOG ============
+function renderWrongLog() {
+  if (state.wrongLog.length === 0) {
+    $('wrong-log-list').innerHTML = '<p style="color:var(--text-muted);">No wrong answers yet! Keep studying.</p>';
     return;
   }
-  empty.classList.add('hidden');
-  list.innerHTML = state.wrongAnswers.slice().reverse().map((w, i) => `
-    <div class="glass rounded-xl p-5">
-      <div class="flex items-start justify-between mb-2">
-        <span class="text-xs bg-danger/20 text-danger px-2 py-0.5 rounded">Unit ${w.unit}</span>
-        <button onclick="removeWrong(${state.wrongAnswers.length - 1 - i})" class="text-text-muted hover:text-danger text-xs">Remove</button>
-      </div>
-      <p class="font-medium mb-2">${w.q}</p>
-      <div class="text-sm space-y-1">
-        <p><span class="text-danger">Your answer:</span> ${w.yourAnswer}</p>
-        <p><span class="text-success">Correct:</span> ${w.correct}</p>
-        <p class="text-text-muted mt-2">${w.expl}</p>
-      </div>
+  $('wrong-log-list').innerHTML = state.wrongLog.map((w, i) => `
+    <div class="card">
+      <div class="text-xs mb-1" style="color:var(--text-muted);">Unit ${w.unit}</div>
+      <div class="font-semibold text-sm mb-2">${w.question}</div>
+      <div class="text-sm"><span style="color:var(--red);">Your answer: ${w.options[w.yourAnswer]}</span></div>
+      <div class="text-sm"><span style="color:var(--green);">Correct: ${w.options[w.correct]}</span></div>
+      <div class="text-xs mt-1" style="color:var(--text-muted);">${w.explanation}</div>
     </div>
   `).join('');
 }
 
-function removeWrong(idx) {
-  state.wrongAnswers.splice(idx, 1);
-  saveState();
-  renderWrongAnswers();
-}
-
-// ===================== FLAGGED =====================
+// ============ FLAGGED ============
 function renderFlagged() {
-  const list = document.getElementById('flagged-list');
-  const empty = document.getElementById('flagged-empty');
   if (state.flagged.length === 0) {
-    list.innerHTML = '';
-    empty.classList.remove('hidden');
+    $('flagged-list').innerHTML = '<p style="color:var(--text-muted);">No flagged items yet. Flag confusing topics from Unit Notes.</p>';
     return;
   }
-  empty.classList.add('hidden');
-  list.innerHTML = state.flagged.map((f, i) => `
-    <div class="glass rounded-xl p-5 flex items-center justify-between">
+  $('flagged-list').innerHTML = state.flagged.map(f => `
+    <div class="card flex justify-between items-center">
       <div>
-        <span class="text-xs bg-warning/20 text-warning px-2 py-0.5 rounded uppercase">${f.type}</span>
-        <p class="font-medium mt-1">${f.text}</p>
+        <div class="font-semibold">Unit ${f}: ${UNITS[f-1].name}</div>
+        <div class="text-sm" style="color:var(--text-muted);">${UNITS[f-1].desc}</div>
       </div>
-      <button onclick="removeFlagged(${i})" class="text-text-muted hover:text-danger text-sm">Remove</button>
+      <button class="btn btn-ghost btn-sm" onclick="state.flagged=state.flagged.filter(x=>x!==${f});renderFlagged();showToast('Unflagged Unit ${f}')">✕</button>
     </div>
   `).join('');
 }
 
-function removeFlagged(idx) {
-  state.flagged.splice(idx, 1);
-  saveState();
-  renderFlagged();
-}
-
-// ===================== NIGHT BEFORE =====================
+// ============ NIGHT BEFORE ============
 function renderNightBefore() {
-  document.getElementById('night-content').innerHTML = units.map(u => `
-    <div class="glass rounded-xl p-6">
-      <div class="flex items-center gap-2 mb-3">
-        <span class="text-xl">${u.icon}</span>
-        <h3 class="font-semibold">Unit ${u.id}: ${u.name}</h3>
-      </div>
-      <div class="text-sm text-text-muted leading-relaxed">
-        ${unitNotes[u.id].replace(/<h3.*?>.*?<\/h3>/, '').replace(/🎯 Cheat Sheet Tips:/, '<strong class="text-text">Key reminders:</strong>')}
-      </div>
-    </div>
-  `).join('');
+  let html = '';
+  UNITS.forEach(u => {
+    const formulas = FORMULAS.find(f => f.unit === u.num);
+    html += `<div class="card"><div class="font-semibold mb-2">Unit ${u.num}: ${u.name}</div>`;
+    html += `<ul class="text-sm space-y-1" style="color:var(--text-secondary);">${u.topics.map(t => `<li>· ${t}</li>`).join('')}</ul>`;
+    if (formulas) {
+      html += `<div class="mt-2 flex flex-wrap gap-2">${formulas.formulas.map(f => `<code class="text-xs p-1.5 rounded font-mono" style="background:var(--bg-secondary);">${f}</code>`).join('')}</div>`;
+    }
+    html += '</div>';
+  });
+  $('night-before-content').innerHTML = html;
 }
 
-// ===================== POMODORO =====================
+// ============ POMODORO ============
 function togglePomodoro() {
-  const btn = document.getElementById('pomo-btn');
-  if (pomoRunning) {
-    clearInterval(pomoTimer);
-    pomoRunning = false;
-    btn.textContent = 'Resume';
-  } else {
-    pomoRunning = true;
-    btn.textContent = 'Pause';
-    pomoTimer = setInterval(() => {
-      pomoTimeLeft--;
-      updatePomoDisplay();
-      if (pomoTimeLeft <= 0) {
-        clearInterval(pomoTimer);
-        pomoRunning = false;
-        completePomoPhase();
+  if (state.pomodoroActive) { pausePomodoro(); return; }
+  state.pomodoroActive = true;
+  $('pomo-start').textContent = 'Pause';
+  state.pomodoroInterval = setInterval(() => {
+    state.pomodoroSeconds--;
+    updatePomodoroDisplay();
+    if (state.pomodoroSeconds <= 0) {
+      clearInterval(state.pomodoroInterval);
+      state.pomodoroActive = false;
+      if (state.pomodoroIsBreak) {
+        state.pomodoroSessions++;
+        state.pomodoroIsBreak = false;
+        state.pomodoroSeconds = 25 * 60;
+        $('pomodoro-state').textContent = 'Focus';
+        showToast('Break over! Time to focus 🍅');
+      } else {
+        state.pomodoroIsBreak = true;
+        state.pomodoroSeconds = 5 * 60;
+        $('pomodoro-state').textContent = 'Break';
+        showToast('Focus session done! Take a break ☕');
+        state.xp += 25;
+        if (state.streak === 0) state.streak = 1;
+        updateDashboard();
       }
-    }, 1000);
-  }
+      $('pomo-start').textContent = 'Start';
+      $('pomo-sessions').textContent = state.pomodoroSessions;
+      updatePomodoroDisplay();
+    }
+  }, 1000);
 }
 
-function updatePomoDisplay() {
-  const m = Math.floor(pomoTimeLeft / 60);
-  const s = pomoTimeLeft % 60;
-  document.getElementById('pomo-time').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-  const total = pomoBreak ? 5 * 60 : 25 * 60;
-  const offset = 283 - (pomoTimeLeft / total) * 283;
-  document.getElementById('pomo-ring').style.strokeDashoffset = offset;
-}
-
-function completePomoPhase() {
-  const btn = document.getElementById('pomo-btn');
-  if (!pomoBreak) {
-    state.pomodoroSessions++;
-    saveState();
-    document.getElementById('pomo-sessions').textContent = state.pomodoroSessions;
-    pomoBreak = true;
-    pomoTimeLeft = 5 * 60;
-    document.getElementById('pomo-label').textContent = 'Break';
-    document.getElementById('pomo-ring').style.stroke = '#22c55e';
-    btn.textContent = 'Start Break';
-    addXP(5);
-    addActivity('Completed a Pomodoro session');
-  } else {
-    pomoBreak = false;
-    pomoTimeLeft = 25 * 60;
-    document.getElementById('pomo-label').textContent = 'Focus';
-    document.getElementById('pomo-ring').style.stroke = '#3b82f6';
-    btn.textContent = 'Start';
-  }
-  updatePomoDisplay();
+function pausePomodoro() {
+  state.pomodoroActive = false;
+  clearInterval(state.pomodoroInterval);
+  $('pomo-start').textContent = 'Resume';
 }
 
 function resetPomodoro() {
-  clearInterval(pomoTimer);
-  pomoRunning = false;
-  pomoBreak = false;
-  pomoTimeLeft = 25 * 60;
-  document.getElementById('pomo-btn').textContent = 'Start';
-  document.getElementById('pomo-label').textContent = 'Focus';
-  document.getElementById('pomo-ring').style.stroke = '#3b82f6';
-  updatePomoDisplay();
+  clearInterval(state.pomodoroInterval);
+  state.pomodoroActive = false;
+  state.pomodoroSeconds = 25 * 60;
+  state.pomodoroIsBreak = false;
+  state.pomodoroSessions = 0;
+  $('pomo-start').textContent = 'Start';
+  $('pomodoro-state').textContent = 'Focus';
+  $('pomo-sessions').textContent = '0';
+  updatePomodoroDisplay();
 }
 
-// ===================== UTILS =====================
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function updatePomodoroDisplay() {
+  const mins = Math.floor(state.pomodoroSeconds / 60);
+  const secs = state.pomodoroSeconds % 60;
+  $('pomodoro-time').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  const total = state.pomodoroIsBreak ? 5 * 60 : 25 * 60;
+  const progress = state.pomodoroSeconds / total;
+  const circumference = 2 * Math.PI * 90; // ~565.49
+  $('pomodoro-ring').style.strokeDashoffset = circumference * (1 - progress);
 }
 
-// Initialize
+// ============ INIT ============
+function init() {
+  state.flashcards = [...DEFAULT_FLASHCARDS];
+  updateDashboard();
+  navigateTo('dashboard');
+  updatePomodoroDisplay();
+  generateFRQ();
+}
+
 init();
 </script>
 </body>
