@@ -614,6 +614,8 @@ const state = {
   pomodoroSeconds: 25 * 60,
   pomodoroIsBreak: false,
   pomodoroSessions: 0,
+  lessonUnit: 1,
+  lessonSubunit: 0,
   currentPage: 'dashboard',
 };
 
@@ -1339,6 +1341,49 @@ const UNITS = [
   }
 ];
 
+const LESSON_SUBUNITS = {
+  1: [
+    { title: '1.1 Motion Language', summary: 'Scalars vs vectors, signs, coordinate choices, and frames.', takeaways: ['Pick a positive direction first', 'A vector needs direction and magnitude', 'Relative motion depends on the observer'], exampleIndex: 0, practiceIndices: [0, 2], apTrap: 'Speed is not velocity. A negative velocity can still have positive speed.', deepNote: 'Everything in kinematics gets easier once the axis is chosen deliberately.' },
+    { title: '1.2 Constant Acceleration', summary: 'Use the kinematic equations and graph relationships to solve motion with constant acceleration.', takeaways: ['Slope of x-t is velocity', 'Slope of v-t is acceleration', 'Area under v-t is displacement'], exampleIndex: 2, practiceIndices: [1, 3], apTrap: 'At the top of a projectile, velocity is zero only in the vertical direction.', deepNote: 'AP often hides acceleration in graph interpretation instead of direct equation use.' },
+    { title: '1.3 Projectile Motion', summary: 'Split motion into horizontal and vertical components and solve each independently.', takeaways: ['Horizontal motion is constant velocity', 'Vertical motion is constant acceleration g', 'Time of flight links the two components'], exampleIndex: 1, practiceIndices: [1, 3], apTrap: 'The horizontal and vertical parts are independent, but they share the same time.', deepNote: 'This is one of the AP favorite setups because it tests vectors, equations, and graphs at once.' }
+  ],
+  2: [
+    { title: '2.1 Free-Body Diagrams', summary: 'Map every external force before writing equations.', takeaways: ['Only include forces acting on the object', 'Draw from a point on the object', 'Do not include action-reaction pairs in one FBD'], exampleIndex: 0, practiceIndices: [0, 4], apTrap: 'Normal force is not always equal to weight; it depends on the situation.', deepNote: 'If the FBD is wrong, the rest of the problem usually collapses.' },
+    { title: '2.2 Friction, Tension, Springs', summary: 'Handle surfaces, ropes, and restoring forces with careful sign choices.', takeaways: ['Static friction adjusts up to a max', 'Kinetic friction has fixed magnitude', 'Spring force always points toward equilibrium'], exampleIndex: 1, practiceIndices: [1, 2], apTrap: 'Static friction can be zero if no frictional force is needed.', deepNote: 'AP loves mixed-force setups where multiple forces act in different directions.' },
+    { title: '2.3 Circular Motion and Systems', summary: 'Use net inward force for turns and connect multiple objects through a shared acceleration.', takeaways: ['Centripetal force is not a new force', 'The inward net force is what matters', 'Solve connected objects as a system first'], exampleIndex: 2, practiceIndices: [3, 4], apTrap: 'Centripetal force can be provided by friction, tension, gravity, or a combination.', deepNote: 'Many AP questions hide circular motion inside a standard forces problem.' }
+  ],
+  3: [
+    { title: '3.1 Work and the Work-Energy Theorem', summary: 'Connect force over distance to changes in kinetic energy.', takeaways: ['Work depends on angle', 'Net work changes kinetic energy', 'Constant speed means zero net work'], exampleIndex: 2, practiceIndices: [0, 4], apTrap: 'Work can be negative when force opposes motion.', deepNote: 'Energy methods often replace a long force calculation.' },
+    { title: '3.2 Potential Energy and Conservation', summary: 'Track stored energy from gravity and springs, then conserve mechanical energy when possible.', takeaways: ['Choose a reference height', 'Gravity and springs are conservative', 'Friction removes mechanical energy'], exampleIndex: 0, practiceIndices: [1, 2], apTrap: 'Potential energy is not absolute; only changes in PE matter.', deepNote: 'AP rewards clean before/after energy tables.' },
+    { title: '3.3 Power and Mixed Problems', summary: 'Use power as the rate of energy transfer in lifting, motors, and motion.', takeaways: ['Power is energy per time', 'P = Fv for force parallel to motion', 'Units are watts'], exampleIndex: 3, practiceIndices: [3, 4], apTrap: 'Do not confuse power with energy; they are related but not the same.', deepNote: 'Power questions often appear in context rather than pure algebra.' }
+  ],
+  4: [
+    { title: '4.1 Momentum and Impulse', summary: 'Relate force-time and momentum change in collisions and pushes.', takeaways: ['Momentum is a vector', 'Impulse equals change in momentum', 'Graphs can give impulse from area'], exampleIndex: 1, practiceIndices: [0, 1], apTrap: 'Impulse and momentum have the same units, but they are not the same quantity.', deepNote: 'This subunit builds the foundation for every collision question.' },
+    { title: '4.2 Conservation in Collisions', summary: 'Use momentum conservation to solve elastic and inelastic impacts.', takeaways: ['Momentum is conserved if external force is negligible', 'Elastic collisions conserve kinetic energy', 'Perfectly inelastic means objects stick'], exampleIndex: 2, practiceIndices: [2, 3], apTrap: 'Kinetic energy is not conserved in inelastic collisions.', deepNote: 'AP often asks you to justify why momentum is conserved but energy is not.' },
+    { title: '4.3 Two-Dimensional Momentum', summary: 'Split momentum into x and y components and use the center of mass idea.', takeaways: ['Conserve momentum in each axis separately', 'Vectors add component-by-component', 'Center of mass follows external net force'], exampleIndex: 3, practiceIndices: [2, 3], apTrap: 'A collision can be solved in 2D by conserving x and y separately.', deepNote: 'This is where the exam blends vectors, momentum, and geometry.' }
+  ],
+  5: [
+    { title: '5.1 Angular Variables and Torque', summary: 'Translate linear ideas into angular ones and compute torque correctly.', takeaways: ['Angular position, velocity, and acceleration mirror linear motion', 'Torque depends on lever arm and angle', 'Perpendicular force creates maximum torque'], exampleIndex: 2, practiceIndices: [0, 3], apTrap: 'Use the perpendicular distance or perpendicular force component, not the full force blindly.', deepNote: 'Rotation is just translation with a different set of variables.' },
+    { title: '5.2 Rotational Equilibrium', summary: 'Set net torque to zero to analyze beams, seesaws, and supports.', takeaways: ['Choose a pivot strategically', 'Unknown pivot forces can disappear from the torque equation', 'Balanced objects have zero angular acceleration'], exampleIndex: 0, practiceIndices: [1, 3], apTrap: 'If the object is not translating, do not assume the net force is zero unless stated.', deepNote: 'AP loves static torque setups with one hidden force.' },
+    { title: '5.3 Rotational Dynamics', summary: 'Use τ = Iα to connect applied torque and angular acceleration.', takeaways: ['Moment of inertia depends on mass distribution', 'Same torque gives different α for different I', 'Rim mass increases rotational inertia more than central mass'], exampleIndex: 1, practiceIndices: [1, 2], apTrap: 'A larger moment of inertia means harder rotation, even at the same mass.', deepNote: 'This subunit usually becomes a comparison or conceptual FRQ.' }
+  ],
+  6: [
+    { title: '6.1 Rotational KE and Rolling', summary: 'Treat rolling as both translation and rotation at the same time.', takeaways: ['Rolling objects have two kinetic energy terms', 'Pure rolling means v = rω', 'Different shapes roll differently'], exampleIndex: 1, practiceIndices: [1, 3], apTrap: 'If an object is slipping, you cannot use v = rω.', deepNote: 'Rolling energy problems are classic AP curveballs.' },
+    { title: '6.2 Angular Momentum', summary: 'Use L = Iω and conserve it when external torque is negligible.', takeaways: ['Angular momentum is conserved when net external torque is zero', 'Reducing I increases ω', 'Angular impulse changes angular momentum'], exampleIndex: 0, practiceIndices: [0, 3], apTrap: 'Conservation of angular momentum is about torque, not force.', deepNote: 'This is the rotational version of momentum conservation.' },
+    { title: '6.3 Satellites and Orbits', summary: 'Connect gravity, centripetal force, and orbital speed.', takeaways: ['Gravity provides centripetal force', 'Higher orbit means lower speed', 'Orbital period grows with radius'], exampleIndex: 2, practiceIndices: [2, 3], apTrap: 'A satellite is not floating in space; gravity is still acting strongly.', deepNote: 'AP often tests this as a balance of forces plus circular motion.' }
+  ],
+  7: [
+    { title: '7.1 SHM Basics', summary: 'Identify simple harmonic motion and write the core equations.', takeaways: ['Restoring force points toward equilibrium', 'Period and frequency are reciprocals', 'Angular frequency links the motion'], exampleIndex: 0, practiceIndices: [0, 1], apTrap: 'Amplitude affects energy, not the period, for ideal spring SHM.', deepNote: 'SHM is all about a repeating restoring force.' },
+    { title: '7.2 Energy in SHM', summary: 'Move between kinetic and potential energy as the oscillator moves.', takeaways: ['Equilibrium means max KE', 'Extremes mean max PE', 'Total energy stays constant'], exampleIndex: 2, practiceIndices: [2, 3], apTrap: 'Speed is highest at equilibrium, not at maximum displacement.', deepNote: 'AP frequently asks for energy reasoning instead of formula plugging.' },
+    { title: '7.3 Pendulums and Graphs', summary: 'Interpret pendulum motion and translate graphs into equations.', takeaways: ['Small-angle pendulums depend on length and g', 'Graphs reveal amplitude and period', 'Phase determines where the motion starts'], exampleIndex: 3, practiceIndices: [1, 3], apTrap: 'The pendulum period formula only works for small angles.', deepNote: 'Graph questions often appear with phase and amplitude details.' }
+  ],
+  8: [
+    { title: '8.1 Density and Pressure', summary: 'Calculate pressure in fluids and understand how depth changes the force per area.', takeaways: ['Pressure increases with depth', 'Density is mass per volume', 'Absolute pressure includes atmospheric pressure'], exampleIndex: 0, practiceIndices: [0, 4], apTrap: 'Pressure at depth depends on the fluid above, not container shape.', deepNote: 'This unit begins with static fluids before moving to flow.' },
+    { title: '8.2 Buoyancy and Pascal', summary: 'Determine whether objects float and how hydraulic systems multiply force.', takeaways: ['Buoyant force equals displaced fluid weight', 'Floating means F_b = mg', 'Pressure transmits equally in enclosed fluids'], exampleIndex: 1, practiceIndices: [1, 2], apTrap: 'Buoyant force depends on displaced volume, not on the object volume alone.', deepNote: 'AP often wraps buoyancy in a systems or density context.' },
+    { title: '8.3 Continuity and Bernoulli', summary: 'Study moving fluids and how speed, area, and pressure trade off.', takeaways: ['Narrower pipe means higher fluid speed', 'Faster fluid usually means lower pressure', 'Ideal fluid assumptions matter'], exampleIndex: 4, practiceIndices: [3, 4], apTrap: 'Bernoulli is a conservation statement, not a random formula to memorize.', deepNote: 'Flow questions combine pressure, speed, and geometry.' }
+  ]
+};
+
 const FORMULAS = [
   { unit: 1, name: 'Kinematics', weight: '10-15%', formulas: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'Δx = ½(v + v₀)t', 'vₓ = v₀cosθ', 'vᵧ = v₀sinθ - gt'] },
   { unit: 2, name: 'Force and Translational Dynamics', weight: '18-23%', formulas: ['F_net = ma (Newton\'s 2nd Law)', 'f_k = μₖN (kinetic friction)', 'f_s ≤ μₛN (static friction)', 'F_g = mg', 'F_spring = -kx', 'F_c = mv²/r', 'F_g = Gm₁m₂/r²'] },
@@ -1660,176 +1705,111 @@ function renderLessons() {
   `).join('');
 }
 
-function openLesson(unitNum) {
+function selectLessonSubunit(index) {
+  state.lessonSubunit = index;
+  renderLessonDetail(state.lessonUnit, index);
+}
+
+function renderLessonDetail(unitNum, subIndex = 0) {
   const unit = UNITS.find(u => u.num === unitNum);
   if (!unit) return;
-  
-  $('lessons-overview').classList.add('hidden');
-  $('lesson-viewer').classList.remove('hidden');
-  
-  const content = unit.apContent;
-  const deep = unit.deepContent;
+  const subunits = LESSON_SUBUNITS[unitNum] || [];
+  const subunit = subunits[subIndex] || subunits[0];
+  if (!subunit) return;
   const isAP = state.selectedMode === 'ap';
-  
-  let html = `
-    <div class="flex items-center gap-3 mb-6">
+  const example = unit.workedExamples?.[subunit.exampleIndex] || unit.workedExamples?.[0];
+  const practiceList = (subunit.practiceIndices || []).map(i => unit.practiceProblems?.[i]).filter(Boolean);
+
+  const html = `
+    <div class="flex items-center gap-3 mb-4">
       <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold" style="background:${unit.color}20;color:${unit.color};">${unit.num}</div>
       <div>
         <h1 class="text-2xl font-bold">${unit.name}</h1>
         <p class="text-sm" style="color:var(--text-muted);">${unit.desc} · ${unit.weight} of exam</p>
       </div>
-      <div class="ml-auto text-xs px-3 py-1 rounded-full" style="background:${isAP ? 'var(--accent)' : 'var(--cyan)'};color:#fff;">
-        ${isAP ? '🎯 AP Exam Mode' : '🔬 Deep Learning Mode'}
-      </div>
+      <div class="ml-auto text-xs px-3 py-1 rounded-full" style="background:${isAP ? 'var(--accent)' : 'var(--cyan)'};color:#fff;">${isAP ? '🎯 AP Exam Mode' : '🔬 Deep Learning Mode'}</div>
     </div>
-  `;
-  
-  // Topics list
-  html += `
+
     <div class="card mb-4">
-      <div class="font-semibold text-sm mb-3">📚 Topics in this unit</div>
-      <div class="flex flex-wrap gap-2">
-        ${unit.topics.map((t, i) => `<span class="text-xs px-3 py-1.5 rounded-full" style="background:var(--bg-secondary);border:1px solid var(--border);">${i+1}. ${t}</span>`).join('')}
-      </div>
-    </div>
-  `;
-  
-  // Key Ideas
-  html += `
-    <div class="card mb-4">
-      <div class="font-semibold text-sm mb-3">💡 Key Ideas ${isAP ? '(AP Exam Focus)' : '(Conceptual Understanding)'}</div>
-      <ul class="space-y-3">
-        ${content.key_ideas.map(idea => `
-          <li class="flex gap-3 text-sm">
-            <span class="text-lg" style="color:var(--green);">✓</span>
-            <span style="color:var(--text-secondary);">${idea}</span>
-          </li>
-        `).join('')}
-      </ul>
-    </div>
-  `;
-  
-  // Exam Tips
-  html += `
-    <div class="card mb-4" style="border-color:var(--yellow);">
-      <div class="font-semibold text-sm mb-3">🎯 AP Exam Tips</div>
-      <ul class="space-y-2">
-        ${content.exam_tips.map(tip => `<li class="text-sm" style="color:var(--text-secondary);">${tip}</li>`).join('')}
-      </ul>
-    </div>
-  `;
-  
-  // Key Equations
-  html += `
-    <div class="card mb-4">
-      <div class="font-semibold text-sm mb-3">📐 Key Equations</div>
-      <div class="grid grid-cols-2 gap-2">
-        ${content.key_equations.map(eq => `
-          <div class="font-mono text-sm p-3 rounded-xl text-center" style="background:var(--bg-secondary);border:1px solid var(--border);">${eq}</div>
-        `).join('')}
-      </div>
-    </div>
-  `;
-  
-  // Worked Examples (shown in both modes)
-  if (unit.workedExamples && unit.workedExamples.length > 0) {
-    html += `
-      <div class="card mb-4" style="border-color:var(--green);">
-        <div class="font-semibold text-sm mb-4">📝 Worked Examples</div>
-        <div class="space-y-4">
-          ${unit.workedExamples.map((ex, i) => `
-            <div class="p-4 rounded-xl" style="background:var(--bg-secondary);">
-              <div class="font-semibold text-sm mb-2" style="color:var(--accent);">${ex.title}</div>
-              <div class="text-sm mb-3" style="color:var(--text-secondary);"><strong>Problem:</strong> ${ex.problem}</div>
-              <div class="text-xs space-y-1 font-mono" style="color:var(--text-muted);">
-                ${ex.solution.map(step => `<div class="pl-3 border-l-2" style="border-color:var(--accent);">${step}</div>`).join('')}
-              </div>
-            </div>
-          `).join('')}
+      <div class="font-semibold text-sm mb-3">Unit Snapshot</div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="text-xs mb-2" style="color:var(--text-muted);">Unit topics</div>
+          <ul class="text-sm space-y-1" style="color:var(--text-secondary);">${unit.topics.map(t => `<li>• ${t}</li>`).join('')}</ul>
+        </div>
+        <div>
+          <div class="text-xs mb-2" style="color:var(--text-muted);">Fast AP checkpoints</div>
+          <ul class="text-sm space-y-1" style="color:var(--text-secondary);">${unit.apContent.key_ideas.slice(0, 3).map(t => `<li>• ${t}</li>`).join('')}</ul>
         </div>
       </div>
-    `;
-  }
-  
-  // Practice Problems (shown in both modes)
-  if (unit.practiceProblems && unit.practiceProblems.length > 0) {
-    html += `
-      <div class="card mb-4" style="border-color:var(--cyan);">
-        <div class="font-semibold text-sm mb-4">✏️ Practice Problems</div>
-        <div class="space-y-3">
-          ${unit.practiceProblems.map((prob, i) => `
-            <details class="group p-3 rounded-xl" style="background:var(--bg-secondary);">
-              <summary class="cursor-pointer text-sm font-medium flex items-center gap-2 list-none">
-                <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background:var(--accent);color:#fff;">${i+1}</span>
-                <span style="color:var(--text-primary);">${prob.q}</span>
-                <span class="ml-auto text-xs" style="color:var(--text-muted);">Click to reveal answer ▼</span>
-              </summary>
-              <div class="mt-3 pl-8 text-sm" style="color:var(--green);">
-                <strong>Answer:</strong> ${prob.a}
-              </div>
-            </details>
-          `).join('')}
+      <div class="mt-4 flex flex-wrap gap-2">
+        ${unit.apContent.key_equations.map(eq => `<span class="text-xs px-2 py-1 rounded-lg font-mono" style="background:var(--bg-secondary);border:1px solid var(--border);">${eq}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-[280px_1fr] gap-4">
+      <div class="card h-fit">
+        <div class="font-semibold text-sm mb-3">Subunits</div>
+        <div class="space-y-2">
+          ${subunits.map((s, i) => `<button class="w-full text-left px-3 py-3 rounded-xl border text-sm transition-all ${i === subIndex ? 'glow-border' : ''}" style="background:${i === subIndex ? 'rgba(124,92,252,0.12)' : 'var(--bg-secondary)'};border-color:${i === subIndex ? 'var(--accent)' : 'var(--border)'};" onclick="selectLessonSubunit(${i})"><div class="font-semibold">${s.title}</div><div class="text-xs mt-1" style="color:var(--text-muted);">${s.summary}</div></button>`).join('')}
         </div>
       </div>
-    `;
-  }
-  
-  // Deep Learning Content (only shown in deep mode)
-  if (!isAP) {
-    html += `
-      <div class="card mb-4" style="border-color:var(--cyan);">
-        <div class="font-semibold text-sm mb-3">🧠 Intuition</div>
-        <p class="text-sm" style="color:var(--text-secondary);">${deep.intuition}</p>
+
+      <div class="space-y-4">
+        <div class="card">
+          <div class="text-xs mb-2" style="color:var(--text-muted);">Focused lesson</div>
+          <h2 class="text-xl font-bold mb-2">${subunit.title}</h2>
+          <p class="text-sm" style="color:var(--text-secondary);">${subunit.summary}</p>
+        </div>
+
+        <div class="card">
+          <div class="font-semibold text-sm mb-3">What to know</div>
+          <ul class="space-y-2 text-sm" style="color:var(--text-secondary);">${subunit.takeaways.map(item => `<li>• ${item}</li>`).join('')}</ul>
+        </div>
+
+        <div class="card">
+          <div class="font-semibold text-sm mb-3">Worked Example</div>
+          <div class="p-4 rounded-xl" style="background:var(--bg-secondary);">
+            <div class="font-semibold text-sm mb-2" style="color:var(--accent);">${example.title}</div>
+            <div class="text-sm mb-3" style="color:var(--text-secondary);"><strong>Problem:</strong> ${example.problem}</div>
+            <div class="space-y-1 text-xs font-mono" style="color:var(--text-muted);">${example.solution.map(step => `<div class="pl-3 border-l-2" style="border-color:var(--accent);">${step}</div>`).join('')}</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="font-semibold text-sm mb-3">Practice Check</div>
+          <div class="space-y-3">${practiceList.map((p, i) => `<details class="p-3 rounded-xl" style="background:var(--bg-secondary);"><summary class="cursor-pointer text-sm font-medium list-none">${i + 1}. ${p.q}</summary><div class="mt-2 text-sm" style="color:var(--green);"><strong>Answer:</strong> ${p.a}</div></details>`).join('')}</div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="card" style="border-color:var(--yellow);">
+            <div class="font-semibold text-sm mb-2">AP Trap</div>
+            <p class="text-sm" style="color:var(--text-secondary);">${subunit.apTrap}</p>
+          </div>
+          <div class="card" style="border-color:var(--cyan);">
+            <div class="font-semibold text-sm mb-2">Why this matters</div>
+            <p class="text-sm" style="color:var(--text-secondary);">${subunit.deepNote}</p>
+          </div>
+        </div>
+
+        <div class="flex gap-3 flex-wrap">
+          <button class="btn btn-primary" onclick="startUnitQuiz(${unit.num})">Take Unit Quiz</button>
+          <button class="btn btn-secondary" onclick="flagUnit(${unit.num})">Flag Unit</button>
+          <button class="btn btn-secondary" onclick="backToUnits()">← All Units</button>
+        </div>
       </div>
-    `;
-    
-    html += `
-      <div class="card mb-4">
-        <div class="font-semibold text-sm mb-3">🌍 Real-World Examples</div>
-        <ul class="space-y-2">
-          ${deep.real_world.map(example => `
-            <li class="flex gap-2 text-sm">
-              <span style="color:var(--cyan);">•</span>
-              <span style="color:var(--text-secondary);">${example}</span>
-            </li>
-          `).join('')}
-        </ul>
-      </div>
-    `;
-    
-    html += `
-      <div class="card mb-4" style="border-color:var(--red);">
-        <div class="font-semibold text-sm mb-3">⚠️ Common Mistakes to Avoid</div>
-        <ul class="space-y-2">
-          ${deep.common_mistakes.map(mistake => `
-            <li class="flex gap-2 text-sm">
-              <span style="color:var(--red);">✗</span>
-              <span style="color:var(--text-secondary);">${mistake}</span>
-            </li>
-          `).join('')}
-        </ul>
-      </div>
-    `;
-    
-    html += `
-      <div class="card mb-4" style="border-color:var(--green);">
-        <div class="font-semibold text-sm mb-3">🚀 Why This Matters</div>
-        <p class="text-sm" style="color:var(--text-secondary);">${deep.why_it_matters}</p>
-      </div>
-    `;
-  }
-  
-  // Quiz button
-  html += `
-    <div class="flex gap-3 mt-6">
-      <button class="btn btn-primary" onclick="startUnitQuiz(${unit.num})">Take Unit Quiz ⚡</button>
-      <button class="btn btn-secondary" onclick="flagUnit(${unit.num});showToast('Unit ${unit.num} flagged for review 🚩')">Flag for Review 🚩</button>
-      <button class="btn btn-secondary" onclick="backToUnits()">← All Units</button>
     </div>
   `;
-  
+
   $('lesson-content').innerHTML = html;
-  $('lesson-content').scrollTo(0, 0);
+}
+
+function openLesson(unitNum) {
+  state.lessonUnit = unitNum;
+  state.lessonSubunit = 0;
+  $('lessons-overview').classList.add('hidden');
+  $('lesson-viewer').classList.remove('hidden');
+  renderLessonDetail(unitNum, 0);
 }
 
 function backToUnits() {
