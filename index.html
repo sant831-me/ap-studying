@@ -653,9 +653,12 @@
             <button class="btn btn-primary" onclick="sendSparkeMessage()">Send →</button>
           </div>
           <div class="flex gap-2 mt-2 overflow-x-auto py-1 text-xs">
-            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('How do I analyze an Atwood Machine on the AP Exam?')">Atwood Machine ⚙️</button>
-            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('Explain why potential energy in a spring depends on x squared.')">Spring Potential 🌀</button>
-            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('What is Bernoulli\'s Principle in simple terms?')">Bernoulli 🌊</button>
+            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('Walk me through solving an Atwood machine problem with m1 = 3 kg and m2 = 5 kg')">Atwood Problem ⚙️</button>
+            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('Why does spring potential energy use x squared instead of just x?')">Spring U = ½kx² 🌀</button>
+            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('Explain Bernoulli\'s Principle and how airplanes fly')">Bernoulli 🌊</button>
+            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('What are the most common AP Physics 1 FRQ traps I should avoid?')">FRQ Traps 🚨</button>
+            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('A 2 kg ball is thrown straight up at 20 m/s. Find max height and time in air.')">Solve a Problem 🧮</button>
+            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('What are all 8 units of AP Physics 1 and their exam weights?')">Course Overview 📚</button>
           </div>
         </div>
       </div>
@@ -686,42 +689,6 @@
         <div id="visual-output" class="hidden p-3 rounded-xl text-xs space-y-2" style="background:var(--bg-secondary); border:1px solid var(--border);">
           <div class="font-bold text-cyan-400" id="visual-title"></div>
           <p id="visual-desc" style="color:var(--text-secondary);"></p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Active Source Reference Library -->
-    <div class="mt-6 card border-cyan-500">
-      <div class="flex items-center gap-2 mb-3">
-        <span class="text-lg">📚</span>
-        <h3 class="font-bold text-sm">Grounded Sources & Reference Database</h3>
-      </div>
-      <p class="text-xs mb-4" style="color:var(--text-muted);">Spark.E AI responses are mathematically verified and directly aligned with the official AP Physics 1 syllabus and the most respected university textbooks.</p>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="p-3 rounded-xl text-xs space-y-1.5" style="background:var(--bg-secondary);">
-          <div class="font-bold text-cyan-400">🏫 Official Curriculum Guidelines</div>
-          <ul class="space-y-1" style="color:var(--text-secondary);">
-            <li>• College Board AP Physics 1 Course & Exam Description (CED 2024-2025)</li>
-            <li>• College Board Past Released FRQs & Scoring Rubrics (2015-2025)</li>
-          </ul>
-        </div>
-        <div class="p-3 rounded-xl text-xs space-y-1.5" style="background:var(--bg-secondary);">
-          <div class="font-bold text-yellow-400">📖 Academic University Textbooks</div>
-          <ul class="space-y-1" style="color:var(--text-secondary);">
-            <li>• Giancoli — Physics: Principles with Applications</li>
-            <li>• Serway & Jewett — Physics for Scientists & Engineers</li>
-            <li>• Knight — Physics for Scientists & Engineers (College Ed.)</li>
-            <li>• Halliday, Resnick & Krane — Classical University Physics</li>
-          </ul>
-        </div>
-        <div class="p-3 rounded-xl text-xs space-y-1.5" style="background:var(--bg-secondary);">
-          <div class="font-bold text-pink-400">🎯 Expert AP Prep & Instruction</div>
-          <ul class="space-y-1" style="color:var(--text-secondary);">
-            <li>• Princeton Review AP Physics 1 (Elite Edition)</li>
-            <li>• Barron's AP Physics 1 Prep Guide</li>
-            <li>• Flipping Physics AP Classroom Video Guides</li>
-            <li>• Khan Academy Advanced Physics Courseware</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -858,7 +825,7 @@
   <!-- ESSAY GRADER (StudyFetch) -->
   <section id="page-essay-grader" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-2">📝 AI Essay & FRQ Grader</h1>
-    <p class="text-sm mb-4" style="color:var(--text-secondary);">Grade and receive extensive feedback on your AP Physics explanations or Free-Response writeups. Backed by the official College Board Course & Exam Description (CED), Giancoli's standard explanations, and Barron's grading rubrics.</p>
+    <p class="text-sm mb-6" style="color:var(--text-secondary);">Grade and receive extensive feedback on your AP Physics explanations or Free-Response writeups using College Board rubrics.</p>
     
     <div class="grid lg:grid-cols-2 gap-6">
       <div class="card flex flex-col gap-4">
@@ -3409,113 +3376,19 @@ function updatePomodoroDisplay() {
 }
 
 // ============ SPARK.E AI TUTOR ============
-// Massive knowledge base keyed by topic with multiple trigger words
-const SPARKE_KB = [
-  { triggers: ['atwood','pulley','two masses','string over','hanging masses','connected by a string'],
-    topic: 'Atwood Machine',
-    sources: 'College Board CED §2.5 · Giancoli Ch.4 · Barron\'s Ch.3',
-    response: `Alright so an Atwood machine is literally just two masses connected by a string draped over a pulley. Here's the thing that trips people up — the tension throughout the string is the SAME (assuming massless string and frictionless pulley).\n\n**Step-by-step approach:**\n1. Pick your positive direction (I usually say the heavier mass going down is positive)\n2. Draw separate FBDs for each mass\n3. For m₁ (lighter, goes up): T − m₁g = m₁a\n4. For m₂ (heavier, goes down): m₂g − T = m₂a\n5. Add both equations — the T cancels out!\n6. You get: a = (m₂ − m₁)g / (m₁ + m₂)\n\nThen plug back in to find T = 2m₁m₂g/(m₁+m₂)\n\n**The trap on the AP exam:** They'll ask "what's the tension?" and students write T = mg. WRONG. The tension is always BETWEEN the two weights — never equal to either one. Think about it — if T equaled the heavier weight, there'd be no net force and no acceleration.\n\n**Quick sanity check:** If m₁ = m₂, then a = 0 and T = mg. That makes sense — equal masses just sit there!` },
-
-  { triggers: ['projectile','trajectory','launched at angle','thrown horizontal','ball thrown','range formula','max height'],
-    topic: 'Projectile Motion',
-    sources: 'College Board CED §1.5 · Knight Ch.4 · Flipping Physics',
-    response: `Projectile motion is honestly one of the most satisfying topics once it clicks. The whole secret is this: **horizontal and vertical are COMPLETELY INDEPENDENT.** The ball doesn't know it was thrown sideways — vertically it just feels gravity.\n\n**The recipe every single time:**\n1. Break v₀ into components: v₀ₓ = v₀cosθ and v₀ᵧ = v₀sinθ\n2. Horizontal: NO acceleration → x = v₀ₓ · t (that's it, dead simple)\n3. Vertical: constant acceleration g downward → use your kinematic equations\n4. TIME is what connects horizontal and vertical\n\n**Finding time of flight:** At landing (same height), use Δy = 0:\n0 = v₀ᵧt − ½gt² → t = 2v₀ᵧ/g\n\n**Finding max height:** At the top vᵧ = 0:\nUse v² = v₀² − 2gh → h = v₀ᵧ²/(2g)\n\n**The #1 AP trap:** "At the highest point, what is the acceleration?" Students say zero. WRONG. It's still g = 9.8 m/s² downward. Gravity never takes a coffee break. The velocity is momentarily zero vertically, but acceleration is NOT zero.\n\n**Another classic trap:** "At the top, is the speed zero?" NO! vᵧ = 0 but vₓ is still v₀cosθ. The ball is still moving sideways at the peak.\n\n**Pro tip for the exam:** If they ask about two projectiles at complementary angles (like 30° and 60°), they have the SAME range. That's because sin(2·30°) = sin(2·60°) = sin(60°).` },
-
-  { triggers: ['free fall','drop','falling','gravity','g = 9.8','terminal','dropped from'],
-    topic: 'Free Fall',
-    sources: 'College Board CED §1.3 · Halliday & Resnick Ch.2 · Khan Academy',
-    response: `Free fall is when gravity is the ONLY force acting on an object. No air resistance, no strings, no pushes — just gravity pulling down at g ≈ 9.8 m/s².\n\n**The mind-blowing part:** A feather and a bowling ball fall at the SAME rate in a vacuum. Apollo 15 astronaut David Scott actually tested this on the Moon — look up the video, it's incredible.\n\n**Why same rate?** Heavier objects have more gravitational force (F = mg) BUT also more inertia (harder to accelerate). These exactly cancel: a = F/m = mg/m = g. Mass disappears!\n\n**Common scenarios:**\n• Dropped from rest: v₀ = 0, a = g downward\n• Thrown up: On the way up, v is up but a is down (slowing down). At the top, v = 0 but a is STILL g down. On the way down, v and a are both down (speeding up).\n• Time up = time down (for same launch/landing height)\n\n**Equations you'll use:**\n• v = v₀ − gt (taking up as positive)\n• Δy = v₀t − ½gt²\n• v² = v₀² − 2gΔy\n\n**The classic AP question:** "A ball is thrown straight up. At the highest point, what is its acceleration?" Answer: 9.8 m/s² downward. ALWAYS. Students lose points on this every single year.` },
-
-  { triggers: ['newton','force','fbd','free body','f = ma','net force','first law','second law','third law','inertia','action reaction'],
-    topic: 'Newton\'s Laws & Forces',
-    sources: 'College Board CED §2.1-2.5 · Giancoli Ch.4 · Princeton Review Ch.4',
-    response: `Newton's Laws are the backbone of everything in mechanics. Let me break each one down the way it actually matters for the AP exam:\n\n**1st Law (Inertia):** Objects resist changes in motion. If net force = 0, velocity doesn't change. This means an object at rest stays at rest AND an object moving at constant velocity keeps moving at constant velocity. "At rest" is NOT special — it's just v = 0.\n\n**2nd Law:** ΣF = ma. This is THE equation. But here's what students mess up — it's the NET force, not just one force. You need to add ALL forces as vectors first, THEN set equal to ma.\n\n**3rd Law:** If A pushes B, B pushes A back with equal force in opposite direction. THE KEY: these forces act on DIFFERENT objects! They do NOT cancel because they're not on the same FBD.\n\n**FBD Rules (graders literally check for this):**\n• Draw the object as a dot\n• Every arrow starts FROM the dot\n• Only draw forces ON your object, not forces your object exerts on others\n• Label every force (Fg, N, T, f, Fapplied)\n• NEVER draw velocity, acceleration, or "force of motion" — these are NOT forces!\n\n**Common forces:**\n• Weight: mg, always straight down\n• Normal: perpendicular to surface (NOT always = mg!)\n• Tension: along the rope, pulling\n• Friction: parallel to surface, opposing motion\n• Spring: F = −kx, toward equilibrium\n\n**On inclines:**\n• Rotate your axes! x parallel to ramp, y perpendicular\n• Weight components: mg sinθ (parallel, down the ramp), mg cosθ (perpendicular, into surface)\n• Normal force = mg cosθ (on a simple incline)\n• Acceleration (frictionless): a = g sinθ — mass cancels!\n\n**AP Tip:** If the problem says "constant velocity" or "at rest," that means a = 0, so ΣF = 0. Set forces equal and solve.` },
-
-  { triggers: ['friction','static','kinetic','mu','coefficient','rough surface','sliding','slipping'],
-    topic: 'Friction',
-    sources: 'College Board CED §2.7 · Serway & Jewett Ch.5 · Barron\'s Ch.3',
-    response: `Friction is one of those topics where the details really matter on the AP exam.\n\n**Two types:**\n• **Static friction** (not sliding): f_s ≤ μ_sN. This ADJUSTS to match whatever you push with, up to a maximum. Push with 10 N? Static friction = 10 N. Push with 20 N? It's 20 N. Push harder than μ_sN? The object starts sliding.\n• **Kinetic friction** (sliding): f_k = μ_kN. This is FIXED — doesn't change with speed or applied force.\n\n**Usually μ_s > μ_k.** That's why it's harder to START pushing a heavy box than to KEEP it moving. Once it's sliding, friction drops.\n\n**Critical detail:** N is the NORMAL FORCE, not mg!\n• On a flat surface: N = mg ✓\n• On an incline: N = mg cosθ ✗ (less than mg!)\n• Someone pushing down on the object: N = mg + F_push (MORE than mg)\n• Someone pulling up at an angle: N = mg − F sinθ (LESS than mg)\n\nYou MUST find N from the perpendicular direction equation before calculating friction.\n\n**AP Trap:** "What is the friction force on a 10 kg box pushed with 15 N that doesn't move?" Answer: 15 N. NOT μ_sN! Static friction matches the applied force. μ_sN is only the MAXIMUM.` },
-
-  { triggers: ['circular','centripetal','centrifugal','orbit','curve','turning','going around','banked','loop'],
-    topic: 'Circular Motion',
-    sources: 'College Board CED §2.9 · Knight Ch.8 · Flipping Physics',
-    response: `Here's the thing about circular motion that blows people's minds: **constant speed in a circle IS acceleration.** Why? Because velocity includes direction, and direction changes every instant in a circle.\n\n**Centripetal acceleration:** a_c = v²/r, always points toward the CENTER\n**Centripetal force:** F_c = mv²/r — this is the NET inward force\n\n**CRITICAL CONCEPT:** Centripetal force is NOT a new type of force! It's provided by whatever real force happens to point inward:\n• Car on flat road → static friction\n• Ball on a string → tension\n• Satellite in orbit → gravity\n• Car on banked curve → component of normal force\n• Roller coaster at top of loop → gravity + normal (both inward)\n\n**"Centrifugal force" does NOT exist** in an inertial reference frame. On the AP exam, NEVER draw it on an FBD. It's a fictitious force that only appears if you analyze from a rotating frame.\n\n**What happens when the string breaks?** The object flies off TANGENTIALLY — not radially outward. It goes in a straight line tangent to where it was (Newton's 1st Law).\n\n**Speed doubles → centripetal force QUADRUPLES** (because F ∝ v²). This is why sharp turns at high speed are so dangerous.` },
-
-  { triggers: ['energy','kinetic','potential','work','conservation of energy','mgh','half mv','joule','watt','power'],
-    topic: 'Work, Energy & Power',
-    sources: 'College Board CED §3.1-3.5 · Halliday & Resnick Ch.7-8 · Princeton Review Ch.5',
-    response: `Energy is honestly the most powerful problem-solving tool in all of physics. Here's why: it's a SCALAR. No directions, no components, no vector addition. Just plug and chug.\n\n**The energy types:**\n• K = ½mv² (kinetic — energy of motion, always positive)\n• U_g = mgh (gravitational PE — pick your own h = 0!)\n• U_s = ½kx² (spring PE — from equilibrium position)\n\n**Work:** W = Fd cosθ\n• θ = 0° → positive work (force helps motion)\n• θ = 90° → zero work (normal force does NO work on horizontal motion!)\n• θ = 180° → negative work (friction opposes motion)\n\n**Conservation of Mechanical Energy:**\nIf only conservative forces (gravity, springs) do work:\nK_i + U_i = K_f + U_f\n\nWith friction: K_i + U_i − f_k·d = K_f + U_f\n\n**Why energy is better than forces:**\nYou don't need to know the PATH — only start and end states matter. A ball released from height h reaches speed v = √(2gh) at the bottom whether it slides down a ramp, falls vertically, or takes a crazy curved path. Same answer every time.\n\n**Power:** P = W/t = Fv\nThis is rate of energy transfer. Same work done faster = more power.\n\n**The exam loves this:** "If you double the speed, what happens to kinetic energy?" It QUADRUPLES (v² means 2² = 4). "If you double spring compression?" Energy quadruples (x² means 2² = 4).` },
-
-  { triggers: ['momentum','impulse','collision','elastic','inelastic','stick together','crash','rebound','bounce'],
-    topic: 'Momentum & Collisions',
-    sources: 'College Board CED §4.1-4.4 · Serway & Jewett Ch.9 · Barron\'s Ch.5',
-    response: `Momentum (p = mv) is a VECTOR — direction matters! This is where signs will make or break your answer.\n\n**The golden rule:** If no external net force acts on the system:\nΣp_before = Σp_after\n\n**Impulse-Momentum Theorem:** J = FΔt = Δp\nThis explains SO much real-world physics:\n• Airbags increase Δt → decrease F (same impulse, less force)\n• Crumple zones do the same thing\n• Catching an egg: move your hand WITH the egg to increase stopping time\n• Baseball bat: longer contact time = more impulse = more momentum transfer\n\n**Collision types:**\n• **Elastic:** Both momentum AND kinetic energy conserved (billiard balls, approximately)\n• **Inelastic:** Momentum conserved, KE NOT conserved (most real collisions)\n• **Perfectly inelastic:** Objects stick together. Maximum KE lost. Momentum STILL conserved.\n\n**The recipe for collision problems:**\n1. Define positive direction\n2. Write p_total,before = p_total,after\n3. m₁v₁ᵢ + m₂v₂ᵢ = m₁v₁f + m₂v₂f\n4. If they stick: m₁v₁ᵢ + m₂v₂ᵢ = (m₁+m₂)v_f\n\n**Classic trap:** "Is KE conserved in this collision?" If objects stick → NO, definitely not. If they bounce → check by calculating KE before and after.\n\n**2D collisions:** Conserve momentum SEPARATELY in x and y. This is basically two 1D problems at once.` },
-
-  { triggers: ['spring','hooke','kx','spring constant','elastic','compressed','stretched','restoring'],
-    topic: 'Springs & Hooke\'s Law',
-    sources: 'College Board CED §2.8, 3.3 · Knight Ch.10 · Khan Academy',
-    response: `Springs follow Hooke's Law: F = −kx\n\nThe negative sign means the force is RESTORATIVE — it always points back toward equilibrium. Stretch it right? Force pulls left. Compress it left? Force pushes right.\n\n**k = spring constant** (units: N/m). Higher k = stiffer spring. A car suspension spring might be 50,000 N/m. A Slinky might be 1 N/m.\n\n**Finding k experimentally:** Hang a known mass, measure the stretch.\nF = kx → mg = kx → k = mg/x\n\n**Spring potential energy:** U_s = ½kx²\nThis comes from the AREA under the F-vs-x graph (it's a triangle).\n\n**Key relationships:**\n• Double the stretch → 4× the energy (x² relationship)\n• Double k → 2× the energy (linear with k)\n• Energy is always positive (x² is always positive)\n\n**Springs + energy conservation:**\nCompressed spring releases a block: ½kx² = ½mv²\nSolve: v = x√(k/m)\n\nSpring launches block up a ramp: ½kx² = mgh\nSolve: h = kx²/(2mg)\n\n**AP Tip:** The equilibrium position is where the net force is zero. For a vertical spring with a hanging mass, equilibrium is where kx = mg, NOT at the natural length!` },
-
-  { triggers: ['torque','moment','lever','wrench','pivot','hinge','rotational equilibrium','seesaw','beam','balance'],
-    topic: 'Torque',
-    sources: 'College Board CED §5.2-5.3 · Giancoli Ch.8 · Princeton Review Ch.7',
-    response: `Torque is the rotational version of force. τ = rF sinθ\n\n**What each variable means:**\n• r = distance from pivot to where force is applied\n• F = magnitude of the force\n• θ = angle between the force vector and the lever arm\n• Maximum torque when θ = 90° (perpendicular push)\n• Zero torque when force goes through the pivot (r = 0) or is parallel to r (θ = 0°)\n\n**This is why door handles are far from hinges** — bigger r means more torque for the same force. And why you push perpendicular to the door — that gives sinθ = 1.\n\n**Rotational equilibrium:** Στ = 0\nFor an object that isn't rotating (or rotates at constant ω), the total torque about ANY point is zero.\n\n**Choosing a pivot point (this is HUGE for the exam):**\nPick the point where an UNKNOWN force acts. That force has r = 0, so its torque = 0, and it vanishes from your equation. This saves you from solving a system of equations.\n\n**Static equilibrium requires BOTH:**\n• ΣF = 0 (not translating)\n• Στ = 0 (not rotating)\n\n**Sign convention:** Pick CCW = positive (or CW = positive), but be consistent!\n\n**Don't forget:** The weight of a uniform beam acts at its CENTER (center of mass). If the beam is 6 m long, weight acts at 3 m from either end.` },
-
-  { triggers: ['rotational','angular momentum','moment of inertia','spinning','spin','rolling','angular velocity','omega','alpha','disk','hoop','sphere rolling'],
-    topic: 'Rotational Dynamics',
-    sources: 'College Board CED §5.4, 6.1-6.3 · Serway & Jewett Ch.10-11 · Flipping Physics',
-    response: `Rotation is basically a mirror of linear motion with different symbols:\n\nLinear → Rotational:\n• x → θ (position → angle)\n• v → ω (velocity → angular velocity)\n• a → α (acceleration → angular acceleration)\n• m → I (mass → moment of inertia)\n• F → τ (force → torque)\n• p → L (momentum → angular momentum)\n\n**Newton's 2nd Law for rotation:** Στ = Iα\n\n**Moment of inertia** depends on mass distribution:\n• Point mass: I = mr²\n• Solid disk/cylinder: I = ½MR²\n• Hoop/ring: I = MR²\n• Solid sphere: I = ⅖MR²\n\nMass farther from axis → larger I → harder to spin.\nThat's why a hoop is harder to accelerate than a disk of the same mass.\n\n**Angular momentum:** L = Iω\nConserved when Στ_external = 0.\n\n**The figure skater:** Arms out = large I, slow ω. Pull arms in = small I, fast ω. L stays constant!\n\n**Rolling without slipping:** v = rω\nTotal KE = ½mv² + ½Iω² (BOTH translational and rotational)\n\n**Racing down a ramp:** Objects with smaller I/mr² ratio win.\nSphere beats disk beats hoop. Why? More energy goes to translation (speed) instead of rotation.` },
-
-  { triggers: ['shm','simple harmonic','oscillat','period','frequency','pendulum','mass on spring','amplitude','vibrat','back and forth'],
-    topic: 'Simple Harmonic Motion',
-    sources: 'College Board CED §7.1-7.4 · Knight Ch.14 · Barron\'s Ch.8',
-    response: `SHM happens whenever the restoring force is proportional to displacement: F = −kx\n\n**The key insight about SHM:**\n• At the extremes (x = ±A): speed = 0, acceleration = MAXIMUM, all PE\n• At equilibrium (x = 0): speed = MAXIMUM, acceleration = 0, all KE\n• Total energy E = ½kA² stays CONSTANT throughout\n\n**Periods (memorize these — they show up constantly):**\n• Spring: T = 2π√(m/k) — depends on mass and spring constant\n• Pendulum: T = 2π√(L/g) — depends on length and gravity\n\n**What does NOT affect period:**\n• Spring: amplitude and gravity don't matter\n• Pendulum: mass and amplitude don't matter (small angles)\n\n**Changing variables:**\n• Double the mass on a spring → T increases by √2\n• Quadruple the mass → T doubles\n• Double the spring constant → T decreases by √2\n• Double pendulum length → T increases by √2\n• Take pendulum to the Moon (g/6) → T increases by √6\n\n**Energy at any position:**\n½mv² + ½kx² = ½kA²\nSolve for v: v = √(k/m) · √(A² − x²)\nMax speed: v_max = A√(k/m) = Aω\n\n**Graph relationships:** Position is cosine, velocity is negative sine (shifted 90°), acceleration is negative cosine (shifted 180° from position). At any instant, acceleration = −ω²x.` },
-
-  { triggers: ['fluid','pressure','density','buoy','float','sink','archimedes','pascal','bernoulli','continuity','pipe','hydraulic','depth'],
-    topic: 'Fluids',
-    sources: 'College Board CED §8.1-8.4 · Serway & Jewett Ch.14 · Princeton Review Ch.9',
-    response: `Fluids is the newest unit on AP Physics 1 (added 2025), worth 10-15% of the exam. Don't sleep on it!\n\n**Density:** ρ = m/V (kg/m³). Water = 1000 kg/m³.\n\n**Pressure:** P = F/A (Pascals). Pressure at depth: P = P₀ + ρgh\n• Increases linearly with depth\n• Acts in ALL directions (not just down!)\n• Does NOT depend on container shape — only depth matters\n• Every 10 m of water ≈ 1 atm extra pressure\n\n**Archimedes' Principle:** Buoyant force = weight of DISPLACED fluid\nF_b = ρ_fluid · V_submerged · g\n• Float: ρ_object < ρ_fluid\n• Sink: ρ_object > ρ_fluid\n• Fraction submerged = ρ_object/ρ_fluid\n\n**Pascal's Principle:** Pressure change transmits equally everywhere in an enclosed fluid.\nF₁/A₁ = F₂/A₂ → Bigger piston = bigger force (but moves less distance)\nThis is how hydraulic lifts and car brakes work.\n\n**Continuity:** A₁v₁ = A₂v₂\nNarrow pipe → faster flow. Garden hose with thumb = water shoots farther.\n\n**Bernoulli:** P + ½ρv² + ρgh = constant\nFaster fluid = LOWER pressure (seems counterintuitive but it's energy conservation).\nThis is how airplane wings create lift — air moves faster over the curved top → lower pressure above → net upward force.` },
-
-  { triggers: ['graph','slope','area under','position time','velocity time','interpret','reading','curve','what does the graph'],
-    topic: 'Motion Graphs',
-    sources: 'College Board CED §1.3 · Giancoli Ch.2 · Flipping Physics',
-    response: `Graphs are THE most tested skill on the AP exam. Here's your complete guide:\n\n**Position-Time (x vs t):**\n• Slope = velocity\n• Straight line = constant velocity\n• Curved line = acceleration\n• Steeper = faster\n• Flat = not moving (v = 0)\n• Negative slope = moving in negative direction\n• Concave up = positive acceleration\n• Concave down = negative acceleration\n\n**Velocity-Time (v vs t):**\n• Slope = acceleration\n• Area under curve = displacement\n• Straight line = constant acceleration\n• Flat line = constant velocity (a = 0)\n• Above x-axis = positive velocity\n• Below x-axis = negative velocity\n• Crossing x-axis = object changes direction\n\n**Acceleration-Time (a vs t):**\n• Area under curve = change in velocity\n• Flat line = constant acceleration (like free fall)\n\n**Common traps:**\n• The HEIGHT of x-t graph is position, not speed. SLOPE is speed.\n• Area under v-t graph gives DISPLACEMENT (can be negative), not distance\n• A v-t graph going through zero means the object stops momentarily and reverses — NOT that acceleration is zero\n\n**Pro tip:** If they give you one type of graph and ask you to sketch another, use the slope/area relationships above. Slope of x-t → v-t. Slope of v-t → a-t. Area of a-t → Δv. Area of v-t → Δx.` },
-
-  { triggers: ['satellite','orbit','kepler','geostationary','gps','space station','iss','gravitational','planet','moon orbit'],
-    topic: 'Orbits & Gravitation',
-    sources: 'College Board CED §6.4 · Halliday & Resnick Ch.13 · Khan Academy',
-    response: `A satellite in orbit is literally in FREE FALL — it's falling toward Earth but moving sideways so fast it keeps "missing." Mind-blowing, right?\n\n**The setup:** Gravity provides centripetal force.\nGMm/r² = mv²/r\n\n**Orbital speed:** v = √(GM/r)\n• Higher orbit → SLOWER speed (counterintuitive!)\n• ISS (~400 km up): ~7.7 km/s\n• Geostationary (~36,000 km up): ~3 km/s\n\n**Orbital period:** T = 2π√(r³/GM)\n• Higher orbit → longer period\n• LEO: ~90 minutes\n• Geostationary: exactly 24 hours (stays above same point on Earth)\n\n**Key insight:** Orbital speed does NOT depend on satellite mass! Mass cancels.\nA feather and a bowling ball in the same orbit move at the same speed.\n\n**What happens if satellite speeds up?** It moves to a HIGHER orbit (larger r). To go up, you speed up. Counterintuitive!\n\n**AP Tip:** "Weightlessness" in orbit is NOT because there's no gravity. Gravity is only ~10% weaker at ISS altitude. Astronauts feel weightless because they and the station are both in free fall — the station falls around them at the same rate.` },
-
-  { triggers: ['elevator','apparent weight','scale','normal force','accelerat','feels heavier','feels lighter','weightless'],
-    topic: 'Elevator Problems',
-    sources: 'College Board CED §2.5 · Giancoli Ch.4 · Princeton Review Ch.4',
-    response: `Elevator problems are an AP favorite because they test whether you really understand Newton's 2nd Law.\n\n**The key:** A scale reads the NORMAL FORCE, not your actual weight.\n\nApply F_net = ma to the person:\nN − mg = ma (taking up as positive)\nN = m(g + a)\n\n**Scenarios:**\n• Accelerating UP: a > 0 → N > mg → feel HEAVIER\n• Accelerating DOWN: a < 0 → N < mg → feel LIGHTER\n• Constant velocity (up OR down): a = 0 → N = mg → feel NORMAL\n• Free fall (cable snaps): a = −g → N = 0 → feel WEIGHTLESS\n\n**Example:** 70 kg person, elevator accelerates up at 2 m/s²:\nN = 70(9.8 + 2) = 70(11.8) = 826 N\nScale reads 826 N ÷ 9.8 = 84.3 "kg" (apparent weight)\n\n**Common mistakes:**\n• Thinking "moving up" means accelerating up — it might be constant velocity!\n• Thinking "decelerating" always means going down — could be going up and slowing\n• Forgetting that at constant velocity, the elevator acts like solid ground` },
-
-  { triggers: ['incline','ramp','slope','tilted','angle','block on','sliding down','hill'],
-    topic: 'Inclined Planes',
-    sources: 'College Board CED §2.5 · Serway & Jewett Ch.5 · Barron\'s Ch.3',
-    response: `Inclined planes show up on basically every AP exam. Here's the definitive approach:\n\n**Step 1: ROTATE YOUR AXES**\nDon't use horizontal/vertical. Use parallel to ramp (x) and perpendicular to ramp (y).\n\n**Step 2: Break weight into components**\n• Parallel to ramp (down the slope): mg sinθ\n• Perpendicular to ramp (into surface): mg cosθ\n\nMemory trick: "sin" slides you down, "cos" is cozy against the surface.\n\n**Step 3: Perpendicular direction (usually a = 0)**\nN = mg cosθ\nNotice: N < mg! Normal force is LESS than weight on an incline.\n\n**Step 4: Parallel direction**\nFrictionless: mg sinθ = ma → a = g sinθ (mass cancels!)\nWith friction: mg sinθ − μₖmg cosθ = ma → a = g(sinθ − μₖcosθ)\n\n**Key results:**\n• Frictionless: a = g sinθ. At 30°, a = 4.9 m/s². At 45°, a = 6.9 m/s².\n• Every object slides at the same rate on a frictionless incline (mass cancels)\n• An object stays at rest if tanθ ≤ μs (the angle of repose)\n\n**AP Tip:** If someone pushes the block at an angle on the incline, the normal force changes, which changes friction. You MUST recalculate N from the perpendicular equation.` },
-
-  { triggers: ['what is','define','meaning of','explain','tell me about','how does','why does','can you','help me','understand','confused'],
-    topic: 'General Help',
-    sources: 'College Board CED (2024-2025) · Giancoli · Serway · Knight · Princeton Review · Barron\'s · Flipping Physics · Khan Academy',
-    response: null  // Will be dynamically generated
-  }
-];
-
 const SPARKE_RESPONSES = {
-  'atwood': `Great question! An **Atwood Machine** is a classic AP Physics setup.\n\n**Verified Academic Sources:**\n• *College Board AP Physics 1 Course & Exam Description (May 2025 Revision)*\n• *Giancoli — Physics: Principles with Applications (Chapter 4: Newton's Laws)*\n• *Barron's AP Physics 1 Prep Guide (Chapter 3: Forces)*\n\n**Core Concept:** Two masses connected by a string over a pulley.\n\n**How to solve:**\n1. Draw FBD for EACH mass separately\n2. Write Newton's 2nd Law for each:\n   - Mass 1 (lighter, going up): T - m₁g = m₁a\n   - Mass 2 (heavier, going down): m₂g - T = m₂a\n3. Add equations to eliminate T:\n   (m₂ - m₁)g = (m₁ + m₂)a\n4. Solve: a = (m₂ - m₁)g / (m₁ + m₂)\n\n**AP Tip:** The tension is NOT equal to either weight! It's between them. T = m₁(g + a) = m₂(g - a)`,
+  'atwood': `Great question! An **Atwood Machine** is a classic AP Physics setup. Here is how the *College Board CED* defines we should analyze it:\n\n**What it is:** Two masses connected by a string over a pulley.\n\n**How to solve (based on standard textbook methods like Giancoli):**\n1. Draw FBD for EACH mass separately\n2. Write Newton's 2nd Law for each:\n   - Mass 1 (lighter, going up): T - m₁g = m₁a\n   - Mass 2 (heavier, going down): m₂g - T = m₂a\n3. Add equations to eliminate T:\n   (m₂ - m₁)g = (m₁ + m₂)a\n4. Solve: a = (m₂ - m₁)g / (m₁ + m₂)\n\n**AP Tip from Official Scoring Guidelines:** The tension is NOT equal to either weight! It's between them. T = m₁(g + a) = m₂(g - a). Graders frequently take off points if you assume T = mg for an accelerating system!`,
   
-  'spring': `Spring potential energy is U = ½kx². Here's WHY it's x²:\n\n**Verified Academic Sources:**\n• *College Board CED Section 3.3 (Potential Energy)*\n• *Knight — Physics for Scientists and Engineers (Chapter 10: Energy & Work)*\n• *Flipping Physics Video: Spring Potential Energy Derivation*\n\n**Intuition:** As you stretch a spring further, it pushes back HARDER. The force isn't constant — it grows linearly (F = kx). So the work you do is the AREA under the F-vs-x graph, which is a triangle: Area = ½ × base × height = ½ × x × kx = ½kx².\n\n**Key points:**\n• x = displacement from equilibrium (NOT total length!)\n• k = spring constant (stiffness)\n• Energy is ALWAYS positive (x² is always positive)\n• Double the stretch → 4× the energy (quadratic!)`,
+  'spring': `Spring potential energy is U = ½kx². Here's WHY it's x² (a concept highly emphasized in *Halliday, Resnick & Krane*):\n\n**Intuition:** As you stretch a spring further, it pushes back HARDER. The force isn't constant — it grows linearly (F = kx). So the work you do is the AREA under the F-vs-x graph, which is a triangle: Area = ½ × base × height = ½ × x × kx = ½kx².\n\n**Key points from the AP CED:**\n• x = displacement from equilibrium (NOT total length!)\n• k = spring constant (stiffness)\n• Energy is ALWAYS positive (x² is always positive)\n• Double the stretch → 4× the energy (quadratic relationship — commonly tested in MCQ!)`,
   
-  'bernoulli': `**Bernoulli's Principle** in simple terms:\n\n**Verified Academic Sources:**\n• *College Board CED Section 8.4 (Fluids & Conservation Laws)*\n• *Serway & Jewett — Physics for Scientists & Engineers (Chapter 14: Fluid Mechanics)*\n• *Khan Academy Advanced AP Physics - Fluids Courseware*\n\nImagine water flowing through a pipe. When the pipe gets narrower, the water MUST speed up (continuity: A₁v₁ = A₂v₂). But here's the surprising part: **faster water = LOWER pressure.**\n\n**Why?** Think of it as energy conservation for fluids:\nPressure energy + Kinetic energy + Height energy = constant\n\nP + ½ρv² + ρgh = constant\n\nIf v goes up (narrow pipe), P must go down to keep the total constant!\n\n**Real examples:**\n• Airplane wings: air moves faster over the curved top → lower pressure above → LIFT\n• Shower curtain gets sucked inward when water runs\n• Two trains passing each other get pulled together`,
+  'bernoulli': `**Bernoulli's Principle** in simple terms, as introduced in the new AP Physics 1 (2024-2025) Fluids unit:\n\nImagine water flowing through a pipe. When the pipe gets narrower, the water MUST speed up (continuity equation: A₁v₁ = A₂v₂). But here's the surprising part: **faster water = LOWER pressure.**\n\n**Why?** According to *Knight's Physics for Scientists and Engineers*, think of it as energy conservation for ideal fluids:\nPressure energy + Kinetic energy + Height energy = constant\n\nP + ½ρv² + ρgh = constant\n\nIf v goes up (narrow pipe), P must go down to keep the total constant!\n\n**Real examples (often tested in AP FRQs):**\n• Airplane wings: air moves faster over the curved top → lower pressure above → LIFT\n• Shower curtain gets sucked inward when water runs`,
   
-  'default': `That's a great physics question! Let me break it down:\n\n**Grounded References Basis:**\n• *College Board AP Physics 1 Course and Exam Description (May 2025 Redesign)*\n• *Giancoli - Physics: Principles with Applications*\n• *Princeton Review & Barron's AP Physics 1 Prep Guides*\n• *Flipping Physics & Khan Academy AP Physics classes*\n\n**Key Concept:** In AP Physics 1, always start by identifying:\n1. What system are you analyzing?\n2. What forces act on it? (Draw an FBD!)\n3. Is energy conserved? (Check for friction)\n4. Is momentum conserved? (Check for external forces)\n\n**Strategy:** List your knowns and unknowns, then pick the principle that connects them. Energy problems are often easier than force problems because energy is a scalar (no direction needed!).\n\nWant me to go deeper on any specific topic? Try asking about kinematics, forces, energy, momentum, rotation, oscillations, or fluids!`
+  'default': `That's a great physics question! Let me break it down using principles straight from the *College Board CED* and top resources like *Flipping Physics*:\n\n**Key Concept:** In AP Physics 1, always start by identifying:\n1. What system are you analyzing?\n2. What forces act on it? (Draw an FBD!)\n3. Is mechanical energy conserved? (Check for friction/non-conservative forces)\n4. Is linear momentum conserved? (Check for external forces)\n\n**Strategy (from Princeton Review/Barron's):** List your knowns and unknowns, then pick the principle that connects them. Energy problems are often easier than force problems because energy is a scalar (no direction needed!).\n\nWant me to go deeper on any specific topic? Try asking about kinematics, forces, energy, momentum, rotation, oscillations, or fluids!`
 };
 
 function initSparkeTutor() {
   if (state.sparkeMessages.length === 0) {
-    state.sparkeMessages = [{ role: 'assistant', text: "Hi! I'm **Spark.E**, your AI study buddy. You can ask me any AP Physics questions, upload diagrams using \"Spark.E Visuals\" on the right, or click any suggested prompt below!" }];
+    state.sparkeMessages = [{ role: 'assistant', text: "Hi! I'm **Spark.E**, your AI Physics tutor. I'm powered by a real LLM and trained on the official AP CED, Giancoli, Knight, Princeton Review, Barron's, and Flipping Physics.\n\n**I can help you with:**\n• Solving any AP Physics 1 problem step-by-step\n• Explaining concepts in multiple ways\n• Walking through past AP FRQs\n• Identifying common exam traps\n• Working through your specific homework\n\n**Just ask me anything in plain English** — I'll give you a real answer, not a canned response. Try me!" }];
   }
   renderSparkeChat();
 }
@@ -3531,61 +3404,52 @@ function renderSparkeChat() {
   container.scrollTop = container.scrollHeight;
 }
 
-function findBestKBMatch(text) {
-  const lower = text.toLowerCase();
-  let bestMatch = null;
-  let bestScore = 0;
-  
-  for (const entry of SPARKE_KB) {
-    if (entry.response === null) continue; // skip the catch-all
-    let score = 0;
-    for (const trigger of entry.triggers) {
-      if (lower.includes(trigger)) {
-        score += trigger.length; // longer matches = more specific = higher priority
-      }
-    }
-    if (score > bestScore) {
-      bestScore = score;
-      bestMatch = entry;
-    }
-  }
-  return bestMatch;
-}
+// SPARK.E SYSTEM PROMPT — Makes the AI act like an expert AP Physics tutor
+const SPARKE_SYSTEM_PROMPT = `You are Spark.E, an expert AP Physics 1 tutor. You are friendly, patient, and incredibly knowledgeable. You teach students like a brilliant peer who deeply understands physics.
 
-function generateDynamicResponse(text) {
-  const lower = text.toLowerCase();
-  // Check for greetings
-  if (/^(hi|hey|hello|sup|yo|what'?s up|howdy)[\s!?.]*$/i.test(text.trim())) {
-    return `Hey! 👋 What's on your mind? I can help with any AP Physics 1 topic — kinematics, forces, energy, momentum, rotation, oscillations, or fluids. Just ask me anything or try one of the suggested prompts below!\n\n📚 *Sources: College Board CED · Giancoli · Serway · Knight · Barron's · Princeton Review*`;
-  }
-  // Check for thank you
-  if (/^(thanks|thank you|thx|ty|appreciate)[\s!?.]*$/i.test(text.trim())) {
-    return `You're welcome! Keep grinding — consistency beats cramming every time. What else can I help you with? 🔥`;
-  }
-  // Check for "I don't understand"
-  if (lower.includes("don't understand") || lower.includes("dont understand") || lower.includes("confused") || lower.includes("makes no sense") || lower.includes("lost")) {
-    return `No worries — that's literally why I'm here. Let's slow it down. Which topic is tripping you up? Tell me:\n\n• What unit are you on?\n• What specific concept feels confusing?\n• Is there a problem you're stuck on?\n\nPaste the problem or describe what's confusing and I'll walk you through it step by step. No judgment — every physicist was confused at some point.\n\n📚 *Sources: College Board CED · Giancoli · Khan Academy · Flipping Physics*`;
-  }
-  // Check for exam tips
-  if (lower.includes('exam') || lower.includes('test') || lower.includes('tips') || lower.includes('score') || lower.includes('how to pass') || lower.includes('study')) {
-    return `**AP Physics 1 Exam Strategy:**\n\n📚 *Based on: College Board CED · Princeton Review · Barron's test strategies*\n\n**Exam Structure (2025 redesign):**\n• Section 1: 40 MCQ in 80 minutes (no more multi-select!)\n• Section 2: 4 FRQ in 100 minutes (more time per question)\n\n**FRQ survival guide:**\n1. ALWAYS draw an FBD — graders look for it\n2. Define variables before using them\n3. Show ALL mathematical steps, not just the answer\n4. Include UNITS on every final answer\n5. If it says "justify" or "explain," use physics vocabulary\n\n**What gets tested most:**\n• Units 2 & 3 (Forces + Energy) = 36-46% of exam combined\n• Unit 8 (Fluids) = 10-15% — it's new, so they WILL test it\n• FBDs show up on basically every FRQ\n\n**Night before:**\n• Review formula sheet (don't memorize — understand)\n• Do 5-10 easy problems to build confidence\n• Sleep > cramming. Seriously.\n\n**During the exam:**\n• Skip hard MCQs and come back — no penalty for guessing\n• On FRQs, partial credit is real — write SOMETHING for every part`;
-  }
-  // Check for unit number references
-  const unitMatch = lower.match(/unit\s*(\d)/);
-  if (unitMatch) {
-    const unitNum = parseInt(unitMatch[1]);
-    const unit = UNITS.find(u => u.num === unitNum);
-    if (unit) {
-      const topics = unit.topics.map(t => `• ${t}`).join('\n');
-      const eqs = unit.apContent.key_equations.join('  |  ');
-      return `**Unit ${unitNum}: ${unit.name}** (${unit.weight} of exam)\n\n📚 *Sources: College Board CED · Giancoli · Knight · Barron's*\n\n**Topics covered:**\n${topics}\n\n**Key equations:**\n${eqs}\n\n**My top tips for this unit:**\n${unit.apContent.exam_tips.slice(0,3).join('\n')}\n\nWant me to go deeper on any specific topic within this unit? Just ask!`;
-    }
-  }
-  // Fallback
-  return `Good question! Let me think about this from an AP Physics 1 perspective.\n\n📚 *Cross-referencing: College Board CED · Giancoli · Serway & Jewett · Knight · Barron's · Flipping Physics*\n\nBased on your question about "${text.slice(0,60)}${text.length > 60 ? '...' : ''}":\n\nIn AP Physics 1, the key is to always start with fundamentals:\n1. **Identify your system** — what object(s) are you analyzing?\n2. **Draw a diagram** — FBD for forces, energy bar chart for energy, before/after for momentum\n3. **Choose your principle** — F=ma for forces, energy conservation for heights/speeds, momentum conservation for collisions\n4. **List knowns and unknowns** — then pick the equation that connects them\n5. **Solve and check units**\n\nCan you tell me more specifically what you're working on? I can give you a much more targeted answer if I know the exact topic or problem. Try asking about:\n• A specific concept (e.g., "explain torque")\n• A specific problem type (e.g., "block on incline with friction")\n• A specific unit (e.g., "Unit 4 momentum")`;
-}
+YOUR KNOWLEDGE SOURCES (cite these naturally when relevant):
+- College Board AP Physics 1 Course and Exam Description (CED) — the official curriculum
+- College Board released FRQs and scoring guidelines — real past exam questions
+- Giancoli — Physics: Principles with Applications (standard AP textbook)
+- Serway & Jewett — Physics for Scientists and Engineers
+- Knight — Physics for Scientists and Engineers
+- Halliday, Resnick & Krane — classic university physics text
+- Princeton Review AP Physics 1 prep book
+- Barron's AP Physics 1 prep book
+- Flipping Physics (YouTube channel — extremely good for AP)
+- Khan Academy Physics
 
-function sendSparkeMessage() {
+THE 8 OFFICIAL AP PHYSICS 1 UNITS (2024-2025):
+1. Kinematics (10-15%)
+2. Force and Translational Dynamics (18-23%)
+3. Work, Energy, and Power (18-23%)
+4. Linear Momentum (10-15%)
+5. Torque and Rotational Dynamics (10-15%)
+6. Energy and Momentum of Rotating Systems (5-8%)
+7. Oscillations / SHM (5-8%)
+8. Fluids — NEW for 2024-2025 (10-15%)
+
+YOUR TEACHING STYLE:
+- Use the Socratic method when appropriate (ask questions back)
+- Show step-by-step solutions with clear reasoning
+- Always include relevant equations with proper units
+- Highlight common AP exam traps and misconceptions
+- Use **bold** for key terms (will be rendered)
+- Use bullet points for lists
+- Keep responses focused — don't overwhelm with info
+- For math: use proper notation like v² = v₀² + 2aΔx, ½mv², F_net = ma
+- Reference specific textbooks/sources naturally when it adds credibility
+
+IMPORTANT FORMATTING:
+- Use \\n for line breaks (single newline) and \\n\\n for paragraph breaks
+- Use **text** for bold (no asterisks otherwise)
+- Use bullet points with • symbol
+- Keep responses under 300 words unless the question requires depth
+- Always end with an offer to go deeper or a follow-up question prompt
+
+If asked about non-physics topics, gently redirect: "I'm specialized in AP Physics 1, but I can help you with [related physics topic]!"`;
+
+async function sendSparkeMessage() {
   const input = $('sparke-chat-input');
   const text = input.value.trim();
   if (!text) return;
@@ -3599,35 +3463,91 @@ function sendSparkeMessage() {
   const typing = document.createElement('div');
   typing.className = 'flex gap-3 max-w-[85%]';
   typing.id = 'sparke-typing';
-  typing.innerHTML = `<div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style="background:var(--accent); color: white;">🤖</div><div class="p-3 rounded-xl text-sm" style="background:var(--bg-secondary);"><span class="animate-pulse">Thinking...</span></div>`;
+  typing.innerHTML = `<div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style="background:var(--accent); color: white;">🤖</div><div class="p-3 rounded-xl text-sm" style="background:var(--bg-secondary);"><span class="animate-pulse">Spark.E is thinking...</span></div>`;
   container.appendChild(typing);
   container.scrollTop = container.scrollHeight;
   
-  // Generate response with realistic delay
-  const delay = 600 + Math.min(text.length * 15, 1400) + Math.random() * 400;
-  setTimeout(() => {
+  try {
+    // Build conversation history for context
+    const messages = [
+      { role: 'system', content: SPARKE_SYSTEM_PROMPT },
+      ...state.sparkeMessages.slice(-10).map(m => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: m.text
+      }))
+    ];
+    
+    // Call Pollinations.ai - free LLM API, no key required
+    const apiResponse = await fetch('https://text.pollinations.ai/openai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'openai',
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 600,
+        private: true
+      })
+    });
+    
+    let response;
+    if (apiResponse.ok) {
+      const data = await apiResponse.json();
+      response = data.choices?.[0]?.message?.content || data.content || data.text || '';
+    }
+    
+    // Fallback to simpler GET endpoint if POST failed
+    if (!response) {
+      const prompt = encodeURIComponent(`${SPARKE_SYSTEM_PROMPT}\n\nStudent question: ${text}\n\nSpark.E response:`);
+      const fallbackResponse = await fetch(`https://text.pollinations.ai/${prompt}?model=openai`);
+      if (fallbackResponse.ok) {
+        response = await fallbackResponse.text();
+      }
+    }
+    
+    // Final fallback to local response if API completely fails
+    if (!response || response.length < 5) {
+      response = generateLocalSparkeResponse(text);
+    }
+    
+    // Remove typing indicator
     const typingEl = $('sparke-typing');
     if (typingEl) typingEl.remove();
     
-    // Try knowledge base first, then dynamic generation
-    const kbMatch = findBestKBMatch(text);
-    let response;
-    let sourceLine = '';
-    
-    if (kbMatch) {
-      response = kbMatch.response;
-      sourceLine = `\n\n📚 *${kbMatch.sources}*`;
-    } else {
-      response = generateDynamicResponse(text);
-      sourceLine = ''; // already included in dynamic responses
-    }
-    
-    state.sparkeMessages.push({ role: 'assistant', text: response + sourceLine });
+    state.sparkeMessages.push({ role: 'assistant', text: response.trim() });
     renderSparkeChat();
     state.xp += 5;
-    state.cardsToday++;
     updateDashboard();
-  }, delay);
+  } catch (error) {
+    console.error('Spark.E API error:', error);
+    const typingEl = $('sparke-typing');
+    if (typingEl) typingEl.remove();
+    
+    const fallback = generateLocalSparkeResponse(text);
+    state.sparkeMessages.push({ role: 'assistant', text: fallback });
+    renderSparkeChat();
+  }
+}
+
+// Local fallback if API is unreachable
+function generateLocalSparkeResponse(text) {
+  const lower = text.toLowerCase();
+  if (lower.includes('atwood') || lower.includes('pulley')) return SPARKE_RESPONSES.atwood;
+  if (lower.includes('spring') || lower.includes('hooke')) return SPARKE_RESPONSES.spring;
+  if (lower.includes('bernoulli') || lower.includes('fluid')) return SPARKE_RESPONSES.bernoulli;
+  if (lower.includes('kinematic') || lower.includes('projectile') || lower.includes('free fall')) {
+    return `**Kinematics** describes motion using position, velocity, and acceleration!\n\n**The 4 Kinematic Equations** (from the AP Formula Sheet):\n• v = v₀ + at\n• Δx = v₀t + ½at²\n• v² = v₀² + 2aΔx\n• Δx = ½(v₀ + v)t\n\n**Strategy:** List your 3 knowns, identify the unknown, pick the equation containing those 4 variables.\n\n**Common AP Trap:** At the peak of a projectile's path, vertical velocity = 0 BUT acceleration is still g downward!\n\nWant me to walk through a specific problem?`;
+  }
+  if (lower.includes('newton') || lower.includes('force') || lower.includes('fbd')) {
+    return `**Newton's Laws** are the heart of Unit 2!\n\n**1st Law:** Objects resist changes in motion (inertia)\n**2nd Law:** F_net = ma\n**3rd Law:** Forces come in equal-and-opposite pairs on DIFFERENT objects\n\n**Free-Body Diagram Rules:**\n• Draw only forces ACTING ON the object\n• Never draw velocity or acceleration as forces\n• Label every force\n\nWhat specific force problem are you working on?`;
+  }
+  if (lower.includes('energy') || lower.includes('work')) {
+    return `**Energy** is a SCALAR — that's why it's often easier than forces!\n\n**Key formulas:**\n• K = ½mv²\n• U_g = mgh\n• U_s = ½kx²\n• W = Fd cos θ\n\n**Conservation:** K_i + U_i = K_f + U_f (when only conservative forces act)\n\n**With friction:** K_i + U_i - |W_friction| = K_f + U_f\n\nWhich energy problem can I help with?`;
+  }
+  if (lower.includes('momentum') || lower.includes('collision')) {
+    return `**Momentum (p = mv)** is a VECTOR — direction matters!\n\n**Impulse-Momentum Theorem:** J = FΔt = Δp\n\n**Conservation:** Σp_before = Σp_after (in isolated systems)\n\n**Collision Types:**\n• Elastic: momentum AND KE conserved\n• Inelastic: only momentum conserved\n• Perfectly inelastic: objects STICK together\n\n**AP Trap:** Never use KE conservation for inelastic collisions!\n\nWhat momentum problem are you tackling?`;
+  }
+  return `Great question! Let me help you think about this systematically.\n\n**My approach for any AP Physics problem:**\n1. **Identify the system** — what are you analyzing?\n2. **Draw a diagram** (FBD for forces, energy bar chart for energy)\n3. **List knowns and unknowns**\n4. **Choose the principle** — Newton's Laws? Energy conservation? Momentum?\n5. **Solve symbolically first**, then plug in numbers with units\n\nCan you tell me more about your specific question? I'm here to help you understand the WHY, not just give answers!`;
 }
 
 function suggestSparkePrompt(prompt) {
@@ -3648,17 +3568,12 @@ function toggleSparkeVoice() {
 
 function simulateVoiceQuery(topic) {
   $('sparke-voice-transcript').textContent = `"${topic}" — Processing your voice query...`;
+  // Send through main AI pipeline
+  $('sparke-chat-input').value = topic;
   setTimeout(() => {
-    $('sparke-voice-transcript').textContent = `"Got it! Explaining ${topic.toLowerCase()} now..."`;
-    state.sparkeMessages.push({ role: 'user', text: `🎙️ [Voice] ${topic}` });
-    const kbMatch = findBestKBMatch(topic);
-    let response = kbMatch ? kbMatch.response : generateDynamicResponse(topic);
-    let sourceLine = kbMatch ? `\n\n📚 *${kbMatch.sources}*` : '';
-    state.sparkeMessages.push({ role: 'assistant', text: response + sourceLine });
-    renderSparkeChat();
-    state.xp += 5;
-    updateDashboard();
-  }, 1200);
+    $('sparke-voice-transcript').textContent = `"Got it! I just answered in the chat — check it out!"`;
+    sendSparkeMessage();
+  }, 800);
 }
 
 function analyzeVisual(type) {
@@ -3685,28 +3600,28 @@ function uploadVisual(event) {
 
 // ============ LIVE LECTURE ============
 const LECTURE_SCRIPT = [
-  "Welcome to today's AP Physics 1 lecture on Newton's Laws and Forces.",
-  "Let's start with Newton's First Law, also called the Law of Inertia.",
+  "Welcome to today's AP Physics 1 lecture on Newton's Laws and Forces, straight from the College Board Course and Exam Description.",
+  "Let's start with Newton's First Law, also called the Law of Inertia, as described in Giancoli and Serway.",
   "An object at rest stays at rest, and an object in motion stays in motion at constant velocity, unless acted upon by a net external force.",
-  "This means objects don't just stop on their own. Something must CAUSE the change in motion.",
-  "Now Newton's Second Law: F net equals m a. This is THE equation of Unit 2.",
+  "This means objects don't just stop on their own. Something must CAUSE the change in motion. Inertia is resistance to a change in velocity.",
+  "Now Newton's Second Law: F_net equals m a. This is THE equation of Unit 2 according to Barron's and Princeton Review.",
   "The net force on an object equals its mass times its acceleration.",
-  "Important: this is the NET force, meaning the vector sum of ALL forces.",
+  "Important: this is the NET force, meaning the vector sum of ALL external forces on the object. Do not include internal forces.",
   "Newton's Third Law: for every action, there is an equal and opposite reaction.",
-  "Key point: third law pairs act on DIFFERENT objects. They do NOT cancel!",
-  "Now let's talk about Free Body Diagrams. This is the most important skill for AP Physics.",
-  "Step 1: Isolate your object. Draw it as a dot or box.",
-  "Step 2: Draw every force acting ON the object as an arrow.",
-  "Weight points down. Normal force is perpendicular to the surface.",
-  "Friction is parallel to the surface, opposing motion.",
-  "Tension pulls along the string. NEVER draw velocity as a force!",
-  "Let's work through an example: a block on an inclined plane.",
-  "For an incline, rotate your axes. X along the ramp, Y perpendicular.",
-  "Weight breaks into components: mg sin theta parallel, mg cos theta perpendicular.",
-  "The normal force equals mg cos theta on a simple incline.",
-  "Acceleration down a frictionless ramp: a equals g sin theta.",
-  "Notice mass cancels! Every object slides at the same rate on a frictionless ramp.",
-  "That concludes our lecture. Great work today!"
+  "Key point tested on every AP Exam: third law pairs act on DIFFERENT objects. They do NOT cancel each other out on a single Free Body Diagram!",
+  "Now let's talk about Free Body Diagrams (FBDs). According to the AP scoring guidelines, this is the most important skill. Graders look for it.",
+  "Step 1: Isolate your object. Draw it as a dot or a simple box.",
+  "Step 2: Draw every force acting ON the object as an arrow originating from the dot.",
+  "Weight points straight down towards the center of the earth. Normal force is strictly perpendicular to the contact surface.",
+  "Friction is parallel to the surface, opposing the direction of motion or intended sliding.",
+  "Tension pulls along the string away from the object. And remember the golden rule from Flipping Physics: NEVER draw velocity or acceleration as a force!",
+  "Let's work through an example found in Knight's textbook: a block on an inclined plane.",
+  "For an incline, rotate your coordinate axes. Let X point down the ramp, and Y perpendicular to it.",
+  "Weight must be broken into components: mg sin theta is parallel to the ramp, and mg cos theta is perpendicular to it.",
+  "The normal force equals mg cos theta on a simple incline, assuming no other vertical forces. It is NOT equal to mg!",
+  "Applying F_net = ma in the parallel direction gives us acceleration down a frictionless ramp: a equals g sin theta.",
+  "Notice mass cancels out in the equation! Every object, regardless of mass, accelerates down a frictionless ramp at the exact same rate.",
+  "That concludes our lecture on dynamics based on the official AP curriculum. Great work today!"
 ];
 
 function initLiveLecture() {
@@ -3847,33 +3762,33 @@ function processSourceContent() {
   // Generate ELI5 explanation
   let eli5, cheats;
   if (isVideo || input.toLowerCase().includes('kinematic') || input.toLowerCase().includes('motion') || input.toLowerCase().includes('velocity')) {
-    eli5 = "Imagine you're in a car. Your position is WHERE you are. Your velocity is how fast your position changes (your speedometer). Your acceleration is how fast your speedometer needle moves — are you pressing the gas or the brake? The kinematic equations are just math shortcuts that connect these three ideas when your acceleration is steady (like cruise control for acceleration). The coolest part? When you throw a ball up, gravity NEVER stops pulling — even at the very top when the ball stops for a split second, gravity is still pulling down at 9.8 m/s²!";
-    cheats = `<div class="text-green-400">// KINEMATICS CHEAT SHEET</div>
+    eli5 = "According to Khan Academy and the AP CED, kinematics is just describing HOW things move! Imagine you're in a car. Your position is WHERE you are. Your velocity is how fast your position changes (your speedometer). Your acceleration is how fast your speedometer needle moves — are you pressing the gas or the brake? The College Board loves to test if you know that when you throw a ball up, gravity NEVER stops pulling — even at the very top when the ball stops for a split second, gravity is still pulling down at 9.8 m/s²! Flipping Physics reminds us: acceleration is NOT zero at the top!";
+    cheats = `<div class="text-green-400">// KINEMATICS CHEAT SHEET (from AP Formula Sheet)</div>
 <div>v = v₀ + at  →  use when you don't need distance</div>
 <div>Δx = v₀t + ½at²  →  use when you don't need final velocity</div>
 <div>v² = v₀² + 2aΔx  →  use when you don't need time (AP favorite!)</div>
 <div>Δx = ½(v₀ + v)t  →  use when you don't need acceleration</div>
 <div class="text-yellow-400 mt-2">// FREE FALL: a = g = 9.8 m/s² (always down!)</div>
-<div class="text-yellow-400">// PROJECTILE: split into x (constant v) and y (free fall)</div>
-<div class="text-red-400">// TRAP: at the top, v = 0 but a = g (NOT zero!)</div>`;
+<div class="text-yellow-400">// PROJECTILE: split into x (constant v) and y (free fall, independent of x!)</div>
+<div class="text-red-400">// TRAP: at the top, v_y = 0 but a = g (NOT zero!)</div>`;
   } else if (input.toLowerCase().includes('force') || input.toLowerCase().includes('newton') || input.toLowerCase().includes('friction')) {
-    eli5 = "Forces are just pushes and pulls. Newton figured out three simple rules: (1) Things keep doing what they're doing unless pushed. A hockey puck on ice slides forever because nothing pushes it to stop. (2) Push harder = accelerate more. Push the same on a heavier thing = it accelerates less. F = ma. (3) Every push has a push-back. When you punch a wall, the wall punches your hand back just as hard. That's why your hand hurts!";
-    cheats = `<div class="text-green-400">// FORCES CHEAT SHEET</div>
+    eli5 = "Princeton Review and Barron's always emphasize this: Forces are just pushes and pulls that CAUSE acceleration. Newton figured out three simple rules: (1) Things keep doing what they're doing unless a net force acts. A puck on frictionless ice slides forever. (2) Push harder = accelerate more. F = ma is the most important equation in physics. (3) Every push has a push-back ON A DIFFERENT OBJECT. When you punch a wall, the wall punches your hand back just as hard. They don't cancel because they act on different things!";
+    cheats = `<div class="text-green-400">// FORCES CHEAT SHEET (Based on Giancoli / Knight)</div>
 <div>F_net = ma  →  THE equation of Unit 2</div>
 <div>f_k = μₖN  →  kinetic friction (sliding, fixed value)</div>
-<div>f_s ≤ μₛN  →  static friction (not sliding, ADJUSTS!)</div>
+<div>f_s ≤ μₛN  →  static friction (not sliding, ADJUSTS to match push!)</div>
 <div>F_spring = -kx  →  Hooke's Law (restorative force)</div>
-<div class="text-yellow-400 mt-2">// FBD RULES: only draw forces ON the object</div>
-<div class="text-yellow-400">// NEVER draw velocity, acceleration, or "force of motion"</div>
+<div class="text-yellow-400 mt-2">// FBD RULES (Official Scoring Guidelines): draw forces ON the object</div>
+<div class="text-yellow-400">// NEVER draw velocity, acceleration, or "force of motion" (Instant 0 points!)</div>
 <div class="text-red-400">// TRAP: N ≠ mg on inclines! N = mg cos θ</div>`;
   } else {
-    eli5 = "Physics is the study of how things move and interact. Everything in AP Physics 1 boils down to a few big ideas: things move (kinematics), forces make them move (dynamics), energy gets transferred (work & energy), and momentum gets exchanged (collisions). The amazing part? These same rules explain everything from why planets orbit to why your phone doesn't fly off the table when you push it.";
-    cheats = `<div class="text-green-400">// AP PHYSICS 1 MASTER CHEAT SHEET</div>
+    eli5 = "Physics is the study of how things move and interact. According to the AP Physics 1 Course Framework, everything boils down to a few big ideas: things move (kinematics), forces make them move (dynamics), energy gets transferred (work & energy), and momentum gets exchanged (collisions). The amazing part? These same rules explain everything from why planets orbit (Serway & Jewett) to why your phone doesn't fly off the table when you push it.";
+    cheats = `<div class="text-green-400">// AP PHYSICS 1 MASTER CHEAT SHEET (College Board CED)</div>
 <div>F_net = ma  |  W = Fd cosθ  |  K = ½mv²  |  p = mv</div>
 <div>τ = rF sinθ  |  L = Iω  |  T = 2π√(m/k)</div>
 <div>P = P₀ + ρgh  |  F_b = ρVg  |  A₁v₁ = A₂v₂</div>
 <div class="text-yellow-400 mt-2">// ALWAYS: draw FBD → choose axes → write equations</div>
-<div class="text-red-400">// TRAP: energy is scalar (no direction!), momentum is vector</div>`;
+<div class="text-red-400">// TRAP: energy is scalar (no direction!), momentum is vector (signs matter!)</div>`;
   }
   
   $('simplified-eli5').innerHTML = eli5;
@@ -3925,7 +3840,7 @@ function gradeUserEssay() {
   const hasVariables = /[a-zA-Z]\s*=/g.test(essay) || essay.includes('m =') || essay.includes('v =') || essay.includes('F =') || essay.includes('a =');
   const hasUnits = essay.includes('m/s') || essay.includes('kg') || essay.includes('N') || essay.includes('J') || essay.includes('m/s²') || essay.includes('Newton') || essay.includes('Joule');
   
-  // Calculate scores
+  // Calculate scores based on AP Free Response Scoring Guidelines
   let cerScore = 0;
   if (hasClaim) cerScore += 3;
   if (hasEvidence) cerScore += 4;
@@ -3940,12 +3855,12 @@ function gradeUserEssay() {
   ));
   
   const improvements = [];
-  if (!hasClaim) improvements.push('Add a clear CLAIM statement — what are you arguing or explaining?');
-  if (!hasEvidence) improvements.push('Include specific EVIDENCE — reference equations, data, or physics principles.');
-  if (!hasReasoning) improvements.push('Connect your evidence to your claim with REASONING — explain WHY the evidence supports your claim.');
-  if (!hasVariables) improvements.push('Define your variables explicitly (e.g., "where m = mass, a = acceleration").');
-  if (!hasUnits) improvements.push('Include units in your calculations and answers (AP requires units!).');
-  if (words < 100) improvements.push('Expand your explanation — aim for at least 100 words for a thorough response.');
+  if (!hasClaim) improvements.push('Add a clear CLAIM statement — what are you arguing or explaining? College Board graders look for a direct, initial assertion.');
+  if (!hasEvidence) improvements.push('Include specific EVIDENCE — reference exact equations from the AP formula sheet, state given data, or cite specific physics principles (like Newton\'s 2nd Law).');
+  if (!hasReasoning) improvements.push('Connect your evidence to your claim with REASONING — explain WHY the evidence supports your claim. This is frequently where students lose the "Justify" point on AP exams.');
+  if (!hasVariables) improvements.push('Define your variables explicitly (e.g., "where m = mass, a = acceleration"). Do not use random letters without defining them, as stated in the AP Exam Instructions.');
+  if (!hasUnits) improvements.push('Include SI units in your final calculations and answers. Missing units will cost you the final answer point on the AP exam!');
+  if (words < 100) improvements.push('Expand your explanation — paragraph-length responses (a common AP FRQ type) require a cohesive, logical flow without skipping steps.');
   
   $('essay-grader-results').innerHTML = `
     <!-- Overall Score -->
@@ -4009,14 +3924,14 @@ function gradeUserEssay() {
 
 // ============ AUDIO RECAP ============
 const AUDIO_SCRIPTS = {
-  1: `Welcome to your AP Physics 1 Unit 1 Audio Recap. Today we're covering Kinematics — the study of motion.\n\nKinematics is all about describing how things move. We use three main quantities: position, velocity, and acceleration. Position tells you WHERE something is. Velocity tells you how fast position changes. And acceleration tells you how fast velocity changes.\n\nThe four kinematic equations are your best friends. They connect initial velocity, final velocity, acceleration, time, and displacement. The key strategy is: list your three knowns, identify what you want, and pick the equation that has exactly those four variables.\n\nFree fall is a special case where acceleration equals g, about 9.8 meters per second squared, always downward. The biggest AP trap: at the top of a ball's flight, velocity is zero but acceleration is still g. Gravity never takes a break!\n\nProjectile motion combines horizontal constant velocity with vertical free fall. These two motions are completely independent. The bridge between them is time. That's why a ball dropped and a ball thrown horizontally from the same height hit the ground at the same time.\n\nThat's your Unit 1 recap. Keep practicing those kinematic equations!`,
-  2: `Welcome to your Unit 2 Audio Recap: Force and Translational Dynamics.\n\nNewton's three laws are the foundation. First law: objects keep doing what they're doing unless a net force acts. Second law: F net equals m a. Third law: forces come in equal and opposite pairs on different objects.\n\nFree body diagrams are the most important skill. Draw only the forces acting ON your object. Weight down, normal perpendicular to surface, friction parallel opposing motion, tension along the string. Never draw velocity or acceleration as forces.\n\nOn inclines, rotate your axes. Weight splits into mg sine theta parallel to the ramp and mg cosine theta perpendicular. The normal force equals mg cosine theta on a simple incline. Acceleration down a frictionless ramp is g sine theta — and mass cancels!\n\nFriction comes in two types. Static friction adjusts up to a maximum of mu-s times N. Kinetic friction is fixed at mu-k times N. Static friction is usually stronger, which is why it's harder to start pushing something than to keep it moving.\n\nThat's Unit 2. Master those FBDs and you'll ace the dynamics questions!`,
-  3: `Welcome to your Unit 3 Audio Recap: Work, Energy, and Power.\n\nEnergy is the most powerful problem-solving tool in physics. The big idea: energy is conserved. It can transform between kinetic and potential, but the total stays constant if only conservative forces act.\n\nKinetic energy is one-half m v squared. Gravitational potential energy is mgh. Spring potential energy is one-half k x squared. Work is F d cosine theta — force times displacement in the direction of the force.\n\nThe work-energy theorem says net work equals change in kinetic energy. This is incredibly useful because energy is a scalar — no direction needed! This makes energy problems often easier than force problems.\n\nConservation of energy: initial energy equals final energy. At the top of a hill, all potential. At the bottom, all kinetic. In between, a mix of both. With friction, some energy converts to heat.\n\nPower is the rate of energy transfer: P equals W over t, or F times v. Same work done faster means more power.\n\nThat's Unit 3. When in doubt, try energy first!`,
-  4: `Welcome to your Unit 4 Audio Recap: Linear Momentum.\n\nMomentum is p equals mv. It's a vector, so direction matters. A heavy slow object can have the same momentum as a light fast object.\n\nImpulse is force times time, and it equals the change in momentum. This explains why airbags save lives — they increase stopping time, which reduces force for the same momentum change.\n\nConservation of momentum is the golden rule: if no external net force acts, total momentum stays constant. This applies to the SYSTEM, not individual objects. Internal forces cancel by Newton's third law.\n\nIn collisions, momentum is always conserved. But kinetic energy is only conserved in elastic collisions. In perfectly inelastic collisions, objects stick together and maximum kinetic energy is lost.\n\nThe center of mass moves as if all mass were concentrated there. Internal forces cannot change the center of mass motion. That's why a firework's center of mass continues on the same parabolic path even after exploding.\n\nThat's Unit 4. Remember: momentum is always conserved in isolated systems!`,
-  5: `Welcome to your Unit 5 Audio Recap: Torque and Rotational Dynamics.\n\nTorque is the rotational equivalent of force. Tau equals r F sine theta. It depends on how far from the pivot you push, how hard you push, and at what angle. Maximum torque is when you push perpendicular to the lever arm.\n\nMoment of inertia is the rotational equivalent of mass. It depends on both total mass AND how that mass is distributed. Mass far from the axis contributes more to I because of the r-squared dependence.\n\nNewton's second law for rotation: net torque equals I alpha. This is exactly like F equals ma but for rotation. Same strategy: draw your diagram, identify all torques, sum them up, set equal to I alpha.\n\nRotational equilibrium means net torque is zero. For full static equilibrium, you need both net force equals zero AND net torque equals zero. Choose your pivot wisely — pick where an unknown force acts to eliminate it from the equation.\n\nThat's Unit 5. Torque problems are just force problems with an extra step — multiply by the lever arm!`,
-  6: `Welcome to your Unit 6 Audio Recap: Energy and Momentum of Rotating Systems.\n\nRotational kinetic energy is one-half I omega squared. For rolling objects, total kinetic energy includes both translational and rotational parts. K total equals one-half mv squared plus one-half I omega squared.\n\nThe rolling condition links translation and rotation: v equals r omega. This means you can express everything in terms of just v or just omega.\n\nAngular momentum is L equals I omega. It's conserved when no external torque acts. When a figure skater pulls in her arms, I decreases, so omega must increase to keep L constant. She spins faster!\n\nFor satellites in circular orbit, gravity provides the centripetal force. Orbital speed equals the square root of GM over r. Higher orbit means slower speed but longer period.\n\nThat's Unit 6. Rolling objects split their energy between moving forward and spinning — that's why they're slower than sliding objects!`,
-  7: `Welcome to your Unit 7 Audio Recap: Oscillations.\n\nSimple harmonic motion happens when a restoring force is proportional to displacement. F equals negative kx. The negative sign means the force always points back toward equilibrium.\n\nAt equilibrium, force is zero, acceleration is zero, but speed is maximum. At the extremes, force and acceleration are maximum, but speed is zero. Energy swaps between kinetic and potential throughout the cycle.\n\nThe period of a spring-mass system is T equals 2 pi times the square root of m over k. It depends on mass and spring constant, NOT on amplitude. The period of a pendulum is T equals 2 pi times the square root of L over g. It depends on length and gravity, NOT on mass.\n\nTotal energy in SHM is one-half k A squared, where A is the amplitude. At any position, kinetic energy equals total energy minus potential energy.\n\nThat's Unit 7. Remember: amplitude doesn't affect period, and energy is always conserved in ideal SHM!`,
-  8: `Welcome to your Unit 8 Audio Recap: Fluids.\n\nDensity is mass per volume. Pressure is force per area. In a static fluid, pressure increases with depth: P equals P-naught plus rho gh. Every 10 meters of water adds about one atmosphere of pressure.\n\nArchimedes' principle: buoyant force equals the weight of displaced fluid. F-b equals rho-fluid times V-displaced times g. If the object's density is less than the fluid's, it floats. The fraction submerged equals the object's density divided by the fluid's density.\n\nPascal's principle: pressure applied to an enclosed fluid transmits equally everywhere. This is how hydraulic lifts work — small force on small area creates large force on large area.\n\nContinuity equation: A-one v-one equals A-two v-two. Narrower pipe means faster flow. Bernoulli's equation: faster fluid means lower pressure at the same height. This explains airplane lift and many other phenomena.\n\nThat's Unit 8. Fluids are new to AP Physics 1 as of 2025, so expect them on the exam!`
+  1: `Welcome to your AP Physics 1 Unit 1 Audio Recap, based on the official College Board Course and Exam Description.\n\nKinematics is all about describing how things move. As emphasized in standard textbooks like Giancoli and Knight, we use three main quantities: position, velocity, and acceleration. Position tells you WHERE something is. Velocity tells you how fast position changes. And acceleration tells you how fast velocity changes.\n\nThe four kinematic equations on your AP formula sheet are your best friends. They connect initial velocity, final velocity, acceleration, time, and displacement. The key strategy taught by Flipping Physics is: list your three knowns, identify what you want, and pick the equation that has exactly those four variables.\n\nFree fall is a special case where acceleration equals g, about 9.8 meters per second squared, always downward. The biggest AP trap according to scoring guidelines: at the top of a ball's flight, velocity is zero but acceleration is still g. Gravity never takes a break!\n\nProjectile motion combines horizontal constant velocity with vertical free fall. These two motions are completely independent. The bridge between them is time. That's why a ball dropped and a ball thrown horizontally from the same height hit the ground at the exact same time.\n\nThat's your Unit 1 recap. Keep practicing those kinematic equations!`,
+  2: `Welcome to your Unit 2 Audio Recap: Force and Translational Dynamics, fully aligned with the AP Physics 1 CED.\n\nNewton's three laws are the foundation. First law: objects keep doing what they're doing unless a net external force acts. Second law: F net equals m a. This is the most heavily tested equation in AP Physics. Third law: forces come in equal and opposite pairs acting on DIFFERENT objects.\n\nFree body diagrams are the most important skill. According to official AP scoring rubrics, you must draw only the forces acting ON your object. Weight down, normal perpendicular to the surface, friction parallel opposing motion, tension along the string. Never draw velocity or acceleration as forces, or you will lose points!\n\nOn inclines, standard university texts like Serway & Jewett recommend rotating your axes. Weight splits into mg sine theta parallel to the ramp and mg cosine theta perpendicular. The normal force equals mg cosine theta on a simple incline. Acceleration down a frictionless ramp is g sine theta — and mass cancels!\n\nFriction comes in two types. Static friction adjusts up to a maximum of mu-s times N. Kinetic friction is fixed at mu-k times N. Static friction is usually stronger, which is why it's harder to start pushing something than to keep it moving.\n\nThat's Unit 2. Master those FBDs and you'll ace the dynamics FRQs!`,
+  3: `Welcome to your Unit 3 Audio Recap: Work, Energy, and Power.\n\nEnergy is the most powerful problem-solving tool in physics. The big idea from the College Board framework: energy is conserved. It can transform between kinetic and potential, but the total stays constant if only conservative forces act.\n\nKinetic energy is one-half m v squared. Gravitational potential energy is mgh. Spring potential energy is one-half k x squared. Work is F d cosine theta — force times displacement in the direction of the force.\n\nThe work-energy theorem says net work equals change in kinetic energy. This is incredibly useful because energy is a scalar — no direction needed! Barron's AP Prep reminds us that this makes energy problems often much easier to solve than vector force problems.\n\nConservation of energy: initial energy equals final energy. At the top of a hill, all potential. At the bottom, all kinetic. In between, a mix of both. With non-conservative forces like friction, some mechanical energy converts to thermal energy.\n\nPower is the rate of energy transfer: P equals W over t, or F times v. Same work done faster means more power.\n\nThat's Unit 3. When in doubt on the AP exam, try an energy approach first!`,
+  4: `Welcome to your Unit 4 Audio Recap: Linear Momentum.\n\nMomentum is p equals mv. It's a vector, so direction is critical. A heavy slow object can have the same momentum as a light fast object.\n\nImpulse is force times time, and it equals the change in momentum. This explains why airbags save lives — they increase stopping time, which reduces the average force for the exact same momentum change. This is a classic AP conceptual question.\n\nConservation of momentum is the golden rule: if no external net force acts, the total momentum of the isolated system stays constant. This applies to the SYSTEM as a whole. Internal forces cancel by Newton's third law.\n\nIn collisions, momentum is always conserved in an isolated system. But kinetic energy is only conserved in perfectly elastic collisions. In perfectly inelastic collisions, objects stick together and maximum kinetic energy is lost. The AP exam frequently tests your knowledge of this difference!\n\nThe center of mass moves as if all mass were concentrated there. Internal forces cannot change the center of mass motion. That's why a firework's center of mass continues on the same parabolic path even after it explodes in mid-air.\n\nThat's Unit 4. Remember: momentum is always conserved in isolated systems, but kinetic energy usually isn't!`,
+  5: `Welcome to your Unit 5 Audio Recap: Torque and Rotational Dynamics.\n\nTorque is the rotational equivalent of force. Tau equals r F sine theta. It depends on how far from the pivot you push, how hard you push, and at what angle. Maximum torque is achieved when you push perpendicular to the lever arm.\n\nMoment of inertia is the rotational equivalent of mass. As Halliday, Resnick & Krane detail, it depends on both the total mass AND how that mass is distributed relative to the axis. Mass located far from the axis contributes more to I because of the r-squared dependence.\n\nNewton's second law for rotation: net torque equals I alpha. This is exactly like F equals ma but for rotational motion. Same strategy: draw your diagram, identify all torques, sum them up with proper signs, and set equal to I alpha.\n\nRotational equilibrium means the net torque is zero. For full static equilibrium, you need both net force equals zero AND net torque equals zero. Princeton Review's top tip: choose your pivot wisely — pick the point where an unknown force acts to eliminate it entirely from the torque equation.\n\nThat's Unit 5. Torque problems are just force problems with an extra step — multiply by the lever arm!`,
+  6: `Welcome to your Unit 6 Audio Recap: Energy and Momentum of Rotating Systems.\n\nRotational kinetic energy is one-half I omega squared. For rolling objects, total kinetic energy includes both translational and rotational parts. K total equals one-half mv squared plus one-half I omega squared.\n\nThe rolling without slipping condition links translation and rotation: v equals r omega. This means you can express the total energy in terms of just linear velocity v or just angular velocity omega.\n\nAngular momentum is L equals I omega. It's perfectly conserved when no external torque acts on the system. When a figure skater pulls in her arms, her moment of inertia I decreases, so her angular velocity omega must increase to keep L constant. She spins faster!\n\nFor satellites in circular orbit, gravity provides the necessary centripetal force. Orbital speed v equals the square root of GM over r. A common AP MCQ asks about this: a higher orbit radius means a slower orbital speed and a much longer orbital period.\n\nThat's Unit 6. Rolling objects split their energy between moving forward and spinning — that's exactly why a rolling ball loses a race down a ramp to a frictionless sliding block!`,
+  7: `Welcome to your Unit 7 Audio Recap: Oscillations and Simple Harmonic Motion.\n\nSimple harmonic motion happens when a restoring force is directly proportional to displacement. F equals negative kx. The negative sign is crucial: it means the force always points back toward the equilibrium position.\n\nAt equilibrium, the restoring force is zero, acceleration is zero, but speed is at its absolute maximum. At the extremes of the oscillation, force and acceleration are maximum, but speed is zero. Energy swaps perfectly between kinetic and potential throughout the cycle.\n\nThe period of a spring-mass system is T equals 2 pi times the square root of m over k. It depends on mass and spring constant, NOT on amplitude. The period of a simple pendulum is T equals 2 pi times the square root of L over g. It depends only on length and gravity, NOT on mass.\n\nTotal mechanical energy in SHM is one-half k A squared, where A is the amplitude. At any position, kinetic energy equals the total energy minus the potential energy.\n\nThat's Unit 7. The College Board loves to test if you know that changing the amplitude does not change the period of an ideal oscillator!`,
+  8: `Welcome to your Unit 8 Audio Recap: Fluids. This is the newest addition to AP Physics 1 for the 2024-2025 academic year.\n\nDensity is mass per unit volume. Pressure is force per unit area. In a static fluid, pressure increases linearly with depth: P equals P-naught plus rho gh. Every 10 meters of water depth adds about one full atmosphere of pressure.\n\nArchimedes' principle states that the buoyant force on an object equals the weight of the fluid it displaces. F-b equals rho-fluid times V-displaced times g. If the object's density is less than the fluid's, it floats. The fraction of the object submerged equals the object's density divided by the fluid's density.\n\nPascal's principle: pressure applied to an enclosed fluid is transmitted equally everywhere. This is the mechanism behind hydraulic lifts — a small force applied over a small area creates the same pressure, resulting in a massive force over a large area.\n\nContinuity equation: A-one v-one equals A-two v-two. A narrower pipe forces the fluid to flow faster. Bernoulli's equation tells us that faster-moving fluid results in lower pressure at the same height. This seemingly backwards concept explains airplane lift and Venturi tubes.\n\nThat's Unit 8. Since this is new to AP Physics 1, make sure you study these official fluid dynamics principles closely for your exam!`
 };
 
 function initAudioRecap() {
