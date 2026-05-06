@@ -293,6 +293,7 @@
     <button class="nav-item" data-page="notes">📝 Unit Notes</button>
     <button class="nav-item" data-page="concept-map">🗺 Concept Map</button>
     <button class="nav-item" data-page="formulas">📐 Formula Sheet</button>
+    <button class="nav-item" data-page="conversions">🔄 Unit Conversions</button>
     <button class="nav-item" data-page="flashcards">🃏 Flashcards</button>
     <button class="nav-item" data-page="frq">✍️ FRQ Practice</button>
     <button class="nav-item" data-page="quiz">⚡ Quiz</button>
@@ -448,6 +449,213 @@
     <h1 class="text-2xl font-bold mb-4">📐 Formula Sheet</h1>
     <p class="mb-6" style="color:var(--text-secondary);">Every formula organized by unit.</p>
     <div class="space-y-4" id="formula-list"></div>
+  </section>
+
+  <!-- UNIT CONVERSIONS -->
+  <section id="page-conversions" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-2">🔄 Unit Conversions</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Master unit conversions — the #1 skill that costs students points on the AP exam. Learn the method, study the references, and practice until it's automatic.</p>
+
+    <!-- Tab Navigation -->
+    <div class="flex gap-2 mb-6 border-b" style="border-color:var(--border);">
+      <button class="conv-tab active px-4 py-2 text-sm font-semibold border-b-2 transition-all" style="border-color:var(--accent); color:var(--accent);" data-conv-tab="learn" onclick="switchConvTab('learn')">📖 Learn the Method</button>
+      <button class="conv-tab px-4 py-2 text-sm font-semibold border-b-2 transition-all" style="border-color:transparent; color:var(--text-muted);" data-conv-tab="reference" onclick="switchConvTab('reference')">📋 Reference Tables</button>
+      <button class="conv-tab px-4 py-2 text-sm font-semibold border-b-2 transition-all" style="border-color:transparent; color:var(--text-muted);" data-conv-tab="calculator" onclick="switchConvTab('calculator')">🧮 Calculator</button>
+      <button class="conv-tab px-4 py-2 text-sm font-semibold border-b-2 transition-all" style="border-color:transparent; color:var(--text-muted);" data-conv-tab="practice" onclick="switchConvTab('practice')">⚡ Practice</button>
+    </div>
+
+    <!-- LEARN TAB -->
+    <div id="conv-learn" class="conv-content">
+      <!-- Why It Matters -->
+      <div class="card mb-4" style="border-color:var(--red);">
+        <div class="font-bold text-sm mb-2">⚠️ Why Conversions Are Critical on the AP Exam</div>
+        <p class="text-sm mb-2" style="color:var(--text-secondary);">Every AP Physics 1 problem requires SI base units. If you plug in mph instead of m/s, or grams instead of kg, your answer will be wrong — even if your physics is perfect. AP graders deduct points for wrong units OR missing units.</p>
+        <p class="text-sm" style="color:var(--text-secondary);"><strong style="color:var(--accent);">Pro tip from Princeton Review:</strong> ALWAYS convert to SI base units (meters, kilograms, seconds) BEFORE plugging into any equation. Convert once at the start, then never worry about units again!</p>
+      </div>
+
+      <!-- The Dimensional Analysis Method -->
+      <div class="card mb-4">
+        <div class="font-bold text-base mb-3">🎯 The Dimensional Analysis Method (Factor-Label Method)</div>
+        <p class="text-sm mb-3" style="color:var(--text-secondary);">This is THE only method you need. It works for ANY conversion, no matter how complex. The trick: multiply by fractions equal to 1.</p>
+
+        <div class="p-4 rounded-xl mb-4" style="background:var(--bg-secondary);">
+          <div class="font-semibold text-sm mb-2" style="color:var(--cyan);">📋 The 4-Step Process:</div>
+          <ol class="text-sm space-y-2 list-decimal ml-5" style="color:var(--text-secondary);">
+            <li><strong>Write down what you have</strong> with units (e.g., 60 mph)</li>
+            <li><strong>Multiply by a conversion fraction</strong> where the unit you want to cancel is on the BOTTOM and the unit you want is on the TOP (e.g., × 1609 m / 1 mi)</li>
+            <li><strong>Cancel matching units</strong> (cross out matching units like fractions)</li>
+            <li><strong>Multiply numbers, write units</strong> that didn't cancel</li>
+          </ol>
+        </div>
+
+        <div class="p-4 rounded-xl" style="background:var(--bg-secondary); border:1px solid var(--accent);">
+          <div class="font-semibold text-sm mb-2" style="color:var(--accent);">💡 Worked Example: Convert 60 mph to m/s</div>
+          <div class="font-mono text-xs space-y-2" style="color:var(--text-secondary);">
+            <div>Step 1: <span style="color:#fff;">60 mi/hr</span></div>
+            <div>Step 2: <span style="color:#fff;">60 mi/hr × (1609 m / 1 mi) × (1 hr / 3600 s)</span></div>
+            <div>Step 3: Cancel mi and hr (top mi cancels bottom mi, bottom hr cancels top hr)</div>
+            <div>Step 4: <span style="color:var(--green);">= (60 × 1609) / 3600 = 26.8 m/s</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Tips -->
+      <div class="grid lg:grid-cols-2 gap-4 mb-4">
+        <div class="card" style="border-color:var(--green);">
+          <div class="font-bold text-sm mb-2">✅ Pro Tips That Save Points</div>
+          <ul class="text-sm space-y-2" style="color:var(--text-secondary);">
+            <li>• <strong>Always convert FIRST</strong>, before doing any physics</li>
+            <li>• <strong>Write units in EVERY step</strong> — they're your error-detector</li>
+            <li>• If your final units are weird (like kg·m²·s⁻³), you made a mistake</li>
+            <li>• <strong>Memorize the SI base units:</strong> meters, kilograms, seconds, Newtons, Joules, Watts</li>
+            <li>• Use <strong>scientific notation</strong> for very large/small numbers (avoids errors)</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:var(--red);">
+          <div class="font-bold text-sm mb-2">❌ Common Mistakes That Lose Points</div>
+          <ul class="text-sm space-y-2" style="color:var(--text-secondary);">
+            <li>• Forgetting to convert grams → kilograms (off by 1000!)</li>
+            <li>• Using cm instead of m in formulas (off by 100!)</li>
+            <li>• Forgetting that Hz = 1/s and Pa = N/m²</li>
+            <li>• Confusing kg with N (mass vs weight)</li>
+            <li>• Squaring units incorrectly (m² ≠ 100 cm², it's 10,000 cm²!)</li>
+            <li>• Forgetting units in the final answer (instant point loss on FRQ)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Squared Units Trap -->
+      <div class="card" style="border-color:var(--yellow);">
+        <div class="font-bold text-sm mb-2">⚠️ The Squared/Cubed Units Trap</div>
+        <p class="text-sm mb-2" style="color:var(--text-secondary);">When converting squared or cubed units, you must square or cube the conversion factor!</p>
+        <div class="p-3 rounded-xl font-mono text-xs space-y-1" style="background:var(--bg-secondary); color:var(--text-secondary);">
+          <div>WRONG: 1 m² = 100 cm² ❌ (this would be just multiplying by 100)</div>
+          <div style="color:var(--green);">RIGHT: 1 m² = (100 cm)² = 10,000 cm² ✅</div>
+          <div class="mt-2">WRONG: 1 m³ = 1000 cm³ ❌</div>
+          <div style="color:var(--green);">RIGHT: 1 m³ = (100 cm)³ = 1,000,000 cm³ ✅</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFERENCE TAB -->
+    <div id="conv-reference" class="conv-content hidden">
+      <!-- Metric Prefixes -->
+      <div class="card mb-4">
+        <div class="font-bold text-base mb-3">📏 Metric Prefixes (MEMORIZE THESE!)</div>
+        <p class="text-sm mb-3" style="color:var(--text-muted);">These appear in nearly every AP Physics problem. Master them cold.</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead style="background:var(--bg-secondary);">
+              <tr>
+                <th class="p-2 text-left font-semibold">Prefix</th>
+                <th class="p-2 text-left font-semibold">Symbol</th>
+                <th class="p-2 text-left font-semibold">Multiplier</th>
+                <th class="p-2 text-left font-semibold">Example</th>
+              </tr>
+            </thead>
+            <tbody id="prefix-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SI Base Units -->
+      <div class="card mb-4">
+        <div class="font-bold text-base mb-3">🎯 SI Base Units (Always Use These in Equations!)</div>
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-2" id="si-units"></div>
+      </div>
+
+      <!-- Common Conversions -->
+      <div class="card mb-4">
+        <div class="font-bold text-base mb-3">🔄 Common Conversions in AP Physics</div>
+        <div class="space-y-4" id="common-conversions"></div>
+      </div>
+    </div>
+
+    <!-- CALCULATOR TAB -->
+    <div id="conv-calculator" class="conv-content hidden">
+      <div class="card max-w-2xl mx-auto">
+        <div class="font-bold text-base mb-3">🧮 Live Conversion Calculator</div>
+        <p class="text-sm mb-4" style="color:var(--text-secondary);">Convert any quantity instantly. Type a value, pick the units, and get the result.</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">CATEGORY</label>
+            <select id="conv-category" class="w-full p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary); border-color:var(--border);" onchange="updateConvUnits()">
+              <option value="length">Length / Distance</option>
+              <option value="mass">Mass</option>
+              <option value="time">Time</option>
+              <option value="velocity">Velocity / Speed</option>
+              <option value="acceleration">Acceleration</option>
+              <option value="force">Force</option>
+              <option value="energy">Energy / Work</option>
+              <option value="power">Power</option>
+              <option value="pressure">Pressure</option>
+              <option value="angle">Angle</option>
+              <option value="area">Area</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">FROM</label>
+              <input type="number" id="conv-input-value" placeholder="0" class="w-full p-3 rounded-xl border text-white text-sm mb-2 font-mono" style="background:var(--bg-secondary); border-color:var(--border);" oninput="performConversion()">
+              <select id="conv-from-unit" class="w-full p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary); border-color:var(--border);" onchange="performConversion()"></select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">TO</label>
+              <input type="text" id="conv-output-value" placeholder="0" readonly class="w-full p-3 rounded-xl border text-white text-sm mb-2 font-mono" style="background:var(--bg-card); border-color:var(--accent); color:var(--accent);">
+              <select id="conv-to-unit" class="w-full p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary); border-color:var(--border);" onchange="performConversion()"></select>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl" style="background:var(--bg-secondary); border:1px solid var(--accent);">
+            <div class="text-xs font-bold mb-2" style="color:var(--accent);">📐 Step-by-Step Solution</div>
+            <div id="conv-steps" class="text-xs font-mono leading-relaxed" style="color:var(--text-secondary);">Enter a value to see the conversion steps...</div>
+          </div>
+
+          <button class="btn btn-secondary w-full justify-center" onclick="swapConvUnits()">🔄 Swap Units</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRACTICE TAB -->
+    <div id="conv-practice" class="conv-content hidden">
+      <div class="grid lg:grid-cols-3 gap-4 mb-4">
+        <div class="card text-center">
+          <div class="text-3xl font-bold" id="conv-score">0</div>
+          <div class="text-xs" style="color:var(--text-muted);">Score</div>
+        </div>
+        <div class="card text-center">
+          <div class="text-3xl font-bold" id="conv-streak" style="color:var(--orange);">0</div>
+          <div class="text-xs" style="color:var(--text-muted);">Streak 🔥</div>
+        </div>
+        <div class="card text-center">
+          <div class="text-3xl font-bold" id="conv-accuracy">—</div>
+          <div class="text-xs" style="color:var(--text-muted);">Accuracy</div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="flex justify-between items-center mb-3">
+          <div class="font-bold text-sm">Question <span id="conv-q-num">1</span></div>
+          <select id="conv-difficulty" class="p-2 rounded-lg border text-white text-xs" style="background:var(--bg-secondary); border-color:var(--border);" onchange="newConvPractice()">
+            <option value="easy">Easy (basic prefixes)</option>
+            <option value="medium" selected>Medium (mixed units)</option>
+            <option value="hard">Hard (squared/derived)</option>
+          </select>
+        </div>
+
+        <div id="conv-question" class="text-lg font-semibold mb-4" style="color:var(--text-primary);"></div>
+        
+        <div class="grid gap-2 mb-4" id="conv-options"></div>
+
+        <div id="conv-feedback" class="hidden p-3 rounded-xl text-sm mb-4"></div>
+
+        <button class="btn btn-primary w-full justify-center" id="conv-next-btn" onclick="nextConvPractice()">Next Question →</button>
+      </div>
+    </div>
   </section>
 
   <!-- FLASHCARDS -->
@@ -2689,6 +2897,7 @@ function navigateTo(page) {
   if (page === 'notes') renderNotes();
   if (page === 'concept-map') renderConceptMap();
   if (page === 'formulas') renderFormulas();
+  if (page === 'conversions') initConversions();
   if (page === 'flashcards') initFlashcards();
   if (page === 'frq') generateFRQ();
   if (page === 'quiz') initQuiz();
@@ -3107,6 +3316,407 @@ function renderFormulas() {
       </div>
     </div>
   `).join('');
+}
+
+// ============ UNIT CONVERSIONS ============
+const METRIC_PREFIXES = [
+  { prefix: 'tera', symbol: 'T', value: 1e12, example: '1 TJ = 10¹² J' },
+  { prefix: 'giga', symbol: 'G', value: 1e9, example: '1 GW = 10⁹ W' },
+  { prefix: 'mega', symbol: 'M', value: 1e6, example: '1 MN = 10⁶ N' },
+  { prefix: 'kilo', symbol: 'k', value: 1e3, example: '1 km = 1000 m' },
+  { prefix: 'hecto', symbol: 'h', value: 1e2, example: '1 hPa = 100 Pa' },
+  { prefix: 'deka', symbol: 'da', value: 1e1, example: '1 dam = 10 m' },
+  { prefix: '(none)', symbol: '—', value: 1, example: '1 m = 1 m' },
+  { prefix: 'deci', symbol: 'd', value: 1e-1, example: '1 dm = 0.1 m' },
+  { prefix: 'centi', symbol: 'c', value: 1e-2, example: '1 cm = 0.01 m' },
+  { prefix: 'milli', symbol: 'm', value: 1e-3, example: '1 ms = 0.001 s' },
+  { prefix: 'micro', symbol: 'μ', value: 1e-6, example: '1 μm = 10⁻⁶ m' },
+  { prefix: 'nano', symbol: 'n', value: 1e-9, example: '1 ns = 10⁻⁹ s' },
+  { prefix: 'pico', symbol: 'p', value: 1e-12, example: '1 pF = 10⁻¹² F' }
+];
+
+const SI_BASE_UNITS = [
+  { quantity: 'Length', unit: 'meter', symbol: 'm' },
+  { quantity: 'Mass', unit: 'kilogram', symbol: 'kg' },
+  { quantity: 'Time', unit: 'second', symbol: 's' },
+  { quantity: 'Velocity', unit: 'meter/second', symbol: 'm/s' },
+  { quantity: 'Acceleration', unit: 'meter/second²', symbol: 'm/s²' },
+  { quantity: 'Force', unit: 'Newton', symbol: 'N (kg·m/s²)' },
+  { quantity: 'Energy/Work', unit: 'Joule', symbol: 'J (N·m)' },
+  { quantity: 'Power', unit: 'Watt', symbol: 'W (J/s)' },
+  { quantity: 'Pressure', unit: 'Pascal', symbol: 'Pa (N/m²)' },
+  { quantity: 'Frequency', unit: 'Hertz', symbol: 'Hz (1/s)' },
+  { quantity: 'Angle', unit: 'radian', symbol: 'rad' },
+  { quantity: 'Momentum', unit: 'kg·m/s', symbol: 'kg·m/s' }
+];
+
+const COMMON_CONVERSIONS = [
+  { category: '📏 Length', items: [
+    '1 km = 1000 m',
+    '1 m = 100 cm = 1000 mm',
+    '1 mile (mi) = 1609 m = 1.609 km',
+    '1 foot (ft) = 0.3048 m',
+    '1 inch (in) = 0.0254 m = 2.54 cm',
+    '1 yard = 0.9144 m'
+  ]},
+  { category: '⚖️ Mass', items: [
+    '1 kg = 1000 g',
+    '1 g = 1000 mg',
+    '1 metric ton (t) = 1000 kg',
+    '1 pound (lb) = 0.4536 kg',
+    '1 ounce (oz) = 28.35 g'
+  ]},
+  { category: '⏱ Time', items: [
+    '1 minute = 60 s',
+    '1 hour = 3600 s',
+    '1 day = 86,400 s',
+    '1 year ≈ 3.156 × 10⁷ s',
+    '1 ms = 10⁻³ s',
+    '1 μs = 10⁻⁶ s'
+  ]},
+  { category: '🚗 Velocity', items: [
+    '1 m/s = 3.6 km/h',
+    '1 km/h = 0.278 m/s',
+    '1 mph = 0.447 m/s',
+    '1 mph = 1.609 km/h',
+    '60 mph ≈ 26.8 m/s'
+  ]},
+  { category: '💪 Force & Energy', items: [
+    '1 N = 1 kg·m/s²',
+    '1 lb of force ≈ 4.448 N',
+    '1 J = 1 N·m = 1 kg·m²/s²',
+    '1 cal = 4.184 J',
+    '1 kWh = 3.6 × 10⁶ J',
+    '1 eV = 1.602 × 10⁻¹⁹ J'
+  ]},
+  { category: '⚡ Power & Pressure', items: [
+    '1 W = 1 J/s',
+    '1 kW = 1000 W',
+    '1 hp ≈ 746 W',
+    '1 atm = 101,325 Pa',
+    '1 bar = 100,000 Pa',
+    '1 mmHg = 133.3 Pa'
+  ]},
+  { category: '📐 Angles', items: [
+    '180° = π radians',
+    '1 rad = 57.296°',
+    '1° = 0.01745 rad',
+    '90° = π/2 rad ≈ 1.571 rad',
+    '360° = 2π rad ≈ 6.283 rad'
+  ]},
+  { category: '📦 Area & Volume', items: [
+    '1 m² = 10,000 cm² (squared!)',
+    '1 km² = 10⁶ m²',
+    '1 m³ = 1,000,000 cm³ (cubed!)',
+    '1 m³ = 1000 L',
+    '1 L = 1000 mL = 1000 cm³',
+    '1 gallon (US) = 3.785 L'
+  ]}
+];
+
+const CONV_UNITS = {
+  length: {
+    base: 'm', name: 'meters',
+    units: { 'm': 1, 'km': 1000, 'cm': 0.01, 'mm': 0.001, 'μm': 1e-6, 'nm': 1e-9, 'mi': 1609.34, 'ft': 0.3048, 'in': 0.0254, 'yd': 0.9144 }
+  },
+  mass: {
+    base: 'kg', name: 'kilograms',
+    units: { 'kg': 1, 'g': 0.001, 'mg': 1e-6, 't (metric ton)': 1000, 'lb': 0.453592, 'oz': 0.0283495 }
+  },
+  time: {
+    base: 's', name: 'seconds',
+    units: { 's': 1, 'ms': 0.001, 'μs': 1e-6, 'min': 60, 'hr': 3600, 'day': 86400, 'year': 3.156e7 }
+  },
+  velocity: {
+    base: 'm/s', name: 'meters/second',
+    units: { 'm/s': 1, 'km/h': 0.27778, 'mph': 0.44704, 'ft/s': 0.3048, 'knots': 0.5144 }
+  },
+  acceleration: {
+    base: 'm/s²', name: 'meters/second²',
+    units: { 'm/s²': 1, 'cm/s²': 0.01, 'ft/s²': 0.3048, 'g (gravity)': 9.81 }
+  },
+  force: {
+    base: 'N', name: 'Newtons',
+    units: { 'N': 1, 'kN': 1000, 'lbf (pound-force)': 4.44822, 'dyne': 1e-5 }
+  },
+  energy: {
+    base: 'J', name: 'Joules',
+    units: { 'J': 1, 'kJ': 1000, 'cal': 4.184, 'kcal': 4184, 'kWh': 3.6e6, 'eV': 1.602e-19, 'BTU': 1055 }
+  },
+  power: {
+    base: 'W', name: 'Watts',
+    units: { 'W': 1, 'kW': 1000, 'MW': 1e6, 'hp': 745.7, 'BTU/hr': 0.293 }
+  },
+  pressure: {
+    base: 'Pa', name: 'Pascals',
+    units: { 'Pa': 1, 'kPa': 1000, 'MPa': 1e6, 'atm': 101325, 'bar': 100000, 'mmHg (torr)': 133.322, 'psi': 6894.76 }
+  },
+  angle: {
+    base: 'rad', name: 'radians',
+    units: { 'rad': 1, 'deg (°)': Math.PI / 180, 'rev': 2 * Math.PI, 'grad': Math.PI / 200 }
+  },
+  area: {
+    base: 'm²', name: 'meters²',
+    units: { 'm²': 1, 'km²': 1e6, 'cm²': 1e-4, 'mm²': 1e-6, 'ft²': 0.0929, 'in²': 6.4516e-4, 'acre': 4046.86, 'hectare': 10000 }
+  },
+  volume: {
+    base: 'm³', name: 'meters³',
+    units: { 'm³': 1, 'L': 0.001, 'mL': 1e-6, 'cm³': 1e-6, 'ft³': 0.02832, 'gal (US)': 0.003785, 'in³': 1.6387e-5 }
+  },
+  temperature: {
+    base: 'K', name: 'Kelvin',
+    units: { 'K': 1, '°C': 1, '°F': 1 }, // special case handled separately
+    special: true
+  }
+};
+
+function initConversions() {
+  // Render prefix table
+  $('prefix-table').innerHTML = METRIC_PREFIXES.map(p => `
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td class="p-2">${p.prefix}</td>
+      <td class="p-2 font-mono font-bold" style="color:var(--accent);">${p.symbol}</td>
+      <td class="p-2 font-mono">${p.value === 1 ? '1' : p.value.toExponential().replace('e+', '× 10').replace('e-', '× 10⁻')}</td>
+      <td class="p-2 font-mono text-xs" style="color:var(--text-muted);">${p.example}</td>
+    </tr>
+  `).join('');
+
+  // Render SI base units
+  $('si-units').innerHTML = SI_BASE_UNITS.map(u => `
+    <div class="p-3 rounded-xl" style="background:var(--bg-secondary);">
+      <div class="text-xs font-bold" style="color:var(--accent);">${u.quantity}</div>
+      <div class="text-sm">${u.unit}</div>
+      <div class="text-xs font-mono" style="color:var(--text-muted);">${u.symbol}</div>
+    </div>
+  `).join('');
+
+  // Render common conversions
+  $('common-conversions').innerHTML = COMMON_CONVERSIONS.map(cat => `
+    <div>
+      <div class="font-bold text-sm mb-2" style="color:var(--accent);">${cat.category}</div>
+      <div class="grid grid-cols-2 gap-2">
+        ${cat.items.map(item => `<div class="p-2 rounded-lg text-xs font-mono" style="background:var(--bg-secondary);">${item}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  // Initialize calculator
+  updateConvUnits();
+  
+  // Initialize practice
+  newConvPractice();
+}
+
+function switchConvTab(tab) {
+  document.querySelectorAll('.conv-tab').forEach(t => {
+    t.style.borderColor = 'transparent';
+    t.style.color = 'var(--text-muted)';
+    t.classList.remove('active');
+  });
+  document.querySelectorAll('.conv-content').forEach(c => c.classList.add('hidden'));
+  
+  const activeTab = document.querySelector(`[data-conv-tab="${tab}"]`);
+  if (activeTab) {
+    activeTab.style.borderColor = 'var(--accent)';
+    activeTab.style.color = 'var(--accent)';
+    activeTab.classList.add('active');
+  }
+  $(`conv-${tab}`).classList.remove('hidden');
+}
+
+function updateConvUnits() {
+  const cat = $('conv-category').value;
+  const data = CONV_UNITS[cat];
+  const units = Object.keys(data.units);
+  
+  const fromSelect = $('conv-from-unit');
+  const toSelect = $('conv-to-unit');
+  
+  fromSelect.innerHTML = units.map(u => `<option value="${u}">${u}</option>`).join('');
+  toSelect.innerHTML = units.map(u => `<option value="${u}">${u}</option>`).join('');
+  
+  // Set default: first unit to second unit
+  if (units.length > 1) toSelect.selectedIndex = 1;
+  
+  performConversion();
+}
+
+function performConversion() {
+  const cat = $('conv-category').value;
+  const data = CONV_UNITS[cat];
+  const value = parseFloat($('conv-input-value').value);
+  const fromUnit = $('conv-from-unit').value;
+  const toUnit = $('conv-to-unit').value;
+  
+  if (isNaN(value)) {
+    $('conv-output-value').value = '';
+    $('conv-steps').innerHTML = 'Enter a value to see the conversion steps...';
+    return;
+  }
+  
+  let result, steps;
+  
+  if (cat === 'temperature') {
+    // Special temperature conversion
+    let kelvin;
+    if (fromUnit === 'K') kelvin = value;
+    else if (fromUnit === '°C') kelvin = value + 273.15;
+    else if (fromUnit === '°F') kelvin = (value - 32) * 5/9 + 273.15;
+    
+    if (toUnit === 'K') result = kelvin;
+    else if (toUnit === '°C') result = kelvin - 273.15;
+    else if (toUnit === '°F') result = (kelvin - 273.15) * 9/5 + 32;
+    
+    steps = `<div>Step 1: Convert ${value} ${fromUnit} to Kelvin</div>
+<div style="color:var(--green);">${fromUnit === 'K' ? `${value} K` : fromUnit === '°C' ? `${value} + 273.15 = ${kelvin.toFixed(2)} K` : `(${value} - 32) × 5/9 + 273.15 = ${kelvin.toFixed(2)} K`}</div>
+<div class="mt-2">Step 2: Convert Kelvin to ${toUnit}</div>
+<div style="color:var(--green);">${toUnit === 'K' ? `${kelvin.toFixed(2)} K` : toUnit === '°C' ? `${kelvin.toFixed(2)} - 273.15 = ${result.toFixed(2)} °C` : `(${kelvin.toFixed(2)} - 273.15) × 9/5 + 32 = ${result.toFixed(2)} °F`}</div>`;
+  } else {
+    // Standard conversion through base unit
+    const fromFactor = data.units[fromUnit];
+    const toFactor = data.units[toUnit];
+    const baseValue = value * fromFactor;
+    result = baseValue / toFactor;
+    
+    steps = `<div>Step 1: Convert ${value} ${fromUnit} to base unit (${data.base})</div>
+<div style="color:var(--green);">${value} × ${fromFactor} = ${baseValue.toExponential(4).replace('e+', ' × 10').replace('e-', ' × 10⁻')} ${data.base}</div>
+<div class="mt-2">Step 2: Convert base unit to ${toUnit}</div>
+<div style="color:var(--green);">${baseValue.toExponential(4).replace('e+', ' × 10').replace('e-', ' × 10⁻')} ÷ ${toFactor} = ${result} ${toUnit}</div>
+<div class="mt-2" style="color:var(--accent);">Quick formula: value × (${fromFactor} / ${toFactor})</div>`;
+  }
+  
+  // Format result
+  let formatted;
+  if (Math.abs(result) < 0.001 || Math.abs(result) > 1e6) {
+    formatted = result.toExponential(4);
+  } else {
+    formatted = parseFloat(result.toPrecision(8)).toString();
+  }
+  
+  $('conv-output-value').value = formatted + ' ' + toUnit;
+  $('conv-steps').innerHTML = steps;
+}
+
+function swapConvUnits() {
+  const fromSel = $('conv-from-unit');
+  const toSel = $('conv-to-unit');
+  const tempVal = fromSel.value;
+  fromSel.value = toSel.value;
+  toSel.value = tempVal;
+  performConversion();
+}
+
+// CONVERSION PRACTICE
+const CONV_PRACTICE_QUESTIONS = {
+  easy: [
+    { q: 'Convert 5 km to meters', answer: 5000, unit: 'm', options: [500, 5000, 50000, 0.005] },
+    { q: 'Convert 250 cm to meters', answer: 2.5, unit: 'm', options: [25, 2.5, 0.25, 25000] },
+    { q: 'Convert 3000 g to kilograms', answer: 3, unit: 'kg', options: [0.3, 3, 30, 300] },
+    { q: 'Convert 5 minutes to seconds', answer: 300, unit: 's', options: [60, 300, 30, 500] },
+    { q: 'Convert 2 hours to seconds', answer: 7200, unit: 's', options: [120, 7200, 720, 3600] },
+    { q: 'Convert 500 mg to grams', answer: 0.5, unit: 'g', options: [5, 0.5, 50, 0.05] },
+    { q: 'Convert 4.5 km to meters', answer: 4500, unit: 'm', options: [450, 4500, 45000, 45] },
+    { q: 'Convert 2.5 hours to minutes', answer: 150, unit: 'min', options: [125, 150, 250, 200] },
+    { q: 'Convert 80 cm to meters', answer: 0.8, unit: 'm', options: [8, 0.8, 0.08, 800] },
+    { q: 'Convert 1 day to seconds', answer: 86400, unit: 's', options: [86400, 8640, 1440, 3600] }
+  ],
+  medium: [
+    { q: 'Convert 60 mph to m/s (use 1 mi = 1609 m)', answer: 26.82, unit: 'm/s', options: [16.7, 26.82, 96.5, 36.0] },
+    { q: 'Convert 100 km/h to m/s', answer: 27.78, unit: 'm/s', options: [27.78, 36.0, 100.0, 16.67] },
+    { q: 'Convert 9.81 m/s² to ft/s² (1 ft = 0.3048 m)', answer: 32.18, unit: 'ft/s²', options: [32.18, 9.81, 2.99, 29.4] },
+    { q: 'Convert 1500 J to kcal (1 kcal = 4184 J)', answer: 0.358, unit: 'kcal', options: [358, 0.358, 6276000, 6.276] },
+    { q: 'Convert 2 atm to Pa (1 atm = 101325 Pa)', answer: 202650, unit: 'Pa', options: [101325, 202650, 50662.5, 2026.5] },
+    { q: 'Convert 5 kWh to J (1 kWh = 3.6 × 10⁶ J)', answer: 18000000, unit: 'J', options: [1800000, 18000000, 180000, 5000] },
+    { q: 'Convert 30° to radians', answer: 0.524, unit: 'rad', options: [0.524, 1.047, 0.262, 30.0] },
+    { q: 'Convert π/4 radians to degrees', answer: 45, unit: '°', options: [30, 45, 60, 90] },
+    { q: 'Convert 1 hp to Watts (1 hp = 746 W)', answer: 746, unit: 'W', options: [746, 100, 1000, 550] },
+    { q: 'Convert 5 lb to kg (1 lb = 0.4536 kg)', answer: 2.268, unit: 'kg', options: [11.02, 2.268, 0.227, 5.0] }
+  ],
+  hard: [
+    { q: 'Convert 1 m² to cm²', answer: 10000, unit: 'cm²', options: [100, 1000, 10000, 100000] },
+    { q: 'Convert 1 m³ to cm³', answer: 1000000, unit: 'cm³', options: [1000, 10000, 100000, 1000000] },
+    { q: 'Convert 50 mph to m/s (squared scenario for kinetic energy)', answer: 22.35, unit: 'm/s', options: [22.35, 80.5, 8.05, 50.0] },
+    { q: 'A 2000 cm² window — what is this in m²?', answer: 0.2, unit: 'm²', options: [20, 0.2, 200000, 2.0] },
+    { q: 'Convert 5 g/cm³ to kg/m³ (density)', answer: 5000, unit: 'kg/m³', options: [5, 50, 5000, 500000] },
+    { q: 'Convert 100 km/h to m/s, then square it (for v²)', answer: 771.6, unit: '(m/s)²', options: [27.78, 771.6, 100, 277.8] },
+    { q: 'Convert 3 L to m³', answer: 0.003, unit: 'm³', options: [3000, 0.003, 0.3, 30000] },
+    { q: 'Convert 1 N/cm² to Pa (1 cm² = 10⁻⁴ m²)', answer: 10000, unit: 'Pa', options: [100, 1000, 10000, 1] },
+    { q: 'A car uses 720 kJ in 60 s. What is the power in Watts?', answer: 12000, unit: 'W', options: [12, 1200, 12000, 120000] },
+    { q: 'Convert 1.5 × 10⁵ ms to minutes', answer: 2.5, unit: 'min', options: [25, 2.5, 0.25, 250] }
+  ]
+};
+
+const convState = { score: 0, streak: 0, total: 0, correct: 0, currentQ: null };
+
+function newConvPractice() {
+  const difficulty = $('conv-difficulty').value;
+  const pool = CONV_PRACTICE_QUESTIONS[difficulty];
+  const q = pool[Math.floor(Math.random() * pool.length)];
+  
+  // Shuffle options
+  const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+  convState.currentQ = { ...q, shuffledOptions: shuffled };
+  
+  $('conv-question').textContent = q.q;
+  $('conv-options').innerHTML = shuffled.map((opt, i) => `
+    <button class="conv-option-btn p-3 rounded-xl border text-left text-sm transition-all hover:bg-card-hover" 
+      style="background:var(--bg-secondary); border-color:var(--border);" 
+      onclick="answerConvPractice(${opt}, this)">
+      <span class="font-bold mr-2" style="color:var(--accent);">${String.fromCharCode(65 + i)}.</span>
+      <span class="font-mono">${opt} ${q.unit}</span>
+    </button>
+  `).join('');
+  
+  $('conv-feedback').classList.add('hidden');
+  $('conv-q-num').textContent = convState.total + 1;
+}
+
+function answerConvPractice(selected, btn) {
+  const q = convState.currentQ;
+  const correct = Math.abs(selected - q.answer) < 0.01;
+  
+  // Disable all buttons
+  document.querySelectorAll('.conv-option-btn').forEach(b => {
+    b.style.pointerEvents = 'none';
+    const val = parseFloat(b.querySelector('.font-mono').textContent);
+    if (Math.abs(val - q.answer) < 0.01) {
+      b.style.borderColor = 'var(--green)';
+      b.style.background = 'rgba(52,211,153,0.1)';
+    }
+    if (b === btn && !correct) {
+      b.style.borderColor = 'var(--red)';
+      b.style.background = 'rgba(248,113,113,0.1)';
+    }
+  });
+  
+  convState.total++;
+  if (correct) {
+    convState.score += 10;
+    convState.correct++;
+    convState.streak++;
+    state.xp += 10;
+    $('conv-feedback').className = 'p-3 rounded-xl text-sm mb-4';
+    $('conv-feedback').style.background = 'rgba(52,211,153,0.1)';
+    $('conv-feedback').style.color = 'var(--green)';
+    $('conv-feedback').innerHTML = `✅ <strong>Correct!</strong> The answer is <strong>${q.answer} ${q.unit}</strong>. +10 XP!`;
+  } else {
+    convState.streak = 0;
+    $('conv-feedback').className = 'p-3 rounded-xl text-sm mb-4';
+    $('conv-feedback').style.background = 'rgba(248,113,113,0.1)';
+    $('conv-feedback').style.color = 'var(--red)';
+    $('conv-feedback').innerHTML = `❌ <strong>Not quite.</strong> The correct answer is <strong>${q.answer} ${q.unit}</strong>. Keep practicing!`;
+  }
+  
+  $('conv-feedback').classList.remove('hidden');
+  $('conv-score').textContent = convState.score;
+  $('conv-streak').textContent = convState.streak;
+  $('conv-accuracy').textContent = Math.round((convState.correct / convState.total) * 100) + '%';
+  
+  updateDashboard();
+}
+
+function nextConvPractice() {
+  newConvPractice();
 }
 
 // ============ FLASHCARDS ============
