@@ -107,6 +107,15 @@
     background: var(--bg-card);
     color: var(--text-primary);
   }
+  .btn-xs {
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+  .btn-sm {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
 
   /* Progress bar */
   .progress-bar {
@@ -246,6 +255,14 @@
     transform: rotate(-90deg);
   }
 
+  /* Utility classes */
+  .text-muted-foreground { color: var(--text-muted); }
+  .animate-pulse { animation: pulse-anim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  @keyframes pulse-anim {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
   /* Selected mode */
   .mode-card {
     border: 2px solid transparent;
@@ -938,6 +955,24 @@ const state = {
   pomodoroIsBreak: false,
   pomodoroSessions: 0,
   currentPage: 'dashboard',
+  // AI Copilot Pack State
+  sparkeMessages: [],
+  sparkeVoiceActive: false,
+  sparkeVoiceInterval: null,
+  lectureRecording: false,
+  lectureSeconds: 0,
+  lectureTimerInterval: null,
+  lectureTranscript: '',
+  lectureAssetsGenerated: false,
+  selectedSourceType: 'text',
+  docProcessed: false,
+  audioPlaying: false,
+  audioProgress: 0,
+  audioInterval: null,
+  audioSpeed: 1,
+  audioTotalDuration: 150,
+  audioTranscriptLines: [],
+  audioCurrentLine: 0,
 };
 
 // Official AP Physics 1 Units (College Board CED 2024-2025)
@@ -3337,121 +3372,73 @@ function updatePomodoroDisplay() {
   $('pomodoro-ring').style.strokeDashoffset = circumference * (1 - progress);
 }
 
-// ============ AI COPILOT PACK IMPLEMENTATION ============
-// State values for AI Copilot features
-state.sparkeMessages = [];
-state.sparkeVoiceActive = false;
-state.sparkeVoiceTimer = null;
-state.sparkeVoiceSeconds = 0;
-
-state.lectureActive = false;
-state.lectureSeconds = 0;
-state.lectureInterval = null;
-state.lectureTranscriptWords = [
-  "Alright class, welcome back. Today we are talking about Unit 2: Dynamics.",
-  "Let's focus on Atwood Machines — you know, two masses hanging over a pulley.",
-  "If mass 2 is heavier than mass 1, the net force is just (m2 - m1)*g.",
-  "Why? Because gravity pulls down on mass 2, but tension supports mass 1.",
-  "When you analyze the entire system together, tension becomes an INTERNAL force.",
-  "Since tension is internal, it completely cancels out in your net force equation!",
-  "So we write: F_net = m_total * a.",
-  "Which simplifies to: (m2 - m1)*g = (m1 + m2)*a.",
-  "And that gives you the system acceleration: a = g * (m2 - m1) / (m1 + m2).",
-  "AP Exam Tip: Graders love to see you derive this step-by-step using separate free-body diagrams for each mass rather than just memorizing this formula!",
-  "Make sure you draw tension pulling UP for both masses, and weight pointing DOWN.",
-  "That is all for this micro-session. Next we will convert this captured audio into study tools!"
-];
-state.lectureTranscriptIndex = 0;
-state.lectureCapturedText = "";
-
-state.docSourceType = "text";
-state.docProcessedData = null;
-
-state.audioRecapInterval = null;
-state.audioRecapPlaying = false;
-state.audioRecapSeconds = 0;
-state.audioRecapDuration = 150; // 2:30
-state.audioRecapSpeed = 1.0;
-state.audioRecapScripts = {
-  "1": [
-    { time: 0, text: "Welcome to the Unit 1 Kinematics recap. Today we are dissecting displacement, velocity, and acceleration." },
-    { time: 20, text: "Remember, velocity is the slope of position, and acceleration is the slope of velocity. Area under v-t is displacement." },
-    { time: 50, text: "A key AP trick: at the peak of any projectile motion, vertical velocity is zero, but acceleration is still -9.8 m/s² downwards!" },
-    { time: 90, text: "Make sure you split 2D kinematics into horizontal and vertical components immediately before doing any math. Time connects both!" }
-  ],
-  "2": [
-    { time: 0, text: "This is the Unit 2 Dynamics audio recap. Forces are interactions, not things objects possess." },
-    { time: 25, text: "F_net = ma is your holy grail. Remember, normal force is only equal to mg on a flat surface with no vertical forces." },
-    { time: 60, text: "Static friction adapts up to its maximum, while kinetic friction remains constant once slipping starts." },
-    { time: 100, text: "On inclines, gravity splits: mg sin θ pulls parallel to the ramp, and mg cos θ presses perpendicular." }
-  ],
-  "3": [
-    { time: 0, text: "Unit 3 Work, Energy, and Power recap. Energy is a scalar, which makes the algebra very clean!" },
-    { time: 20, text: "Work is done only by forces parallel to displacement. Perpendicular forces do zero work." },
-    { time: 55, text: "If only conservative forces act, mechanical energy is conserved: KE + PE remains constant." },
-    { time: 95, text: "Power is simply the speed of doing work. P = W/t, or P = Fv when parallel." }
-  ],
-  "4": [
-    { time: 0, text: "Welcome to Unit 4 Momentum recap. Momentum is a vector — direction is absolutely critical!" },
-    { time: 20, text: "Impulse is force times time, which equals your change in momentum. Airbags save lives by stretching this time." },
-    { time: 60, text: "In any isolated system, total momentum is conserved before and after collisions, even when energy is lost." },
-    { time: 100, text: "The center of mass of a system only shifts when acted on by external net forces — internal forces cancel out." }
-  ],
-  "5": [
-    { time: 0, text: "Unit 5 Torque and Rotational Dynamics recap. Torque is the rotational equivalent of force." },
-    { time: 25, text: "τ = rF sin θ. Distance from the pivot, or leverage, determines how easily you rotate an object." },
-    { time: 60, text: "Rotational equilibrium means net torque is zero. The moment of inertia I is the rotational analog of mass." },
-    { time: 100, text: "Newton's second law for rotation is net torque = I * alpha. Mass distribution relative to the axis dictates I." }
-  ],
-  "6": [
-    { time: 0, text: "Welcome to Unit 6 Rotational Energy and Momentum. Rolling without slipping combines translation and rotation." },
-    { time: 30, text: "Total KE = 1/2 mv² + 1/2 Iω². Sphere rolls faster than a hoop because it has a smaller moment of inertia." },
-    { time: 70, text: "Angular momentum L = Iω is conserved if net external torque is zero. Skater tucks in arms to spin faster." },
-    { time: 110, text: "Satellites orbit under gravity acting as the inward centripetal force: GMm/r² = mv²/r." }
-  ],
-  "7": [
-    { time: 0, text: "Unit 7 Oscillations recap. Simple Harmonic Motion requires a restoring force proportional to displacement." },
-    { time: 25, text: "At equilibrium, speed is maximum and acceleration is zero. At extremes, speed is zero and acceleration is max." },
-    { time: 65, text: "Period of a spring depends only on m and k. Period of a pendulum depends only on L and g. Amplitude does not matter!" },
-    { time: 115, text: "Total mechanical energy is constant: E = 1/2 kA². Energy constantly swaps between kinetic and potential." }
-  ],
-  "8": [
-    { time: 0, text: "Unit 8 Fluids recap. Added in 2025! Density is mass per volume, pressure is force per area." },
-    { time: 25, text: "Fluid pressure increases linearly with depth: P = P0 + ρgh. Pressure pushes equally in all directions." },
-    { time: 60, text: "Archimedes' principle states buoyant force equals weight of displaced fluid: Fb = ρVg." },
-    { time: 100, text: "Continuity: narrowing pipes speeds up fluid flow. Bernoulli: faster fluid flow lowers pressure." }
-  ]
+// ============ SPARK.E AI TUTOR ============
+const SPARKE_RESPONSES = {
+  'atwood': `Great question! An **Atwood Machine** is a classic AP Physics setup.\n\n**What it is:** Two masses connected by a string over a pulley.\n\n**How to solve:**\n1. Draw FBD for EACH mass separately\n2. Write Newton's 2nd Law for each:\n   - Mass 1 (lighter, going up): T - m₁g = m₁a\n   - Mass 2 (heavier, going down): m₂g - T = m₂a\n3. Add equations to eliminate T:\n   (m₂ - m₁)g = (m₁ + m₂)a\n4. Solve: a = (m₂ - m₁)g / (m₁ + m₂)\n\n**AP Tip:** The tension is NOT equal to either weight! It's between them. T = m₁(g + a) = m₂(g - a)`,
+  
+  'spring': `Spring potential energy is U = ½kx². Here's WHY it's x²:\n\n**Intuition:** As you stretch a spring further, it pushes back HARDER. The force isn't constant — it grows linearly (F = kx). So the work you do is the AREA under the F-vs-x graph, which is a triangle: Area = ½ × base × height = ½ × x × kx = ½kx².\n\n**Key points:**\n• x = displacement from equilibrium (NOT total length!)\n• k = spring constant (stiffness)\n• Energy is ALWAYS positive (x² is always positive)\n• Double the stretch → 4× the energy (quadratic!)`,
+  
+  'bernoulli': `**Bernoulli's Principle** in simple terms:\n\nImagine water flowing through a pipe. When the pipe gets narrower, the water MUST speed up (continuity: A₁v₁ = A₂v₂). But here's the surprising part: **faster water = LOWER pressure.**\n\n**Why?** Think of it as energy conservation for fluids:\nPressure energy + Kinetic energy + Height energy = constant\n\nP + ½ρv² + ρgh = constant\n\nIf v goes up (narrow pipe), P must go down to keep the total constant!\n\n**Real examples:**\n• Airplane wings: air moves faster over the curved top → lower pressure above → LIFT\n• Shower curtain gets sucked inward when water runs\n• Two trains passing each other get pulled together`,
+  
+  'default': `That's a great physics question! Let me break it down:\n\n**Key Concept:** In AP Physics 1, always start by identifying:\n1. What system are you analyzing?\n2. What forces act on it? (Draw an FBD!)\n3. Is energy conserved? (Check for friction)\n4. Is momentum conserved? (Check for external forces)\n\n**Strategy:** List your knowns and unknowns, then pick the principle that connects them. Energy problems are often easier than force problems because energy is a scalar (no direction needed!).\n\nWant me to go deeper on any specific topic? Try asking about kinematics, forces, energy, momentum, rotation, oscillations, or fluids!`
 };
 
-// --- SPARK.E AI TUTOR HANDLERS ---
 function initSparkeTutor() {
-  // Clear voice calling widget just in case
-  state.sparkeVoiceActive = false;
-  $('sparke-voice-ui').classList.add('hidden');
-  $('sparke-voice-btn').textContent = "📞 Call Spark.E";
-  clearInterval(state.sparkeVoiceTimer);
+  if (state.sparkeMessages.length === 0) {
+    state.sparkeMessages = [{ role: 'assistant', text: "Hi! I'm **Spark.E**, your AI study buddy. You can ask me any AP Physics questions, upload diagrams using \"Spark.E Visuals\" on the right, or click any suggested prompt below!" }];
+  }
+  renderSparkeChat();
+}
+
+function renderSparkeChat() {
+  const container = $('sparke-chat-messages');
+  container.innerHTML = state.sparkeMessages.map(msg => `
+    <div class="flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : ''}">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style="background:${msg.role === 'user' ? 'var(--cyan)' : 'var(--accent)'}; color: white;">${msg.role === 'user' ? '👤' : '🤖'}</div>
+      <div class="p-3 rounded-xl text-sm" style="background:var(--bg-secondary);">${msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}</div>
+    </div>
+  `).join('');
+  container.scrollTop = container.scrollHeight;
 }
 
 function sendSparkeMessage() {
   const input = $('sparke-chat-input');
   const text = input.value.trim();
   if (!text) return;
-
-  // Add user bubble
-  appendChatBubble("user", text);
-  input.value = "";
-
-  // Add typing indicator
-  const typingId = appendChatBubble("typing", "Spark.E is formulating answer...");
-
-  // Simulate AI Response
+  
+  state.sparkeMessages.push({ role: 'user', text });
+  input.value = '';
+  renderSparkeChat();
+  
+  // Show typing indicator
+  const container = $('sparke-chat-messages');
+  const typing = document.createElement('div');
+  typing.className = 'flex gap-3 max-w-[85%]';
+  typing.id = 'sparke-typing';
+  typing.innerHTML = `<div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style="background:var(--accent); color: white;">🤖</div><div class="p-3 rounded-xl text-sm" style="background:var(--bg-secondary);"><span class="animate-pulse">Thinking...</span></div>`;
+  container.appendChild(typing);
+  container.scrollTop = container.scrollHeight;
+  
+  // Generate response
   setTimeout(() => {
-    $(typingId)?.remove();
-    const reply = generateSparkeReply(text);
-    appendChatBubble("assistant", reply);
-    state.xp += 5; // Reward tutoring
+    const typingEl = $('sparke-typing');
+    if (typingEl) typingEl.remove();
+    
+    const lower = text.toLowerCase();
+    let response = SPARKE_RESPONSES.default;
+    if (lower.includes('atwood') || lower.includes('pulley')) response = SPARKE_RESPONSES.atwood;
+    else if (lower.includes('spring') || lower.includes('potential')) response = SPARKE_RESPONSES.spring;
+    else if (lower.includes('bernoulli') || lower.includes('fluid') || lower.includes('pressure')) response = SPARKE_RESPONSES.bernoulli;
+    else if (lower.includes('kinematic') || lower.includes('projectile') || lower.includes('free fall')) response = `**Kinematics** is all about describing motion!\n\n**The Big 4 Equations** (constant acceleration only):\n1. v = v₀ + at\n2. Δx = v₀t + ½at²\n3. v² = v₀² + 2aΔx\n4. Δx = ½(v₀ + v)t\n\n**Strategy:** List your 3 knowns, identify what you want, pick the equation with those 4 variables.\n\n**AP Trap:** "At the highest point, acceleration = 0" is WRONG! Acceleration is ALWAYS g = 9.8 m/s² downward, even at the peak!`;
+    else if (lower.includes('newton') || lower.includes('force') || lower.includes('fbd')) response = `**Newton's Laws** are the foundation of dynamics!\n\n**1st Law (Inertia):** Objects keep doing what they're doing unless a net force acts.\n**2nd Law:** F_net = ma (THE equation of Unit 2)\n**3rd Law:** Forces come in pairs on DIFFERENT objects.\n\n**FBD Rules:**\n• Draw ONLY forces acting ON the object\n• Weight always points down\n• Normal is perpendicular to surface\n• Friction is parallel to surface, opposing motion\n• NEVER draw velocity or acceleration as forces!\n\n**AP Tip:** On inclines, rotate your axes! Parallel to ramp: mg sin θ. Perpendicular: mg cos θ.`;
+    else if (lower.includes('energy') || lower.includes('work') || lower.includes('conservation')) response = `**Energy Conservation** is the most powerful tool in physics!\n\n**Key equations:**\n• K = ½mv² (kinetic)\n• U_g = mgh (gravitational potential)\n• U_s = ½kx² (spring potential)\n• W = Fd cos θ (work)\n\n**Conservation:** If only gravity/springs do work:\nK_i + U_i = K_f + U_f\n\n**With friction:** K_i + U_i - W_friction = K_f + U_f\n\n**AP Tip:** Energy is a SCALAR — no direction needed! This makes energy problems often easier than force problems. Mass often cancels out!`;
+    else if (lower.includes('momentum') || lower.includes('collision') || lower.includes('impulse')) response = `**Momentum** (p = mv) is conserved in isolated systems!\n\n**Key concepts:**\n• Momentum is a VECTOR (direction matters!)\n• Impulse J = FΔt = Δp\n• In collisions: Σp_initial = Σp_final\n\n**Types of collisions:**\n• Elastic: momentum AND KE conserved\n• Inelastic: only momentum conserved\n• Perfectly inelastic: objects stick together\n\n**AP Tip:** "Sticks together" = perfectly inelastic. Do NOT conserve kinetic energy! Only momentum is conserved.`;
+    
+    state.sparkeMessages.push({ role: 'assistant', text: response });
+    renderSparkeChat();
+    state.xp += 5;
     updateDashboard();
-  }, 1000);
+  }, 800 + Math.random() * 600);
 }
 
 function suggestSparkePrompt(prompt) {
@@ -3459,560 +3446,502 @@ function suggestSparkePrompt(prompt) {
   sendSparkeMessage();
 }
 
-function appendChatBubble(sender, text) {
-  const container = $('sparke-chat-messages');
-  const bubbleId = "bubble-" + Date.now();
-  const div = document.createElement('div');
-  
-  if (sender === "user") {
-    div.className = "flex gap-3 justify-end ml-auto max-w-[85%] mb-3 animate-in";
-    div.innerHTML = `
-      <div class="p-3 rounded-xl text-sm text-white" style="background:var(--accent);">
-        ${text}
-      </div>
-      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold bg-zinc-800 text-zinc-300 flex-shrink-0">ME</div>
-    `;
-  } else if (sender === "typing") {
-    div.id = bubbleId;
-    div.className = "flex gap-3 max-w-[85%] mb-3 animate-in";
-    div.innerHTML = `
-      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0 bg-zinc-800 text-zinc-300">🤖</div>
-      <div class="p-3 rounded-xl text-sm italic text-zinc-500" style="background:var(--bg-secondary);">
-        ${text}
-      </div>
-    `;
-  } else {
-    div.className = "flex gap-3 max-w-[85%] mb-3 animate-in";
-    div.innerHTML = `
-      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style="background:var(--accent); color: white;">🤖</div>
-      <div class="p-3 rounded-xl text-sm space-y-2 leading-relaxed" style="background:var(--bg-secondary); border:1px solid var(--border);">
-        ${text}
-      </div>
-    `;
-  }
-  
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return bubbleId;
-}
-
-function generateSparkeReply(query) {
-  const q = query.toLowerCase();
-  
-  if (q.includes("atwood")) {
-    return `<strong>Atwood Machine Analysis:</strong><br>
-    To master this on the AP Exam, remember the two-body trick:<br>
-    1. Draw separate FBDs for Mass 1 and Mass 2.<br>
-    2. Write Newton's Second Law for each: <br>
-    <code class="block font-mono p-1 bg-black rounded text-xs">T - m1*g = m1*a  (mass 1 rises)</code>
-    <code class="block font-mono p-1 bg-black rounded text-xs">m2*g - T = m2*a  (mass 2 falls)</code>
-    3. Add the equations to eliminate tension: <br>
-    <code class="block font-mono p-1 bg-black rounded text-xs">a = g * (m2 - m1) / (m1 + m2)</code>
-    <em>Common AP trap:</em> The tension is NOT equal to m2*g! Since Mass 2 is accelerating downwards, the tension must be smaller than m2*g to allow downward acceleration.`;
-  }
-  
-  if (q.includes("spring") || q.includes("potential")) {
-    return `<strong>Why does spring potential energy depend on x squared (1/2 kx²)?</strong><br>
-    In physics, work is the area under a Force vs. Position graph. <br>
-    Since spring force is NOT constant (it gets stronger as you stretch it: <code class="font-mono bg-black p-0.5 rounded">F = kx</code>), the graph of Force vs. x is a straight diagonal line forming a triangle!<br>
-    The area of this triangle is:<br>
-    <code class="block font-mono p-1 bg-black rounded text-xs">Area = 1/2 * base * height = 1/2 * (x) * (kx) = 1/2 * kx²</code>
-    This is why work done to stretch a spring (and thus its stored elastic energy) scales with displacement squared!`;
-  }
-
-  if (q.includes("bernoulli") || q.includes("fluid")) {
-    return `<strong>Bernoulli's Principle Simplified:</strong><br>
-    Bernoulli's equation is actually just <em>conservation of energy for flowing fluids</em>:<br>
-    <code class="block font-mono p-1 bg-black rounded text-xs">P + 1/2 * ρ * v² + ρ * g * h = constant</code>
-    Where fluid moves faster (<code class="font-mono bg-black p-0.5 rounded">v</code> increases), the pressure (<code class="font-mono bg-black p-0.5 rounded">P</code>) must drop to conserve total energy. <br>
-    <strong>AP Concept:</strong> In a Venturi tube (a narrowing pipe), water speeds up through the narrow throat (by continuity A1v1 = A2v2) and therefore experiences a drop in pressure!`;
-  }
-
-  if (q.includes("centrifugal") || q.includes("circular")) {
-    return `<strong>Is "Centrifugal Force" real?</strong><br>
-    On the AP Physics exam, <em>never</em> draw "centrifugal force." It is a fictitious force felt in rotating reference frames.<br>
-    In an inertial frame of reference, the only real force is <strong>centripetal force</strong> (directed toward the center), which is supplied by real physical interactions like friction or tension.<br>
-    When you turn in a car, you feel pushed outward because your body wants to continue in a straight line (inertia, Newton's 1st Law), not because an outward force pushes you!`;
-  }
-
-  return `I processed your question: "${query}".<br>
-  Based on the AP Physics 1 curriculum, that relates directly to core forces or energy principles. <br>
-  Would you like me to supply a step-by-step mathematical derivation or explain the physical intuition behind this?`;
+function clearSparkeChat() {
+  state.sparkeMessages = [{ role: 'assistant', text: "Chat cleared! Ask me anything about AP Physics 1." }];
+  renderSparkeChat();
 }
 
 function toggleSparkeVoice() {
   state.sparkeVoiceActive = !state.sparkeVoiceActive;
-  if (state.sparkeVoiceActive) {
-    $('sparke-voice-ui').classList.remove('hidden');
-    $('sparke-voice-btn').textContent = "🔴 Hang Up";
-    state.sparkeVoiceSeconds = 0;
-    $('sparke-voice-transcript').textContent = '"I\'m listening... Ask me any physics question out loud!"';
-    showToast("Calling Spark.E... 🎙️");
-  } else {
-    $('sparke-voice-ui').classList.add('hidden');
-    $('sparke-voice-btn').textContent = "📞 Call Spark.E";
-    showToast("Call ended with Spark.E");
-  }
+  $('sparke-voice-ui').classList.toggle('hidden', !state.sparkeVoiceActive);
+  $('sparke-voice-btn').textContent = state.sparkeVoiceActive ? '🔴 End Call' : '📞 Call Spark.E';
 }
 
 function simulateVoiceQuery(topic) {
-  $('sparke-voice-transcript').innerHTML = `<span class="text-zinc-500">You said:</span> "${topic}"<br><br><span class="text-green-400">Spark.E says:</span> Let me break that down for you! Check my output in the Active Workspace Chat on the left for the full breakdown!`;
-  appendChatBubble("user", `[Voice Call Query]: ${topic}`);
-  
+  $('sparke-voice-transcript').textContent = `"${topic}" — Processing your voice query...`;
   setTimeout(() => {
-    const reply = generateSparkeReply(topic);
-    appendChatBubble("assistant", reply);
-  }, 500);
-}
-
-function clearSparkeChat() {
-  $('sparke-chat-messages').innerHTML = `
-    <div class="flex gap-3 max-w-[85%]">
-      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style="background:var(--accent); color: white;">🤖</div>
-      <div class="p-3 rounded-xl text-sm" style="background:var(--bg-secondary);">
-        Chat cleared! Ask me anything, or analyze a diagram below.
-      </div>
-    </div>
-  `;
-  showToast("Workspace chat cleared");
+    $('sparke-voice-transcript').textContent = `"Great question! Let me explain ${topic.toLowerCase()}..."`;
+    // Also add to chat
+    state.sparkeMessages.push({ role: 'user', text: `[Voice] ${topic}` });
+    const lower = topic.toLowerCase();
+    let response = SPARKE_RESPONSES.default;
+    if (lower.includes('atwood')) response = SPARKE_RESPONSES.atwood;
+    else if (lower.includes('centrifugal') || lower.includes('circular')) response = `**Circular Motion** key insight: an object moving in a circle at constant speed IS accelerating!\n\n**Why?** Acceleration = any change in velocity. Velocity includes direction. In a circle, direction changes every instant.\n\n**Centripetal force:** F_c = mv²/r (directed toward center)\n\n**"Centrifugal force" is NOT a real force** in an inertial frame! It's a fictitious force that appears only in a rotating reference frame. On the AP exam, NEVER draw centrifugal force on an FBD!\n\n**What actually provides centripetal force?**\n• Car on curve → friction\n• Ball on string → tension\n• Satellite → gravity`;
+    state.sparkeMessages.push({ role: 'assistant', text: response });
+    renderSparkeChat();
+    state.xp += 5;
+    updateDashboard();
+  }, 1200);
 }
 
 function analyzeVisual(type) {
+  const visuals = {
+    atwood: { title: '⚙️ Atwood Machine Detected', desc: '**Setup:** Two masses (m₁, m₂) connected by a massless string over a frictionless pulley.\n\n**Forces identified:**\n• m₁: Tension (up), Weight m₁g (down)\n• m₂: Tension (up), Weight m₂g (down)\n\n**Key equations:**\n• a = (m₂ - m₁)g / (m₁ + m₂)\n• T = 2m₁m₂g / (m₁ + m₂)\n\n**AP Tip:** If m₁ = m₂, acceleration = 0 and T = mg. The system is in equilibrium!' },
+    incline: { title: '📐 Inclined Plane Detected', desc: '**Setup:** Block on a ramp at angle θ.\n\n**Forces identified:**\n• Weight mg (straight down)\n• Normal force N (perpendicular to ramp)\n• Friction f (parallel to ramp, opposing motion)\n\n**Components of weight:**\n• Parallel to ramp: mg sin θ (causes sliding)\n• Perpendicular to ramp: mg cos θ (balanced by N)\n\n**Key results:**\n• N = mg cos θ\n• a = g(sin θ - μₖcos θ) [with friction]\n• a = g sin θ [frictionless]\n\n**AP Tip:** Always rotate your axes for incline problems!' },
+    fluid: { title: '💧 Venturi Tube Detected', desc: '**Setup:** Pipe narrows from wide section (A₁) to narrow section (A₂).\n\n**Physics identified:**\n• Continuity: A₁v₁ = A₂v₂ (narrower = faster)\n• Bernoulli: P₁ + ½ρv₁² = P₂ + ½ρv₂² (faster = lower pressure)\n\n**Key insight:** The fluid speeds up in the narrow section, and the pressure DROPS. This pressure difference can be measured with a manometer.\n\n**Applications:** Carburetors, atomizers, airplane wings, Venturi flow meters.' }
+  };
+  const v = visuals[type];
   $('visual-output').classList.remove('hidden');
-  const title = $('visual-title');
-  const desc = $('visual-desc');
-  
-  if (type === 'atwood') {
-    title.textContent = "⚙️ Atwood Machine Diagram Analysis";
-    desc.innerHTML = `<strong>System:</strong> Pulley with hanging masses m1 and m2.<br>
-    <strong>Forces:</strong> Gravity pulling down on each, tension pulling up on both.<br>
-    <strong>AP Exam Insight:</strong> Since the pulley is massless and frictionless, tension is the same on both sides. System accelerates at <code class="font-mono text-cyan-400">a = g*(m2-m1)/(m1+m2)</code>.`;
-  } else if (type === 'incline') {
-    title.textContent = "📐 Block on Incline Diagram Analysis";
-    desc.innerHTML = `<strong>System:</strong> Mass m on a ramp inclined at angle θ.<br>
-    <strong>Forces:</strong> Normal force (N) perpendicular to surface, friction (f) parallel to ramp, weight (mg) straight down.<br>
-    <strong>AP Exam Insight:</strong> Gravity must be resolved into components: <code class="font-mono text-cyan-400">mg sin θ</code> parallel to ramp (downhill) and <code class="font-mono text-cyan-400">mg cos θ</code> perpendicular to ramp. Hence <code class="font-mono text-cyan-400">N = mg cos θ</code>.`;
-  } else {
-    title.textContent = "💧 Venturi Tube Flow Diagram Analysis";
-    desc.innerHTML = `<strong>System:</strong> Fluid flowing through a narrowing horizontal pipe.<br>
-    <strong>Key Laws:</strong> Continuity (<code class="font-mono text-cyan-400">A1v1 = A2v2</code>) and Bernoulli's Principle.<br>
-    <strong>AP Exam Insight:</strong> In the narrow throat, the flow speed must increase. Consequently, the pressure drops in the throat! Deeper water level in open tubes indicates higher static pressure.`;
-  }
-  state.xp += 10;
-  updateDashboard();
-  showToast("Diagram parsed successfully 👁️");
+  $('visual-title').textContent = v.title;
+  $('visual-desc').innerHTML = v.desc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  showToast('Diagram analyzed! Check the output panel.');
 }
 
 function uploadVisual(event) {
   const file = event.target.files[0];
   if (!file) return;
-  
-  showToast("Scanning uploaded diagram...");
   $('visual-output').classList.remove('hidden');
-  $('visual-title').textContent = `📸 Custom Diagram Analyzed: ${file.name}`;
-  $('visual-desc').innerHTML = `<strong>Scan complete:</strong> We identified a physics setup schematic.<br>
-  <strong>Detected:</strong> Free-body vectors, dimensions, and variables.<br>
-  <strong>Interpretation:</strong> This aligns with Unit 2 Dynamics and Newton's laws. The vectors indicate a state of non-equilibrium. Net force acts parallel to the displacement. +15 XP earned.`;
-  
-  state.xp += 15;
-  updateDashboard();
+  $('visual-title').textContent = '📸 Image Uploaded: ' + file.name;
+  $('visual-desc').innerHTML = '<strong>Analysis:</strong> Image received! This appears to be a physics diagram. Based on the visual elements, I can identify forces, motion vectors, and setup geometry.<br><br><strong>Detected elements:</strong> Free-body diagram with weight vector, normal force, and applied force. The setup suggests a dynamics problem on a horizontal surface.<br><br><strong>Suggested approach:</strong> Draw FBD → Apply Newton\'s 2nd Law in x and y → Solve for unknowns.';
+  showToast('Image uploaded and analyzed!');
 }
 
+// ============ LIVE LECTURE ============
+const LECTURE_SCRIPT = [
+  "Welcome to today's AP Physics 1 lecture on Newton's Laws and Forces.",
+  "Let's start with Newton's First Law, also called the Law of Inertia.",
+  "An object at rest stays at rest, and an object in motion stays in motion at constant velocity, unless acted upon by a net external force.",
+  "This means objects don't just stop on their own. Something must CAUSE the change in motion.",
+  "Now Newton's Second Law: F net equals m a. This is THE equation of Unit 2.",
+  "The net force on an object equals its mass times its acceleration.",
+  "Important: this is the NET force, meaning the vector sum of ALL forces.",
+  "Newton's Third Law: for every action, there is an equal and opposite reaction.",
+  "Key point: third law pairs act on DIFFERENT objects. They do NOT cancel!",
+  "Now let's talk about Free Body Diagrams. This is the most important skill for AP Physics.",
+  "Step 1: Isolate your object. Draw it as a dot or box.",
+  "Step 2: Draw every force acting ON the object as an arrow.",
+  "Weight points down. Normal force is perpendicular to the surface.",
+  "Friction is parallel to the surface, opposing motion.",
+  "Tension pulls along the string. NEVER draw velocity as a force!",
+  "Let's work through an example: a block on an inclined plane.",
+  "For an incline, rotate your axes. X along the ramp, Y perpendicular.",
+  "Weight breaks into components: mg sin theta parallel, mg cos theta perpendicular.",
+  "The normal force equals mg cos theta on a simple incline.",
+  "Acceleration down a frictionless ramp: a equals g sin theta.",
+  "Notice mass cancels! Every object slides at the same rate on a frictionless ramp.",
+  "That concludes our lecture. Great work today!"
+];
 
-// --- LIVE LECTURE HANDLERS ---
 function initLiveLecture() {
-  state.lectureActive = false;
-  state.lectureSeconds = 0;
-  state.lectureTranscriptIndex = 0;
-  state.lectureCapturedText = "";
-  
-  $('lecture-status').textContent = "Inactive";
-  $('lecture-status').className = "font-semibold text-sm text-zinc-500";
-  $('lecture-pulse').className = "w-3 h-3 rounded-full bg-zinc-500";
-  $('lecture-timer').textContent = "00:00";
-  $('btn-lecture-toggle').textContent = "Start Recording 🎙️";
-  $('btn-lecture-notes').disabled = true;
-  $('lecture-notes-display').classList.add('hidden');
-}
-
-function toggleLectureRecording() {
-  state.lectureActive = !state.lectureActive;
-  const pulse = $('lecture-pulse');
-  const status = $('lecture-status');
-  const btn = $('btn-lecture-toggle');
-  
-  if (state.lectureActive) {
-    pulse.className = "w-3 h-3 rounded-full bg-red-500 animate-ping";
-    status.textContent = "Recording Live... 🎙️";
-    status.className = "font-semibold text-sm text-red-400";
-    btn.textContent = "Stop Recording ⏹️";
-    $('lecture-transcript').innerHTML = "";
-    state.lectureCapturedText = "";
-    
-    state.lectureInterval = setInterval(() => {
-      state.lectureSeconds++;
-      const mins = Math.floor(state.lectureSeconds / 60).toString().padStart(2, '0');
-      const secs = (state.lectureSeconds % 60).toString().padStart(2, '0');
-      $('lecture-timer').textContent = `${mins}:${secs}`;
-      
-      // Feed live scrolling transcript words
-      if (state.lectureSeconds % 3 === 0 && state.lectureTranscriptIndex < state.lectureTranscriptWords.length) {
-        const line = state.lectureTranscriptWords[state.lectureTranscriptIndex];
-        const p = document.createElement('p');
-        p.className = "text-white animate-in mb-2";
-        p.textContent = "🎙️ " + line;
-        $('lecture-transcript').appendChild(p);
-        $('lecture-transcript').scrollTop = $('lecture-transcript').scrollHeight;
-        
-        state.lectureCapturedText += "\n" + line;
-        state.lectureTranscriptIndex++;
-      }
-      
-      if (state.lectureTranscriptIndex >= state.lectureTranscriptWords.length) {
-        // finished simulation
-        toggleLectureRecording();
-      }
-    }, 1000);
-    showToast("Live lecture microphone listening...");
-  } else {
-    clearInterval(state.lectureInterval);
-    pulse.className = "w-3 h-3 rounded-full bg-green-500";
-    status.textContent = "Recording Saved! ✅";
-    status.className = "font-semibold text-sm text-green-400";
-    btn.textContent = "Record Again 🎙️";
-    $('btn-lecture-notes').disabled = false;
-    showToast("Audio recording stored in local study set.");
+  if (!state.lectureRecording && state.lectureSeconds === 0) {
+    $('lecture-transcript').innerHTML = '<p class="text-zinc-500 italic">"Click \'Start Recording\' and your live spoken words (or class lecture audio) will transcribe right here in real-time."</p>';
   }
 }
 
+function toggleLectureRecording() {
+  if (state.lectureRecording) {
+    // Stop recording
+    state.lectureRecording = false;
+    clearInterval(state.lectureTimerInterval);
+    $('lecture-pulse').className = 'w-3 h-3 rounded-full bg-zinc-500';
+    $('lecture-status').textContent = 'Recording Saved';
+    $('btn-lecture-toggle').textContent = 'Start Recording 🎙️';
+    $('btn-lecture-notes').disabled = false;
+    showToast('Lecture recording saved! Generate notes and flashcards.');
+    return;
+  }
+  
+  // Start recording
+  state.lectureRecording = true;
+  state.lectureSeconds = 0;
+  state.lectureTranscript = '';
+  state.lectureAssetsGenerated = false;
+  $('lecture-pulse').className = 'w-3 h-3 rounded-full bg-red-500 animate-ping';
+  $('lecture-status').textContent = 'Recording Live...';
+  $('btn-lecture-toggle').textContent = 'Stop Recording ⏹️';
+  $('btn-lecture-notes').disabled = true;
+  $('lecture-transcript').innerHTML = '';
+  
+  // Reset asset buttons
+  ['asset-notes', 'asset-flashcards', 'asset-quiz'].forEach(id => {
+    const el = $(id);
+    if (el) {
+      el.querySelector('button').disabled = true;
+      el.querySelector('.text-\\[10px\\]').textContent = 'Not generated yet';
+    }
+  });
+  $('lecture-notes-display').classList.add('hidden');
+  
+  // Simulate real-time transcription
+  let lineIndex = 0;
+  state.lectureTimerInterval = setInterval(() => {
+    state.lectureSeconds++;
+    const mins = Math.floor(state.lectureSeconds / 60).toString().padStart(2, '0');
+    const secs = (state.lectureSeconds % 60).toString().padStart(2, '0');
+    $('lecture-timer').textContent = `${mins}:${secs}`;
+    
+    // Add transcript lines every ~3 seconds
+    if (state.lectureSeconds % 3 === 0 && lineIndex < LECTURE_SCRIPT.length) {
+      const line = LECTURE_SCRIPT[lineIndex];
+      state.lectureTranscript += line + ' ';
+      const p = document.createElement('p');
+      p.className = 'text-zinc-300 animate-in';
+      p.textContent = `[${mins}:${secs}] ${line}`;
+      $('lecture-transcript').appendChild(p);
+      $('lecture-transcript').scrollTop = $('lecture-transcript').scrollHeight;
+      lineIndex++;
+    }
+    
+    // Auto-stop after all lines
+    if (lineIndex >= LECTURE_SCRIPT.length) {
+      toggleLectureRecording();
+    }
+  }, 1000);
+}
+
 function generateLectureAssets() {
-  showToast("StudyFetch AI processing lecture text...");
-  state.xp += 30;
+  if (!state.lectureTranscript) { showToast('No lecture recorded yet!'); return; }
   
-  // Enable View buttons
-  $('asset-notes').querySelector('button').disabled = false;
-  $('asset-notes').querySelector('.text-\\[10px\\]').textContent = "Ready to review! (AP Dynamics)";
-  $('asset-notes').querySelector('.text-\\[10px\\]').className = "text-[10px] text-green-400";
+  state.lectureAssetsGenerated = true;
   
-  $('asset-flashcards').querySelector('button').disabled = false;
-  $('asset-flashcards').querySelector('.text-\\[10px\\]').textContent = "+5 flashcards added to pool";
-  $('asset-flashcards').querySelector('.text-\\[10px\\]').className = "text-[10px] text-green-400";
+  // Enable asset buttons
+  ['asset-notes', 'asset-flashcards', 'asset-quiz'].forEach(id => {
+    const el = $(id);
+    if (el) {
+      el.querySelector('button').disabled = false;
+      el.querySelector('.text-\\[10px\\]').textContent = '✅ Generated';
+      el.querySelector('.text-\\[10px\\]').style.color = 'var(--green)';
+    }
+  });
   
-  $('asset-quiz').querySelector('button').disabled = false;
-  $('asset-quiz').querySelector('.text-\\[10px\\]').textContent = "+2 quiz questions loaded";
-  $('asset-quiz').querySelector('.text-\\[10px\\]').className = "text-[10px] text-green-400";
+  // Generate notes
+  $('notes-display-body').innerHTML = `
+    <div class="font-bold text-cyan-400 mb-2">📋 Lecture Summary: Newton's Laws & Forces</div>
+    <div class="space-y-2">
+      <p><strong>Newton's 1st Law (Inertia):</strong> Objects resist changes in motion. No net force = no acceleration.</p>
+      <p><strong>Newton's 2nd Law:</strong> F_net = ma. The net force equals mass times acceleration.</p>
+      <p><strong>Newton's 3rd Law:</strong> Forces come in equal-and-opposite pairs on DIFFERENT objects.</p>
+      <p><strong>Free-Body Diagrams:</strong> Isolate object → draw all forces → choose axes → write equations.</p>
+      <p><strong>Inclined Planes:</strong> Rotate axes. Parallel component: mg sin θ. Perpendicular: mg cos θ.</p>
+      <p><strong>Key Result:</strong> On a frictionless incline, a = g sin θ (mass cancels!).</p>
+    </div>
+  `;
   
-  // Actually inject 5 custom flashcards into state
-  const newFCs = [
-    { q: "[Live Lecture] What is the net force in an Atwood Machine system?", a: "F_net = (m2 - m1) * g. Pulley mass and string tension cancel as internal forces." },
-    { q: "[Live Lecture] Why does tension cancel when analyzing an Atwood Machine system?", a: "Because tension is an internal force acting equally and oppositely on both masses within the chosen system boundary." },
-    { q: "[Live Lecture] What is the acceleration formula of an Atwood pulley?", a: "a = g * (m2 - m1) / (m1 + m2)." },
-    { q: "[Live Lecture] How do you draw tension on a hanging mass FBD?", a: "Tension must always be drawn pulling UPWARDS along the string, away from the mass." },
-    { q: "[Live Lecture] Why is tension smaller than m2*g for the falling mass?", a: "Because there must be a downward net force (m2g > T) to allow downward acceleration." }
+  // Add flashcards from lecture
+  const lectureCards = [
+    { q: 'State Newton\'s First Law', a: 'An object at rest stays at rest, and an object in motion stays in motion at constant velocity, unless acted upon by a net external force.' },
+    { q: 'What is Newton\'s Second Law equation?', a: 'F_net = ma. Net force equals mass times acceleration.' },
+    { q: 'Why don\'t Newton\'s 3rd Law pairs cancel?', a: 'They act on DIFFERENT objects. You can only cancel forces acting on the SAME object.' },
+    { q: 'On an incline, what are the components of weight?', a: 'Parallel to ramp: mg sin θ. Perpendicular to ramp: mg cos θ.' },
+    { q: 'What is acceleration down a frictionless incline?', a: 'a = g sin θ. Notice mass cancels — all objects slide at the same rate!' }
   ];
-  state.flashcards = [...state.flashcards, ...newFCs];
+  state.flashcards = [...state.flashcards, ...lectureCards];
   
-  // Actually inject 2 quiz questions
-  const newQZs = [
-    { unit: 2, q: '[Live Lecture] What is the net force on an Atwood machine with masses 2 kg and 6 kg?', options: ['39.2 N', '78.4 N', '19.6 N', '0 N'], correct: 0, explanation: 'F_net = (m2-m1)g = (6-2)*9.8 = 39.2 N.' },
-    { unit: 2, q: '[Live Lecture] In an ideal Atwood pulley, is the string tension equal to the weight of the heavier mass?', options: ['Yes', 'No, it is greater', 'No, it is smaller', 'Only if accelerating'], correct: 2, explanation: 'Smaller! There must be a downward net force on the heavier mass, so m2*g must exceed Tension.' }
-  ];
-  QUIZ_QUESTIONS.push(...newQZs);
-  
+  showToast('Lecture assets generated! Notes, 5 flashcards, and quiz ready.');
+  state.xp += 20;
   updateDashboard();
-  showToast("Study Set compiled! +30 XP earned.");
 }
 
 function viewLectureNotes() {
-  $('lecture-notes-display').classList.remove('hidden');
-  $('notes-display-body').innerHTML = `
-    <h4 class="font-bold text-sm text-cyan-400">AP Dynamics: Atwood Machine Deep Dive</h4>
-    <p>We captured a \${state.lectureSeconds} second lecture recording. Here are the formatted AI takeaways:</p>
-    
-    <div class="p-3 rounded border mb-2" style="border-color:var(--border); background:var(--bg-card);">
-      <strong>1. System Boundaries:</strong><br>
-      When analyzing two connected hanging masses, we can treat the entire thing as a single system. Tension becomes an internal force and cancels out.
-    </div>
-
-    <div class="p-3 rounded border mb-2" style="border-color:var(--border); background:var(--bg-card);">
-      <strong>2. Derivation of System Acceleration:</strong><br>
-      • Mass 1 (rising): <code class="text-xs text-yellow-400">T - m1*g = m1*a</code><br>
-      • Mass 2 (falling): <code class="text-xs text-yellow-400">m2*g - T = m2*a</code><br>
-      Add them: <code class="text-xs text-yellow-400">(m2 - m1)*g = (m1 + m2)*a</code><br>
-      Solve: <code class="text-xs text-cyan-400">a = g * (m2 - m1) / (m1 + m2)</code>
-    </div>
-
-    <div class="p-3 rounded border" style="border-color:var(--border); background:var(--bg-card);">
-      <strong>3. Common Pitfall:</strong><br>
-      Do not assume tension equals the weight of either hanging mass. Tension adjusts dynamically based on the system acceleration!
-    </div>
-  `;
+  $('lecture-notes-display').classList.toggle('hidden');
 }
 
-
-// --- DOC & VIDEO AI HANDLERS ---
+// ============ DOC & VIDEO AI PROCESSOR ============
 function initDocProcessor() {
-  state.docSourceType = "text";
-  state.docProcessedData = null;
+  state.docProcessed = false;
   $('btn-export-assets').disabled = true;
 }
 
 function selectSourceType(type) {
-  state.docSourceType = type;
-  if (type === 'text') {
-    $('src-text').style.borderColor = 'var(--accent)';
-    $('src-text').style.background = 'rgba(124,92,252,0.1)';
-    $('src-video').style.borderColor = 'var(--border)';
-    $('src-video').style.background = 'transparent';
-  } else {
-    $('src-video').style.borderColor = 'var(--accent)';
-    $('src-video').style.background = 'rgba(124,92,252,0.1)';
-    $('src-text').style.borderColor = 'var(--border)';
-    $('src-text').style.background = 'transparent';
-  }
+  state.selectedSourceType = type;
+  $('src-text').style.borderColor = type === 'text' ? 'var(--accent)' : 'var(--border)';
+  $('src-text').style.background = type === 'text' ? 'rgba(124,92,252,0.1)' : 'transparent';
+  $('src-video').style.borderColor = type === 'video' ? 'var(--accent)' : 'var(--border)';
+  $('src-video').style.background = type === 'video' ? 'rgba(124,92,252,0.1)' : 'transparent';
 }
 
 function processSourceContent() {
   const input = $('doc-ai-input').value.trim();
-  if (!input) { showToast("Please paste some content or insert a URL first!"); return; }
+  if (!input) { showToast('Please paste some text or a URL first!'); return; }
   
-  showToast("Mindgrasp AI analyzing source content...");
+  // Check if it's a YouTube URL
+  const isVideo = input.includes('youtube.com') || input.includes('youtu.be');
   
-  setTimeout(() => {
-    $('simplified-eli5').innerHTML = `
-      "Imagine you have a bucket of water. If you turn it upside down, water spills. But if you spin it around in a circle really fast, the water stays inside! Why? Because the water is trying to travel in a straight line, but the bucket keeps pulling it inward toward your hand. In physics, we call that pull centripetal force. It is the secret force that keeps planets in orbit, cars on curves, and roller coasters on tracks!"
-    `;
-    
-    $('simplified-cheats').innerHTML = `
-      <div><span class="text-pink-400">// CODE CHEAT: Uniform Circular Motion</span></div>
-      <div>1. <span class="text-cyan-400">a_c = v² / r</span> (Centripetal acceleration points INWARD)</div>
-      <div>2. <span class="text-cyan-400">F_net = mv² / r</span> (Inward net force required)</div>
-      <div>3. <span class="text-cyan-400">v = 2πr / T</span> (Speed connected to period T of rotation)</div>
-      <div>// TRAP: Centrifugal force does not exist in FBDs! Always draw friction, normal, or gravity inward.</div>
-    `;
-    
-    $('btn-export-assets').disabled = false;
-    state.xp += 25;
-    updateDashboard();
-    showToast("Content parsed and simplified! +25 XP earned.");
-  }, 1200);
+  // Generate ELI5 explanation
+  let eli5, cheats;
+  if (isVideo || input.toLowerCase().includes('kinematic') || input.toLowerCase().includes('motion') || input.toLowerCase().includes('velocity')) {
+    eli5 = "Imagine you're in a car. Your position is WHERE you are. Your velocity is how fast your position changes (your speedometer). Your acceleration is how fast your speedometer needle moves — are you pressing the gas or the brake? The kinematic equations are just math shortcuts that connect these three ideas when your acceleration is steady (like cruise control for acceleration). The coolest part? When you throw a ball up, gravity NEVER stops pulling — even at the very top when the ball stops for a split second, gravity is still pulling down at 9.8 m/s²!";
+    cheats = `<div class="text-green-400">// KINEMATICS CHEAT SHEET</div>
+<div>v = v₀ + at  →  use when you don't need distance</div>
+<div>Δx = v₀t + ½at²  →  use when you don't need final velocity</div>
+<div>v² = v₀² + 2aΔx  →  use when you don't need time (AP favorite!)</div>
+<div>Δx = ½(v₀ + v)t  →  use when you don't need acceleration</div>
+<div class="text-yellow-400 mt-2">// FREE FALL: a = g = 9.8 m/s² (always down!)</div>
+<div class="text-yellow-400">// PROJECTILE: split into x (constant v) and y (free fall)</div>
+<div class="text-red-400">// TRAP: at the top, v = 0 but a = g (NOT zero!)</div>`;
+  } else if (input.toLowerCase().includes('force') || input.toLowerCase().includes('newton') || input.toLowerCase().includes('friction')) {
+    eli5 = "Forces are just pushes and pulls. Newton figured out three simple rules: (1) Things keep doing what they're doing unless pushed. A hockey puck on ice slides forever because nothing pushes it to stop. (2) Push harder = accelerate more. Push the same on a heavier thing = it accelerates less. F = ma. (3) Every push has a push-back. When you punch a wall, the wall punches your hand back just as hard. That's why your hand hurts!";
+    cheats = `<div class="text-green-400">// FORCES CHEAT SHEET</div>
+<div>F_net = ma  →  THE equation of Unit 2</div>
+<div>f_k = μₖN  →  kinetic friction (sliding, fixed value)</div>
+<div>f_s ≤ μₛN  →  static friction (not sliding, ADJUSTS!)</div>
+<div>F_spring = -kx  →  Hooke's Law (restorative force)</div>
+<div class="text-yellow-400 mt-2">// FBD RULES: only draw forces ON the object</div>
+<div class="text-yellow-400">// NEVER draw velocity, acceleration, or "force of motion"</div>
+<div class="text-red-400">// TRAP: N ≠ mg on inclines! N = mg cos θ</div>`;
+  } else {
+    eli5 = "Physics is the study of how things move and interact. Everything in AP Physics 1 boils down to a few big ideas: things move (kinematics), forces make them move (dynamics), energy gets transferred (work & energy), and momentum gets exchanged (collisions). The amazing part? These same rules explain everything from why planets orbit to why your phone doesn't fly off the table when you push it.";
+    cheats = `<div class="text-green-400">// AP PHYSICS 1 MASTER CHEAT SHEET</div>
+<div>F_net = ma  |  W = Fd cosθ  |  K = ½mv²  |  p = mv</div>
+<div>τ = rF sinθ  |  L = Iω  |  T = 2π√(m/k)</div>
+<div>P = P₀ + ρgh  |  F_b = ρVg  |  A₁v₁ = A₂v₂</div>
+<div class="text-yellow-400 mt-2">// ALWAYS: draw FBD → choose axes → write equations</div>
+<div class="text-red-400">// TRAP: energy is scalar (no direction!), momentum is vector</div>`;
+  }
+  
+  $('simplified-eli5').innerHTML = eli5;
+  $('simplified-cheats').innerHTML = cheats;
+  $('btn-export-assets').disabled = false;
+  state.docProcessed = true;
+  showToast('Content simplified! Check the ELI5 and Cheat Sheet outputs.');
+  state.xp += 10;
+  updateDashboard();
 }
 
 function exportProcessedToDecks() {
-  // Inject flashcards
-  const fcs = [
-    { q: "[Simplified] What is centripetal force?", a: "It is the net inward force keeping an object moving in a circle. It is not a new force, but supplied by friction, tension, normal, etc." },
-    { q: "[Simplified] Why does water stay in a bucket spun overhead?", a: "Because of inertia — the water wants to travel in a straight line, but the bucket continuously pushes it inward." },
-    { q: "[Simplified] What is the centripetal acceleration formula?", a: "a_c = v² / r." }
+  if (!state.docProcessed) { showToast('Process some content first!'); return; }
+  
+  const newCards = [
+    { q: 'What are the 4 kinematic equations?', a: 'v = v₀ + at | Δx = v₀t + ½at² | v² = v₀² + 2aΔx | Δx = ½(v₀ + v)t' },
+    { q: 'When do you use v² = v₀² + 2aΔx?', a: 'When you don\'t need time! This is the AP exam favorite.' },
+    { q: 'What is F_net = ma?', a: 'Newton\'s 2nd Law. Net force equals mass times acceleration. THE equation of dynamics.' },
+    { q: 'What\'s the difference between static and kinetic friction?', a: 'Static friction ADJUSTS (up to μₛN) when not sliding. Kinetic friction is FIXED at μₖN when sliding.' },
+    { q: 'Why is energy often easier than forces?', a: 'Energy is a SCALAR (no direction needed!). Forces are vectors requiring components and angles.' }
   ];
-  state.flashcards.push(...fcs);
+  state.flashcards = [...state.flashcards, ...newCards];
   
-  // Inject quiz question
-  const qz = {
-    unit: 2, q: '[Simplified] If you double the radius of a circular turn while keeping the same speed, what happens to centripetal acceleration?',
-    options: ['Doubles', 'Quadruples', 'Halves', 'Constant'], correct: 2, explanation: 'a_c = v²/r. Larger r in denominator means acceleration is halved!'
-  };
-  QUIZ_QUESTIONS.push(qz);
-  
-  $('btn-export-assets').disabled = true;
-  state.xp += 20;
+  showToast('5 flashcards added to your deck! 🃏');
+  state.xp += 15;
+  state.cardsToday += 5;
   updateDashboard();
-  showToast("Flashcards and Quizzes exported successfully! Review them in those tabs.");
 }
 
-
-// --- ESSAY GRADER HANDLERS ---
+// ============ ESSAY GRADER ============
 function initEssayGrader() {
-  $('essay-input').value = "";
-  $('essay-grader-results').innerHTML = `
-    <div class="text-center py-12 text-zinc-500 italic text-sm">
-      📄 Paste your essay and click "Grade Essay" to see scoring breakdown, CER analysis, and feedback.
-    </div>
-  `;
+  $('essay-grader-results').innerHTML = '<div class="text-center py-12 text-zinc-500 italic text-sm">📄 Paste your essay and click "Grade Essay" to see scoring breakdown, CER analysis, and feedback.</div>';
 }
 
 function gradeUserEssay() {
-  const text = $('essay-input').value.trim();
-  if (!text) { showToast("Please write or paste an essay first!"); return; }
+  const essay = $('essay-input').value.trim();
+  const theme = $('essay-theme').value;
   
-  showToast("Evaluating essay against AP standards...");
+  if (!essay) { showToast('Please write or paste your essay first!'); return; }
+  if (essay.length < 50) { showToast('Your essay is too short. Write at least a few sentences for accurate grading.'); return; }
   
-  // Check text length and keywords to formulate a grade
-  let score = 5;
-  let matches = [];
-  if (text.length > 100) score = 6;
-  if (text.length > 300) score = 8;
-  if (text.length > 600) score = 9;
+  const words = essay.split(/\s+/).length;
+  const sentences = essay.split(/[.!?]+/).filter(s => s.trim()).length;
   
-  if (text.toLowerCase().includes("atwood")) matches.push("Atwood System");
-  if (text.toLowerCase().includes("tension")) matches.push("String Tension");
-  if (text.toLowerCase().includes("friction")) matches.push("Frictional force");
-  if (text.toLowerCase().includes("normal")) matches.push("Normal force components");
+  // Analyze content
+  const hasClaim = essay.toLowerCase().includes('because') || essay.toLowerCase().includes('therefore') || essay.toLowerCase().includes('thus') || essay.toLowerCase().includes('conclude') || essay.toLowerCase().includes('means that') || essay.toLowerCase().includes('shows that');
+  const hasEvidence = essay.toLowerCase().includes('equation') || essay.toLowerCase().includes('formula') || essay.toLowerCase().includes('data') || essay.toLowerCase().includes('calculate') || essay.toLowerCase().includes('value') || essay.toLowerCase().includes('newton') || essay.toLowerCase().includes('force') || essay.toLowerCase().includes('energy') || essay.toLowerCase().includes('mass');
+  const hasReasoning = essay.toLowerCase().includes('since') || essay.toLowerCase().includes('because') || essay.toLowerCase().includes('this means') || essay.toLowerCase().includes('which shows') || essay.toLowerCase().includes('therefore') || essay.toLowerCase().includes('explains') || essay.toLowerCase().includes('leads to');
+  const hasVariables = /[a-zA-Z]\s*=/g.test(essay) || essay.includes('m =') || essay.includes('v =') || essay.includes('F =') || essay.includes('a =');
+  const hasUnits = essay.includes('m/s') || essay.includes('kg') || essay.includes('N') || essay.includes('J') || essay.includes('m/s²') || essay.includes('Newton') || essay.includes('Joule');
   
-  setTimeout(() => {
-    $('essay-grader-results').innerHTML = `
-      <div class="p-4 rounded-xl border border-cyan-500 bg-zinc-950">
-        <div class="flex justify-between items-center mb-3">
-          <div class="text-lg font-bold text-cyan-400">Score: \${score}/10</div>
-          <span class="text-xs px-2.5 py-1 rounded-full bg-zinc-800">\${score >= 8 ? '⭐️ Advanced' : '⚠️ Proficient'}</span>
+  // Calculate scores
+  let cerScore = 0;
+  if (hasClaim) cerScore += 3;
+  if (hasEvidence) cerScore += 4;
+  if (hasReasoning) cerScore += 3;
+  
+  let overallScore = Math.min(10, Math.round(
+    (cerScore / 10) * 5 + 
+    (hasVariables ? 1.5 : 0) + 
+    (hasUnits ? 1 : 0) + 
+    (words > 100 ? 1.5 : words > 50 ? 1 : 0.5) +
+    (sentences >= 3 ? 1 : 0.5)
+  ));
+  
+  const improvements = [];
+  if (!hasClaim) improvements.push('Add a clear CLAIM statement — what are you arguing or explaining?');
+  if (!hasEvidence) improvements.push('Include specific EVIDENCE — reference equations, data, or physics principles.');
+  if (!hasReasoning) improvements.push('Connect your evidence to your claim with REASONING — explain WHY the evidence supports your claim.');
+  if (!hasVariables) improvements.push('Define your variables explicitly (e.g., "where m = mass, a = acceleration").');
+  if (!hasUnits) improvements.push('Include units in your calculations and answers (AP requires units!).');
+  if (words < 100) improvements.push('Expand your explanation — aim for at least 100 words for a thorough response.');
+  
+  $('essay-grader-results').innerHTML = `
+    <!-- Overall Score -->
+    <div class="text-center p-4 rounded-xl mb-4" style="background:var(--bg-secondary);">
+      <div class="text-5xl font-bold mb-1" style="color:${overallScore >= 7 ? 'var(--green)' : overallScore >= 5 ? 'var(--yellow)' : 'var(--red)'};">${overallScore}/10</div>
+      <div class="text-sm" style="color:var(--text-muted);">Overall AP Score Estimate</div>
+    </div>
+    
+    <!-- CER Breakdown -->
+    <div class="p-4 rounded-xl mb-4" style="background:var(--bg-secondary);">
+      <div class="font-bold text-sm mb-3">📊 Claim-Evidence-Reasoning (CER) Analysis</div>
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-sm">
+          <span>Claim ${hasClaim ? '✅' : '❌'}</span>
+          <div class="progress-bar w-32"><div class="progress-fill" style="width:${hasClaim ? '100' : '20'}%; background:${hasClaim ? 'var(--green)' : 'var(--red)'};"></div></div>
         </div>
-        
-        <div class="space-y-3 text-sm">
-          <div>
-            <div class="text-xs font-bold text-zinc-400 uppercase">1. CLAIM ANALYSIS (C)</div>
-            <p class="text-xs mt-1" style="color:var(--text-secondary);">Your claim was identified. You clearly state the dependency of acceleration on mass differences.</p>
-          </div>
-          
-          <div>
-            <div class="text-xs font-bold text-zinc-400 uppercase">2. EVIDENCE (E)</div>
-            <p class="text-xs mt-1" style="color:var(--text-secondary);">You referenced the following key parameters: \${matches.join(", ") || 'No strong physical variables identified'}.</p>
-          </div>
-          
-          <div>
-            <div class="text-xs font-bold text-zinc-400 uppercase">3. PHYSICAL REASONING (R)</div>
-            <p class="text-xs mt-1" style="color:var(--text-secondary);">Your application of F = ma was evaluated. \${score < 8 ? 'You need to write down the explicit equations of motion for each block individually to get full AP rubric points!' : 'Excellent job integrating vector components.'}</p>
-          </div>
-          
-          <div class="h-px bg-zinc-800 my-2"></div>
-          
-          <div>
-            <div class="text-xs font-bold text-yellow-400 uppercase">💡 HOW TO GET A PERFECT 10/10</div>
-            <ul class="text-xs space-y-1 text-zinc-400 list-disc pl-4 mt-1">
-              <li>Always define your positive and negative coordinates explicitly.</li>
-              <li>Include the equation <code class="font-mono text-cyan-400">a = g*(m2-m1)/(m1+m2)</code> and show how it scales.</li>
-              <li>Specify that the pulley mass is negligible (frictionless pulley).</li>
-            </ul>
-          </div>
+        <div class="flex justify-between items-center text-sm">
+          <span>Evidence ${hasEvidence ? '✅' : '❌'}</span>
+          <div class="progress-bar w-32"><div class="progress-fill" style="width:${hasEvidence ? '100' : '20'}%; background:${hasEvidence ? 'var(--green)' : 'var(--red)'};"></div></div>
+        </div>
+        <div class="flex justify-between items-center text-sm">
+          <span>Reasoning ${hasReasoning ? '✅' : '❌'}</span>
+          <div class="progress-bar w-32"><div class="progress-fill" style="width:${hasReasoning ? '100' : '20'}%; background:${hasReasoning ? 'var(--green)' : 'var(--red)'};"></div></div>
         </div>
       </div>
-    `;
-    state.xp += 30;
-    updateDashboard();
-    showToast("Grading complete! +30 XP earned.");
-  }, 1500);
+    </div>
+    
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-2 mb-4">
+      <div class="p-3 rounded-xl text-center" style="background:var(--bg-secondary);">
+        <div class="font-bold text-lg">${words}</div>
+        <div class="text-xs" style="color:var(--text-muted);">Words</div>
+      </div>
+      <div class="p-3 rounded-xl text-center" style="background:var(--bg-secondary);">
+        <div class="font-bold text-lg">${sentences}</div>
+        <div class="text-xs" style="color:var(--text-muted);">Sentences</div>
+      </div>
+      <div class="p-3 rounded-xl text-center" style="background:var(--bg-secondary);">
+        <div class="font-bold text-lg">${hasVariables ? '✅' : '❌'}</div>
+        <div class="text-xs" style="color:var(--text-muted);">Variables</div>
+      </div>
+    </div>
+    
+    <!-- Improvements -->
+    ${improvements.length > 0 ? `
+    <div class="p-4 rounded-xl" style="background:var(--bg-secondary); border: 1px solid var(--yellow);">
+      <div class="font-bold text-sm mb-2" style="color:var(--yellow);">💡 Suggested Improvements</div>
+      <ul class="space-y-1 text-sm" style="color:var(--text-secondary);">
+        ${improvements.map(i => `<li>• ${i}</li>`).join('')}
+      </ul>
+    </div>` : `
+    <div class="p-4 rounded-xl text-center" style="background:var(--bg-secondary); border: 1px solid var(--green);">
+      <div class="font-bold text-sm" style="color:var(--green);">🎉 Excellent! Your essay covers all key elements.</div>
+    </div>`}
+  `;
+  
+  state.xp += 10;
+  updateDashboard();
+  showToast(`Essay graded: ${overallScore}/10! Check the detailed breakdown.`);
 }
 
+// ============ AUDIO RECAP ============
+const AUDIO_SCRIPTS = {
+  1: `Welcome to your AP Physics 1 Unit 1 Audio Recap. Today we're covering Kinematics — the study of motion.\n\nKinematics is all about describing how things move. We use three main quantities: position, velocity, and acceleration. Position tells you WHERE something is. Velocity tells you how fast position changes. And acceleration tells you how fast velocity changes.\n\nThe four kinematic equations are your best friends. They connect initial velocity, final velocity, acceleration, time, and displacement. The key strategy is: list your three knowns, identify what you want, and pick the equation that has exactly those four variables.\n\nFree fall is a special case where acceleration equals g, about 9.8 meters per second squared, always downward. The biggest AP trap: at the top of a ball's flight, velocity is zero but acceleration is still g. Gravity never takes a break!\n\nProjectile motion combines horizontal constant velocity with vertical free fall. These two motions are completely independent. The bridge between them is time. That's why a ball dropped and a ball thrown horizontally from the same height hit the ground at the same time.\n\nThat's your Unit 1 recap. Keep practicing those kinematic equations!`,
+  2: `Welcome to your Unit 2 Audio Recap: Force and Translational Dynamics.\n\nNewton's three laws are the foundation. First law: objects keep doing what they're doing unless a net force acts. Second law: F net equals m a. Third law: forces come in equal and opposite pairs on different objects.\n\nFree body diagrams are the most important skill. Draw only the forces acting ON your object. Weight down, normal perpendicular to surface, friction parallel opposing motion, tension along the string. Never draw velocity or acceleration as forces.\n\nOn inclines, rotate your axes. Weight splits into mg sine theta parallel to the ramp and mg cosine theta perpendicular. The normal force equals mg cosine theta on a simple incline. Acceleration down a frictionless ramp is g sine theta — and mass cancels!\n\nFriction comes in two types. Static friction adjusts up to a maximum of mu-s times N. Kinetic friction is fixed at mu-k times N. Static friction is usually stronger, which is why it's harder to start pushing something than to keep it moving.\n\nThat's Unit 2. Master those FBDs and you'll ace the dynamics questions!`,
+  3: `Welcome to your Unit 3 Audio Recap: Work, Energy, and Power.\n\nEnergy is the most powerful problem-solving tool in physics. The big idea: energy is conserved. It can transform between kinetic and potential, but the total stays constant if only conservative forces act.\n\nKinetic energy is one-half m v squared. Gravitational potential energy is mgh. Spring potential energy is one-half k x squared. Work is F d cosine theta — force times displacement in the direction of the force.\n\nThe work-energy theorem says net work equals change in kinetic energy. This is incredibly useful because energy is a scalar — no direction needed! This makes energy problems often easier than force problems.\n\nConservation of energy: initial energy equals final energy. At the top of a hill, all potential. At the bottom, all kinetic. In between, a mix of both. With friction, some energy converts to heat.\n\nPower is the rate of energy transfer: P equals W over t, or F times v. Same work done faster means more power.\n\nThat's Unit 3. When in doubt, try energy first!`,
+  4: `Welcome to your Unit 4 Audio Recap: Linear Momentum.\n\nMomentum is p equals mv. It's a vector, so direction matters. A heavy slow object can have the same momentum as a light fast object.\n\nImpulse is force times time, and it equals the change in momentum. This explains why airbags save lives — they increase stopping time, which reduces force for the same momentum change.\n\nConservation of momentum is the golden rule: if no external net force acts, total momentum stays constant. This applies to the SYSTEM, not individual objects. Internal forces cancel by Newton's third law.\n\nIn collisions, momentum is always conserved. But kinetic energy is only conserved in elastic collisions. In perfectly inelastic collisions, objects stick together and maximum kinetic energy is lost.\n\nThe center of mass moves as if all mass were concentrated there. Internal forces cannot change the center of mass motion. That's why a firework's center of mass continues on the same parabolic path even after exploding.\n\nThat's Unit 4. Remember: momentum is always conserved in isolated systems!`,
+  5: `Welcome to your Unit 5 Audio Recap: Torque and Rotational Dynamics.\n\nTorque is the rotational equivalent of force. Tau equals r F sine theta. It depends on how far from the pivot you push, how hard you push, and at what angle. Maximum torque is when you push perpendicular to the lever arm.\n\nMoment of inertia is the rotational equivalent of mass. It depends on both total mass AND how that mass is distributed. Mass far from the axis contributes more to I because of the r-squared dependence.\n\nNewton's second law for rotation: net torque equals I alpha. This is exactly like F equals ma but for rotation. Same strategy: draw your diagram, identify all torques, sum them up, set equal to I alpha.\n\nRotational equilibrium means net torque is zero. For full static equilibrium, you need both net force equals zero AND net torque equals zero. Choose your pivot wisely — pick where an unknown force acts to eliminate it from the equation.\n\nThat's Unit 5. Torque problems are just force problems with an extra step — multiply by the lever arm!`,
+  6: `Welcome to your Unit 6 Audio Recap: Energy and Momentum of Rotating Systems.\n\nRotational kinetic energy is one-half I omega squared. For rolling objects, total kinetic energy includes both translational and rotational parts. K total equals one-half mv squared plus one-half I omega squared.\n\nThe rolling condition links translation and rotation: v equals r omega. This means you can express everything in terms of just v or just omega.\n\nAngular momentum is L equals I omega. It's conserved when no external torque acts. When a figure skater pulls in her arms, I decreases, so omega must increase to keep L constant. She spins faster!\n\nFor satellites in circular orbit, gravity provides the centripetal force. Orbital speed equals the square root of GM over r. Higher orbit means slower speed but longer period.\n\nThat's Unit 6. Rolling objects split their energy between moving forward and spinning — that's why they're slower than sliding objects!`,
+  7: `Welcome to your Unit 7 Audio Recap: Oscillations.\n\nSimple harmonic motion happens when a restoring force is proportional to displacement. F equals negative kx. The negative sign means the force always points back toward equilibrium.\n\nAt equilibrium, force is zero, acceleration is zero, but speed is maximum. At the extremes, force and acceleration are maximum, but speed is zero. Energy swaps between kinetic and potential throughout the cycle.\n\nThe period of a spring-mass system is T equals 2 pi times the square root of m over k. It depends on mass and spring constant, NOT on amplitude. The period of a pendulum is T equals 2 pi times the square root of L over g. It depends on length and gravity, NOT on mass.\n\nTotal energy in SHM is one-half k A squared, where A is the amplitude. At any position, kinetic energy equals total energy minus potential energy.\n\nThat's Unit 7. Remember: amplitude doesn't affect period, and energy is always conserved in ideal SHM!`,
+  8: `Welcome to your Unit 8 Audio Recap: Fluids.\n\nDensity is mass per volume. Pressure is force per area. In a static fluid, pressure increases with depth: P equals P-naught plus rho gh. Every 10 meters of water adds about one atmosphere of pressure.\n\nArchimedes' principle: buoyant force equals the weight of displaced fluid. F-b equals rho-fluid times V-displaced times g. If the object's density is less than the fluid's, it floats. The fraction submerged equals the object's density divided by the fluid's density.\n\nPascal's principle: pressure applied to an enclosed fluid transmits equally everywhere. This is how hydraulic lifts work — small force on small area creates large force on large area.\n\nContinuity equation: A-one v-one equals A-two v-two. Narrower pipe means faster flow. Bernoulli's equation: faster fluid means lower pressure at the same height. This explains airplane lift and many other phenomena.\n\nThat's Unit 8. Fluids are new to AP Physics 1 as of 2025, so expect them on the exam!`
+};
 
-// --- AUDIO RECAP HANDLERS ---
 function initAudioRecap() {
-  state.audioRecapPlaying = false;
-  state.audioRecapSeconds = 0;
-  clearInterval(state.audioRecapInterval);
+  state.audioPlaying = false;
+  state.audioProgress = 0;
+  clearInterval(state.audioInterval);
   $('audio-player-container').classList.add('hidden');
 }
 
 function generateAudioRecap() {
-  const unitNum = $('audio-recap-unit').value;
-  const unit = UNITS.find(u => u.num == unitNum);
+  const unitNum = parseInt($('audio-recap-unit').value);
+  const unit = UNITS.find(u => u.num === unitNum);
   
-  showToast(`Generating Unit \${unitNum} Podcast Summary...`);
+  $('audio-track-title').textContent = `Unit ${unitNum}: ${unit.name} — Audio Recap`;
+  $('audio-player-container').classList.remove('hidden');
+  $('audio-progress').style.width = '0%';
+  $('audio-time').textContent = '00:00';
+  $('audio-playing-status').textContent = 'Paused';
+  $('audio-play-btn').textContent = '▶';
   
-  setTimeout(() => {
-    $('audio-player-container').classList.remove('hidden');
-    $('audio-track-title').textContent = `AP Physics: Unit \${unitNum} Summary Podcast`;
-    
-    // Reset player state
-    state.audioRecapPlaying = false;
-    state.audioRecapSeconds = 0;
-    clearInterval(state.audioRecapInterval);
-    $('audio-play-btn').textContent = "▶";
-    $('audio-progress').style.width = "0%";
-    $('audio-playing-status').textContent = "Ready to Play";
-    $('audio-playing-status').className = "text-xs font-semibold text-zinc-500";
-    
-    // Render full scrolling script transcript
-    const scripts = state.audioRecapScripts[unitNum] || [];
-    $('audio-transcript-text').innerHTML = scripts.map((s, i) => `
-      <p class="mb-2 script-line" id="line-\${s.time}" data-time="\${s.time}">
-        <strong>[\${Math.floor(s.time/60)}:\${(s.time%60).toString().padStart(2,'0')}]</strong> \${s.text}
-      </p>
-    `).join('');
-    
-    state.xp += 15;
-    updateDashboard();
-    showToast("Audio summary compiled! Click Play.");
-  }, 1000);
+  state.audioProgress = 0;
+  state.audioPlaying = false;
+  state.audioSpeed = 1;
+  state.audioCurrentLine = 0;
+  clearInterval(state.audioInterval);
+  
+  // Split script into lines for transcript
+  state.audioTranscriptLines = AUDIO_SCRIPTS[unitNum].split('\n\n').filter(l => l.trim());
+  state.audioTotalDuration = state.audioTranscriptLines.length * 18; // ~18 seconds per paragraph
+  
+  $('audio-duration').textContent = formatTime(state.audioTotalDuration);
+  $('audio-transcript-text').innerHTML = state.audioTranscriptLines.map((line, i) => 
+    `<div class="mb-2 audio-line" data-line="${i}" style="opacity:${i === 0 ? 1 : 0.4};">${line}</div>`
+  ).join('');
+  
+  showToast(`Unit ${unitNum} podcast generated! Press play to listen.`);
 }
 
 function toggleAudioPlayback() {
-  state.audioRecapPlaying = !state.audioRecapPlaying;
-  const btn = $('audio-play-btn');
-  const status = $('audio-playing-status');
+  if (state.audioPlaying) {
+    state.audioPlaying = false;
+    clearInterval(state.audioInterval);
+    $('audio-play-btn').textContent = '▶';
+    $('audio-playing-status').textContent = 'Paused';
+    return;
+  }
   
-  if (state.audioRecapPlaying) {
-    btn.textContent = "⏸";
-    status.textContent = "Playing summaries...";
-    status.className = "text-xs font-semibold text-green-400";
+  if (state.audioProgress >= 100) {
+    state.audioProgress = 0;
+    state.audioCurrentLine = 0;
+  }
+  
+  state.audioPlaying = true;
+  $('audio-play-btn').textContent = '⏸';
+  $('audio-playing-status').textContent = 'Playing';
+  
+  state.audioInterval = setInterval(() => {
+    state.audioProgress += (100 / state.audioTotalDuration) * state.audioSpeed;
     
-    state.audioRecapInterval = setInterval(() => {
-      state.audioRecapSeconds += state.audioRecapSpeed;
-      if (state.audioRecapSeconds >= state.audioRecapDuration) {
-        state.audioRecapSeconds = state.audioRecapDuration;
-        toggleAudioPlayback();
-      }
-      
-      updateAudioProgressUI();
-    }, 1000);
-  } else {
-    btn.textContent = "▶";
-    status.textContent = "Paused";
-    status.className = "text-xs font-semibold text-zinc-500";
-    clearInterval(state.audioRecapInterval);
-  }
-}
-
-function updateAudioProgressUI() {
-  const current = state.audioRecapSeconds;
-  const duration = state.audioRecapDuration;
-  
-  // Update time counter
-  const cMins = Math.floor(current / 60).toString().padStart(2, '0');
-  const cSecs = Math.floor(current % 60).toString().padStart(2, '0');
-  $('audio-time').textContent = `\${cMins}:\${cSecs}`;
-  
-  // Progress bar
-  const pct = (current / duration) * 100;
-  $('audio-progress').style.width = pct + "%";
-  
-  // Sync scrolling transcript highlighting
-  const scriptLines = document.querySelectorAll('.script-line');
-  let activeLine = null;
-  scriptLines.forEach(l => {
-    const t = parseInt(l.dataset.time);
-    if (current >= t) {
-      activeLine = l;
+    if (state.audioProgress >= 100) {
+      state.audioProgress = 100;
+      state.audioPlaying = false;
+      clearInterval(state.audioInterval);
+      $('audio-play-btn').textContent = '▶';
+      $('audio-playing-status').textContent = 'Complete';
     }
-    l.style.color = "var(--text-muted)";
-    l.style.fontWeight = "normal";
-  });
-  
-  if (activeLine) {
-    activeLine.style.color = "var(--text-primary)";
-    activeLine.style.fontWeight = "bold";
-    activeLine.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+    
+    $('audio-progress').style.width = state.audioProgress + '%';
+    const elapsed = (state.audioProgress / 100) * state.audioTotalDuration;
+    $('audio-time').textContent = formatTime(elapsed);
+    
+    // Update transcript highlighting
+    const currentLine = Math.floor((state.audioProgress / 100) * state.audioTranscriptLines.length);
+    if (currentLine !== state.audioCurrentLine) {
+      state.audioCurrentLine = currentLine;
+      document.querySelectorAll('.audio-line').forEach((el, i) => {
+        el.style.opacity = i <= currentLine ? '1' : '0.4';
+        el.style.color = i === currentLine ? 'var(--cyan)' : '';
+        if (i === currentLine) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+  }, 1000);
 }
 
 function seekAudio(event) {
-  const progressBar = event.currentTarget;
-  const rect = progressBar.getBoundingClientRect();
-  const clickX = event.clientX - rect.left;
-  const pct = clickX / rect.width;
-  
-  state.audioRecapSeconds = pct * state.audioRecapDuration;
-  updateAudioProgressUI();
-}
-
-function adjustAudioSpeed(val) {
-  state.audioRecapSpeed = parseFloat(val);
-  showToast(`Playback speed adjusted to \${val}x`);
+  const rect = event.currentTarget.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const pct = (x / rect.width) * 100;
+  state.audioProgress = Math.max(0, Math.min(100, pct));
+  $('audio-progress').style.width = state.audioProgress + '%';
+  const elapsed = (state.audioProgress / 100) * state.audioTotalDuration;
+  $('audio-time').textContent = formatTime(elapsed);
 }
 
 function skipAudio(seconds) {
-  state.audioRecapSeconds = Math.max(0, Math.min(state.audioRecapDuration, state.audioRecapSeconds + seconds));
-  updateAudioProgressUI();
+  const change = (seconds / state.audioTotalDuration) * 100;
+  state.audioProgress = Math.max(0, Math.min(100, state.audioProgress + change));
+  $('audio-progress').style.width = state.audioProgress + '%';
+  const elapsed = (state.audioProgress / 100) * state.audioTotalDuration;
+  $('audio-time').textContent = formatTime(elapsed);
 }
 
+function adjustAudioSpeed(speed) {
+  state.audioSpeed = parseFloat(speed);
+  showToast(`Playback speed: ${speed}x`);
+}
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
 
 // ============ INIT ============
 function init() {
