@@ -256,6 +256,43 @@
     border-color: var(--accent);
     box-shadow: 0 0 24px var(--accent-glow);
   }
+  
+  /* Chat/AI Tutor styles */
+  .chat-container { display: flex; flex-direction: column; height: 500px; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; space-y: 3; }
+  .chat-message { max-width: 80%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+  .chat-user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .chat-ai { background: var(--bg-secondary); color: var(--text-primary); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+  .chat-input-area { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--border); }
+  .chat-input { flex: 1; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text-primary); font-size: 14px; outline: none; }
+  .chat-input:focus { border-color: var(--accent); }
+  
+  /* Audio player */
+  .audio-player { background: var(--bg-secondary); border-radius: 12px; padding: 16px; border: 1px solid var(--border); }
+  
+  /* Progress ring */
+  .progress-ring { transform: rotate(-90deg); }
+  
+  /* Game card */
+  .game-card { transition: all 0.3s; cursor: pointer; }
+  .game-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+  
+  /* Analytics bar */
+  .analytics-bar { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+  .analytics-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  
+  /* Summary card */
+  .summary-highlight { background: linear-gradient(135deg, var(--accent)20, var(--cyan)20); border: 1px solid var(--accent); border-radius: 12px; padding: 16px; }
+  
+  /* Practice test timer */
+  .test-timer { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: bold; color: var(--accent); }
+  
+  /* Scroll animation */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .slide-up { animation: slideUp 0.4s ease forwards; }
 </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -280,17 +317,16 @@
     <button class="nav-item" data-page="frq">✍️ FRQ Practice</button>
     <button class="nav-item" data-page="quiz">⚡ Quiz</button>
     <button class="nav-item" data-page="challenge">🏆 Challenge Mode</button>
+    <button class="nav-item" data-page="practice-test">📝 Practice Test</button>
+    <button class="nav-item" data-page="ai-tutor">🤖 AI Tutor</button>
+    <button class="nav-item" data-page="summarizer">✨ AI Summarizer</button>
+    <button class="nav-item" data-page="audio">🔊 Audio Lessons</button>
+    <button class="nav-item" data-page="games">🎮 Study Games</button>
+    <button class="nav-item" data-page="analytics">📊 Analytics</button>
     <button class="nav-item" data-page="wrong-log">❌ Wrong Answer Log</button>
     <button class="nav-item" data-page="flagged">🚩 Flagged Questions</button>
     <button class="nav-item" data-page="night-before">🌙 Night Before</button>
     <button class="nav-item" data-page="pomodoro">🍅 Pomodoro</button>
-    <div class="h-px my-2" style="background:var(--border);"></div>
-    <div class="px-3 py-1 text-[10px] font-bold tracking-wider text-muted-foreground uppercase" style="color:var(--text-muted);">AI COPILOT PACK</div>
-    <button class="nav-item" data-page="sparke-tutor">🤖 Spark.E AI Tutor</button>
-    <button class="nav-item" data-page="live-lecture">🎙️ Live Lecture</button>
-    <button class="nav-item" data-page="doc-processor">📄 Doc & Video AI</button>
-    <button class="nav-item" data-page="essay-grader">📝 Essay Grader</button>
-    <button class="nav-item" data-page="audio-recap">🎧 Audio Recap</button>
   </nav>
   <div class="p-4 border-t text-xs" style="border-color:var(--border);color:var(--text-muted);">
     <div class="flex items-center gap-2 mb-2">
@@ -585,319 +621,172 @@
     </div>
   </section>
 
-  <!-- SPARK.E AI TUTOR (StudyFetch & Mindgrasp) -->
-  <section id="page-sparke-tutor" class="hidden animate-in">
-    <div class="flex justify-between items-center mb-4">
+  <!-- PRACTICE TEST -->
+  <section id="page-practice-test" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">📝 AP Practice Test</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Simulate real AP Physics 1 exam conditions. Timed, full-length practice tests.</p>
+    <div class="grid grid-cols-2 gap-5 mb-6">
+      <div class="card cursor-pointer game-card" onclick="startPracticeTest('full')">
+        <div class="text-3xl mb-2">📝</div>
+        <div class="font-semibold">Full Practice Test</div>
+        <p class="text-sm" style="color:var(--text-muted);">40 MCQ + 4 FRQ · 180 min</p>
+      </div>
+      <div class="card cursor-pointer game-card" onclick="startPracticeTest('mcq')">
+        <div class="text-3xl mb-2">✅</div>
+        <div class="font-semibold">MCQ Only</div>
+        <p class="text-sm" style="color:var(--text-muted);">40 questions · 80 min</p>
+      </div>
+      <div class="card cursor-pointer game-card" onclick="startPracticeTest('frq')">
+        <div class="text-3xl mb-2">✍️</div>
+        <div class="font-semibold">FRQ Only</div>
+        <p class="text-sm" style="color:var(--text-muted);">4 questions · 100 min</p>
+      </div>
+      <div class="card cursor-pointer game-card" onclick="startPracticeTest('timed')">
+        <div class="text-3xl mb-2">⏱️</div>
+        <div class="font-semibold">Timed Drill</div>
+        <p class="text-sm" style="color:var(--text-muted);">10 questions · 15 min</p>
+      </div>
+    </div>
+    <div id="test-area" class="hidden">
+      <div class="card mb-4">
+        <div class="flex justify-between items-center">
+          <div class="font-semibold" id="test-title">Practice Test</div>
+          <div class="test-timer" id="test-timer">--:--</div>
+        </div>
+        <div class="flex gap-4 text-sm mt-2" style="color:var(--text-muted);">
+          <span>Q <b id="test-qnum">1</b>/<b id="test-total">10</b></span>
+          <span>Score: <b id="test-score">0</b></span>
+        </div>
+        <div class="progress-bar mt-3"><div class="progress-fill" id="test-progress" style="width:0%"></div></div>
+      </div>
+      <div class="card mb-4"><div id="test-question"></div><div id="test-options" class="space-y-2 mt-4"></div></div>
+      <div class="flex gap-3">
+        <button class="btn btn-primary" id="test-submit" onclick="submitTestAnswer()">Submit</button>
+        <button class="btn btn-secondary" onclick="nextTestQuestion()">Skip →</button>
+      </div>
+      <div id="test-feedback" class="mt-3 text-sm hidden"></div>
+    </div>
+  </section>
+
+  <!-- AI TUTOR -->
+  <section id="page-ai-tutor" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🤖 AI Tutor</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Ask any physics question and get instant, detailed explanations.</p>
+    <div class="card">
+      <div class="chat-container">
+        <div class="chat-messages" id="tutor-messages">
+          <div class="chat-message chat-ai">👋 Hi! I'm your AP Physics 1 AI Tutor. Ask me anything about physics concepts, formulas, or problem-solving strategies!</div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="tutor-input" placeholder="Ask a physics question..." onkeypress="if(event.key==='Enter')sendTutorMessage()">
+          <button class="btn btn-primary" onclick="sendTutorMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-3 mt-4">
+      <button class="btn btn-secondary btn-sm" onclick="askTutorSuggestion('Explain Newton\\'s 3 Laws with examples')">Newton's Laws</button>
+      <button class="btn btn-secondary btn-sm" onclick="askTutorSuggestion('How do I solve projectile motion?')">Projectile Motion</button>
+      <button class="btn btn-secondary btn-sm" onclick="askTutorSuggestion('Explain energy conservation')">Energy Conservation</button>
+      <button class="btn btn-secondary btn-sm" onclick="askTutorSuggestion('AP Physics FRQ tips')">FRQ Tips</button>
+      <button class="btn btn-secondary btn-sm" onclick="askTutorSuggestion('Explain circular motion')">Circular Motion</button>
+      <button class="btn btn-secondary btn-sm" onclick="askTutorSuggestion('How does torque work?')">Torque</button>
+    </div>
+  </section>
+
+  <!-- AI SUMMARIZER -->
+  <section id="page-summarizer" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">✨ AI Summarizer</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Get instant summaries of any lesson. Save 85% reading time.</p>
+    <div class="grid grid-cols-2 gap-5">
       <div>
-        <h1 class="text-2xl font-bold">🤖 Spark.E AI Tutor</h1>
-        <p class="text-sm" style="color:var(--text-secondary);">Your 24/7 personal physics copilot powered by StudyFetch technology.</p>
-      </div>
-      <div class="flex gap-2">
-        <button class="btn btn-secondary" onclick="toggleSparkeVoice()"><span id="sparke-voice-btn">📞 Call Spark.E</span></button>
-      </div>
-    </div>
-
-    <!-- Live Voice Call UI overlay -->
-    <div id="sparke-voice-ui" class="hidden card text-center p-6 mb-5 border-cyan-500 glow-border animate-pulse">
-      <div class="flex items-center justify-center gap-2 mb-3">
-        <span class="w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
-        <div class="font-bold text-sm text-cyan-400">LIVE AUDIO CALL ACTIVE</div>
-      </div>
-      <div class="text-4xl mb-3">🎙️</div>
-      <p class="text-sm italic mb-4" id="sparke-voice-transcript">"I'm listening... Ask me any physics question out loud!"</p>
-      <div class="flex justify-center gap-2">
-        <button class="btn btn-secondary btn-sm" onclick="simulateVoiceQuery('Explain Atwood Machine')">"Explain Atwood Machine"</button>
-        <button class="btn btn-secondary btn-sm" onclick="simulateVoiceQuery('What is centrifugal force?')">"Explain Circular Motion"</button>
-        <button class="btn btn-primary btn-sm" onclick="toggleSparkeVoice()">Hang Up 🔴</button>
-      </div>
-    </div>
-
-    <div class="grid lg:grid-cols-3 gap-6">
-      <!-- Chat Interface -->
-      <div class="lg:col-span-2 flex flex-col card h-[500px]" style="padding: 0; overflow: hidden;">
-        <div class="p-4 border-b flex items-center justify-between" style="border-color:var(--border);">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-            <span class="font-semibold text-sm">Active Workspace Chat</span>
+        <div class="card mb-4">
+          <div class="font-semibold text-sm mb-3">Select Unit</div>
+          <select id="summary-unit" class="w-full p-3 rounded-xl border text-sm" style="background:var(--bg-secondary);border-color:var(--border);color:var(--text-primary);">
+            <option value="1">Unit 1: Kinematics</option><option value="2">Unit 2: Forces</option>
+            <option value="3">Unit 3: Energy</option><option value="4">Unit 4: Momentum</option>
+            <option value="5">Unit 5: Torque</option><option value="6">Unit 6: Rotating Systems</option>
+            <option value="7">Unit 7: Oscillations</option><option value="8">Unit 8: Fluids</option>
+          </select>
+          <div class="mt-3 space-y-2">
+            <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="summary-type" value="key" checked> Key Concepts</label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="summary-type" value="exam"> Exam-Focused</label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="summary-type" value="formulas"> Formulas Only</label>
           </div>
-          <button class="btn btn-secondary btn-xs text-xs py-1 px-2" onclick="clearSparkeChat()">Clear Chat</button>
-        </div>
-        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="sparke-chat-messages">
-          <div class="flex gap-3 max-w-[85%]">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style="background:var(--accent); color: white;">🤖</div>
-            <div class="p-3 rounded-xl text-sm" style="background:var(--bg-secondary);">
-              Hi! I'm <strong>Spark.E</strong>, your AI study buddy. You can ask me any AP Physics questions, upload diagrams using "Spark.E Visuals" on the right, or click any suggested prompt below!
-            </div>
-          </div>
-        </div>
-        <div class="p-4 border-t" style="border-color:var(--border);">
-          <div class="flex gap-2">
-            <input type="text" id="sparke-chat-input" placeholder="Ask Spark.E anything about Physics..." class="flex-1 p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary); border-color:var(--border);" onkeydown="if(event.key === 'Enter') sendSparkeMessage()">
-            <button class="btn btn-primary" onclick="sendSparkeMessage()">Send →</button>
-          </div>
-          <div class="flex gap-2 mt-2 overflow-x-auto py-1 text-xs">
-            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('How do I analyze an Atwood Machine on the AP Exam?')">Atwood Machine ⚙️</button>
-            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('Explain why potential energy in a spring depends on x squared.')">Spring Potential 🌀</button>
-            <button class="btn btn-secondary btn-xs whitespace-nowrap" onclick="suggestSparkePrompt('What is Bernoulli\'s Principle in simple terms?')">Bernoulli 🌊</button>
-          </div>
+          <button class="btn btn-primary w-full mt-3" onclick="generateSummary()">Generate Summary ✨</button>
         </div>
       </div>
-
-      <!-- Spark.E Visuals / Diagram Analyzer -->
-      <div class="card flex flex-col">
-        <h3 class="font-bold text-sm mb-2 flex items-center gap-2">👁️ Spark.E Visuals</h3>
-        <p class="text-xs mb-4" style="color:var(--text-muted);">Analyze physics diagrams, setups, and charts. Pick a preset diagram or drop your own image to get instant AI explanations.</p>
-        <div class="grid grid-cols-3 gap-2 mb-4">
-          <button class="p-2 border rounded-xl text-center hover:bg-card-hover transition-all text-xs" style="border-color:var(--border);" onclick="analyzeVisual('atwood')">
-            <div class="text-lg mb-1">⚙️</div>
-            Atwood
-          </button>
-          <button class="p-2 border rounded-xl text-center hover:bg-card-hover transition-all text-xs" style="border-color:var(--border);" onclick="analyzeVisual('incline')">
-            <div class="text-lg mb-1">📐</div>
-            Ramp
-          </button>
-          <button class="p-2 border rounded-xl text-center hover:bg-card-hover transition-all text-xs" style="border-color:var(--border);" onclick="analyzeVisual('fluid')">
-            <div class="text-lg mb-1">💧</div>
-            Venturi
-          </button>
-        </div>
-        <div class="p-4 border-2 border-dashed rounded-xl text-center text-sm cursor-pointer mb-4 flex-1 flex flex-col justify-center items-center" style="border-color:var(--border); color:var(--text-muted);" onclick="$('visual-file-input').click()">
-          <div class="text-2xl mb-1">📸</div>
-          <span>Upload diagram / diagram.png</span>
-          <input type="file" id="visual-file-input" class="hidden" accept="image/*" onchange="uploadVisual(event)">
-        </div>
-        <div id="visual-output" class="hidden p-3 rounded-xl text-xs space-y-2" style="background:var(--bg-secondary); border:1px solid var(--border);">
-          <div class="font-bold text-cyan-400" id="visual-title"></div>
-          <p id="visual-desc" style="color:var(--text-secondary);"></p>
+      <div class="card" style="min-height:300px;">
+        <div class="summary-highlight mb-4"><div class="font-semibold">AI-Generated Summary</div></div>
+        <div id="summary-content" class="text-sm space-y-3" style="color:var(--text-secondary);">Select a unit and click "Generate Summary".</div>
+        <div class="flex gap-2 mt-4">
+          <button class="btn btn-secondary btn-sm" onclick="copySummary()">📋 Copy</button>
+          <button class="btn btn-secondary btn-sm" onclick="readSummaryAloud()">🔊 Read Aloud</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- LIVE LECTURE (StudyFetch & Mindgrasp) -->
-  <section id="page-live-lecture" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-2">🎙️ Record Live Lecture</h1>
-    <p class="text-sm mb-6" style="color:var(--text-secondary);">Transcribe and capture lecture notes in real-time. Automatically converts audio into interactive Study Sets, Flashcards, and Quizzes.</p>
-    
-    <div class="grid lg:grid-cols-3 gap-6">
-      <div class="card lg:col-span-2 flex flex-col justify-between h-[450px]">
-        <div>
-          <div class="flex justify-between items-center mb-4">
-            <div class="flex items-center gap-2">
-              <span id="lecture-pulse" class="w-3 h-3 rounded-full bg-zinc-500"></span>
-              <span class="font-semibold text-sm" id="lecture-status">Inactive</span>
-            </div>
-            <div class="text-xs font-mono" id="lecture-timer">00:00</div>
-          </div>
-          
-          <!-- Live Transcript text container -->
-          <div class="p-4 rounded-xl h-[250px] overflow-y-auto font-mono text-xs leading-relaxed space-y-3" style="background:var(--bg-secondary); border:1px solid var(--border);" id="lecture-transcript">
-            <p class="text-zinc-500 italic">"Click 'Start Recording' and your live spoken words (or class lecture audio) will transcribe right here in real-time."</p>
-          </div>
-        </div>
-        
-        <div class="flex gap-3">
-          <button class="btn btn-primary" id="btn-lecture-toggle" onclick="toggleLectureRecording()">Start Recording 🎙️</button>
-          <button class="btn btn-secondary" id="btn-lecture-notes" onclick="generateLectureAssets()" disabled>Generate Notes & Flashcards ⚡</button>
-        </div>
+  <!-- AUDIO LESSONS -->
+  <section id="page-audio" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🔊 Audio Lessons</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Listen to lessons while commuting or relaxing. Learn anywhere!</p>
+    <div class="card mb-4">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-xl flex items-center justify-center text-2xl" style="background:rgba(124,92,252,0.2);">🔊</div>
+        <div class="flex-1"><div class="font-semibold" id="audio-title">Unit 1: Kinematics</div><div class="text-sm" style="color:var(--text-muted);" id="audio-subtitle">Scalars, Vectors, and Motion</div></div>
+        <button class="btn btn-primary" onclick="toggleAudio()" id="audio-play-btn">▶ Play</button>
       </div>
-
-      <div class="card">
-        <h3 class="font-bold text-sm mb-2">⚡ Generated Assets</h3>
-        <p class="text-xs mb-4" style="color:var(--text-muted);">Once your recording is finished, the AI will package your lecture into the assets listed below.</p>
-        
-        <div class="space-y-3">
-          <div class="p-3 rounded-xl border flex items-center justify-between" style="border-color:var(--border);" id="asset-notes">
-            <div>
-              <div class="text-xs font-semibold">Structured Study Notes</div>
-              <div class="text-[10px]" style="color:var(--text-muted);">Not generated yet</div>
-            </div>
-            <button class="btn btn-secondary btn-xs py-1 px-2 text-xs" onclick="viewLectureNotes()" disabled>View</button>
-          </div>
-          
-          <div class="p-3 rounded-xl border flex items-center justify-between" style="border-color:var(--border);" id="asset-flashcards">
-            <div>
-              <div class="text-xs font-semibold">Flashcard Decks</div>
-              <div class="text-[10px]" style="color:var(--text-muted);">Not generated yet</div>
-            </div>
-            <button class="btn btn-secondary btn-xs py-1 px-2 text-xs" onclick="navigateTo('flashcards')" disabled>Review</button>
-          </div>
-          
-          <div class="p-3 rounded-xl border flex items-center justify-between" style="border-color:var(--border);" id="asset-quiz">
-            <div>
-              <div class="text-xs font-semibold">Quiz Challenge</div>
-              <div class="text-[10px]" style="color:var(--text-muted);">Not generated yet</div>
-            </div>
-            <button class="btn btn-secondary btn-xs py-1 px-2 text-xs" onclick="navigateTo('quiz')" disabled>Take Quiz</button>
-          </div>
-        </div>
+      <div class="mt-4"><input type="range" id="audio-progress" min="0" max="100" value="0" class="w-full" style="accent-color:var(--accent);"></div>
+      <div class="flex gap-2 mt-3">
+        <button class="btn btn-ghost btn-sm" onclick="changeSpeed(0.75)">0.75×</button>
+        <button class="btn btn-ghost btn-sm" onclick="changeSpeed(1)">1×</button>
+        <button class="btn btn-ghost btn-sm" onclick="changeSpeed(1.5)">1.5×</button>
+        <button class="btn btn-ghost btn-sm" onclick="changeSpeed(2)">2×</button>
       </div>
     </div>
+    <div class="card">
+      <div class="font-semibold text-sm mb-3">Playlist</div>
+      <div id="audio-playlist" class="space-y-2"></div>
+    </div>
+  </section>
 
-    <!-- Generated notes display modal overlay -->
-    <div id="lecture-notes-display" class="hidden mt-6 card border-green-500 animate-in">
+  <!-- STUDY GAMES -->
+  <section id="page-games" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">🎮 Study Games</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Learn through play! Gamified review sessions.</p>
+    <div class="grid grid-cols-3 gap-5">
+      <div class="card game-card cursor-pointer" onclick="startGame('typing')"><div class="text-4xl mb-3">⌨️</div><div class="font-semibold">Speed Typing</div><p class="text-sm" style="color:var(--text-muted);">Type answers fast</p></div>
+      <div class="card game-card cursor-pointer" onclick="startGame('memory')"><div class="text-4xl mb-3">🧠</div><div class="font-semibold">Memory Match</div><p class="text-sm" style="color:var(--text-muted);">Match terms & definitions</p></div>
+      <div class="card game-card cursor-pointer" onclick="startGame('speed')"><div class="text-4xl mb-3">⚡</div><div class="font-semibold">Speed Round</div><p class="text-sm" style="color:var(--text-muted);">60s challenge</p></div>
+    </div>
+    <div id="game-area" class="hidden mt-6 card">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="font-bold text-base" id="notes-display-title">Lecture Summary Notes</h3>
-        <button class="btn btn-ghost btn-sm" onclick="$('lecture-notes-display').classList.add('hidden')">Close ✕</button>
+        <div class="font-semibold" id="game-title">Game</div>
+        <div class="flex gap-4"><span>Score: <b id="game-score" style="color:var(--accent);">0</b></span><span id="game-timer" style="color:var(--orange);">60s</span></div>
       </div>
-      <div class="p-4 rounded-xl text-sm space-y-4 font-mono leading-relaxed" style="background:var(--bg-secondary); border:1px solid var(--border);" id="notes-display-body">
+      <div id="game-content" class="text-center py-8"></div>
+      <div id="game-input-area" class="hidden mt-4 flex gap-3 justify-center">
+        <input type="text" id="game-input" class="p-3 rounded-xl border flex-1 max-w-md" style="background:var(--bg-secondary);border-color:var(--border);color:var(--text-primary);" onkeypress="if(event.key==='Enter')submitGameAnswer()">
+        <button class="btn btn-primary" onclick="submitGameAnswer()">Submit</button>
       </div>
+      <button class="btn btn-secondary mt-4" onclick="endGame()">End Game</button>
     </div>
   </section>
 
-  <!-- DOC & VIDEO PROCESSOR (Mindgrasp & I Hate Reading) -->
-  <section id="page-doc-processor" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-2">📄 Doc & Video AI Processor</h1>
-    <p class="text-sm mb-6" style="color:var(--text-secondary);">Inspired by Mindgrasp and I Hate Reading. Paste dense textbooks, articles, or YouTube video links to instantly simplify them.</p>
-    
-    <div class="grid lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-1 card flex flex-col gap-4">
-        <div>
-          <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">PASTE TEXT OR INSERT URL</label>
-          <textarea id="doc-ai-input" placeholder="Paste a dense textbook paragraph, paper, or YouTube URL (e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ) here..." rows="10" class="w-full p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary); border-color:var(--border); font-family:inherit; resize:none;"></textarea>
-        </div>
-        
-        <div>
-          <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">CHOOSE YOUR SOURCE TYPE</label>
-          <div class="grid grid-cols-2 gap-2">
-            <button class="p-3 border rounded-xl hover:bg-card-hover text-center transition-all text-xs" id="src-text" style="border-color:var(--accent); background:rgba(124,92,252,0.1);" onclick="selectSourceType('text')">📝 Raw Text</button>
-            <button class="p-3 border rounded-xl hover:bg-card-hover text-center transition-all text-xs" id="src-video" style="border-color:var(--border);" onclick="selectSourceType('video')">🎥 YouTube URL</button>
-          </div>
-        </div>
-        
-        <button class="btn btn-primary w-full justify-center text-center" onclick="processSourceContent()">Simplify Content ⚡</button>
-      </div>
-
-      <div class="lg:col-span-2 space-y-4">
-        <!-- Simplified explanations -->
-        <div class="card border-pink-500">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="text-lg">👶</span>
-            <h3 class="font-bold text-sm">ELI5 — "Explain Like I'm 5" (I Hate Reading Style)</h3>
-          </div>
-          <div class="p-3 rounded-xl text-sm italic" style="background:var(--bg-secondary);" id="simplified-eli5">
-            "Your output will appear here. No complex jargon, just raw intuition!"
-          </div>
-        </div>
-
-        <div class="card border-yellow-500">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="text-lg">🏷️</span>
-            <h3 class="font-bold text-sm">Cheat Sheet Codes</h3>
-          </div>
-          <div class="p-3 rounded-xl text-xs font-mono space-y-2" style="background:var(--bg-secondary);" id="simplified-cheats">
-            <div>// Ready-to-copy extremely condensed formulas and rules will appear here.</div>
-          </div>
-        </div>
-
-        <!-- Interactive add to deck -->
-        <div class="card flex justify-between items-center">
-          <div>
-            <div class="font-semibold text-sm">Want to study this?</div>
-            <p class="text-xs" style="color:var(--text-muted);">Transform this processed output into 5 custom flashcards and 2 practice quiz questions instantly.</p>
-          </div>
-          <button class="btn btn-primary" id="btn-export-assets" onclick="exportProcessedToDecks()" disabled>Add to Deck 🃏</button>
-        </div>
-      </div>
+  <!-- ANALYTICS -->
+  <section id="page-analytics" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-4">📊 Analytics Dashboard</h1>
+    <p class="mb-6" style="color:var(--text-secondary);">Track your progress and optimize your study strategy.</p>
+    <div class="grid grid-cols-4 gap-4 mb-6">
+      <div class="card text-center"><div class="text-3xl font-bold" style="color:var(--accent);" id="analytics-total">0</div><div class="text-xs" style="color:var(--text-muted);">Total Questions</div></div>
+      <div class="card text-center"><div class="text-3xl font-bold" style="color:var(--green);" id="analytics-accuracy">0%</div><div class="text-xs" style="color:var(--text-muted);">Accuracy</div></div>
+      <div class="card text-center"><div class="text-3xl font-bold" style="color:var(--orange);" id="analytics-streak">0</div><div class="text-xs" style="color:var(--text-muted);">Day Streak</div></div>
+      <div class="card text-center"><div class="text-3xl font-bold" style="color:var(--cyan);" id="analytics-xp">0</div><div class="text-xs" style="color:var(--text-muted);">Total XP</div></div>
     </div>
-  </section>
-
-  <!-- ESSAY GRADER (StudyFetch) -->
-  <section id="page-essay-grader" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-2">📝 AI Essay & FRQ Grader</h1>
-    <p class="text-sm mb-6" style="color:var(--text-secondary);">Grade and receive extensive feedback on your AP Physics explanations or Free-Response writeups using College Board rubrics.</p>
-    
-    <div class="grid lg:grid-cols-2 gap-6">
-      <div class="card flex flex-col gap-4">
-        <div>
-          <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">SELECT AP ESSAY THEME</label>
-          <select id="essay-theme" class="w-full p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary); border-color:var(--border);">
-            <option value="atwood">Atwood Machine & String Tension Analysis</option>
-            <option value="conservation">Conservation of Energy on Curved Loop Track</option>
-            <option value="bernoulli">Venturi Tubes and Pressure Difference Explanation</option>
-          </select>
-        </div>
-        
-        <div>
-          <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">PASTE YOUR EXPLANATION OR ESSAY</label>
-          <textarea id="essay-input" placeholder="Type your claim, evidence, and reasoning here. Be sure to define variables, reference specific equations, and list assumptions..." rows="12" class="w-full p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary); border-color:var(--border); font-family:inherit; resize:none;"></textarea>
-        </div>
-        
-        <button class="btn btn-primary" onclick="gradeUserEssay()">Grade Essay ✏️</button>
-      </div>
-
-      <div class="card flex flex-col h-[550px] overflow-y-auto">
-        <h3 class="font-bold text-sm mb-3">📊 College Board Evaluation Rubric</h3>
-        <div id="essay-grader-results" class="space-y-4">
-          <div class="text-center py-12 text-zinc-500 italic text-sm">
-            📄 Paste your essay and click "Grade Essay" to see scoring breakdown, CER analysis, and feedback.
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- AUDIO RECAP (StudyFetch) -->
-  <section id="page-audio-recap" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-2">🎧 AI Audio Recap</h1>
-    <p class="text-sm mb-6" style="color:var(--text-secondary);">Generate customized 3-minute AP Physics audio summary podcasts from any unit to study on the go.</p>
-    
-    <div class="max-w-xl mx-auto card text-center">
-      <div class="mb-4">
-        <label class="block text-xs font-bold mb-2 text-left" style="color:var(--text-muted);">CHOOSE STUDY UNIT</label>
-        <select id="audio-recap-unit" class="w-full p-3 rounded-xl border text-white text-sm" style="background:var(--bg-secondary); border-color:var(--border);">
-          <option value="1">Unit 1: Kinematics (Motion)</option>
-          <option value="2">Unit 2: Force & Dynamics</option>
-          <option value="3">Unit 3: Work, Energy, & Power</option>
-          <option value="4">Unit 4: Linear Momentum</option>
-          <option value="5">Unit 5: Torque & Rotation</option>
-          <option value="6">Unit 6: Energy/Momentum of Rotation</option>
-          <option value="7">Unit 7: Oscillations (SHM)</option>
-          <option value="8">Unit 8: Fluids</option>
-        </select>
-      </div>
-      
-      <button class="btn btn-primary w-full justify-center mb-6" onclick="generateAudioRecap()">Generate Podcast Recap ⚡</button>
-      
-      <!-- Audio player simulation UI -->
-      <div id="audio-player-container" class="hidden p-5 rounded-xl border space-y-4 animate-in" style="background:var(--bg-secondary); border-color:var(--border);">
-        <div class="flex items-center justify-between">
-          <div class="text-xs font-semibold text-left">
-            <div id="audio-track-title" class="font-bold text-sm text-cyan-400">AP Physics Summary Podcast</div>
-            <div class="text-[10px] text-zinc-500">Narrator: Spark.E AI Voice</div>
-          </div>
-          <div class="flex items-center gap-1.5 text-xs text-zinc-400 font-mono">
-            <span id="audio-time">00:00</span> / <span id="audio-duration">02:30</span>
-          </div>
-        </div>
-        
-        <!-- Progress bar slider -->
-        <div class="progress-bar w-full cursor-pointer h-1.5 rounded-full overflow-hidden" onclick="seekAudio(event)" style="background:#252535;">
-          <div class="progress-fill h-full rounded-full" id="audio-progress" style="width:0%; background:var(--accent);"></div>
-        </div>
-        
-        <!-- Controls -->
-        <div class="flex items-center justify-between">
-          <select id="audio-speed" class="p-1 rounded bg-zinc-800 text-white text-xs font-mono" onchange="adjustAudioSpeed(this.value)">
-            <option value="1">1.0x</option>
-            <option value="1.25">1.25x</option>
-            <option value="1.5">1.5x</option>
-            <option value="2">2.0x</option>
-          </select>
-          
-          <div class="flex items-center gap-3">
-            <button class="btn btn-secondary btn-sm rounded-full w-9 h-9 p-0 flex items-center justify-center text-sm" onclick="skipAudio(-10)">⏮</button>
-            <button class="btn btn-primary rounded-full w-12 h-12 p-0 flex items-center justify-center text-lg" id="audio-play-btn" onclick="toggleAudioPlayback()">▶</button>
-            <button class="btn btn-secondary btn-sm rounded-full w-9 h-9 p-0 flex items-center justify-center text-sm" onclick="skipAudio(10)">⏭</button>
-          </div>
-          
-          <div class="text-xs font-semibold text-green-400" id="audio-playing-status">Paused</div>
-        </div>
-
-        <!-- Scrolling Podcast Transcript -->
-        <div class="p-3 rounded-lg text-xs leading-relaxed text-left max-h-[120px] overflow-y-auto italic border text-zinc-400" style="background:var(--bg-card); border-color:var(--border);" id="audio-transcript-text">
-        </div>
-      </div>
+    <div class="card mb-6"><div class="font-semibold text-sm mb-4">Performance by Unit</div><div id="unit-analytics" class="space-y-3"></div></div>
+    <div class="grid grid-cols-2 gap-5">
+      <div class="card"><div class="font-semibold text-sm mb-4">Weekly Activity</div><div class="flex items-end gap-2 h-32" id="weekly-chart"></div></div>
+      <div class="card"><div class="font-semibold text-sm mb-4">Strengths & Weaknesses</div><div id="strengths-weaknesses" class="space-y-2"></div></div>
     </div>
   </section>
 
@@ -3084,13 +2973,6 @@ function selectQuizOption(idx, el) {
 }
 
 function submitQuiz() {
-  // If the quiz is currently showing feedback and the button is 'Next →',
-  // advance to the next question instead of submitting.
-  if ($('qz-submit').textContent.trim() === 'Next →') {
-    nextQuizQuestion();
-    return;
-  }
-
   if (state.quizSelected === null) { showToast('Select an answer first'); return; }
   const q = quizQuestions[state.quizIndex];
   const correct = state.quizSelected === q.correct;
@@ -3103,7 +2985,7 @@ function submitQuiz() {
     ? `<span style="color:var(--green);">✅ Correct! ${q.explanation}</span>`
     : `<span style="color:var(--red);">❌ Wrong. ${q.explanation}</span>`;
   $('qz-submit').textContent = 'Next →';
-  
+  $('qz-submit').onclick = nextQuizQuestion;
   // Highlight correct answer
   document.querySelectorAll('.option-item').forEach((o, i) => {
     o.style.pointerEvents = 'none';
@@ -3117,6 +2999,7 @@ function submitQuiz() {
 function nextQuizQuestion() {
   state.quizIndex++;
   state.quizSelected = null;
+  $('qz-submit').onclick = submitQuiz;
   renderQuizQuestion();
 }
 
