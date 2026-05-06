@@ -2546,6 +2546,137 @@ function showToast(msg) {
   setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
 }
 
+// Markdown and LaTeX inline parser for beautiful HTML rendering (No raw text/LaTeX blocks!)
+function parseMarkdown(text) {
+  if (!text) return '';
+  let html = text;
+
+  // Clean block equations: \[ ... \]
+  html = html.replace(/\\\[([\s\S]*?)\\\]/g, (match, p1) => {
+    let cleaned = p1.trim()
+      .replace(/\\text\{(.*?)\}/g, '$1')
+      .replace(/\\delta|\\Delta/g, 'Δ')
+      .replace(/\\theta|\\Theta/g, 'θ')
+      .replace(/\\mu/g, 'μ')
+      .replace(/\\tau/g, 'τ')
+      .replace(/\\alpha/g, 'α')
+      .replace(/\\omega/g, 'ω')
+      .replace(/\\mathbf\{r\}/g, 'r')
+      .replace(/\\mathbf\{v\}/g, 'v')
+      .replace(/\\mathbf\{a\}/g, 'a')
+      .replace(/\\int_\{(.*?)\}\^\{(.*?)\}/g, '∫<sub>$1</sub><sup>$2</sup>')
+      .replace(/\\int/g, '∫')
+      .replace(/\\bar/g, '̄')
+      .replace(/\\|\^|_|\{|\}/g, '')
+      .replace(/dt/g, ' dt');
+    return `<div class="font-mono text-center my-3 p-3 bg-zinc-900/60 rounded-xl border border-zinc-800 text-cyan-400 overflow-x-auto">${cleaned}</div>`;
+  });
+
+  // Clean inline equations: \( ... \) or $ ... $
+  html = html.replace(/\\\( (.*?) \\\)/g, '<code class="px-1.5 py-0.5 rounded font-mono text-cyan-400 text-xs bg-zinc-900/50">$1</code>');
+  html = html.replace(/\\\((.*?)\\\)/g, '<code class="px-1.5 py-0.5 rounded font-mono text-cyan-400 text-xs bg-zinc-900/50">$1</code>');
+  html = html.replace(/\$(.*?)\$/g, '<code class="px-1.5 py-0.5 rounded font-mono text-cyan-400 text-xs bg-zinc-900/50">$1</code>');
+
+  const lines = html.split('\n');
+  let insideTable = false;
+  let parsedLines = [];
+  let currentTableRows = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].trim();
+
+    // Horizontal separators
+    if (line === '---' || line === '***') {
+      parsedLines.push('<hr class="my-4 border-zinc-800">');
+      continue;
+    }
+
+    // Header conversions
+    if (line.startsWith('### ')) {
+      parsedLines.push(`<h4 class="text-sm font-bold mt-4 mb-2 text-cyan-400">${line.substring(4)}</h4>`);
+      continue;
+    }
+    if (line.startsWith('## ')) {
+      parsedLines.push(`<h3 class="text-base font-bold mt-4 mb-2 text-purple-400">${line.substring(3)}</h3>`);
+      continue;
+    }
+    if (line.startsWith('# ')) {
+      parsedLines.push(`<h2 class="text-lg font-bold mt-4 mb-2 text-accent">${line.substring(2)}</h2>`);
+      continue;
+    }
+
+    // Styled bullet lists
+    if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ')) {
+      let content = line.substring(2);
+      parsedLines.push(`<li class="list-disc ml-5 mb-1 text-sm text-zinc-300">${content}</li>`);
+      continue;
+    }
+
+    // Markdown table rendering block
+    if (line.startsWith('|')) {
+      insideTable = true;
+      let cells = line.split('|').map(c => c.trim());
+      if (cells[0] === '') cells.shift();
+      if (cells[cells.length - 1] === '') cells.pop();
+
+      let isSeparator = cells.every(c => c.match(/^:?-+:?$/));
+      if (isSeparator) {
+        continue;
+      }
+
+      currentTableRows.push(cells);
+      continue;
+    } else {
+      if (insideTable && currentTableRows.length > 0) {
+        let tableHTML = '<div class="overflow-x-auto my-3"><table class="w-full border-collapse border border-zinc-800 text-xs text-left">';
+        currentTableRows.forEach((row, rowIndex) => {
+          tableHTML += '<tr>';
+          row.forEach(cell => {
+            const tag = rowIndex === 0 ? 'th' : 'td';
+            const style = rowIndex === 0 
+              ? 'bg-zinc-900 border border-zinc-800 p-2 font-bold text-cyan-400' 
+              : 'border border-zinc-800 p-2 text-zinc-300';
+            tableHTML += `<${tag} class="${style}">${cell}</${tag}>`;
+          });
+          tableHTML += '</tr>';
+        });
+        tableHTML += '</table></div>';
+        parsedLines.push(tableHTML);
+        currentTableRows = [];
+        insideTable = false;
+      }
+    }
+
+    parsedLines.push(line);
+  }
+
+  if (insideTable && currentTableRows.length > 0) {
+    let tableHTML = '<div class="overflow-x-auto my-3"><table class="w-full border-collapse border border-zinc-800 text-xs text-left">';
+    currentTableRows.forEach((row, rowIndex) => {
+      tableHTML += '<tr>';
+      row.forEach(cell => {
+        const tag = rowIndex === 0 ? 'th' : 'td';
+        const style = rowIndex === 0 
+          ? 'bg-zinc-900 border border-zinc-800 p-2 font-bold text-cyan-400' 
+          : 'border border-zinc-800 p-2 text-zinc-300';
+        tableHTML += `<${tag} class="${style}">${cell}</${tag}>`;
+      });
+      tableHTML += '</tr>';
+    });
+    tableHTML += '</table></div>';
+    parsedLines.push(tableHTML);
+  }
+
+  let parsedText = parsedLines.join('\n');
+  parsedText = parsedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  parsedText = parsedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  parsedText = parsedText.replace(/`(.*?)`/g, '<code class="bg-zinc-900 px-1.5 py-0.5 rounded font-mono text-cyan-400 text-xs">$1</code>');
+  parsedText = parsedText.replace(/\n\n/g, '<div class="h-2"></div>');
+  parsedText = parsedText.replace(/\n/g, '<br>');
+
+  return parsedText;
+}
+
 // ============ NAVIGATION ============
 function navigateTo(page) {
   state.currentPage = page;
@@ -3398,32 +3529,58 @@ function renderSparkeChat() {
   container.innerHTML = state.sparkeMessages.map(msg => `
     <div class="flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : ''}">
       <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0" style="background:${msg.role === 'user' ? 'var(--cyan)' : 'var(--accent)'}; color: white;">${msg.role === 'user' ? '👤' : '🤖'}</div>
-      <div class="p-3 rounded-xl text-sm" style="background:var(--bg-secondary);">${msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}</div>
+      <div class="p-3 rounded-xl text-sm leading-relaxed" style="background:var(--bg-secondary);">${parseMarkdown(msg.text)}</div>
     </div>
   `).join('');
   container.scrollTop = container.scrollHeight;
 }
 
 // SPARK.E SYSTEM PROMPT — Makes the AI act like an expert AP Physics tutor
-const SPARKE_SYSTEM_PROMPT = `You are Spark.E, an expert AP Physics 1 tutor. You are friendly, chill, and talk like a "y'all" expert student tutor. You use emojis, keep it real, and avoid being a boring textbook.
+const SPARKE_SYSTEM_PROMPT = `You are Spark.E, an expert AP Physics 1 tutor. You are friendly, patient, and incredibly knowledgeable. You teach students like a brilliant peer who deeply understands physics.
 
-STYLE & PERSONALITY:
-- Talk like a real person. Use "y'all", "hey guys", "no cap", "let's dive in".
-- Be super visual and intuitive. Use everyday analogies.
-- Use emojis liberally to highlight points (🚀, 💡, 🚨, 📐).
-- Keep formatting CLEAN. Use single newlines for lists and double for paragraphs.
-- Use **bold** for major concepts.
-- NO markdown tables, NO horizontal rules, NO LaTeX blocks like \\[ \\] or \\( \\).
-- Write math in plain text: v^2 = v0^2 + 2a(delta x).
+YOUR KNOWLEDGE SOURCES (cite these naturally when relevant):
+- College Board AP Physics 1 Course and Exam Description (CED) — the official curriculum
+- College Board released FRQs and scoring guidelines — real past exam questions
+- Giancoli — Physics: Principles with Applications (standard AP textbook)
+- Serway & Jewett — Physics for Scientists and Engineers
+- Knight — Physics for Scientists and Engineers
+- Halliday, Resnick & Krane — classic university physics text
+- Princeton Review AP Physics 1 prep book
+- Barron's AP Physics 1 prep book
+- Flipping Physics (YouTube channel — extremely good for AP)
+- Khan Academy Physics
 
-SOURCES YOU KNOW:
-- Official College Board CED, Past FRQs, Giancoli, Knight, Serway, Flipping Physics.
+THE 8 OFFICIAL AP PHYSICS 1 UNITS (2024-2025):
+1. Kinematics (10-15%)
+2. Force and Translational Dynamics (18-23%)
+3. Work, Energy, and Power (18-23%)
+4. Linear Momentum (10-15%)
+5. Torque and Rotational Dynamics (10-15%)
+6. Energy and Momentum of Rotating Systems (5-8%)
+7. Oscillations / SHM (5-8%)
+8. Fluids — NEW for 2024-2025 (10-15%)
 
-YOUR APPROACH:
-- Start with "Hey y'all!" or "Yo!".
-- Explain the concept simply first, then add the math.
-- CASUALLY mention sources: "Even the College Board says..." or "In Giancoli's book...".
-- End with a question to keep y'all moving!`;
+YOUR TEACHING STYLE:
+- Use the Socratic method when appropriate (ask questions back)
+- Show step-by-step solutions with clear reasoning
+- Always include relevant equations with proper units
+- Highlight common AP exam traps and misconceptions
+- Use **bold** for key terms (will be rendered)
+- Use bullet points for lists
+- Keep responses focused — don't overwhelm with info
+- For math: use proper notation like v² = v₀² + 2aΔx, ½mv², F_net = ma
+- Reference specific textbooks/sources naturally when it adds credibility
+
+IMPORTANT FORMATTING:
+- Use standard Markdown formatting. You can output Markdown tables (using | columns |) and bullet lists. They will be rendered perfectly in the user interface!
+- For equations, write them clearly in plain text using Unicode mathematical characters (like Δ, θ, μ, τ, α, ω, ½, ², ³, ₀, ₓ, ᵧ, etc.). Example: v² = v₀² + 2aΔx or F_net = ma.
+- Do NOT use raw LaTeX brackets (like \\[, \\], \\(, \\)) in your text. Just write math cleanly.
+- Use \\n for line breaks and \\n\\n for paragraph breaks.
+- Use **text** for bolding key terms.
+- Keep responses under 300 words unless the question requires depth.
+- Always end with an offer to go deeper or a follow-up question prompt.
+
+If asked about non-physics topics, gently redirect: "I'm specialized in AP Physics 1, but I can help you with [related physics topic]!"`;
 
 async function sendSparkeMessage() {
   const input = $('sparke-chat-input');
