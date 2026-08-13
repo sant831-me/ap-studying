@@ -2075,6 +2075,7 @@ const LESSON_SUBUNITS = {
   1: [
     { code: '1.1', title: 'Scalars, Vectors, and Choosing a Direction', 
       objective: 'Learn the difference between quantities that need direction and those that do not, and why picking a positive direction is the FIRST thing you do in every physics problem.',
+      video: { id: 'ZYl9-iz7nR8', title: 'Introduction to Tip-to-Tail Vector Addition, Vectors and Scalars — Flipping Physics' },
       explain: 'Some quantities are just numbers — like your mass (70 kg) or the temperature outside (20°C). These are SCALARS. Other quantities need a direction to make sense — like "the car is moving 60 mph north." These are VECTORS. If I say "the car is moving 60 mph," you do not know where it is going! That is why direction matters. In physics, we usually pick a coordinate system: right and up are positive, left and down are negative. This choice is not built into nature — you pick it! But once you pick it, you must be consistent throughout the entire problem.',
       notes: [
         'DISTANCE = total path length traveled (like your car odometer). It is always positive. DISPLACEMENT = net change in position (straight line from start to finish). Can be positive, negative, or zero.',
@@ -2091,6 +2092,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '1.2', title: 'Position, Velocity, and Acceleration — What Do They Really Mean?',
       objective: 'Deeply understand what position, velocity, and acceleration are, how they relate to each other, and common misconceptions.',
+      video: { id: 'fhOqbAF1Uis', title: 'Walking Position, Velocity and Acceleration as a Function of Time Graphs — Flipping Physics' },
       explain: 'Position (x) tells you WHERE something is. Velocity (v) tells you how fast the position is CHANGING. Acceleration (a) tells you how fast the velocity is CHANGING. Here is the critical insight most beginners miss: acceleration means ANY change in velocity — that includes speeding up, slowing down, AND changing direction. A car going in a circle at constant 50 mph IS accelerating because the direction keeps changing! Another crucial idea: you can have zero velocity with non-zero acceleration (a ball at the top of a toss), and you can have zero acceleration with non-zero velocity (a car cruising on the highway). These are NOT the same thing!',
       notes: [
         'Position (x): Where the object is. We measure it from a chosen reference point (usually called the origin). Units: meters (m).',
@@ -2125,6 +2127,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '1.4', title: 'The 4 Kinematic Equations — Your Toolkit for Constant Acceleration',
       objective: 'Use the right equation to solve any constant acceleration problem by matching knowns to unknowns.',
+      video: { id: 'dHjWVlfNraM', title: 'Kinematics In One Dimension — The Organic Chemistry Tutor' },
       explain: 'When acceleration is constant (free fall, a car speeding up at a steady rate, a ball rolling down a ramp), there are exactly FOUR equations that connect five variables: initial velocity (v₀), final velocity (v), acceleration (a), time (t), and displacement (Δx). Each equation uses 4 of these 5 variables. Your strategy: (1) List what you KNOW. (2) List what you WANT. (3) Pick the equation that has exactly those variables and nothing you do not know. This is a SKILL — practice it until it becomes automatic.',
       notes: [
         'v = v₀ + at — Use when you do NOT need displacement. Think: "How fast am I going now?"',
@@ -2144,6 +2147,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '1.5', title: 'Free Fall — Why a Feather and a Bowling Ball Fall at the Same Rate',
       objective: 'Understand that gravity accelerates all objects equally and solve free-fall problems.',
+      video: { id: 'vyvDzI22sOE', title: 'Introduction to Free-Fall and the Acceleration due to Gravity — Flipping Physics' },
       explain: 'This is one of the most counterintuitive ideas in physics: in the absence of air, a feather and a bowling ball dropped from the same height hit the ground at the EXACT same time. Galileo discovered this. Why? The heavier object has more weight (pulling it down harder) but also more inertia (harder to accelerate). These two effects cancel EXACTLY. On Earth near the surface, every freely-falling object accelerates downward at g ≈ 9.8 m/s². "Free fall" means ONLY gravity acts — no air resistance, no strings, no pushes.',
       notes: [
         'g = 9.8 m/s² (downward). For quick mental math, use g = 10 m/s².',
@@ -2183,6 +2187,7 @@ const LESSON_SUBUNITS = {
   2: [
     { code: '2.1', title: 'What Is a Force? The Building Blocks of Dynamics',
       objective: 'Understand what forces actually are, identify the main types, and stop making the #1 beginner mistake of drawing "force of motion."',
+      video: { id: 'fiT2R88Zt58', title: 'Introduction to Force — Flipping Physics' },
       explain: 'A force is a PUSH or PULL that can change an object\'s velocity (cause acceleration). Forces are NOT things objects "have" — they are things that HAPPEN TO objects through interactions. A book on a table is not "using up" force to stay there. It is experiencing forces from the table (normal force) and Earth (gravity) that balance out. The biggest mistake beginners make is drawing a "force of motion" or "force of the throw" on a flying ball. Once the ball leaves your hand, the ONLY force acting on it is gravity (ignoring air). There is no force pushing it forward!',
       notes: [
         'FORCE = any push or pull. Measured in Newtons (N). 1 N = 1 kg·m/s².',
@@ -2200,6 +2205,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '2.2', title: 'Newton\'s Three Laws — The Rules That Govern All Motion',
       objective: 'Understand inertia, F = ma, and action-reaction pairs deeply enough to explain everyday situations and avoid common traps.',
+      video: { id: 'OyMlPfJ6Kpk', title: 'AP Physics 1: Dynamics Review (Newton\'s 3 Laws and Friction) — Flipping Physics' },
       explain: 'Newton\'s three laws are the foundation of all of classical mechanics. The 1st Law (inertia) says objects keep doing what they are doing unless a net force acts. The 2nd Law (F = ma) quantifies how forces change motion. The 3rd Law (action-reaction) says forces always come in equal-and-opposite pairs. The tricky part: Newton\'s 3rd Law pairs act on DIFFERENT objects, so they do NOT cancel each other! If you push a wall, the wall pushes you back — but these forces are on different objects, so they cannot be added together to get zero.',
       notes: [
         'NEWTON\'S 1ST LAW (Law of Inertia): An object at rest stays at rest, and an object in motion stays in motion at constant velocity, UNLESS acted upon by a net external force. Objects resist changes in their state of motion.',
@@ -2217,6 +2223,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '2.3', title: 'Free-Body Diagrams — The #1 Skill for AP Physics',
       objective: 'Draw accurate free-body diagrams and turn them into equations that you can solve.',
+      video: { id: '29YPIvj1zjc', title: 'Introduction to Free Body Diagrams — Flipping Physics' },
       explain: 'A Free-Body Diagram (FBD) is a picture where you isolate one object and draw ONLY the forces acting on it. This is not optional — AP graders specifically look for FBDs on free-response questions, and you LOSE POINTS without them. Here is the process: (1) Choose your object. (2) Draw it as a simple dot or box. (3) Draw every force as an arrow starting from the object. (4) Label each force. (5) Choose a coordinate system. (6) Break forces into x and y components. (7) Write F_net = ma in each direction. DO NOT draw velocity, acceleration, or forces the object exerts on other things.',
       notes: [
         'STEP 1: Draw the object as a dot/box. Do NOT draw the surrounding environment.',
@@ -2234,6 +2241,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '2.4', title: 'Friction — The Force You Cannot Ignore',
       objective: 'Understand static vs. kinetic friction, when to use each coefficient, and why normal force is not always mg.',
+      video: { id: 'ZA_D4O6l1lo', title: 'Static and kinetic friction example — Khan Academy' },
       explain: 'Friction is the force that opposes sliding between two surfaces. There are TWO types: STATIC (object is not sliding) and KINETIC (object is sliding). Static friction is special because it ADJUSTS to match the applied force, up to a maximum. If you push a box gently and it does not move, static friction equals exactly what you push — it matches you. Only when you push harder than the maximum does the box start moving, and then kinetic friction takes over. Here is the key: kinetic friction is usually LESS than maximum static friction, which is why it is harder to START pushing something than to KEEP pushing it.',
       notes: [
         'STATIC FRICTION (fs): Exists when surfaces are NOT sliding past each other. It ADJUSTS: fs = whatever force is needed to prevent motion, up to a maximum of fs,max = μsN.',
@@ -2251,6 +2259,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '2.5', title: 'Inclined Planes — Breaking Weight into Components',
       objective: 'Resolve weight into parallel and perpendicular components on a ramp and solve for acceleration.',
+      video: { id: 'TC23wD34C7k', title: 'Inclined plane force components — Khan Academy' },
       explain: 'Incline problems are everywhere on the AP exam. The trick is choosing your axes wisely: instead of horizontal/vertical, choose axes parallel and perpendicular to the ramp. Then gravity (which points straight down) needs to be broken into two components: one parallel to the ramp (mg sin θ) that tries to pull the object down the ramp, and one perpendicular to the ramp (mg cos θ) that pushes into the surface. The perpendicular component equals the normal force (if no other perpendicular forces exist). The parallel component drives acceleration down the ramp.',
       notes: [
         'CHOOSE AXES: x along the ramp (downhill = positive), y perpendicular to ramp (up = positive).',
@@ -2267,6 +2276,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '2.6', title: 'Circular Motion — Constant Speed but Constantly Accelerating',
       objective: 'Understand that circular motion requires a centripetal (center-seeking) force and solve for it.',
+      video: { id: 'RHmrcxQCbwg', title: 'Centripetal Acceleration Introduction — Flipping Physics' },
       explain: 'Here is a mind-bender: an object moving in a circle at constant speed IS accelerating. How? Because acceleration means any change in VELOCITY, and velocity includes direction. In a circle, the direction changes every instant, so there is always acceleration pointing toward the center. This is called centripetal acceleration (a_c = v²/r). By F = ma, there must be a NET force pointing toward the center too. This centripetal force is NOT a new type of force — it is provided by whatever real force is available: tension (ball on a string), friction (car on road), gravity (satellite), or normal force (car on banked curve).',
       notes: [
         'CENTRIPETAL ACCELERATION: a_c = v²/r = ω²r. Always points TOWARD the center.',
@@ -2285,6 +2295,7 @@ const LESSON_SUBUNITS = {
   3: [
     { code: '3.1', title: 'What Is Energy? The Currency of Physics',
       objective: 'Understand energy as the ability to do work, and learn the different "accounts" where energy can be stored.',
+      video: { id: 'TcIMFGLqt44', title: 'Introduction to Kinetic Energy with Example Problem — Flipping Physics' },
       explain: 'Energy is one of the most important concepts in all of physics. It is a SCALAR (no direction!) which makes energy problems often easier than force problems. Energy cannot be created or destroyed — only transferred or transformed. This is the law of conservation of energy, and it is the most powerful tool in physics. Think of energy like money in bank accounts: you can move money between checking (kinetic energy), savings (potential energy), and other accounts, but the total never changes (unless you spend it — that is like friction converting it to heat).',
       notes: [
         'Energy is measured in JOULES (J). 1 Joule = 1 Newton × 1 meter = 1 kg·m²/s².',
@@ -2302,6 +2313,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '3.2', title: 'Work — How Forces Transfer Energy',
       objective: 'Calculate work done by any force and understand when work is positive, negative, or zero.',
+      video: { id: '0Oeywu5IR6s', title: 'Introduction to Work with Examples — Flipping Physics' },
       explain: 'Work is how energy gets transferred between objects by forces. If you push a box across the floor, you do work on the box and transfer energy to it. But work is NOT just force × distance — the angle between the force and displacement matters! If you push a box horizontally while holding it at an angle, only the horizontal component of your push does work. And here is a key insight: the NORMAL FORCE does zero work on horizontal motion because it is perpendicular to displacement. Similarly, centripetal force does zero work in circular motion because it is perpendicular to velocity.',
       notes: [
         'WORK = W = Fd cos θ, where θ is the angle BETWEEN the force and displacement vectors.',
@@ -2321,6 +2333,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '3.3', title: 'Conservation of Energy — The Most Powerful Problem-Solving Tool',
       objective: 'Use energy conservation to solve problems involving height changes, springs, and speed — often easier than forces!',
+      video: { id: 'AnuLW0ZX7-Q', title: 'Introduction to Conservation of Mechanical Energy with Demonstrations — Flipping Physics' },
       explain: 'If only conservative forces (gravity, springs) do work, then mechanical energy is CONSERVED: K_initial + U_initial = K_final + U_final. This means you can relate speeds and heights without knowing the path in between! This is incredibly powerful because you do not need to know how the object got from A to B — just where it started and ended. If friction is present, it does negative work and removes energy: K_i + U_i − W_friction = K_f + U_f.',
       notes: [
         'CONSERVATION OF MECHANICAL ENERGY (no friction, no air resistance): K_i + U_i = K_f + U_f',
@@ -2339,6 +2352,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '3.4', title: 'Power — How Fast Energy Is Transferred',
       objective: 'Calculate power and understand why doing the same work faster requires more power.',
+      video: { id: 'BtHLmxvP7o0', title: 'Introduction to Power — Flipping Physics' },
       explain: 'Power is the RATE of energy transfer. Two people can lift the same box to the same shelf (same work), but the person who does it in 2 seconds has more power than the person who takes 10 seconds. Power is measured in Watts (W), where 1 Watt = 1 Joule per second. This connects to everyday life: a 60 W light bulb converts 60 J of electrical energy every second. A car engine with more horsepower can accelerate faster because it delivers energy to the wheels more quickly.',
       notes: [
         'POWER = rate of doing work: P = W/t. Units: Watts (W) = Joules/second.',
@@ -2356,6 +2370,7 @@ const LESSON_SUBUNITS = {
   4: [
     { code: '4.1', title: 'What Is Momentum? The "Oomph" of Moving Objects',
       objective: 'Understand momentum as mass times velocity, and why it matters more than kinetic energy for understanding collisions.',
+      video: { id: 'K-lH-DoD6Tk', title: 'You Can\'t Run From Momentum! (a momentum introduction) — Flipping Physics' },
       explain: 'Momentum is p = mv. It measures how hard it is to STOP an object. A slow semi-truck and a fast motorcycle might have the same momentum — the same "oomph." The key difference from energy: momentum is a VECTOR, so direction matters! A 5 kg object moving right at 3 m/s has momentum +15 kg·m/s. The same object moving left at 3 m/s has momentum −15 kg·m/s. When analyzing collisions, you MUST track the + and − signs carefully or you will get wrong answers.',
       notes: [
         'MOMENTUM: p = mv. Vector — has magnitude AND direction. Units: kg·m/s.',
@@ -2371,6 +2386,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '4.2', title: 'Impulse — How Force Over Time Changes Momentum',
       objective: 'Understand that impulse equals change in momentum, and why crumple zones and airbags save lives.',
+      video: { id: '6myC6S2TNHw', title: 'Impulse Introduction — Flipping Physics' },
       explain: 'IMPULSE is defined as J = FΔt (force multiplied by the time it acts). The Impulse-Momentum Theorem says: J = Δp (impulse equals change in momentum). This is HUGE for understanding safety. If you need to stop a car (change in momentum is fixed — you go from speed v to 0), you can either have a LARGE force for a SHORT time (hitting a wall) or a SMALL force for a LONG time (gradually braking). The total impulse is the same, but the EXPERIENCE is very different! This is why airbags, crumple zones, and rolling on the ground after a fall all reduce injury.',
       notes: [
         'IMPULSE: J = FΔt. Units: N·s (Newton-seconds), which is equivalent to kg·m/s.',
@@ -2389,6 +2405,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '4.3', title: 'Conservation of Momentum — The Rule for All Collisions',
       objective: 'Apply momentum conservation to collisions, explosions, and any isolated system.',
+      video: { id: 'Kf0bBxmNeec', title: 'Introduction to Conservation of Momentum with Demonstrations — Flipping Physics' },
       explain: 'If no EXTERNAL net force acts on a system, the TOTAL momentum of the system is conserved. This is one of the most powerful conservation laws in physics. Notice: INTERNAL forces (forces between objects within the system) do not matter! Two billiard balls colliding exert huge forces on each other, but these are internal — the total momentum before = total momentum after. To use this: (1) Define your system (both objects). (2) Pick a positive direction. (3) Write Σp_before = Σp_after. (4) Solve.',
       notes: [
         'CONSERVATION OF MOMENTUM: If F_external = 0, then Σp_initial = Σp_final.',
@@ -2407,6 +2424,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '4.4', title: 'Center of Mass — The "Average Position" of a System',
       objective: 'Understand how the center of mass moves and why internal forces cannot change its motion.',
+      video: { id: 'nyJeaUe7wXM', title: 'Center of Mass Introduction — Flipping Physics' },
       explain: 'The center of mass (COM) is the "balance point" of a system — the weighted average position of all the mass. For a uniform rod, it is at the middle. For two unequal masses, it is closer to the heavier one. The KEY insight: the center of mass moves as if ALL the mass were concentrated there and ALL external forces acted there. Internal forces (like two parts of the system pushing on each other) CANNOT change the COM velocity. This is why a firework exploding in mid-air: the center of mass of all the fragments continues on the same parabolic path as if nothing happened!',
       notes: [
         'CENTER OF MASS: x_cm = (m₁x₁ + m₂x₂ + ...)/(m₁ + m₂ + ...). Weighted average position.',
@@ -2425,6 +2443,7 @@ const LESSON_SUBUNITS = {
   5: [
     { code: '5.1', title: 'Rotation Vocabulary — Angular Position, Velocity, and Acceleration',
       objective: 'Learn the rotational equivalents of linear quantities and how they connect through the radius.',
+      video: { id: 'garegCgMxxg', title: 'Angular motion variables — Khan Academy' },
       explain: 'Everything you learned about linear motion (position, velocity, acceleration) has a ROTATIONAL counterpart. Linear position x becomes angular position θ (theta). Linear velocity v becomes angular velocity ω (omega). Linear acceleration a becomes angular acceleration α (alpha). The connection between them: v = rω and a_t = rα, where r is the distance from the rotation axis. A point farther from the axis moves faster in a straight line, even though all points have the same angular velocity!',
       notes: [
         'Angular position: θ (radians). Analogous to x (meters). One full revolution = 2π radians = 360°.',
@@ -2442,6 +2461,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '5.2', title: 'Torque — The Rotational Equivalent of Force',
       objective: 'Calculate torque, understand why distance from the pivot matters, and learn to choose a smart pivot point.',
+      video: { id: 'Tu6e9_SrzBA', title: 'Torque Introduction — Flipping Physics' },
       explain: 'Torque (τ) is what CAUSES rotational acceleration, just like force causes linear acceleration. τ = rF sin θ, where r is the distance from the pivot, F is the force, and θ is the angle between them. Three ways to increase torque: (1) push harder (more F), (2) push farther from the pivot (more r), (3) push perpendicular to the lever (sin 90° = 1). This is why door handles are far from the hinges and why wrenches have long handles!',
       notes: [
         'TORQUE: τ = rF sin θ. Units: N·m (Newton-meters). NOT the same as work (same units, different meaning).',
@@ -2460,6 +2480,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '5.3', title: 'Rotational Equilibrium — When Objects Do Not Rotate',
       objective: 'Solve problems where net torque = 0 (and net force = 0) for objects at rest or rotating at constant speed.',
+      video: { id: 'zwZ6OLv4ksA', title: 'Rotational Equilibrium Introduction — Flipping Physics' },
       explain: 'An object is in ROTATIONAL EQUILIBRIUM when the net torque is zero (Στ = 0). This is the rotational equivalent of F_net = 0. For FULL equilibrium (neither translating nor rotating), you need BOTH conditions: ΣF = 0 AND Στ = 0. The classic AP problem: a beam or seesaw with weights at different distances. Strategy: (1) draw FBD, (2) choose pivot (usually where unknown force acts), (3) write Στ = 0 about that pivot, (4) solve.',
       notes: [
         'Rotational equilibrium: Στ = 0. The object is not angularly accelerating (could be at rest or spinning at constant ω).',
@@ -2476,6 +2497,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '5.4', title: 'Newton\'s Second Law for Rotation — τ = Iα',
       objective: 'Use net torque to find angular acceleration, understanding moment of inertia as rotational mass.',
+      video: { id: 'xusMSv2z77s', title: 'Rotational version of Newton\'s second law — Khan Academy' },
       explain: 'Just as F = ma describes linear acceleration, τ = Iα describes angular acceleration. Here, I (moment of inertia) is the rotational equivalent of mass — it measures how much an object resists angular acceleration. But I is not just mass! It depends on how the mass is DISTRIBUTED relative to the axis. A hoop (all mass at radius R) has I = MR². A disk (mass spread from 0 to R) has I = ½MR². The hoop is harder to spin because more mass is far from the axis.',
       notes: [
         'NET TORQUE = Iα. This is Newton\'s 2nd Law for rotation. Analog of F = ma.',
@@ -2495,6 +2517,7 @@ const LESSON_SUBUNITS = {
   6: [
     { code: '6.1', title: 'Rotational Kinetic Energy — Spinning Objects Have Energy Too',
       objective: 'Calculate the total kinetic energy of rolling objects (translational + rotational) and use energy conservation with rotation.',
+      video: { id: 'C2qGOfCOUko', title: 'Moment of Inertia Introduction and Rotational Kinetic Energy Derivation — Flipping Physics' },
       explain: 'A spinning wheel has kinetic energy even if it is not moving through space! This is ROTATIONAL kinetic energy: K_rot = ½Iω². For objects that are BOTH translating (moving) AND rotating (spinning), you must include BOTH forms: K_total = ½mv² + ½Iω². The classic example: a ball rolling down a ramp. Some of the gravitational potential energy goes into rotation, so the ball rolls SLOWER than a frictionless block sliding. This is why objects "race" down ramps and the one with the smallest I reaches the bottom first.',
       notes: [
         'ROTATIONAL KE: K_rot = ½Iω². Analogous to K_trans = ½mv².',
@@ -2512,6 +2535,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '6.2', title: 'Angular Momentum — The Rotational Equivalent of Linear Momentum',
       objective: 'Calculate angular momentum and apply conservation when external torque is zero.',
+      video: { id: 'vM6G-NgN0PY', title: 'Wheel Conservation of Angular Momentum Demonstration — Flipping Physics' },
       explain: 'Angular momentum (L = Iω) is the rotational equivalent of linear momentum (p = mv). Just as linear momentum is conserved when F_net = 0, ANGULAR momentum is conserved when Στ_external = 0. The most famous example: a figure skater spinning. When she pulls her arms in, her moment of inertia I decreases. Since L = Iω must stay constant, ω MUST increase — she spins faster! This is not magic — it is physics.',
       notes: [
         'ANGULAR MOMENTUM: L = Iω (for rigid body rotating about fixed axis). Units: kg·m²/s.',
@@ -2529,6 +2553,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '6.3', title: 'Satellites and Orbits — Gravity as Centripetal Force',
       objective: 'Connect gravitational force to circular motion for satellites and understand orbital mechanics.',
+      video: { id: '_bBzcwnrLgs', title: 'Impact of mass on orbital speed — Khan Academy' },
       explain: 'A satellite in orbit is in FREE FALL — gravity pulls it toward Earth. But it is moving so fast sideways that it keeps "missing" the Earth as it falls. The gravitational force provides exactly the centripetal force needed for circular motion: GMm/r² = mv²/r. Solving for v gives v = √(GM/r). This means: higher orbit = slower satellite! A geostationary satellite (35,786 km up) moves at about 3 km/s, while the ISS (400 km up) moves at about 7.7 km/s.',
       notes: [
         'In circular orbit: gravity = centripetal force. GMm/r² = mv²/r.',
@@ -2550,6 +2575,7 @@ const LESSON_SUBUNITS = {
   7: [
     { code: '7.1', title: 'What Is Simple Harmonic Motion? The Most Important Pattern in Physics',
       objective: 'Recognize SHM as motion where a restoring force is proportional to displacement, and understand its basic characteristics.',
+      video: { id: 'QVkfRELZpK0', title: 'Simple Harmonic Motion Introduction via a Horizontal Mass-Spring System — Flipping Physics' },
       explain: 'Simple Harmonic Motion (SHM) is a special type of oscillation where the restoring force is proportional to displacement: F = −kx. The negative sign means the force always points BACK toward equilibrium (the middle position). This creates a smooth back-and-forth motion: mass on a spring, pendulum (small angle), vibrating guitar string, even atoms in a crystal! The key insight: the farther you pull from equilibrium, the stronger the restoring force, and the faster it accelerates back. At equilibrium, force is zero but speed is maximum.',
       notes: [
         'SHM = oscillation where F = −kx (force proportional to displacement, directed toward equilibrium).',
@@ -2568,6 +2594,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '7.2', title: 'Period and Frequency — How Fast Does It Oscillate?',
       objective: 'Calculate the period of springs and pendulums, and understand what does and does not affect the period.',
+      video: { id: 'YYroaY0Gd9Q', title: 'Frequency vs. Period in Simple Harmonic Motion — Flipping Physics' },
       explain: 'Period (T) is the time for ONE complete oscillation (back and forth). Frequency (f) is how many oscillations per second: f = 1/T. Here is the mind-blowing part: for a spring-mass system, T = 2π√(m/k). Notice what is MISSING — amplitude! Changing how far you pull the spring does NOT change the period. A gentle oscillation and a big oscillation take the same time. Similarly for a pendulum: T = 2π√(L/g). Period depends on length and gravity, NOT on mass or amplitude (for small angles).',
       notes: [
         'PERIOD (T): time for one complete cycle. Units: seconds.',
@@ -2587,6 +2614,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '7.3', title: 'SHM Graphs and Equations — Position, Velocity, Acceleration vs Time',
       objective: 'Read and draw graphs of x(t), v(t), and a(t) for SHM and understand their relationships.',
+      video: { id: '6TQXZygxsTc', title: 'SHM - Graphs of Position, Velocity, and Acceleration — Flipping Physics' },
       explain: 'In SHM, position follows a sinusoidal pattern: x(t) = A cos(ωt) (if starting from maximum displacement). The velocity is the DERIVATIVE (slope) of position, which shifts the curve by ¼ cycle: v(t) = −Aω sin(ωt). The acceleration is the derivative of velocity (or −ω² times position): a(t) = −Aω² cos(ωt) = −ω²x. Notice: position and acceleration are OPPOSITE (180° out of phase), while velocity is shifted 90° from both. This means when position is maximum, acceleration is maximum in the opposite direction and velocity is zero.',
       notes: [
         'POSITION: x(t) = A cos(ωt). Amplitude = A. Period = 2π/ω.',
@@ -2604,6 +2632,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '7.4', title: 'Energy in SHM — Constant Total, Swapping Between KE and PE',
       objective: 'Use energy conservation to find speed at any position in an oscillation.',
+      video: { id: 'HuV8itFrht4', title: 'SHM - Graphs of Mechanical Energies — Flipping Physics' },
       explain: 'In SHM, total mechanical energy is CONSTANT (no friction). But it continuously swaps between kinetic and potential energy. At the extremes: all energy is potential (PE = ½kA², KE = 0). At equilibrium: all energy is kinetic (KE = ½mv²_max, PE = 0). Everywhere in between: E = KE + PE = constant. This is exactly like a roller coaster! The total energy is determined by the AMPLITUDE: E = ½kA². Bigger oscillation = more total energy.',
       notes: [
         'TOTAL ENERGY: E = ½kA². Determined by amplitude. Constant throughout the motion.',
@@ -2623,6 +2652,7 @@ const LESSON_SUBUNITS = {
   8: [
     { code: '8.1', title: 'Density and Pressure — What Fluids Push and How Hard',
       objective: 'Understand density as mass per volume and pressure as force per area, and calculate pressure at depth in fluids.',
+      video: { id: 'kkq8ruV8_Jw', title: 'Introduction to Pressure & Fluids — The Organic Chemistry Tutor' },
       explain: 'DENSITY (ρ = m/V) tells you how much mass is packed into a given volume. Lead is dense (11,340 kg/m³), air is not (1.2 kg/m³). PRESSURE (P = F/A) tells you how much force is spread over an area. Here is the critical insight about fluids: pressure in a fluid increases with DEPTH. The deeper you go, the more fluid is above you pushing down. The formula P = P₀ + ρgh tells you the pressure at depth h below the surface. Also crucial: in a fluid, pressure pushes in ALL DIRECTIONS — not just down! This is why a balloon underwater gets squeezed from all sides.',
       notes: [
         'DENSITY: ρ = m/V. Units: kg/m³. Water = 1000 kg/m³. Air = 1.2 kg/m³. Lead = 11,340 kg/m³.',
@@ -2641,6 +2671,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '8.2', title: 'Buoyancy — Why Things Float or Sink (Archimedes\' Principle)',
       objective: 'Calculate the buoyant force and predict whether objects float, sink, or are neutrally buoyant.',
+      video: { id: 'Qgl_l0H7Qgc', title: 'Archimedes Principle, Buoyant Force, Basic Introduction — The Organic Chemistry Tutor' },
       explain: 'When you push a beach ball underwater, it pushes back — that upward force is BUOYANCY. Archimedes discovered that the buoyant force equals the WEIGHT of the fluid displaced: F_b = ρ_fluid × V_displaced × g. If the buoyant force is GREATER than the object\'s weight, it floats. If LESS, it sinks. If EQUAL, the object is neutrally buoyant (hovers). The KEY: buoyant force depends on the FLUID\'S density and the VOLUME displaced — NOT on the object\'s mass or the depth!',
       notes: [
         'ARCHIMEDES\' PRINCIPLE: F_b = ρ_fluid × V_displaced × g. Buoyant force = weight of displaced fluid.',
@@ -2659,6 +2690,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '8.3', title: 'Pascal\'s Principle and Hydraulics — Multiplying Force with Fluids',
       objective: 'Understand how pressure transmits through enclosed fluids and how hydraulic systems multiply force.',
+      video: { id: 'MZ6GCH2nLy0', title: 'Pascal\'s Principle, Hydraulic Lift System — The Organic Chemistry Tutor' },
       explain: 'Pascal\'s Principle: pressure applied to an enclosed fluid is transmitted equally in all parts of the fluid. This means if you push on a small piston, the SAME pressure appears at a large piston. Since P = F/A, if the large piston has 10× the area, it gets 10× the force! This is how hydraulic lifts, car brakes, and construction equipment work. The catch: the small piston must move a LARGER distance to move the large piston a small distance. You gain force but lose distance — energy is conserved!',
       notes: [
         'PASCAL\'S PRINCIPLE: A pressure change in an enclosed fluid is transmitted equally to ALL parts of the fluid.',
@@ -2676,6 +2708,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '8.4', title: 'Fluid Dynamics — Continuity and Bernoulli\'s Equation',
       objective: 'Use the continuity equation to relate speed and pipe area, and use Bernoulli\'s equation to connect pressure, speed, and height.',
+      video: { id: 'xTAfyc06ZxQ', title: 'Bernoulli\'s Equation Example Problems, Fluid Mechanics — The Organic Chemistry Tutor' },
       explain: 'When fluid flows through a pipe, two powerful principles apply. CONTINUITY (A₁v₁ = A₂v₂): if the pipe narrows, the fluid MUST speed up (same amount of fluid must get through per second). BERNOULLI (P + ½ρv² + ρgh = constant): where fluid moves faster, pressure is LOWER. This seems backwards but it is true! This explains how planes fly (air moves faster over the curved top of the wing, creating lower pressure above → lift), why shower curtains get sucked inward, and why trains can pull you toward them.',
       notes: [
         'CONTINUITY EQUATION: A₁v₁ = A₂v₂ (for incompressible fluid). Same volume per second must flow through every cross-section.',
