@@ -308,6 +308,36 @@
     #page-formulas .formula-eq { color: #000 !important; }
     #page-formulas .formula-vars { color: #444 !important; }
   }
+
+  /* Responsive / mobile */
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  * { min-width: 0; } /* flex/grid items default to min-width:auto, which forces overflow instead of shrinking — this is the #1 cause of content getting clipped on narrow screens */
+  #main-content { overflow-x: hidden; }
+  #hamburger-btn { display: none; }
+  #mobile-nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 40;
+  }
+  #mobile-nav-overlay.open { display: block; }
+
+  @media (max-width: 767px) {
+    html { font-size: 17px; }
+    #hamburger-btn { display: flex; }
+    aside {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 82vw;
+      max-width: 300px;
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+    }
+    aside.mobile-open { transform: translateX(0); }
+    button, .btn, .nav-item, .conv-tab { min-height: 44px; }
+  }
 </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -359,12 +389,15 @@
   </div>
 </aside>
 
+<div id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+
 <!-- Right column: top nav (search) + main content -->
 <div class="flex-1 flex flex-col overflow-hidden">
 
   <!-- Top Nav -->
-  <header class="flex-shrink-0 flex items-center px-6 lg:px-8 py-3 border-b" style="background:var(--bg-secondary);border-color:var(--border);">
-    <div class="relative w-full max-w-xl" id="global-search-wrap">
+  <header class="flex-shrink-0 flex items-center gap-3 px-4 md:px-6 lg:px-8 py-3 border-b" style="background:var(--bg-secondary);border-color:var(--border);">
+    <button id="hamburger-btn" class="flex-shrink-0 items-center justify-center rounded-lg" style="width:44px;height:44px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);font-size:18px;" onclick="toggleMobileNav()" aria-label="Open menu">☰</button>
+    <div class="relative w-full max-w-xl min-w-0 flex-1" id="global-search-wrap">
       <input
         id="global-search-input"
         type="text"
@@ -389,13 +422,13 @@
     <p class="mb-6" style="color:var(--text-secondary);">Your AP Physics 1 command center. Study consistently — the streak is your most important number.</p>
 
     <!-- Today's Study Plan -->
-    <div class="card mb-5 flex items-center justify-between">
+    <div class="card mb-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
         <div class="text-sm font-semibold" style="color:var(--text-muted);">📋 TODAY'S STUDY PLAN</div>
         <div class="stat-number mt-1" id="cards-today">0</div>
         <div class="text-sm" style="color:var(--text-secondary);">Cards today</div>
       </div>
-      <div class="flex gap-5">
+      <div class="flex flex-wrap gap-5">
         <div class="text-center"><div class="stat-number" id="accuracy-today" style="font-size:1.6rem;">—</div><div class="text-xs" style="color:var(--text-muted);">Accuracy today ✅</div></div>
         <div class="text-center"><div class="stat-number" id="streak-display" style="font-size:1.6rem;color:var(--orange);">0</div><div class="text-xs" style="color:var(--text-muted);">Day streak 🔥</div></div>
         <div class="text-center"><div class="stat-number" id="xp-display" style="font-size:1.6rem;color:var(--accent);">0</div><div class="text-xs" style="color:var(--text-muted);">Total XP ⚡</div></div>
@@ -404,7 +437,7 @@
     </div>
 
     <!-- Focus & Activity Row -->
-    <div class="grid grid-cols-2 gap-5 mb-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
       <div class="card">
         <div class="font-semibold text-sm mb-1">⚠ Focus here</div>
         <p style="color:var(--text-muted);font-size:14px;" id="focus-text">Complete quizzes to see weak spots.</p>
@@ -422,7 +455,7 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       <div class="card cursor-pointer hover:glow-border" onclick="navigateTo('quiz')">
         <div class="text-2xl mb-2">⚡</div>
         <div class="font-semibold">Start Quiz</div>
@@ -466,7 +499,7 @@
     <div id="lessons-overview">
       <h1 class="text-2xl font-bold mb-4">📖 Lessons</h1>
       <p class="mb-6" style="color:var(--text-secondary);">Learn AP Physics 1 from scratch or go deep. Pick your mode, pick your unit, and learn at your own pace.</p>
-      <div class="grid grid-cols-2 gap-5 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
         <div class="card mode-card selected" id="mode-ap" onclick="selectMode('ap')">
           <div class="text-2xl mb-2">🎯</div>
           <div class="font-semibold mb-1">AP Exam Mode</div>
@@ -480,7 +513,7 @@
           <button class="btn btn-secondary mt-3">TRULY UNDERSTAND →</button>
         </div>
       </div>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="unit-grid"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3" id="unit-grid"></div>
     </div>
     <div id="lesson-viewer" class="hidden">
       <button class="btn btn-ghost mb-4" onclick="backToUnits()">← Back to all units</button>
@@ -492,7 +525,7 @@
   <section id="page-notes" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">📝 Unit Notes</h1>
     <p class="mb-6" style="color:var(--text-secondary);">All 8 units — cheat sheet tips integrated. Flag anything confusing for targeted practice.</p>
-    <div class="grid grid-cols-2 gap-4" id="notes-grid"></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="notes-grid"></div>
   </section>
 
   <!-- CONCEPT MAP -->
@@ -506,9 +539,9 @@
 
   <!-- FORMULAS -->
   <section id="page-formulas" class="hidden animate-in">
-    <div class="flex items-start justify-between gap-4 mb-1 no-print">
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 mb-1 no-print">
       <h1 class="text-2xl font-bold">📐 Formula Sheet</h1>
-      <button class="btn btn-primary flex-shrink-0" onclick="window.print()">🖨️ Print Formula Sheet</button>
+      <button class="btn btn-primary flex-shrink-0 self-start" onclick="window.print()">🖨️ Print Formula Sheet</button>
     </div>
     <p class="mb-6 no-print" style="color:var(--text-secondary);">Every key equation from all 8 units, grouped by unit, with what each variable means. Use Print for a clean cram-session copy.</p>
     <h1 class="print-only text-2xl font-bold mb-1">📐 AP Physics 1 — Formula Sheet</h1>
@@ -625,7 +658,7 @@
       <!-- SI Base Units -->
       <div class="card mb-4">
         <div class="font-bold text-base mb-3">🎯 SI Base Units (Always Use These in Equations!)</div>
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-2" id="si-units"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2" id="si-units"></div>
       </div>
 
       <!-- Common Conversions -->
@@ -661,7 +694,7 @@
             </select>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">FROM</label>
               <input type="number" id="conv-input-value" placeholder="0" class="w-full p-3 rounded-xl border text-white text-sm mb-2 font-mono" style="background:var(--bg-secondary); border-color:var(--border);" oninput="performConversion()">
@@ -804,7 +837,7 @@
   <section id="page-challenge" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-2">🏆 Challenge Mode</h1>
     <p class="mb-6" style="color:var(--text-secondary);">Race against the clock. Score points for speed AND accuracy. Build a streak for bonus XP.</p>
-    <div class="grid grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       <div class="card text-center cursor-pointer" onclick="startChallenge('speed')">
         <div class="text-3xl mb-2">🏃</div>
         <div class="font-semibold">Speed Run</div>
@@ -948,7 +981,7 @@
       <div class="card flex flex-col">
         <h3 class="font-bold text-sm mb-2 flex items-center gap-2">👁️ Spark.E Visuals</h3>
         <p class="text-xs mb-4" style="color:var(--text-muted);">Analyze physics diagrams, setups, and charts. Pick a preset diagram or drop your own image to get instant AI explanations.</p>
-        <div class="grid grid-cols-3 gap-2 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
           <button class="p-2 border rounded-xl text-center hover:bg-card-hover transition-all text-xs" style="border-color:var(--border);" onclick="analyzeVisual('atwood')">
             <div class="text-lg mb-1">⚙️</div>
             Atwood
@@ -1060,7 +1093,7 @@
         
         <div>
           <label class="block text-xs font-bold mb-2" style="color:var(--text-muted);">CHOOSE YOUR SOURCE TYPE</label>
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
             <button class="p-3 border rounded-xl hover:bg-card-hover text-center transition-all text-xs" id="src-text" style="border-color:var(--accent); background:rgba(124,92,252,0.1);" onclick="selectSourceType('text')">📝 Raw Text</button>
             <button class="p-3 border rounded-xl hover:bg-card-hover text-center transition-all text-xs" id="src-video" style="border-color:var(--border);" onclick="selectSourceType('video')">🎥 YouTube URL</button>
           </div>
@@ -3124,8 +3157,18 @@ function navigateTo(page, meta) {
 }
 
 document.querySelectorAll('#nav .nav-item').forEach(btn => {
-  btn.addEventListener('click', () => navigateTo(btn.dataset.page));
+  btn.addEventListener('click', () => { navigateTo(btn.dataset.page); closeMobileNav(); });
 });
+
+// ============ MOBILE NAV ============
+function toggleMobileNav() {
+  document.querySelector('aside').classList.toggle('mobile-open');
+  $('mobile-nav-overlay').classList.toggle('open');
+}
+function closeMobileNav() {
+  document.querySelector('aside').classList.remove('mobile-open');
+  $('mobile-nav-overlay').classList.remove('open');
+}
 
 // ============ DASHBOARD UPDATE ============
 function updateDashboard() {
@@ -3674,7 +3717,7 @@ function openSubunit(unitNum, subIndex) {
     html += `
       <div class="card mb-4">
         <div class="font-semibold text-sm mb-3">📐 Key Equations</div>
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
           ${myEq.map(eq => `<div class="font-mono text-sm p-3 rounded-xl text-center" style="background:var(--bg-secondary);border:1px solid var(--border);">${eq}</div>`).join('')}
         </div>
       </div>
@@ -4033,7 +4076,7 @@ function initConversions() {
   $('common-conversions').innerHTML = COMMON_CONVERSIONS.map(cat => `
     <div>
       <div class="font-bold text-sm mb-2" style="color:var(--accent);">${cat.category}</div>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         ${cat.items.map(item => `<div class="p-2 rounded-lg text-xs font-mono" style="background:var(--bg-secondary);">${item}</div>`).join('')}
       </div>
     </div>
@@ -5353,7 +5396,7 @@ function gradeUserEssay() {
     </div>
     
     <!-- Stats -->
-    <div class="grid grid-cols-3 gap-2 mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
       <div class="p-3 rounded-xl text-center" style="background:var(--bg-secondary);">
         <div class="font-bold text-lg">${words}</div>
         <div class="text-xs" style="color:var(--text-muted);">Words</div>
