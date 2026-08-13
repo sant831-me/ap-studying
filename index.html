@@ -62,6 +62,10 @@
     border-radius: 16px;
     padding: 20px;
   }
+  .card-hover-row:hover {
+    background: var(--bg-card-hover);
+    border-color: #303050;
+  }
 
   /* Glow accent */
   .glow-border {
@@ -273,6 +277,37 @@
     border-color: var(--accent);
     box-shadow: 0 0 24px var(--accent-glow);
   }
+
+  /* Print (Formula Sheet) */
+  .print-only { display: none; }
+  @media print {
+    body * { visibility: hidden; }
+    #page-formulas, #page-formulas * { visibility: visible; }
+    #page-formulas {
+      position: absolute; left: 0; top: 0; width: 100%;
+      padding: 0.25in; margin: 0;
+    }
+    .no-print { display: none !important; }
+    .print-only { display: block !important; }
+    #page-formulas, #page-formulas * {
+      background: #fff !important;
+      box-shadow: none !important;
+      color: #111 !important;
+    }
+    #page-formulas .formula-unit-card {
+      border: 1px solid #bbb !important;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 12px !important;
+    }
+    #page-formulas .formula-row {
+      background: #f5f5f5 !important;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    #page-formulas .formula-eq { color: #000 !important; }
+    #page-formulas .formula-vars { color: #444 !important; }
+  }
 </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -297,6 +332,7 @@
     <button class="nav-item" data-page="flashcards">🃏 Flashcards</button>
     <button class="nav-item" data-page="frq">✍️ FRQ Practice</button>
     <button class="nav-item" data-page="quiz">⚡ Quiz</button>
+    <button class="nav-item" data-page="my-scores">📊 My Scores</button>
     <button class="nav-item" data-page="challenge">🏆 Challenge Mode</button>
     <button class="nav-item" data-page="wrong-log">❌ Wrong Answer Log</button>
     <button class="nav-item" data-page="flagged">🚩 Flagged Questions</button>
@@ -317,11 +353,35 @@
     </div>
     <div class="progress-bar mb-1"><div class="progress-fill" id="sidebar-progress" style="width:0%"></div></div>
     <span id="sidebar-xp">0 XP</span> total
+    <div class="mt-2 text-right">
+      <a href="#" style="color:var(--text-muted);font-size:10px;text-decoration:underline;" onclick="event.preventDefault();resetProgress();">Reset Progress</a>
+    </div>
   </div>
 </aside>
 
-<!-- Main Content -->
-<main class="flex-1 overflow-y-auto p-6 lg:p-8" id="main-content">
+<!-- Right column: top nav (search) + main content -->
+<div class="flex-1 flex flex-col overflow-hidden">
+
+  <!-- Top Nav -->
+  <header class="flex-shrink-0 flex items-center px-6 lg:px-8 py-3 border-b" style="background:var(--bg-secondary);border-color:var(--border);">
+    <div class="relative w-full max-w-xl" id="global-search-wrap">
+      <input
+        id="global-search-input"
+        type="text"
+        placeholder="🔍 Search units, subunits, equations, practice problems..."
+        class="w-full text-sm px-4 py-2.5 rounded-xl"
+        style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);outline:none;"
+        autocomplete="off"
+        oninput="handleGlobalSearchInput(this.value)"
+        onfocus="if(this.value.trim()) handleGlobalSearchInput(this.value)"
+        onkeydown="if(event.key==='Escape'){hideSearchResults();this.blur();} else if(event.key==='Enter' && currentSearchResults.length){goToSearchResult(0);}"
+      >
+      <div id="global-search-results" class="hidden absolute left-0 right-0 mt-2 rounded-xl overflow-y-auto" style="background:var(--bg-card);border:1px solid var(--border);max-height:60vh;box-shadow:0 8px 30px rgba(0,0,0,0.4);z-index:30;"></div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto p-6 lg:p-8" id="main-content">
 
   <!-- DASHBOARD -->
   <section id="page-dashboard" class="animate-in">
@@ -446,9 +506,13 @@
 
   <!-- FORMULAS -->
   <section id="page-formulas" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-4">📐 Formula Sheet</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">Every formula organized by unit.</p>
-    <div class="space-y-4" id="formula-list"></div>
+    <div class="flex items-start justify-between gap-4 mb-1 no-print">
+      <h1 class="text-2xl font-bold">📐 Formula Sheet</h1>
+      <button class="btn btn-primary flex-shrink-0" onclick="window.print()">🖨️ Print Formula Sheet</button>
+    </div>
+    <p class="mb-6 no-print" style="color:var(--text-secondary);">Every key equation from all 8 units, grouped by unit, with what each variable means. Use Print for a clean cram-session copy.</p>
+    <h1 class="print-only text-2xl font-bold mb-1">📐 AP Physics 1 — Formula Sheet</h1>
+    <div class="space-y-5" id="formula-list"></div>
   </section>
 
   <!-- UNIT CONVERSIONS -->
@@ -708,7 +772,8 @@
 
   <!-- QUIZ -->
   <section id="page-quiz" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-4">⚡ Quiz</h1>
+    <h1 class="text-2xl font-bold mb-1">⚡ Quiz</h1>
+    <div class="text-xs mb-4" id="quiz-mode-label" style="color:var(--text-muted);"></div>
     <div class="flex gap-6 text-sm mb-6" id="quiz-stats">
       <span>Score: <b id="qz-score">0/0</b></span>
       <span>Q <b id="qz-qnum">1</b></span>
@@ -725,6 +790,14 @@
       <button class="btn btn-secondary" onclick="nextQuizQuestion()">Skip →</button>
     </div>
     <div id="qz-feedback" class="mt-3 text-sm hidden"></div>
+    <div id="quiz-history" class="mt-6"></div>
+  </section>
+
+  <!-- MY SCORES -->
+  <section id="page-my-scores" class="hidden animate-in">
+    <h1 class="text-2xl font-bold mb-1">📊 My Scores</h1>
+    <p class="text-sm mb-6" style="color:var(--text-secondary);">Quiz history per unit, your best scores, and the topics you miss most so you know what to restudy.</p>
+    <div id="my-scores-content"></div>
   </section>
 
   <!-- CHALLENGE MODE -->
@@ -1131,6 +1204,8 @@
 
 </main>
 
+</div>
+
 <!-- Toast container -->
 <div id="toast-container"></div>
 
@@ -1150,6 +1225,12 @@ const state = {
   fcFlipped: false,
   wrongLog: [],
   flagged: [],
+  flaggedSubunits: [],
+  completedSubunits: [],
+  quizScores: [],
+  quizScoreLogged: false,
+  quizUnit: null,
+  quizMissed: [],
   quizIndex: 0,
   quizCorrect: 0,
   quizAnswered: 0,
@@ -1185,6 +1266,55 @@ const state = {
   audioTranscriptLines: [],
   audioCurrentLine: 0,
 };
+
+// ============ PERSISTENCE ============
+// Only completed subunits, flagged units/subunits, and quiz score history survive reload —
+// everything else in `state` is session-only, matching the app's existing (non-persisted) behavior.
+const PROGRESS_KEY = 'physicsos_progress_v1';
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    if (!raw) return { completedSubunits: [], flagged: [], flaggedSubunits: [], quizScores: [] };
+    const parsed = JSON.parse(raw);
+    return {
+      completedSubunits: Array.isArray(parsed.completedSubunits) ? parsed.completedSubunits : [],
+      flagged: Array.isArray(parsed.flagged) ? parsed.flagged : [],
+      flaggedSubunits: Array.isArray(parsed.flaggedSubunits) ? parsed.flaggedSubunits : [],
+      quizScores: Array.isArray(parsed.quizScores) ? parsed.quizScores : [],
+    };
+  } catch (e) {
+    console.error('Failed to load saved progress:', e);
+    return { completedSubunits: [], flagged: [], flaggedSubunits: [], quizScores: [] };
+  }
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify({
+      completedSubunits: state.completedSubunits,
+      flagged: state.flagged,
+      flaggedSubunits: state.flaggedSubunits,
+      quizScores: state.quizScores,
+    }));
+  } catch (e) {
+    console.error('Failed to save progress:', e);
+  }
+}
+
+function resetProgress() {
+  if (!confirm('Reset all saved progress? This clears completed subunits, flagged items, and quiz score history. This cannot be undone.')) return;
+  state.completedSubunits = [];
+  state.flagged = [];
+  state.flaggedSubunits = [];
+  state.quizScores = [];
+  saveProgress();
+  showToast('Progress reset 🔄');
+  if (state.currentPage === 'lessons') renderLessons();
+  if (state.currentPage === 'flagged') renderFlagged();
+  if (state.currentPage === 'quiz') renderQuizHistory();
+  if (state.currentPage === 'my-scores') renderMyScores();
+}
 
 // Official AP Physics 1 Units (College Board CED 2024-2025)
 // Comprehensive lesson content with worked examples and practice problems
@@ -1945,6 +2075,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '1.3', title: 'Motion Graphs — How to Read Position-Time, Velocity-Time, and Acceleration-Time Graphs',
       objective: 'Look at any motion graph and immediately understand what is happening: speed, direction, acceleration, and displacement.',
+      video: { id: 'GtoamALPOP0', title: 'Position vs. time graphs — Khan Academy' },
       explain: 'AP Physics LOVES graph questions. They will give you a graph and ask you to extract physical information. The two key ideas are: (1) The SLOPE of a graph tells you the RATE OF CHANGE. (2) The AREA under a graph tells you the ACCUMULATED CHANGE. So slope of position-time = velocity. Slope of velocity-time = acceleration. Area under velocity-time = displacement. These are not just formulas — they are how calculus works, and they will show up on the AP exam in multiple questions.',
       notes: [
         'POSITION-TIME GRAPH (x vs t): Slope = velocity. Steeper slope = faster. Flat slope = stopped. Negative slope = moving backward. Curved = accelerating (velocity is changing).',
@@ -1998,6 +2129,7 @@ const LESSON_SUBUNITS = {
     },
     { code: '1.6', title: 'Projectile Motion — Two Independent Motions Happening Simultaneously',
       objective: 'Split any 2D projectile into horizontal (constant velocity) and vertical (constant acceleration g), then solve each part separately and connect them with shared time.',
+      video: { id: 'txJP95lBv98', title: 'Projectile motion — Khan Academy (AP Physics)' },
       explain: 'A projectile is anything launched and then moves only under gravity. The KEY insight: horizontal and vertical motions are COMPLETELY INDEPENDENT. The ball does not "know" it was thrown sideways — vertical motion is the same as if you just dropped it. And horizontal motion has no gravity component (gravity pulls DOWN, not sideways), so horizontal velocity is constant. The BRIDGE between the two motions is TIME — both start and end at the same instant. This is why a bullet fired horizontally from a gun hits the ground at the same time as a bullet simply dropped.',
       notes: [
         'HORIZONTAL: aₓ = 0 (unless stated). vₓ = constant = v₀cosθ. Δx = v₀ₓ × t.',
@@ -2541,6 +2673,78 @@ const FORMULAS = [
   { unit: 8, name: 'Fluids', weight: '10-15%', formulas: ['ρ = m/V', 'P = F/A', 'P = P₀ + ρgh', 'F_b = ρVg', 'A₁v₁ = A₂v₂', 'P + ½ρv² + ρgh = constant'] },
 ];
 
+// Complete cram-sheet formula list — every key equation across all 8 units, with variable
+// meanings spelled out. Kept separate from FORMULAS (which Night Before renders as bare
+// strings) so that shape doesn't have to change.
+const FORMULA_SHEET = [
+  { unit: 1, equations: [
+    { eq: 'v = v₀ + at', vars: 'v = final velocity · v₀ = initial velocity · a = acceleration · t = time' },
+    { eq: 'Δx = v₀t + ½at²', vars: 'Δx = displacement · v₀ = initial velocity · a = acceleration · t = time' },
+    { eq: 'v² = v₀² + 2aΔx', vars: 'v = final velocity · v₀ = initial velocity · a = acceleration · Δx = displacement' },
+    { eq: 'Δx = ½(v + v₀)t', vars: 'Δx = displacement · v = final velocity · v₀ = initial velocity · t = time' },
+    { eq: 'vₓ = v₀cosθ', vars: 'vₓ = horizontal velocity component · v₀ = initial speed · θ = launch angle' },
+    { eq: 'vᵧ = v₀sinθ − gt', vars: 'vᵧ = vertical velocity component · v₀ = initial speed · θ = launch angle · g = 9.8 m/s² · t = time' },
+  ]},
+  { unit: 2, equations: [
+    { eq: "F_net = ma", vars: 'F_net = net force (N) · m = mass (kg) · a = acceleration (m/s²) — Newton\'s 2nd Law' },
+    { eq: 'f_k = μₖN', vars: 'f_k = kinetic friction force · μₖ = coefficient of kinetic friction · N = normal force' },
+    { eq: 'f_s ≤ μₛN', vars: 'f_s = static friction force (max available) · μₛ = coefficient of static friction · N = normal force' },
+    { eq: 'F_g = mg', vars: 'F_g = weight · m = mass · g = 9.8 m/s²' },
+    { eq: 'F_spring = −kx', vars: 'F_spring = spring (restoring) force · k = spring constant · x = displacement from equilibrium' },
+    { eq: 'F_c = mv²/r', vars: 'F_c = centripetal force · m = mass · v = speed · r = radius of circular path' },
+    { eq: 'F_g = Gm₁m₂/r²', vars: 'F_g = gravitational force · G = 6.67×10⁻¹¹ N·m²/kg² · m₁, m₂ = the two masses · r = distance between centers' },
+  ]},
+  { unit: 3, equations: [
+    { eq: 'W = Fd cosθ', vars: 'W = work · F = force · d = displacement · θ = angle between force and displacement' },
+    { eq: 'K = ½mv²', vars: 'K = kinetic energy · m = mass · v = speed' },
+    { eq: 'U_g = mgh', vars: 'U_g = gravitational potential energy · m = mass · g = 9.8 m/s² · h = height' },
+    { eq: 'U_s = ½kx²', vars: 'U_s = spring potential energy · k = spring constant · x = displacement from equilibrium' },
+    { eq: 'E_total = K + U', vars: 'E_total = total mechanical energy · K = kinetic energy · U = potential energy' },
+    { eq: 'ΔE = W_nc', vars: 'ΔE = change in mechanical energy · W_nc = work done by non-conservative forces (e.g. friction)' },
+    { eq: 'P = W/t = Fv', vars: 'P = power · W = work · t = time · F = force · v = velocity' },
+  ]},
+  { unit: 4, equations: [
+    { eq: 'p = mv', vars: 'p = momentum · m = mass · v = velocity' },
+    { eq: 'J = FΔt = Δp', vars: 'J = impulse · F = force · Δt = time interval · Δp = change in momentum' },
+    { eq: 'Σp_initial = Σp_final', vars: 'total momentum before = total momentum after — holds for any isolated system' },
+    { eq: 'v_cm = Σmᵢvᵢ / Σmᵢ', vars: 'v_cm = center-of-mass velocity · mᵢ = mass of object i · vᵢ = velocity of object i' },
+  ]},
+  { unit: 5, equations: [
+    { eq: 'τ = rF sinθ', vars: 'τ = torque · r = distance from axis to force · F = force · θ = angle between r and F' },
+    { eq: 'Στ = Iα', vars: 'Στ = net torque · I = moment of inertia · α = angular acceleration' },
+    { eq: 'I = Σmr²', vars: 'I = moment of inertia · m = mass of each particle · r = its distance from the rotation axis' },
+    { eq: 'v = rω', vars: 'v = tangential (linear) speed · r = radius · ω = angular velocity' },
+    { eq: 'a_t = rα', vars: 'a_t = tangential acceleration · r = radius · α = angular acceleration' },
+    { eq: 'a_c = ω²r = v²/r', vars: 'a_c = centripetal acceleration · ω = angular velocity · r = radius · v = tangential speed' },
+  ]},
+  { unit: 6, equations: [
+    { eq: 'K_rot = ½Iω²', vars: 'K_rot = rotational kinetic energy · I = moment of inertia · ω = angular velocity' },
+    { eq: 'K_total = ½mv² + ½Iω²', vars: 'K_total = total KE of a rolling object · m = mass · v = center-of-mass speed · I = moment of inertia · ω = angular velocity' },
+    { eq: 'L = Iω', vars: 'L = angular momentum · I = moment of inertia · ω = angular velocity' },
+    { eq: 'L_initial = L_final', vars: 'angular momentum before = angular momentum after — holds for any isolated system' },
+    { eq: 'v = rω', vars: 'v = center-of-mass speed · r = radius · ω = angular velocity — rolling without slipping' },
+    { eq: 'T = 2π√(r³/GM)', vars: 'T = orbital period · r = orbital radius · G = 6.67×10⁻¹¹ N·m²/kg² · M = mass of central body' },
+  ]},
+  { unit: 7, equations: [
+    { eq: 'T_spring = 2π√(m/k)', vars: 'T = period · m = mass · k = spring constant' },
+    { eq: 'T_pendulum = 2π√(L/g)', vars: 'T = period · L = pendulum length · g = 9.8 m/s²' },
+    { eq: 'E_total = ½kA²', vars: 'E_total = total mechanical energy of SHM · k = spring constant · A = amplitude' },
+    { eq: 'x = A cos(ωt)', vars: 'x = position at time t · A = amplitude · ω = angular frequency · t = time' },
+    { eq: 'v_max = Aω', vars: 'v_max = maximum speed · A = amplitude · ω = angular frequency' },
+    { eq: 'a_max = Aω²', vars: 'a_max = maximum acceleration · A = amplitude · ω = angular frequency' },
+    { eq: 'ω = √(k/m) = 2π/T', vars: 'ω = angular frequency · k = spring constant · m = mass · T = period' },
+  ]},
+  { unit: 8, equations: [
+    { eq: 'ρ = m/V', vars: 'ρ = density · m = mass · V = volume' },
+    { eq: 'P = F/A', vars: 'P = pressure · F = force · A = area' },
+    { eq: 'P = P₀ + ρgh', vars: 'P = pressure at depth h · P₀ = pressure at the surface · ρ = fluid density · g = 9.8 m/s² · h = depth' },
+    { eq: 'F_b = ρVg', vars: 'F_b = buoyant force · ρ = fluid density · V = displaced fluid volume · g = 9.8 m/s²' },
+    { eq: 'A₁v₁ = A₂v₂', vars: 'continuity equation — A = cross-sectional area · v = fluid speed, at two points along the same flow' },
+    { eq: 'P + ½ρv² + ρgh = constant', vars: "Bernoulli's equation — P = pressure · ρ = fluid density · v = fluid speed · g = 9.8 m/s² · h = height, along a streamline" },
+    { eq: 'ρ_object/ρ_fluid = V_submerged/V_total', vars: 'ρ_object, ρ_fluid = densities · V_submerged = submerged volume · V_total = total volume — for a floating object' },
+  ]},
+];
+
 // Official AP Physics 1 FRQs (based on College Board released questions)
 const FRQS = [
   { 
@@ -2745,6 +2949,12 @@ const DEFAULT_FLASHCARDS = [
 
 // ============ HELPERS ============
 function $(id) { return document.getElementById(id); }
+function escapeAttr(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+function youtubeSearchUrl(query) {
+  return `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+}
 function showToast(msg) {
   const container = $('toast-container');
   const toast = document.createElement('div');
@@ -2886,7 +3096,7 @@ function parseMarkdown(text) {
 }
 
 // ============ NAVIGATION ============
-function navigateTo(page) {
+function navigateTo(page, meta) {
   state.currentPage = page;
   document.querySelectorAll('#nav .nav-item').forEach(n => n.classList.remove('active'));
   document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
@@ -2900,9 +3110,10 @@ function navigateTo(page) {
   if (page === 'conversions') initConversions();
   if (page === 'flashcards') initFlashcards();
   if (page === 'frq') generateFRQ();
-  if (page === 'quiz') initQuiz();
+  if (page === 'quiz') initQuiz(meta && meta.unit);
   if (page === 'wrong-log') renderWrongLog();
   if (page === 'flagged') renderFlagged();
+  if (page === 'my-scores') renderMyScores();
   if (page === 'night-before') renderNightBefore();
   if (page === 'lessons') renderLessons();
   if (page === 'sparke-tutor') initSparkeTutor();
@@ -2966,6 +3177,184 @@ function generatePlan() {
 }
 
 // ============ LESSONS ============
+// Splits an array into `n` nearly-equal contiguous chunks (extras go to the earliest chunks),
+// used to distribute a unit's key equations / worked examples / practice problems across its subunit pages.
+function chunkEvenly(arr, n) {
+  if (!arr || !n || n <= 0) return [];
+  const result = [];
+  const base = Math.floor(arr.length / n);
+  const extra = arr.length % n;
+  let idx = 0;
+  for (let i = 0; i < n; i++) {
+    const size = base + (i < extra ? 1 : 0);
+    result.push(arr.slice(idx, idx + size));
+    idx += size;
+  }
+  return result;
+}
+
+// ============ GLOBAL SEARCH ============
+// Flat, searchable index over units, subunits, key equations, and practice problems.
+// Equations/problems are chunked the same way openSubunit() distributes them, so a hit
+// always points at the subunit page where that content actually renders.
+let searchIndexCache = null;
+function getSearchIndex() {
+  if (searchIndexCache) return searchIndexCache;
+  const index = [];
+  UNITS.forEach(u => {
+    index.push({
+      type: 'unit', unitNum: u.num, subIndex: null, icon: '📘',
+      primary: `Unit ${u.num}: ${u.name}`, secondary: u.desc,
+      text: [u.name, u.desc, ...(u.topics || [])].filter(Boolean).join(' '),
+    });
+    const subs = LESSON_SUBUNITS[u.num] || [];
+    const eqChunks = chunkEvenly(u.apContent.key_equations, subs.length);
+    const probChunks = chunkEvenly(u.practiceProblems || [], subs.length);
+    subs.forEach((s, i) => {
+      index.push({
+        type: 'subunit', unitNum: u.num, subIndex: i, icon: '🧩',
+        primary: `${s.code} — ${s.title}`, secondary: `Unit ${u.num}: ${u.name}`,
+        text: [s.code, s.title, s.objective, s.explain, s.analogy, ...(s.notes || []), s.example, s.check, ...(s.confusions || [])].filter(Boolean).join(' '),
+      });
+      (eqChunks[i] || []).forEach(eq => {
+        index.push({
+          type: 'equation', unitNum: u.num, subIndex: i, icon: '📐',
+          primary: eq, secondary: `${s.code} — ${s.title} · Unit ${u.num}`,
+          text: eq,
+        });
+      });
+      (probChunks[i] || []).forEach(prob => {
+        index.push({
+          type: 'practice', unitNum: u.num, subIndex: i, icon: '✏️',
+          primary: prob.q, secondary: `${s.code} — ${s.title} · Unit ${u.num}`,
+          text: `${prob.q} ${prob.a}`,
+        });
+      });
+    });
+  });
+  searchIndexCache = index;
+  return index;
+}
+
+function runGlobalSearch(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  const results = [];
+  for (const rec of getSearchIndex()) {
+    if (rec.primary.toLowerCase().includes(q)) results.push({ ...rec, weight: 3 });
+    else if (rec.text.toLowerCase().includes(q)) results.push({ ...rec, weight: 1 });
+  }
+  results.sort((a, b) => b.weight - a.weight);
+  return results.slice(0, 25);
+}
+
+let currentSearchResults = [];
+
+function handleGlobalSearchInput(value) {
+  currentSearchResults = runGlobalSearch(value);
+  renderSearchResults(currentSearchResults, value);
+}
+
+function renderSearchResults(results, query) {
+  const el = $('global-search-results');
+  if (!el) return;
+  if (!query.trim()) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+  if (!results.length) {
+    el.innerHTML = `<div class="p-3 text-xs" style="color:var(--text-muted);">No matches for "${escapeAttr(query.trim())}"</div>`;
+    el.classList.remove('hidden');
+    return;
+  }
+  const typeLabel = { unit: 'Unit', subunit: 'Subunit', equation: 'Equation', practice: 'Practice Problem' };
+  el.innerHTML = results.map((r, idx) => `
+    <div class="p-3 flex items-start gap-2 cursor-pointer card-hover-row border-b" style="border-color:var(--border);" onclick="goToSearchResult(${idx})">
+      <span class="flex-shrink-0">${r.icon}</span>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-2">
+          <div class="text-sm font-medium truncate">${r.primary}</div>
+          <span class="text-[10px] px-1.5 py-0.5 rounded flex-shrink-0" style="background:var(--bg-secondary);color:var(--text-muted);">${typeLabel[r.type] || r.type}</span>
+        </div>
+        <div class="text-xs truncate" style="color:var(--text-muted);">${r.secondary}</div>
+      </div>
+    </div>
+  `).join('');
+  el.classList.remove('hidden');
+}
+
+function goToSearchResult(idx) {
+  const r = currentSearchResults[idx];
+  if (!r) return;
+  navigateTo('lessons');
+  if (r.type === 'unit' || r.subIndex === null) {
+    openLesson(r.unitNum);
+  } else {
+    openSubunit(r.unitNum, r.subIndex);
+  }
+  clearGlobalSearch();
+}
+
+function hideSearchResults() {
+  const el = $('global-search-results');
+  if (el) el.classList.add('hidden');
+}
+
+function clearGlobalSearch() {
+  const input = $('global-search-input');
+  const el = $('global-search-results');
+  if (input) input.value = '';
+  if (el) { el.classList.add('hidden'); el.innerHTML = ''; }
+  currentSearchResults = [];
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = $('global-search-wrap');
+  if (wrap && !wrap.contains(e.target)) hideSearchResults();
+});
+
+// Subunit completion tracking (persisted — see PERSISTENCE section)
+function subunitKey(unitNum, code) { return `${unitNum}:${code}`; }
+
+function isSubunitComplete(unitNum, code) {
+  return state.completedSubunits.includes(subunitKey(unitNum, code));
+}
+
+function toggleSubunitComplete(unitNum, code) {
+  const key = subunitKey(unitNum, code);
+  const idx = state.completedSubunits.indexOf(key);
+  if (idx === -1) {
+    state.completedSubunits.push(key);
+    showToast('✅ Marked complete!');
+  } else {
+    state.completedSubunits.splice(idx, 1);
+    showToast('Marked incomplete');
+  }
+  saveProgress();
+}
+
+function unitProgressPct(unitNum) {
+  const subs = LESSON_SUBUNITS[unitNum] || [];
+  if (!subs.length) return { done: 0, total: 0, pct: 0 };
+  const done = subs.filter(s => isSubunitComplete(unitNum, s.code)).length;
+  return { done, total: subs.length, pct: Math.round((done / subs.length) * 100) };
+}
+
+// Subunit-level flagging (persisted — separate from the whole-unit flagUnit() below)
+function isSubunitFlagged(unitNum, code) {
+  return state.flaggedSubunits.includes(subunitKey(unitNum, code));
+}
+
+function toggleSubunitFlag(unitNum, code) {
+  const key = subunitKey(unitNum, code);
+  const idx = state.flaggedSubunits.indexOf(key);
+  if (idx === -1) {
+    state.flaggedSubunits.push(key);
+    showToast(`Subunit ${code} flagged for review 🚩`);
+  } else {
+    state.flaggedSubunits.splice(idx, 1);
+    showToast(`Subunit ${code} unflagged`);
+  }
+  saveProgress();
+}
+
 function selectMode(mode) {
   state.selectedMode = mode;
   $('mode-ap').classList.toggle('selected', mode === 'ap');
@@ -2975,7 +3364,9 @@ function selectMode(mode) {
 function renderLessons() {
   $('lessons-overview').classList.remove('hidden');
   $('lesson-viewer').classList.add('hidden');
-  $('unit-grid').innerHTML = UNITS.map(u => `
+  $('unit-grid').innerHTML = UNITS.map(u => {
+    const progress = unitProgressPct(u.num);
+    return `
     <div class="card cursor-pointer" onclick="openLesson(${u.num})">
       <div class="flex items-center justify-between mb-2">
         <div class="text-xs font-mono font-bold px-2 py-0.5 rounded" style="background:${u.color}20;color:${u.color};">UNIT ${u.num}</div>
@@ -2983,22 +3374,30 @@ function renderLessons() {
       </div>
       <div class="font-semibold text-sm mb-1">${u.name}</div>
       <div class="text-xs mb-2" style="color:var(--text-muted);">${u.desc}</div>
-      <div class="text-xs" style="color:var(--accent);">${state.selectedMode === 'ap' ? '🎯 5–15 min AP Review' : '🔬 15–30 min Deep Dive'}</div>
+      <div class="text-xs mb-3" style="color:var(--accent);">${state.selectedMode === 'ap' ? '🎯 5–15 min AP Review' : '🔬 15–30 min Deep Dive'}</div>
+      ${progress.total > 0 ? `
+      <div class="flex items-center justify-between text-[11px] mb-1" style="color:var(--text-muted);">
+        <span>Progress</span><span>${progress.done}/${progress.total} · ${progress.pct}%</span>
+      </div>
+      <div class="w-full rounded-full overflow-hidden" style="height:6px;background:var(--bg-secondary);">
+        <div style="height:100%;width:${progress.pct}%;background:${u.color};border-radius:9999px;"></div>
+      </div>` : ''}
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function openLesson(unitNum) {
   const unit = UNITS.find(u => u.num === unitNum);
   if (!unit) return;
-  
+
   $('lessons-overview').classList.add('hidden');
   $('lesson-viewer').classList.remove('hidden');
-  
+
   const content = unit.apContent;
   const deep = unit.deepContent;
   const isAP = state.selectedMode === 'ap';
-  
+
   let html = `
     <div class="flex items-center gap-3 mb-6">
       <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold" style="background:${unit.color}20;color:${unit.color};">${unit.num}</div>
@@ -3011,8 +3410,24 @@ function openLesson(unitNum) {
       </div>
     </div>
   `;
-  
-  // Topics list
+
+  // Unit progress — how many subunits are marked complete
+  const unitProgress = unitProgressPct(unit.num);
+  if (unitProgress.total > 0) {
+    html += `
+      <div class="card mb-4">
+        <div class="flex items-center justify-between text-xs mb-2" style="color:var(--text-muted);">
+          <span>📈 Unit Progress</span>
+          <span>${unitProgress.done}/${unitProgress.total} subunits complete · ${unitProgress.pct}%</span>
+        </div>
+        <div class="w-full rounded-full overflow-hidden" style="height:8px;background:var(--bg-secondary);">
+          <div style="height:100%;width:${unitProgress.pct}%;background:${unit.color};border-radius:9999px;"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Topics list — overview of what this unit covers
   html += `
     <div class="card mb-4">
       <div class="font-semibold text-sm mb-3">📚 Topics in this unit</div>
@@ -3022,65 +3437,33 @@ function openLesson(unitNum) {
     </div>
   `;
 
+  // Subunit menu — each entry is its own page, opened via openSubunit()
   const subunits = LESSON_SUBUNITS[unit.num] || [];
   if (subunits.length) {
     html += `
       <div class="card mb-4" style="border-color:${unit.color};">
         <div class="font-semibold text-sm mb-2">🧩 Subunit Lessons</div>
-        <p class="text-xs mb-4" style="color:var(--text-muted);">Built from the College Board CED topic order, with AP-style checks after each mini-lesson.</p>
-        <div class="space-y-4">
-          ${subunits.map(s => `
-            <details class="group rounded-xl border p-4 mb-3" style="background:var(--bg-secondary);border-color:var(--border);" open>
-              <summary class="cursor-pointer list-none flex items-start gap-3">
-                <span class="font-mono text-xs px-2 py-1 rounded" style="background:${unit.color}20;color:${unit.color};">${s.code}</span>
-                <span class="flex-1">
-                  <span class="block font-semibold text-sm">${s.title}</span>
-                  <span class="block text-xs mt-1" style="color:var(--text-muted);">Goal: ${s.objective}</span>
-                </span>
-                <span class="text-xs" style="color:var(--text-muted);">▼ expand/collapse</span>
-              </summary>
-              <div class="mt-4 space-y-4">
-                ${s.explain ? `
-                <div class="p-4 rounded-xl" style="background:var(--bg-card);border-left:3px solid ${unit.color};">
-                  <div class="text-xs font-semibold mb-2" style="color:${unit.color};">📖 Explanation (start here if new!)</div>
-                  <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">${s.explain}</p>
-                </div>` : ''}
-                ${s.analogy ? `
-                <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--border);">
-                  <div class="text-xs font-semibold mb-1" style="color:var(--cyan);">💡 Think of it like...</div>
-                  <p class="text-sm" style="color:var(--text-secondary);">${s.analogy}</p>
-                </div>` : ''}
-                <div>
-                  <div class="text-xs font-semibold mb-2" style="color:var(--accent);">📋 Key Points to Remember</div>
-                  <ul class="space-y-2 text-sm" style="color:var(--text-secondary);">
-                    ${s.notes.map(n => `<li class="flex gap-2"><span style="color:${unit.color};">•</span><span>${n}</span></li>`).join('')}
-                  </ul>
-                </div>
-                <div class="grid lg:grid-cols-2 gap-3">
-                  <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--green);">
-                    <div class="text-xs font-semibold mb-1" style="color:var(--green);">📝 Worked Example</div>
-                    <div class="text-xs leading-relaxed" style="color:var(--text-secondary);">${s.example}</div>
-                  </div>
-                  <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--yellow);">
-                    <div class="text-xs font-semibold mb-1" style="color:var(--yellow);">✅ Quick Check (test yourself!)</div>
-                    <div class="text-xs leading-relaxed" style="color:var(--text-secondary);">${s.check}</div>
-                  </div>
-                </div>
-                ${s.confusions ? `
-                <div class="p-3 rounded-xl" style="background:var(--bg-card);border:1px solid var(--red);">
-                  <div class="text-xs font-semibold mb-2" style="color:var(--red);">⚠️ Common Confusions to Avoid</div>
-                  <ul class="space-y-1 text-xs" style="color:var(--text-muted);">
-                    ${s.confusions.map(c => `<li>✗ ${c}</li>`).join('')}
-                  </ul>
-                </div>` : ''}
-              </div>
-            </details>
-          `).join('')}
+        <p class="text-xs mb-4" style="color:var(--text-muted);">Built from the College Board CED topic order. Click a subunit to open its lesson page.</p>
+        <div class="space-y-2">
+          ${subunits.map((s, i) => {
+            const done = isSubunitComplete(unit.num, s.code);
+            const flagged = isSubunitFlagged(unit.num, s.code);
+            return `
+            <div class="rounded-xl border p-3 flex items-start gap-3 cursor-pointer transition card-hover-row" style="background:var(--bg-secondary);border-color:${done ? 'var(--green)' : 'var(--border)'};" onclick="openSubunit(${unit.num}, ${i})">
+              <span class="font-mono text-xs px-2 py-1 rounded flex-shrink-0" style="background:${unit.color}20;color:${unit.color};">${s.code}</span>
+              <span class="flex-1">
+                <span class="block font-semibold text-sm">${done ? '✅ ' : ''}${flagged ? '🚩 ' : ''}${s.title}</span>
+                <span class="block text-xs mt-1" style="color:var(--text-muted);">Goal: ${s.objective}</span>
+              </span>
+              <span class="text-xs flex-shrink-0" style="color:${unit.color};">Open →</span>
+            </div>
+          `;
+          }).join('')}
         </div>
       </div>
     `;
   }
-  
+
   // Key Ideas
   html += `
     <div class="card mb-4">
@@ -3095,7 +3478,7 @@ function openLesson(unitNum) {
       </ul>
     </div>
   `;
-  
+
   // Exam Tips
   html += `
     <div class="card mb-4" style="border-color:var(--yellow);">
@@ -3105,62 +3488,7 @@ function openLesson(unitNum) {
       </ul>
     </div>
   `;
-  
-  // Key Equations
-  html += `
-    <div class="card mb-4">
-      <div class="font-semibold text-sm mb-3">📐 Key Equations</div>
-      <div class="grid grid-cols-2 gap-2">
-        ${content.key_equations.map(eq => `
-          <div class="font-mono text-sm p-3 rounded-xl text-center" style="background:var(--bg-secondary);border:1px solid var(--border);">${eq}</div>
-        `).join('')}
-      </div>
-    </div>
-  `;
-  
-  // Worked Examples (shown in both modes)
-  if (unit.workedExamples && unit.workedExamples.length > 0) {
-    html += `
-      <div class="card mb-4" style="border-color:var(--green);">
-        <div class="font-semibold text-sm mb-4">📝 Worked Examples</div>
-        <div class="space-y-4">
-          ${unit.workedExamples.map((ex, i) => `
-            <div class="p-4 rounded-xl" style="background:var(--bg-secondary);">
-              <div class="font-semibold text-sm mb-2" style="color:var(--accent);">${ex.title}</div>
-              <div class="text-sm mb-3" style="color:var(--text-secondary);"><strong>Problem:</strong> ${ex.problem}</div>
-              <div class="text-xs space-y-1 font-mono" style="color:var(--text-muted);">
-                ${ex.solution.map(step => `<div class="pl-3 border-l-2" style="border-color:var(--accent);">${step}</div>`).join('')}
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  }
-  
-  // Practice Problems (shown in both modes)
-  if (unit.practiceProblems && unit.practiceProblems.length > 0) {
-    html += `
-      <div class="card mb-4" style="border-color:var(--cyan);">
-        <div class="font-semibold text-sm mb-4">✏️ Practice Problems</div>
-        <div class="space-y-3">
-          ${unit.practiceProblems.map((prob, i) => `
-            <details class="group p-3 rounded-xl" style="background:var(--bg-secondary);">
-              <summary class="cursor-pointer text-sm font-medium flex items-center gap-2 list-none">
-                <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background:var(--accent);color:#fff;">${i+1}</span>
-                <span style="color:var(--text-primary);">${prob.q}</span>
-                <span class="ml-auto text-xs" style="color:var(--text-muted);">Click to reveal answer ▼</span>
-              </summary>
-              <div class="mt-3 pl-8 text-sm" style="color:var(--green);">
-                <strong>Answer:</strong> ${prob.a}
-              </div>
-            </details>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  }
-  
+
   // Deep Learning Content (only shown in deep mode)
   if (!isAP) {
     html += `
@@ -3169,7 +3497,7 @@ function openLesson(unitNum) {
         <p class="text-sm" style="color:var(--text-secondary);">${deep.intuition}</p>
       </div>
     `;
-    
+
     html += `
       <div class="card mb-4">
         <div class="font-semibold text-sm mb-3">🌍 Real-World Examples</div>
@@ -3183,7 +3511,7 @@ function openLesson(unitNum) {
         </ul>
       </div>
     `;
-    
+
     html += `
       <div class="card mb-4" style="border-color:var(--red);">
         <div class="font-semibold text-sm mb-3">⚠️ Common Mistakes to Avoid</div>
@@ -3197,7 +3525,7 @@ function openLesson(unitNum) {
         </ul>
       </div>
     `;
-    
+
     html += `
       <div class="card mb-4" style="border-color:var(--green);">
         <div class="font-semibold text-sm mb-3">🚀 Why This Matters</div>
@@ -3205,8 +3533,8 @@ function openLesson(unitNum) {
       </div>
     `;
   }
-  
-  // Quiz button
+
+  // Quiz button — the unit quiz lives here, at the unit level, not on subunit pages
   html += `
     <div class="flex gap-3 mt-6">
       <button class="btn btn-primary" onclick="startUnitQuiz(${unit.num})">Take Unit Quiz ⚡</button>
@@ -3214,7 +3542,205 @@ function openLesson(unitNum) {
       <button class="btn btn-secondary" onclick="backToUnits()">← All Units</button>
     </div>
   `;
-  
+
+  $('lesson-content').innerHTML = html;
+  $('lesson-content').scrollTo(0, 0);
+}
+
+function openSubunit(unitNum, subIndex) {
+  const unit = UNITS.find(u => u.num === unitNum);
+  if (!unit) return;
+  const subunits = LESSON_SUBUNITS[unit.num] || [];
+  const s = subunits[subIndex];
+  if (!s) return;
+
+  $('lessons-overview').classList.add('hidden');
+  $('lesson-viewer').classList.remove('hidden');
+
+  // Unit-level key equations / worked examples / practice problems are distributed
+  // across that unit's subunit pages so nothing is duplicated or lost.
+  const myEq = chunkEvenly(unit.apContent.key_equations, subunits.length)[subIndex] || [];
+  const myEx = chunkEvenly(unit.workedExamples || [], subunits.length)[subIndex] || [];
+  const myProb = chunkEvenly(unit.practiceProblems || [], subunits.length)[subIndex] || [];
+
+  const done = isSubunitComplete(unit.num, s.code);
+  const flagged = isSubunitFlagged(unit.num, s.code);
+  let html = `
+    <button class="text-xs mb-3" style="color:var(--text-muted);" onclick="openLesson(${unit.num})">← Unit ${unit.num}: ${unit.name}</button>
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-mono font-bold flex-shrink-0" style="background:${unit.color}20;color:${unit.color};">${s.code}</div>
+      <div>
+        <h1 class="text-xl font-bold">${s.title}</h1>
+        <p class="text-sm" style="color:var(--text-muted);">🎯 Goal: ${s.objective}</p>
+      </div>
+      <div class="ml-auto flex gap-2 flex-shrink-0">
+        ${flagged ? `<div class="text-xs px-3 py-1 rounded-full" style="background:var(--red);color:#fff;">🚩 Flagged</div>` : ''}
+        ${done ? `<div class="text-xs px-3 py-1 rounded-full" style="background:var(--green);color:#fff;">✅ Completed</div>` : ''}
+      </div>
+    </div>
+  `;
+
+  // Video slot — always present. Embeds a verified video when we have one, otherwise
+  // (or as a fallback if an embed fails to play) offers a live YouTube search for the topic.
+  const ytSearchUrl = youtubeSearchUrl(`${s.title} AP Physics 1`);
+  if (s.video) {
+    html += `
+      <div class="card mb-4">
+        <div class="font-semibold text-sm mb-3">🎬 Watch First</div>
+        <div class="rounded-xl overflow-hidden" style="aspect-ratio:16/9;background:#000;">
+          <iframe src="https://www.youtube.com/embed/${s.video.id}" title="${escapeAttr(s.video.title)}" style="width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <a href="${ytSearchUrl}" target="_blank" rel="noopener noreferrer" class="block text-xs mt-2" style="color:var(--accent);">Video not loading? Search YouTube for "${s.title}" ↗</a>
+      </div>
+    `;
+  } else {
+    html += `
+      <div class="card mb-4 text-center">
+        <div class="text-xs mb-3" style="color:var(--text-muted);">🎬 No video linked for this subunit yet</div>
+        <a href="${ytSearchUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary text-xs" style="display:inline-flex;">🔍 Search YouTube for "${s.title}" ↗</a>
+      </div>
+    `;
+  }
+
+  // 1. Explanation
+  if (s.explain) {
+    html += `
+      <div class="card mb-4" style="border-left:3px solid ${unit.color};">
+        <div class="text-xs font-semibold mb-2" style="color:${unit.color};">📖 Explanation (start here if new!)</div>
+        <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">${s.explain}</p>
+      </div>
+    `;
+  }
+
+  // 2. "Think of it like..." analogy
+  if (s.analogy) {
+    html += `
+      <div class="card mb-4">
+        <div class="text-xs font-semibold mb-1" style="color:var(--cyan);">💡 Think of it like...</div>
+        <p class="text-sm" style="color:var(--text-secondary);">${s.analogy}</p>
+      </div>
+    `;
+  }
+
+  // 3. Key points
+  html += `
+    <div class="card mb-4">
+      <div class="text-xs font-semibold mb-2" style="color:var(--accent);">📋 Key Points to Remember</div>
+      <ul class="space-y-2 text-sm" style="color:var(--text-secondary);">
+        ${s.notes.map(n => `<li class="flex gap-2"><span style="color:${unit.color};">•</span><span>${n}</span></li>`).join('')}
+      </ul>
+    </div>
+  `;
+
+  // 4. Worked example
+  if (s.example) {
+    html += `
+      <div class="card mb-4" style="border-color:var(--green);">
+        <div class="text-xs font-semibold mb-1" style="color:var(--green);">📝 Worked Example</div>
+        <div class="text-sm leading-relaxed" style="color:var(--text-secondary);">${s.example}</div>
+      </div>
+    `;
+  }
+
+  // 5. Quick Check — click to reveal, forces recall first
+  if (s.check) {
+    html += `
+      <div class="card mb-4" style="border-color:var(--yellow);">
+        <details class="group">
+          <summary class="cursor-pointer list-none flex items-center gap-2">
+            <span class="text-xs font-semibold" style="color:var(--yellow);">✅ Quick Check — test yourself first!</span>
+            <span class="ml-auto text-xs flex-shrink-0" style="color:var(--text-muted);">Click to reveal ▼</span>
+          </summary>
+          <div class="mt-3 text-sm leading-relaxed" style="color:var(--text-secondary);">${s.check}</div>
+        </details>
+      </div>
+    `;
+  }
+
+  // 6. Common confusions
+  if (s.confusions) {
+    html += `
+      <div class="card mb-4" style="border-color:var(--red);">
+        <div class="text-xs font-semibold mb-2" style="color:var(--red);">⚠️ Common Confusions to Avoid</div>
+        <ul class="space-y-1 text-xs" style="color:var(--text-muted);">
+          ${s.confusions.map(c => `<li>✗ ${c}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+
+  // 7. Key equations for this subunit
+  if (myEq.length) {
+    html += `
+      <div class="card mb-4">
+        <div class="font-semibold text-sm mb-3">📐 Key Equations</div>
+        <div class="grid grid-cols-2 gap-2">
+          ${myEq.map(eq => `<div class="font-mono text-sm p-3 rounded-xl text-center" style="background:var(--bg-secondary);border:1px solid var(--border);">${eq}</div>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // Additional (multi-step) worked examples assigned to this subunit
+  if (myEx.length) {
+    html += `
+      <div class="card mb-4" style="border-color:var(--green);">
+        <div class="font-semibold text-sm mb-4">📝 Additional Worked Examples</div>
+        <div class="space-y-4">
+          ${myEx.map(ex => `
+            <div class="p-4 rounded-xl" style="background:var(--bg-secondary);">
+              <div class="font-semibold text-sm mb-2" style="color:var(--accent);">${ex.title}</div>
+              <div class="text-sm mb-3" style="color:var(--text-secondary);"><strong>Problem:</strong> ${ex.problem}</div>
+              <div class="text-xs space-y-1 font-mono" style="color:var(--text-muted);">
+                ${ex.solution.map(step => `<div class="pl-3 border-l-2" style="border-color:var(--accent);">${step}</div>`).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // Practice problems for this subunit
+  if (myProb.length) {
+    html += `
+      <div class="card mb-4" style="border-color:var(--cyan);">
+        <div class="font-semibold text-sm mb-4">✏️ Practice Problems</div>
+        <div class="space-y-3">
+          ${myProb.map((prob, i) => `
+            <details class="group p-3 rounded-xl" style="background:var(--bg-secondary);">
+              <summary class="cursor-pointer text-sm font-medium flex items-center gap-2 list-none">
+                <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:var(--accent);color:#fff;">${i+1}</span>
+                <span style="color:var(--text-primary);">${prob.q}</span>
+                <span class="ml-auto text-xs flex-shrink-0" style="color:var(--text-muted);">Click to reveal answer ▼</span>
+              </summary>
+              <div class="mt-3 pl-8 text-sm" style="color:var(--green);">
+                <strong>Answer:</strong> ${prob.a}
+              </div>
+            </details>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // Previous / Next / Flag / Back to all units
+  const hasPrev = subIndex > 0;
+  const hasNext = subIndex < subunits.length - 1;
+  html += `
+    <div class="flex flex-wrap gap-3 mt-6">
+      ${hasPrev
+        ? `<button class="btn btn-secondary" onclick="openSubunit(${unit.num}, ${subIndex - 1})">← Previous: ${subunits[subIndex - 1].code}</button>`
+        : `<button class="btn btn-secondary" onclick="openLesson(${unit.num})">← Unit Overview</button>`}
+      ${hasNext
+        ? `<button class="btn btn-primary" onclick="openSubunit(${unit.num}, ${subIndex + 1})">Next: ${subunits[subIndex + 1].code} →</button>`
+        : `<button class="btn btn-primary" onclick="openLesson(${unit.num})">Finish Unit — Back to Overview ✓</button>`}
+      <button class="btn ${done ? 'btn-secondary' : 'btn-primary'}" onclick="toggleSubunitComplete(${unit.num}, '${s.code}');openSubunit(${unit.num}, ${subIndex})">${done ? '✅ Completed — Undo' : 'Mark Complete ✓'}</button>
+      <button class="btn btn-secondary" onclick="toggleSubunitFlag(${unit.num}, '${s.code}');openSubunit(${unit.num}, ${subIndex})">${flagged ? '🚩 Flagged — Undo' : 'Flag for Review 🚩'}</button>
+      <button class="btn btn-secondary" onclick="backToUnits()">← All Units</button>
+    </div>
+  `;
+
   $('lesson-content').innerHTML = html;
   $('lesson-content').scrollTo(0, 0);
 }
@@ -3226,7 +3752,7 @@ function backToUnits() {
 }
 
 function startUnitQuiz(unitNum) {
-  navigateTo('quiz');
+  navigateTo('quiz', { unit: unitNum });
 }
 
 // ============ UNIT NOTES ============
@@ -3254,6 +3780,7 @@ function flagUnit(unitNum) {
     state.flagged = state.flagged.filter(f => f !== unitNum);
     showToast(`Unit ${unitNum} unflagged`);
   }
+  saveProgress();
 }
 
 // ============ CONCEPT MAP ============
@@ -3308,14 +3835,26 @@ window.addEventListener('resize', () => { if (state.currentPage === 'concept-map
 
 // ============ FORMULAS ============
 function renderFormulas() {
-  $('formula-list').innerHTML = FORMULAS.map(f => `
-    <div class="card">
-      <div class="font-semibold mb-2">Unit ${f.unit}: ${f.name}</div>
-      <div class="grid grid-cols-2 gap-2">
-        ${f.formulas.map(fm => `<div class="font-mono text-sm p-2 rounded-lg text-center" style="background:var(--bg-secondary);">${fm}</div>`).join('')}
+  $('formula-list').innerHTML = FORMULA_SHEET.map(group => {
+    const unit = UNITS.find(u => u.num === group.unit);
+    return `
+    <div class="card formula-unit-card" style="border-color:${unit.color};">
+      <div class="flex items-center gap-2 mb-3 formula-unit-header">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:${unit.color}20;color:${unit.color};">${unit.num}</div>
+        <div class="font-semibold">Unit ${unit.num}: ${unit.name}</div>
+        <div class="ml-auto text-xs no-print" style="color:var(--text-muted);">${unit.weight}</div>
+      </div>
+      <div class="space-y-2">
+        ${group.equations.map(e => `
+          <div class="formula-row flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 p-2.5 rounded-lg" style="background:var(--bg-secondary);">
+            <div class="formula-eq font-mono text-sm font-semibold flex-shrink-0 sm:w-56" style="color:var(--text-primary);">${e.eq}</div>
+            <div class="formula-vars text-xs" style="color:var(--text-muted);">${e.vars}</div>
+          </div>
+        `).join('')}
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // ============ UNIT CONVERSIONS ============
@@ -3821,25 +4360,46 @@ function revealRubric() {
 
 // ============ QUIZ ============
 let quizQuestions = [];
-function initQuiz() {
-  quizQuestions = [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 5);
+function initQuiz(unitNum) {
+  state.quizUnit = unitNum || null;
+  const pool = state.quizUnit ? QUIZ_QUESTIONS.filter(q => q.unit === state.quizUnit) : QUIZ_QUESTIONS;
+  quizQuestions = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
+  const modeLabelEl = $('quiz-mode-label');
+  if (modeLabelEl) {
+    const unitObj = state.quizUnit ? UNITS.find(u => u.num === state.quizUnit) : null;
+    modeLabelEl.textContent = unitObj ? `🎯 Unit ${unitObj.num} Quiz: ${unitObj.name}` : '🎲 Mixed Quiz — questions from all units';
+  }
   state.quizIndex = 0;
   state.quizCorrect = 0;
   state.quizAnswered = 0;
   state.quizSelected = null;
+  state.quizScoreLogged = false;
+  state.quizMissed = [];
   renderQuizQuestion();
+  renderQuizHistory();
 }
 
 function renderQuizQuestion() {
   if (state.quizIndex >= quizQuestions.length) {
     $('quiz-card').innerHTML = `<div class="text-center py-8"><div class="text-4xl mb-2">🎉</div><div class="font-semibold text-lg">Quiz Complete!</div><p class="text-sm" style="color:var(--text-secondary);">Score: ${state.quizCorrect}/${quizQuestions.length}</p></div>`;
-    $('qz-options').innerHTML = '';
     $('qz-submit').classList.add('hidden');
     $('qz-feedback').classList.add('hidden');
     const acc = quizQuestions.length > 0 ? Math.round((state.quizCorrect / quizQuestions.length) * 100) : 0;
     state.xp += state.quizCorrect * 10;
     state.accuracyToday = state.totalAnswered > 0 ? (state.totalCorrect / state.totalAnswered) * 100 : acc;
     if (state.streak === 0) state.streak = 1;
+    if (!state.quizScoreLogged && quizQuestions.length > 0) {
+      state.quizScoreLogged = true;
+      state.quizScores.push({
+        date: new Date().toISOString(),
+        unit: state.quizUnit || null,
+        score: state.quizCorrect,
+        total: quizQuestions.length,
+        missed: state.quizMissed.slice(),
+      });
+      saveProgress();
+      renderQuizHistory();
+    }
     updateDashboard();
     return;
   }
@@ -3881,7 +4441,10 @@ function submitQuiz() {
   state.quizAnswered++;
   state.totalAnswered++;
   if (correct) { state.quizCorrect++; state.totalCorrect++; }
-  if (!correct) { state.wrongLog.push({ unit: q.unit, question: q.q, options: q.options, correct: q.correct, explanation: q.explanation, yourAnswer: state.quizSelected }); }
+  if (!correct) {
+    state.wrongLog.push({ unit: q.unit, question: q.q, options: q.options, correct: q.correct, explanation: q.explanation, yourAnswer: state.quizSelected });
+    state.quizMissed.push({ unit: q.unit, question: q.q, explanation: q.explanation });
+  }
   $('qz-feedback').classList.remove('hidden');
   $('qz-feedback').innerHTML = correct
     ? `<span style="color:var(--green);">✅ Correct! ${q.explanation}</span>`
@@ -3909,6 +4472,141 @@ function updateQuizStats() {
   $('qz-qnum').textContent = Math.min(state.quizIndex + 1, quizQuestions.length);
   $('qz-acc').textContent = state.quizAnswered > 0 ? Math.round((state.quizCorrect / state.quizAnswered) * 100) + '%' : '—';
   $('qz-time').textContent = '—';
+}
+
+function renderQuizHistory() {
+  const el = $('quiz-history');
+  if (!el) return;
+  if (!state.quizScores.length) {
+    el.innerHTML = '';
+    return;
+  }
+  const recent = state.quizScores.slice(-5).reverse();
+  el.innerHTML = `
+    <div class="flex items-center justify-between mb-2">
+      <div class="font-semibold text-sm" style="color:var(--text-muted);">📊 Recent Quiz Scores</div>
+      <button class="text-xs" style="color:var(--accent);" onclick="navigateTo('my-scores')">View My Scores →</button>
+    </div>
+    <div class="space-y-1">
+      ${recent.map(r => {
+        const pct = r.total > 0 ? Math.round((r.score / r.total) * 100) : 0;
+        const d = new Date(r.date);
+        const dateLabel = isNaN(d) ? '' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const unitLabel = r.unit ? `Unit ${r.unit}` : 'Mixed';
+        return `<div class="flex justify-between text-xs p-2 rounded-lg" style="background:var(--bg-secondary);">
+          <span style="color:var(--text-muted);">${dateLabel} · ${unitLabel}</span>
+          <span>${r.score}/${r.total} · ${pct}%</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ============ MY SCORES ============
+function renderMyScores() {
+  const el = $('my-scores-content');
+  if (!el) return;
+  const scores = state.quizScores;
+  if (!scores.length) {
+    el.innerHTML = '<p style="color:var(--text-muted);">No quiz attempts yet. Take a unit quiz from a unit\'s Lessons page, or the general Quiz page, to start tracking your scores here.</p>';
+    return;
+  }
+
+  // Group attempts by unit; anything without a unit (the mixed/general quiz) buckets separately.
+  const byUnit = {};
+  scores.forEach(r => {
+    const key = r.unit || 'mixed';
+    const pct = r.total > 0 ? Math.round((r.score / r.total) * 100) : 0;
+    (byUnit[key] = byUnit[key] || []).push({ ...r, pct });
+  });
+
+  // How often each unit's questions show up in a missed-question list, across all attempts.
+  const missCountByUnit = {};
+  const missCountByQuestion = {};
+  scores.forEach(r => {
+    (r.missed || []).forEach(m => {
+      missCountByUnit[m.unit] = (missCountByUnit[m.unit] || 0) + 1;
+      const qKey = `${m.unit}|${m.question}`;
+      if (!missCountByQuestion[qKey]) missCountByQuestion[qKey] = { unit: m.unit, question: m.question, explanation: m.explanation, count: 0 };
+      missCountByQuestion[qKey].count++;
+    });
+  });
+  const topMissedUnits = Object.entries(missCountByUnit).sort((a, b) => b[1] - a[1]);
+  const topMissedQuestions = Object.values(missCountByQuestion).sort((a, b) => b.count - a.count).slice(0, 8);
+
+  let html = '<div class="grid md:grid-cols-2 gap-4 mb-6">';
+  Object.keys(byUnit)
+    .sort((a, b) => (a === 'mixed' ? 1 : b === 'mixed' ? -1 : Number(a) - Number(b)))
+    .forEach(key => {
+      const attempts = byUnit[key].slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+      const bestPct = Math.max(...attempts.map(a => a.pct));
+      const unit = key !== 'mixed' ? UNITS.find(u => u.num === Number(key)) : null;
+      const label = unit ? `Unit ${unit.num}: ${unit.name}` : 'Mixed / General Quiz';
+      const color = unit ? unit.color : 'var(--accent)';
+      html += `
+        <div class="card">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-semibold text-sm">${label}</div>
+            <div class="text-xs px-2 py-0.5 rounded-full flex-shrink-0" style="background:${color}20;color:${color};">🏆 Best: ${bestPct}%</div>
+          </div>
+          <div class="text-xs mb-3" style="color:var(--text-muted);">${attempts.length} attempt${attempts.length === 1 ? '' : 's'}</div>
+          <div class="space-y-1 max-h-40 overflow-y-auto">
+            ${attempts.slice(0, 8).map(a => {
+              const d = new Date(a.date);
+              const dateLabel = isNaN(d) ? '' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+              return `<div class="flex justify-between text-xs p-2 rounded-lg" style="background:var(--bg-secondary);">
+                <span style="color:var(--text-muted);">${dateLabel}</span>
+                <span>${a.score}/${a.total} · ${a.pct}%</span>
+              </div>`;
+            }).join('')}
+          </div>
+          ${unit ? `<button class="btn btn-secondary text-xs mt-3" onclick="startUnitQuiz(${unit.num})">Retake Unit ${unit.num} Quiz</button>` : ''}
+        </div>
+      `;
+    });
+  html += '</div>';
+
+  if (topMissedUnits.length) {
+    html += `
+      <div class="card mb-6" style="border-color:var(--red);">
+        <div class="font-semibold text-sm mb-3">🎯 Topics You Miss Most — Restudy These</div>
+        <div class="space-y-2">
+          ${topMissedUnits.map(([unitNum, count]) => {
+            const unit = UNITS.find(u => u.num === Number(unitNum));
+            if (!unit) return '';
+            return `<div class="flex items-center justify-between p-3 rounded-xl cursor-pointer card-hover-row" style="background:var(--bg-secondary);" onclick="openLesson(${unit.num})">
+              <div>
+                <div class="font-semibold text-sm">Unit ${unit.num}: ${unit.name}</div>
+                <div class="text-xs" style="color:var(--text-muted);">${unit.desc}</div>
+              </div>
+              <div class="text-xs px-3 py-1 rounded-full flex-shrink-0" style="background:var(--red);color:#fff;">${count} missed</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  if (topMissedQuestions.length) {
+    html += `
+      <div class="card">
+        <div class="font-semibold text-sm mb-3">❓ Specific Questions You Miss Most</div>
+        <div class="space-y-2">
+          ${topMissedQuestions.map(m => `
+            <div class="p-3 rounded-xl text-sm" style="background:var(--bg-secondary);">
+              <div class="flex justify-between gap-3">
+                <span>${m.question}</span>
+                <span class="text-xs flex-shrink-0" style="color:var(--red);">missed ${m.count}×</span>
+              </div>
+              <div class="text-xs mt-1" style="color:var(--text-muted);">${m.explanation}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  el.innerHTML = html;
 }
 
 // ============ CHALLENGE ============
@@ -4003,19 +4701,42 @@ function renderWrongLog() {
 
 // ============ FLAGGED ============
 function renderFlagged() {
-  if (state.flagged.length === 0) {
-    $('flagged-list').innerHTML = '<p style="color:var(--text-muted);">No flagged items yet. Flag confusing topics from Unit Notes.</p>';
+  if (state.flagged.length === 0 && state.flaggedSubunits.length === 0) {
+    $('flagged-list').innerHTML = '<p style="color:var(--text-muted);">No flagged items yet. Flag confusing topics or subunits for review.</p>';
     return;
   }
-  $('flagged-list').innerHTML = state.flagged.map(f => `
+  let html = '';
+  html += state.flaggedSubunits.map(key => {
+    const [unitNumStr, code] = key.split(':');
+    const unitNum = Number(unitNumStr);
+    const unit = UNITS.find(u => u.num === unitNum);
+    const subs = LESSON_SUBUNITS[unitNum] || [];
+    const subIndex = subs.findIndex(s => s.code === code);
+    if (!unit || subIndex === -1) return '';
+    const sub = subs[subIndex];
+    return `
+      <div class="card flex justify-between items-center">
+        <div>
+          <div class="font-semibold">🚩 ${sub.code} — ${sub.title}</div>
+          <div class="text-sm" style="color:var(--text-muted);">Unit ${unit.num}: ${unit.name}</div>
+        </div>
+        <div class="flex gap-2">
+          <button class="btn btn-ghost btn-sm" onclick="openSubunit(${unitNum}, ${subIndex})">Open</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleSubunitFlag(${unitNum}, '${sub.code}');renderFlagged()">✕</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  html += state.flagged.map(f => `
     <div class="card flex justify-between items-center">
       <div>
-        <div class="font-semibold">Unit ${f}: ${UNITS[f-1].name}</div>
+        <div class="font-semibold">🚩 Unit ${f}: ${UNITS[f-1].name}</div>
         <div class="text-sm" style="color:var(--text-muted);">${UNITS[f-1].desc}</div>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="state.flagged=state.flagged.filter(x=>x!==${f});renderFlagged();showToast('Unflagged Unit ${f}')">✕</button>
+      <button class="btn btn-ghost btn-sm" onclick="flagUnit(${f});renderFlagged()">✕</button>
     </div>
   `).join('');
+  $('flagged-list').innerHTML = html;
 }
 
 // ============ NIGHT BEFORE ============
@@ -4790,6 +5511,11 @@ function formatTime(seconds) {
 
 // ============ INIT ============
 function init() {
+  const progress = loadProgress();
+  state.completedSubunits = progress.completedSubunits;
+  state.flagged = progress.flagged;
+  state.flaggedSubunits = progress.flaggedSubunits;
+  state.quizScores = progress.quizScores;
   state.flashcards = [...DEFAULT_FLASHCARDS];
   updateDashboard();
   navigateTo('dashboard');
