@@ -3639,6 +3639,14 @@ function openSubunit(unitNum, subIndex) {
   const myEx = chunkEvenly(unit.workedExamples || [], subunits.length)[subIndex] || [];
   const myProb = chunkEvenly(unit.practiceProblems || [], subunits.length)[subIndex] || [];
 
+  const isAP = state.selectedMode === 'ap';
+  const deep = unit.deepContent;
+  // deep.real_world / deep.common_mistakes are chunked across subunits like the arrays
+  // above; deep.intuition / deep.why_it_matters are single unit-wide strings, so they're
+  // only shown on the first / last subunit page instead of being repeated on every page.
+  const myRealWorld = chunkEvenly(deep.real_world, subunits.length)[subIndex] || [];
+  const myDeepMistakes = chunkEvenly(deep.common_mistakes, subunits.length)[subIndex] || [];
+
   const done = isSubunitComplete(unit.num, s.code);
   const flagged = isSubunitFlagged(unit.num, s.code);
   let html = `
@@ -3650,6 +3658,7 @@ function openSubunit(unitNum, subIndex) {
         <p class="text-sm" style="color:var(--text-muted);">🎯 Goal: ${s.objective}</p>
       </div>
       <div class="ml-auto flex gap-2 flex-shrink-0">
+        <div class="text-xs px-3 py-1 rounded-full" style="background:${isAP ? 'var(--accent)' : 'var(--cyan)'};color:#fff;">${isAP ? '🎯 AP' : '🔬 Deep'}</div>
         ${flagged ? `<div class="text-xs px-3 py-1 rounded-full" style="background:var(--red);color:#fff;">🚩 Flagged</div>` : ''}
         ${done ? `<div class="text-xs px-3 py-1 rounded-full" style="background:var(--green);color:#fff;">✅ Completed</div>` : ''}
       </div>
@@ -3686,6 +3695,46 @@ function openSubunit(unitNum, subIndex) {
         <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">${s.explain}</p>
       </div>
     `;
+  }
+
+  // 1b. Deep Learning content — only shown in deep mode, absent in AP mode
+  if (!isAP) {
+    if (subIndex === 0) {
+      html += `
+        <div class="card mb-4" style="border-color:var(--cyan);">
+          <div class="text-xs font-semibold mb-2" style="color:var(--cyan);">🧠 Intuition</div>
+          <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">${deep.intuition}</p>
+        </div>
+      `;
+    }
+    if (myRealWorld.length) {
+      html += `
+        <div class="card mb-4">
+          <div class="text-xs font-semibold mb-2" style="color:var(--cyan);">🌍 Real-World Examples</div>
+          <ul class="space-y-2 text-sm" style="color:var(--text-secondary);">
+            ${myRealWorld.map(example => `<li class="flex gap-2"><span style="color:var(--cyan);">•</span><span>${example}</span></li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+    if (myDeepMistakes.length) {
+      html += `
+        <div class="card mb-4" style="border-color:var(--red);">
+          <div class="text-xs font-semibold mb-2" style="color:var(--red);">⚠️ Common Conceptual Mistakes</div>
+          <ul class="space-y-1 text-sm" style="color:var(--text-secondary);">
+            ${myDeepMistakes.map(mistake => `<li class="flex gap-2"><span style="color:var(--red);">✗</span><span>${mistake}</span></li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+    if (subIndex === subunits.length - 1) {
+      html += `
+        <div class="card mb-4" style="border-color:var(--green);">
+          <div class="text-xs font-semibold mb-2" style="color:var(--green);">🚀 Why This Matters</div>
+          <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">${deep.why_it_matters}</p>
+        </div>
+      `;
+    }
   }
 
   // 2. "Think of it like..." analogy
