@@ -523,9 +523,19 @@
 
   <!-- UNIT NOTES -->
   <section id="page-notes" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-4">📝 Unit Notes</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">All 8 units — cheat sheet tips integrated. Flag anything confusing for targeted practice.</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="notes-grid"></div>
+    <div id="notes-overview">
+      <h1 class="text-2xl font-bold mb-1">📝 Unit Notes</h1>
+      <p class="mb-4" style="color:var(--text-secondary);">Written notes for learning a topic properly, weeks ahead of the exam — not a cram sheet (that's <button class="underline" style="color:var(--accent);background:none;border:none;cursor:pointer;font:inherit;" onclick="navigateTo('night-before')">Night Before</button> for that). Click a unit to expand its subunits, then click a subunit to read.</p>
+      <div class="flex items-center gap-2 mb-6 flex-wrap">
+        <span class="text-xs" style="color:var(--text-muted);">Reading mode:</span>
+        <button class="btn btn-sm" data-mode-toggle="ap" onclick="selectMode('ap')">🎯 AP Exam — quick summary</button>
+        <button class="btn btn-sm" data-mode-toggle="deep" onclick="selectMode('deep')">🔬 Deep Learning — full notes</button>
+      </div>
+      <div class="space-y-3" id="notes-grid"></div>
+    </div>
+    <div id="notes-viewer" class="hidden">
+      <div id="notes-viewer-content"></div>
+    </div>
   </section>
 
   <!-- CONCEPT MAP -->
@@ -1254,6 +1264,8 @@ const state = {
   totalAnswered: 0,
   totalCorrect: 0,
   selectedMode: 'ap',
+  notesUnit: null,
+  notesSubIndex: null,
   flashcards: [],
   fcIndex: 0,
   fcFlipped: false,
@@ -2503,6 +2515,186 @@ const LESSON_SUBUNITS = {
   ]
 };
 
+// ============ UNIT NOTES CONTENT ============
+// Written notes for the Unit Notes page, keyed by subunit code. Distinct from the Lessons
+// page's tutoring-style copy (explain/deepIntuition/etc.) — this is meant to read like real
+// study notes: apSummary is a tight skim for AP mode, deepNotes is markdown (rendered via
+// parseMarkdown) for Deep mode. Grounded in the AP Physics 1 CED (2026); citations in comments
+// refer to the CED's own printed page numbers. Currently written for Unit 1 only — remaining
+// units render a "not written yet" fallback in renderSubunitNotesPage() until added.
+const SUBUNIT_NOTES = {
+  // CED Topic 1.1 "Scalars and Vectors in One Dimension", LO 1.1.A/1.1.B, EK 1.1.A.1-3, 1.1.B.1 — CED p. 27
+  '1.1': {
+    apSummary: [
+      'Scalar = magnitude only (mass, time, distance, speed). Vector = magnitude + direction (position, displacement, velocity, acceleration).',
+      "In one dimension you don't need arrows — the sign (+/−) of a vector component IS its direction, once you've picked a positive direction.",
+      'Pick your positive direction FIRST, before writing a single equation, and hold it for the entire problem.',
+      'Distance (total path length, always positive) and displacement (net change in position, can be + / − / 0) answer different questions — they are only numerically equal for one-directional motion.'
+    ],
+    deepNotes: `A scalar is a number, full stop — mass, time, distance, speed. It tells you "how much" and nothing else. A vector tells you "how much" **and** "which way" — displacement, velocity, acceleration, force. Position matters here too: knowing an object is "5 meters away" is useless without knowing which direction.
+
+## Why direction becomes a sign, not an arrow
+
+In one dimension, you don't need to draw arrows to track direction — you only need one piece of information: is it positive or negative? That's the entire trick of 1D vector work. Before you touch a single equation, you pick a positive direction (right, up, whatever makes sense for the problem) and write it down: "let right = positive." Every velocity, displacement, and acceleration in the problem gets a sign relative to that choice. Flip the choice halfway through and every answer after that point is wrong, even if the arithmetic is perfect.
+
+## Distance vs. displacement — not the same word twice
+
+Distance is the total length of the path actually walked — it only grows, never shrinks, and it's always positive. Displacement is the straight-line change in position between start and finish — it can be positive, negative, or zero, and it's often smaller than the distance. Walk 100 m east then 100 m back west: that's 200 m of distance but a displacement of 0. Both numbers are "correct" — they're just answering different questions.
+
+## Where students lose points
+
+- Treating "negative" as "wrong" or "slower." Negative just means "opposite to whatever you called positive." A car at −20 m/s is moving exactly as fast as one at +20 m/s, just the other way.
+- Assuming distance and displacement are interchangeable. They only agree when the motion never reverses direction.
+- Picking a positive direction and then silently flipping it partway through a multi-step problem — usually by accident, when a "return trip" leg feels like it should also be positive.`
+  },
+
+  // CED Topic 1.2 "Displacement, Velocity, and Acceleration", LO 1.2.A/1.2.B, EK 1.2.A.1-2, 1.2.B.1-5 — CED pp. 28-29
+  '1.2': {
+    apSummary: [
+      'Position (x): where the object is, relative to a chosen origin.',
+      'Average velocity = Δx/Δt (displacement over the time interval — not total distance).',
+      'Average acceleration = Δv/Δt.',
+      "An object is accelerating any time velocity's magnitude OR direction changes — this includes turning a corner at constant speed.",
+      'Shrink the time interval toward zero and the average value approaches the instantaneous value — this is the idea behind slope on a graph.'
+    ],
+    deepNotes: `Position tells you where something is relative to some origin you chose. Velocity tells you how fast — and in which direction — that position is changing. Acceleration tells you how fast the velocity itself is changing. Each one builds directly on the one before it.
+
+## Average vs. instantaneous — same formula, different time window
+
+Average velocity is just displacement divided by the time interval it happened over: v_avg = Δx/Δt. Average acceleration is the same idea one level up: a_avg = Δv/Δt. The CED is explicit about how these connect to the "instantaneous" values you'll use on graphs later: shrink the time interval down to something tiny, and the average velocity or acceleration over that tiny interval gets closer and closer to the true instantaneous value at that moment. That's the whole idea behind a tangent line on a graph — you'll lean on it constantly once you get to motion graphs.
+
+## Acceleration means ANY change in velocity — not just speeding up
+
+This is the single biggest conceptual trap in this topic. "Accelerating" in physics does not mean "speeding up." It means velocity is changing — in magnitude, in direction, or both. A car rounding a curve at a perfectly steady speed is accelerating, because its direction keeps changing. A ball thrown straight up is accelerating the entire time it's in the air, including the exact instant it's motionless at the peak, because gravity never stops pulling on it.
+
+## Where students lose points
+
+- Reading "constant speed" and assuming "zero acceleration" — only true if direction is ALSO constant (straight-line motion).
+- Assuming zero velocity means zero acceleration. They're independent: a ball at the peak of its toss has v = 0 but a = g.
+- Mixing up average and instantaneous values — an object's average velocity over a whole trip can be very different from its velocity at any single instant during that trip.`
+  },
+
+  // CED Topic 1.3 "Representing Motion" — graph-reading portion, EK 1.3.A.1, 1.3.A.4, 1.3.A.4.i-iv, plus the
+  // nonuniform-acceleration boundary statement — CED pp. 30-31
+  '1.3': {
+    apSummary: [
+      'Position-time graph: SLOPE = velocity.',
+      'Velocity-time graph: SLOPE = acceleration; AREA under the curve = displacement.',
+      'Acceleration-time graph: AREA under the curve = change in velocity.',
+      'A curved position-time graph means changing velocity: concave up → positive acceleration, concave down → negative acceleration.',
+      "AP Physics 1 only expects QUALITATIVE analysis of nonuniform (non-constant) acceleration — sketch and describe it, don't compute exact numbers from a curved a-t graph.",
+      'Motion can be represented five ways: diagrams, graphs, equations, figures, narrative description — expect to translate between them.'
+    ],
+    deepNotes: `Every motion graph is answering the same underlying question in a different visual language: how is this quantity changing? The CED lists five ways to represent motion — motion diagrams, graphs, equations, figures, and plain narrative description — and expects you to translate fluently between them. Graphs are just the visual one.
+
+## Slope and area are the whole game
+
+On a position-time graph, the SLOPE at any point is the instantaneous velocity at that point — steep means fast, flat means stopped, negative slope means moving in the negative direction. On a velocity-time graph, the SLOPE is the instantaneous acceleration, and the AREA between the curve and the time axis is the displacement over that interval. On an acceleration-time graph, the AREA is the change in velocity. That's it — two operations, slope and area, answer almost anything a motion graph can ask.
+
+## Curved lines mean changing rates
+
+A straight line on a position-time graph means constant velocity (zero acceleration). A curved line means velocity is changing — the object is accelerating, and the curvature tells you the sign: curving upward (concave up) means positive acceleration, curving downward (concave down) means negative acceleration.
+
+## What AP Physics 1 does and doesn't expect here
+
+The course's boundary statement is specific: you are not expected to quantitatively analyze nonuniform (non-constant) acceleration — you won't be handed a curved a-t graph and asked to compute an exact displacement from it. But you ARE expected to qualitatively sketch and discuss situations where acceleration isn't constant — recognizing what the curve looks like and what it means, without doing calculus on it.
+
+## Where students lose points
+
+- Reading the HEIGHT of a position-time graph as if it were speed — it's the SLOPE, not the height.
+- Forgetting that area under a v-t graph below the time axis counts as NEGATIVE displacement.
+- Treating a curved position-time graph as a mistake — it just means the object is accelerating.`
+  },
+
+  // CED Topic 1.3, EK 1.3.A.2 (the three official kinematic equations) — CED p. 30
+  '1.4': {
+    apSummary: [
+      'The CED gives exactly three constant-acceleration equations: v = v₀ + at, x = x₀ + v₀t + ½at², v² = v₀² + 2a(x − x₀).',
+      'The common "4th equation," Δx = ½(v₀ + v)t, is a quick algebra combination of the other two — useful, but not one of the three the CED lists.',
+      'Strategy: list your knowns, name your one unknown, pick the equation missing nothing else you don\'t know.',
+      'These equations only hold when acceleration is constant.'
+    ],
+    deepNotes: `Once acceleration is constant, five quantities describe the whole motion: initial velocity v₀, final velocity v, acceleration a, time t, and displacement (x − x₀). The CED provides three equations connecting them:
+
+- v = v₀ + at
+- x = x₀ + v₀t + ½at²
+- v² = v₀² + 2a(x − x₀)
+
+Each equation is missing exactly one of the five quantities. That's the entire strategy: figure out which quantity the problem neither gives you nor asks for, then pick the equation that leaves it out.
+
+## The "fourth equation" you'll see everywhere
+
+Most textbooks (and this app's Lessons) also teach Δx = ½(v₀ + v)t — displacement as average velocity times time. It's mathematically just a combination of the first two equations above, so it's not wrong to use, but it isn't one of the three the CED lists as required content. Treat it as a handy shortcut for problems that skip acceleration entirely, not as a fourth independent law.
+
+## Why these equations, and only these
+
+They all come from the same assumption: acceleration is constant. If acceleration is changing, none of these equations apply — you'd need calculus (integrating a non-constant a(t)) to handle it, which the course explicitly does not require.
+
+## Where students lose points
+
+- Picking an equation before writing down what's known and what's asked — leads to picking one with two unknowns in it.
+- Forgetting "starts from rest" means v₀ = 0, and "comes to rest" means v = 0 — not the same statement.
+- Plugging in a positive value for a when the object is actually slowing down, without checking that it's consistent with the chosen positive direction.`
+  },
+
+  // CED Topic 1.3, EK 1.3.A.3, plus the g-value boundary statement — CED pp. 30-31
+  '1.5': {
+    apSummary: [
+      "Near Earth's surface, free-fall acceleration is downward, constant, and — per the CED's boundary statement — should be taken as g = 10 m/s² for calculations.",
+      'g = 9.8 m/s² or 9.81 m/s² is also fully accepted; you will not be penalized for using the more precise value.',
+      'Free fall means gravity is the ONLY force acting — no air resistance, no string, no push.',
+      "The three kinematic equations apply directly, with a = g pointed down for the object's entire flight — rising, falling, and at the peak."
+    ],
+    deepNotes: `Free fall isn't really a new topic — it's the three kinematic equations from the last topic with one number filled in: acceleration is g, directed straight down, the same for every object regardless of mass. That last part is the genuinely surprising physics: a bowling ball and a feather, dropped in a vacuum from the same height, hit the ground at the exact same instant. The heavier object is pulled down harder, but it's also proportionally harder to accelerate — the two effects cancel exactly.
+
+## What "free fall" actually requires
+
+Free fall specifically means gravity is the only force acting on the object. A dropped ball is in free fall. A thrown ball is in free fall from the moment it leaves your hand (ignoring air resistance). A ball swinging on a string is NOT in free fall — the string's tension is a second force acting on it.
+
+## Which number to use for g
+
+The CED sets a specific default: for any numeric answer, use g = 10 m/s². That's the value the exam expects unless a problem says otherwise. You will not lose credit for using the more familiar 9.8 m/s² or 9.81 m/s² instead — both are explicitly allowed — but if you're estimating quickly, or the numbers are clearly meant to come out clean, try g = 10 first.
+
+## Direction is the part people get wrong, not the magnitude
+
+Whichever direction you called positive, gravity's acceleration is constant and points down for the entire flight — rising, falling, and at the peak. A ball thrown straight up is slowing down on the way up (velocity up, acceleration down — opposite directions) and speeding up on the way down (velocity down, acceleration down — same direction). At the very top, velocity is momentarily zero, but acceleration is still g. It never turns off.
+
+## Where students lose points
+
+- Believing heavier objects fall faster — true in air because of air resistance, false in the idealized vacuum case this course tests.
+- Setting acceleration to zero at the peak of a toss because velocity is zero there — acceleration is still g.
+- Forgetting that "free fall" excludes situations with strings, air resistance, or any other applied force.`
+  },
+
+  // CED Topic 1.5 "Vectors and Motion in Two Dimensions", LO 1.5.A/1.5.B, EK 1.5.A.1-3, 1.5.B.1-2 — CED pp. 33-34
+  '1.6': {
+    apSummary: [
+      'Projectile motion is a special case of 2D motion: zero acceleration along one axis, constant nonzero acceleration along the other.',
+      'Split the initial velocity into perpendicular components with v₀ₓ = v₀cosθ, v₀ᵧ = v₀sinθ.',
+      'Horizontal: constant velocity (a = 0). Vertical: constant acceleration g — solved with the same equations as free fall.',
+      'Time is the only shared link between the two directions — solve one, then plug that time into the other.'
+    ],
+    deepNotes: `The CED frames this topic as "Vectors and Motion in Two Dimensions" — and projectile motion is explicitly called out as one special case of it: two-dimensional motion where acceleration is zero along one axis and constant (and nonzero) along the other. Seen that way, projectile motion isn't a separate set of rules — it's the same 1D kinematics from earlier topics, just done twice, once per direction.
+
+## Why the two directions don't talk to each other
+
+Gravity points straight down. It has no horizontal component. That means horizontal velocity never changes during the flight — there's nothing to change it. Meanwhile, the vertical motion behaves exactly like free fall, completely unaffected by whatever horizontal velocity the object also happens to have. A bullet fired perfectly horizontally and a bullet simply dropped from the same height hit the ground at the same instant — the horizontal shot doesn't "hover" any longer just because it's also moving sideways.
+
+## The method, step by step
+
+1. Break the initial velocity into components using the launch angle: v₀ₓ = v₀cos θ, v₀ᵧ = v₀sin θ.
+2. Treat the horizontal direction as constant-velocity motion (a = 0): Δx = v₀ₓt.
+3. Treat the vertical direction as free fall (a = g): use the same kinematic equations as before.
+4. Time is the bridge — whatever t you solve for vertically is the same t you plug into the horizontal equation, because both motions start and end at the same instants.
+
+## Where students lose points
+
+- Forgetting to split the initial velocity into components before doing anything else.
+- Setting the TOTAL speed to zero at the peak of the trajectory — only the vertical component (vᵧ) is zero there; the horizontal component (vₓ) is unchanged and still contributes to the object's actual speed.
+- Assuming "time up equals time down" always holds — it's only true when the launch height and landing height are the same.`
+  }
+};
+
 const FORMULAS = [
   { unit: 1, name: 'Kinematics', weight: '10-15%', formulas: ['v = v₀ + at', 'Δx = v₀t + ½at²', 'v² = v₀² + 2aΔx', 'Δx = ½(v + v₀)t', 'vₓ = v₀cosθ', 'vᵧ = v₀sinθ - gt'] },
   { unit: 2, name: 'Force and Translational Dynamics', weight: '18-23%', formulas: ['F_net = ma (Newton\'s 2nd Law)', 'f_k = μₖN (kinetic friction)', 'f_s ≤ μₛN (static friction)', 'F_g = mg', 'F_spring = -kx', 'F_c = mv²/r', 'F_g = Gm₁m₂/r²'] },
@@ -3193,6 +3385,21 @@ function selectMode(mode) {
   state.selectedMode = mode;
   $('mode-ap').classList.toggle('selected', mode === 'ap');
   $('mode-deep').classList.toggle('selected', mode === 'deep');
+  syncModeToggleButtons();
+  // If Unit Notes is currently showing a subunit's notes, re-render it in the new mode
+  // instead of forcing the reader back to the unit list.
+  if (state.notesUnit !== null && !$('notes-viewer').classList.contains('hidden')) {
+    renderSubunitNotesPage();
+  }
+}
+
+// Any button marked data-mode-toggle="ap|deep" (e.g. on the Unit Notes page) reuses this
+// same selectMode() call rather than introducing a second mode-selection mechanism.
+function syncModeToggleButtons() {
+  document.querySelectorAll('[data-mode-toggle]').forEach(btn => {
+    const active = btn.dataset.modeToggle === state.selectedMode;
+    btn.className = 'btn btn-sm' + (active ? ' btn-primary' : ' btn-secondary');
+  });
 }
 
 function renderLessons() {
@@ -3634,20 +3841,118 @@ function startUnitQuiz(unitNum) {
 }
 
 // ============ UNIT NOTES ============
+// Two-level drill-down: renderNotes() draws one collapsible card per unit; expanding a
+// unit lists its subunits; clicking a subunit opens openSubunitNotes() in #notes-viewer.
+// Content itself (SUBUNIT_NOTES) is keyed by subunit code and read by state.selectedMode —
+// the same global mode the Lessons page's AP/Deep toggle sets, not a separate mechanism.
 function renderNotes() {
-  $('notes-grid').innerHTML = UNITS.map(u => `
+  $('notes-overview').classList.remove('hidden');
+  $('notes-viewer').classList.add('hidden');
+  $('notes-grid').innerHTML = UNITS.map(u => {
+    const subs = LESSON_SUBUNITS[u.num] || [];
+    const flagged = state.flagged.includes(u.num);
+    return `
     <div class="card">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style="background:${u.color}20;color:${u.color};">${u.num}</div>
-        <div class="font-semibold">${u.name}</div>
+      <div class="flex items-center gap-3 cursor-pointer" onclick="toggleNotesUnit(${u.num})">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:${u.color}20;color:${u.color};">${u.num}</div>
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold">${flagged ? '🚩 ' : ''}${u.name}</div>
+          <div class="text-xs truncate" style="color:var(--text-muted);">${u.desc} · ${u.weight}</div>
+        </div>
+        <button class="btn btn-ghost btn-xs flex-shrink-0" onclick="event.stopPropagation(); flagUnit(${u.num})">🚩</button>
+        <span class="text-xs flex-shrink-0" id="notes-chevron-${u.num}" style="color:var(--text-muted);">▼</span>
       </div>
-      <p class="text-sm mb-2" style="color:var(--text-muted);">${u.desc}</p>
-      <ul class="text-sm space-y-1" style="color:var(--text-secondary);">
-        ${u.topics.map(t => `<li>· ${t}</li>`).join('')}
-      </ul>
-      <button class="btn btn-ghost btn-sm mt-2 text-xs" onclick="flagUnit(${u.num})">🚩 Flag confusing topics</button>
+      <div class="mt-3 space-y-1.5 hidden" id="notes-sublist-${u.num}">
+        ${subs.map((s, i) => `
+          <div class="rounded-lg p-2.5 flex items-center gap-2 cursor-pointer card-hover-row" style="background:var(--bg-secondary);" onclick="event.stopPropagation(); openSubunitNotes(${u.num}, ${i})">
+            <span class="font-mono text-xs px-2 py-0.5 rounded flex-shrink-0" style="background:${u.color}20;color:${u.color};">${s.code}</span>
+            <span class="text-sm flex-1">${s.title}</span>
+            <span class="text-xs flex-shrink-0" style="color:${u.color};">Read →</span>
+          </div>
+        `).join('')}
+      </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
+  syncModeToggleButtons();
+}
+
+function toggleNotesUnit(unitNum) {
+  const list = $(`notes-sublist-${unitNum}`);
+  const chevron = $(`notes-chevron-${unitNum}`);
+  const wasHidden = list.classList.contains('hidden');
+  list.classList.toggle('hidden');
+  chevron.textContent = wasHidden ? '▲' : '▼';
+}
+
+function openSubunitNotes(unitNum, subIndex) {
+  state.notesUnit = unitNum;
+  state.notesSubIndex = subIndex;
+  $('notes-overview').classList.add('hidden');
+  $('notes-viewer').classList.remove('hidden');
+  renderSubunitNotesPage();
+}
+
+function backToNotesOverview() {
+  $('notes-viewer').classList.add('hidden');
+  $('notes-overview').classList.remove('hidden');
+}
+
+function renderSubunitNotesPage() {
+  const unit = UNITS.find(u => u.num === state.notesUnit);
+  const subs = LESSON_SUBUNITS[unit.num] || [];
+  const s = subs[state.notesSubIndex];
+  const notes = SUBUNIT_NOTES[s.code];
+  const isAP = state.selectedMode === 'ap';
+
+  let html = `
+    <button class="text-xs mb-3" style="color:var(--text-muted);" onclick="backToNotesOverview()">← All Unit Notes</button>
+    <div class="flex items-center gap-3 mb-4 flex-wrap">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-mono font-bold flex-shrink-0" style="background:${unit.color}20;color:${unit.color};">${s.code}</div>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl font-bold">${s.title}</h1>
+        <p class="text-xs" style="color:var(--text-muted);">Unit ${unit.num}: ${unit.name}</p>
+      </div>
+      <div class="flex gap-2 flex-shrink-0">
+        <button class="btn btn-sm" data-mode-toggle="ap" onclick="selectMode('ap')">🎯 AP</button>
+        <button class="btn btn-sm" data-mode-toggle="deep" onclick="selectMode('deep')">🔬 Deep</button>
+      </div>
+    </div>
+  `;
+
+  if (notes) {
+    html += isAP ? `
+      <div class="card mb-4">
+        <div class="font-semibold text-sm mb-3">🎯 Quick Summary — AP Exam Focus</div>
+        <ul class="space-y-2 text-sm" style="color:var(--text-secondary);">
+          ${notes.apSummary.map(b => `<li class="flex gap-2"><span style="color:${unit.color};flex-shrink-0;">•</span><span>${b}</span></li>`).join('')}
+        </ul>
+      </div>
+    ` : `
+      <div class="card mb-4">
+        <div class="font-semibold text-sm mb-3">🔬 Full Notes — Deep Learning</div>
+        <div class="text-sm leading-relaxed" style="color:var(--text-secondary);">${parseMarkdown(notes.deepNotes)}</div>
+      </div>
+    `;
+  } else {
+    html += `<div class="card mb-4 text-center text-sm" style="color:var(--text-muted);">Notes for this subunit haven't been written yet.</div>`;
+  }
+
+  const hasPrev = state.notesSubIndex > 0;
+  const hasNext = state.notesSubIndex < subs.length - 1;
+  html += `
+    <div class="flex flex-wrap gap-3 mt-6">
+      ${hasPrev
+        ? `<button class="btn btn-secondary" onclick="openSubunitNotes(${unit.num}, ${state.notesSubIndex - 1})">← Previous: ${subs[state.notesSubIndex - 1].code}</button>`
+        : `<button class="btn btn-secondary" onclick="backToNotesOverview()">← All Unit Notes</button>`}
+      ${hasNext
+        ? `<button class="btn btn-primary" onclick="openSubunitNotes(${unit.num}, ${state.notesSubIndex + 1})">Next: ${subs[state.notesSubIndex + 1].code} →</button>`
+        : `<button class="btn btn-primary" onclick="backToNotesOverview()">Finish Unit — Back to All Notes ✓</button>`}
+    </div>
+  `;
+
+  $('notes-viewer-content').innerHTML = html;
+  syncModeToggleButtons();
 }
 
 function flagUnit(unitNum) {
@@ -3659,6 +3964,7 @@ function flagUnit(unitNum) {
     showToast(`Unit ${unitNum} unflagged`);
   }
   saveProgress();
+  if (state.currentPage === 'notes') renderNotes();
 }
 
 // ============ CONCEPT MAP ============
@@ -3704,7 +4010,7 @@ function renderConceptMap() {
     node.style.left = (pos.x - 28) + 'px';
     node.style.top = (pos.y - 28) + 'px';
     node.title = UNITS[i].name;
-    node.onclick = () => { navigateTo('notes'); setTimeout(() => { const el = document.querySelector(`#notes-grid .card:nth-child(${i+1})`); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200); };
+    node.onclick = () => { navigateTo('notes'); setTimeout(() => { const list = $(`notes-sublist-${i+1}`); if (list && list.classList.contains('hidden')) toggleNotesUnit(i+1); const el = document.querySelector(`#notes-grid .card:nth-child(${i+1})`); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200); };
     container.appendChild(node);
   });
 }
