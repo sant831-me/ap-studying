@@ -774,14 +774,15 @@
   <!-- FLASHCARDS -->
   <section id="page-flashcards" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-1">🃏 Flashcards</h1>
-    <p class="mb-4 text-sm" style="color:var(--text-secondary);">Mix mode interleaves every unit — the harder, more realistic way to review once you know the material. Switch to Unit mode while you're still learning one topic at a time.</p>
+    <p class="mb-4 text-sm" style="color:var(--text-secondary);">Mix mode interleaves every unit — the harder, more realistic way to review once you know the material. Switch to Unit mode while you're still learning one topic at a time, or Imported to drill only the cards you added yourself.</p>
 
     <div class="flex flex-wrap gap-2 mb-3">
       <button class="btn btn-sm" data-fc-mode="mix" onclick="setFcMode('mix')">🔀 Mix — all units</button>
       <button class="btn btn-sm" data-fc-mode="unit" onclick="setFcMode('unit')">🎯 Unit</button>
+      <button class="btn btn-sm" data-fc-mode="imported" onclick="setFcMode('imported')">📥 Imported only</button>
       <select id="fc-unit-select" class="hidden text-sm rounded-lg px-2" style="background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);" onchange="setFcUnit(parseInt(this.value))"></select>
     </div>
-    <div class="flex flex-wrap gap-2 mb-4">
+    <div class="flex flex-wrap gap-2 mb-4" id="fc-source-row">
       <button class="btn btn-sm" data-fc-source="default" onclick="setFcSource('default')">📚 All cards</button>
       <button class="btn btn-sm" data-fc-source="wrong" onclick="setFcSource('wrong')">🚩 Wrong answers only</button>
     </div>
@@ -5842,10 +5843,15 @@ function fcGetSRS(id) {
 }
 
 // Builds the current candidate pool from source (default deck vs. Wrong Log) and mode
-// (mix = everything, unit = filtered to state.fcUnit). Wrong Log entries are converted
-// into card shape and de-duplicated by question, so missing the same quiz question twice
-// consolidates into one flashcard rather than piling up duplicates.
+// (mix = everything, unit = filtered to state.fcUnit, imported = only user-imported
+// cards). Wrong Log entries are converted into card shape and de-duplicated by question,
+// so missing the same quiz question twice consolidates into one flashcard rather than
+// piling up duplicates. "Imported" mode ignores the source toggle entirely — Wrong Log
+// entries are never imported cards, so combining the two would always be empty.
 function fcBuildPool() {
+  if (state.fcMode === 'imported') {
+    return state.flashcards.filter(c => c.imported);
+  }
   let pool;
   if (state.fcSource === 'wrong') {
     const seen = new Map();
@@ -5890,8 +5896,10 @@ function fcPopulateUnitSelect() {
 
 function setFcMode(mode) {
   state.fcMode = mode;
+  if (mode === 'imported') state.fcSource = 'default'; // Wrong Log cards are never imported cards
   fcPopulateUnitSelect();
   $('fc-unit-select').classList.toggle('hidden', mode !== 'unit');
+  $('fc-source-row').classList.toggle('hidden', mode === 'imported');
   fcRebuildQueue();
   updateFlashcardUI();
 }
@@ -5922,6 +5930,7 @@ function initFlashcards() {
   if (state.flashcards.length === 0) state.flashcards = [...DEFAULT_FLASHCARDS];
   fcPopulateUnitSelect();
   $('fc-unit-select').classList.toggle('hidden', state.fcMode !== 'unit');
+  $('fc-source-row').classList.toggle('hidden', state.fcMode === 'imported');
   fcRebuildQueue();
   updateFlashcardUI();
 }
@@ -5942,9 +5951,17 @@ function updateFlashcardUI() {
   if (state.fcQueue.length === 0) {
     studyArea.classList.add('hidden');
     empty.classList.remove('hidden');
-    empty.textContent = state.fcSource === 'wrong'
-      ? (pool.length === 0 ? "No wrong answers logged" + (state.fcMode === 'unit' ? ` for Unit ${state.fcUnit}` : '') + " yet — take a quiz first, then come back to drill what you missed." : 'No cards in this set right now.')
-      : (pool.length === 0 ? 'No cards in this set yet. Import some below, or switch mode.' : 'No cards in this set right now.');
+    if (state.fcMode === 'imported') {
+      empty.textContent = pool.length === 0
+        ? 'No imported cards yet — paste text or drop a file below, then switch back here to drill them.'
+        : 'No cards in this set right now.';
+    } else if (state.fcSource === 'wrong') {
+      empty.textContent = pool.length === 0
+        ? "No wrong answers logged" + (state.fcMode === 'unit' ? ` for Unit ${state.fcUnit}` : '') + " yet — take a quiz first, then come back to drill what you missed."
+        : 'No cards in this set right now.';
+    } else {
+      empty.textContent = pool.length === 0 ? 'No cards in this set yet. Import some below, or switch mode.' : 'No cards in this set right now.';
+    }
     return;
   }
   studyArea.classList.remove('hidden');
@@ -5997,7 +6014,7 @@ function importFlashcards() {
   const lines = text.split('\n').filter(l => l.trim());
   const newCards = lines.map(line => {
     const parts = line.split(/\t|,/);
-    return { unit: 0, q: (parts[0] || '').trim(), a: (parts[1] || '').trim() };
+    return { unit: 0, imported: true, q: (parts[0] || '').trim(), a: (parts[1] || '').trim() };
   }).filter(c => c.q && c.a);
   if (newCards.length === 0) { showToast('No valid Q&A pairs found'); return; }
   state.flashcards = [...state.flashcards, ...newCards];
