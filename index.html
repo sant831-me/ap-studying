@@ -773,24 +773,47 @@
 
   <!-- FLASHCARDS -->
   <section id="page-flashcards" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-4">🃏 Flashcards</h1>
-    <div class="flex gap-8 mb-4 text-sm"><span id="fc-due">0 due</span> <span id="fc-hard">0 hard</span> <span id="fc-known">0 known</span></div>
-    <div class="card flashcard-container mb-4" style="min-height:260px;">
-      <div class="flashcard-inner" id="flashcard-inner" onclick="flipFlashcard()">
-        <div class="flashcard-front" id="fc-front">Loading...</div>
-        <div class="flashcard-back" id="fc-back">—</div>
+    <h1 class="text-2xl font-bold mb-1">🃏 Flashcards</h1>
+    <p class="mb-4 text-sm" style="color:var(--text-secondary);">Mix mode interleaves every unit — the harder, more realistic way to review once you know the material. Switch to Unit mode while you're still learning one topic at a time.</p>
+
+    <div class="flex flex-wrap gap-2 mb-3">
+      <button class="btn btn-sm" data-fc-mode="mix" onclick="setFcMode('mix')">🔀 Mix — all units</button>
+      <button class="btn btn-sm" data-fc-mode="unit" onclick="setFcMode('unit')">🎯 Unit</button>
+      <select id="fc-unit-select" class="hidden text-sm rounded-lg px-2" style="background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);" onchange="setFcUnit(parseInt(this.value))"></select>
+    </div>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button class="btn btn-sm" data-fc-source="default" onclick="setFcSource('default')">📚 All cards</button>
+      <button class="btn btn-sm" data-fc-source="wrong" onclick="setFcSource('wrong')">🚩 Wrong answers only</button>
+    </div>
+
+    <div class="flex gap-6 mb-4 text-sm flex-wrap">
+      <span><b id="fc-due">0</b> due</span>
+      <span><b id="fc-hard">0</b> learning</span>
+      <span><b id="fc-known">0</b> mastered</span>
+      <span style="color:var(--text-muted);" id="fc-pool-label"></span>
+    </div>
+
+    <div id="fc-empty" class="card text-center text-sm hidden" style="color:var(--text-muted);padding:40px 20px;"></div>
+
+    <div id="fc-study-area">
+      <div class="card flashcard-container mb-4" style="min-height:260px;">
+        <div class="flashcard-inner" id="flashcard-inner" onclick="flipFlashcard()">
+          <div class="flashcard-front" id="fc-front">Loading...</div>
+          <div class="flashcard-back" id="fc-back">—</div>
+        </div>
       </div>
+      <p class="text-sm mb-3" style="color:var(--text-muted);">space or tap to flip</p>
+      <div class="flex gap-2 flex-wrap" id="fc-rating">
+        <button class="btn btn-secondary btn-sm" onclick="rateCard(1)">1 — Hard</button>
+        <button class="btn btn-secondary btn-sm" onclick="rateCard(3)">3 — OK</button>
+        <button class="btn btn-secondary btn-sm" onclick="rateCard(5)">5 — Easy</button>
+      </div>
+      <p class="text-xs mt-2" style="color:var(--text-muted);">Hard brings a card back today. Easy pushes it out up to two weeks.</p>
     </div>
-    <p class="text-sm mb-3" style="color:var(--text-muted);">space or tap to flip</p>
-    <div class="flex gap-2 flex-wrap" id="fc-rating">
-      <button class="btn btn-secondary btn-sm" onclick="rateCard(1)">1 — Hard</button>
-      <button class="btn btn-secondary btn-sm" onclick="rateCard(3)">3 — OK</button>
-      <button class="btn btn-secondary btn-sm" onclick="rateCard(5)">5 — Easy</button>
-    </div>
-    <p class="text-xs mt-2" style="color:var(--text-muted);">⚡ +0 XP</p>
+
     <div class="mt-6">
       <div class="font-semibold mb-2 text-sm">📥 Import from anywhere</div>
-      <p class="text-xs mb-3" style="color:var(--text-muted);">Paste tab-separated or comma-separated text (Question, Answer per line), or drag a .csv/.txt file.</p>
+      <p class="text-xs mb-3" style="color:var(--text-muted);">Paste tab-separated or comma-separated text (Question, Answer per line), or drag a .csv/.txt file. Imported cards show up in Mix mode.</p>
       <textarea id="fc-import" placeholder="Question&#9;Answer" rows="4" class="w-full p-3 rounded-xl border text-white text-sm mb-2" style="background:var(--bg-secondary);border-color:var(--border);font-family:'JetBrains Mono',monospace;resize:vertical;"></textarea>
       <button class="btn btn-primary btn-sm" onclick="importFlashcards()">Import</button>
       <div class="mt-3 p-4 border-2 border-dashed rounded-xl text-center text-sm cursor-pointer" style="border-color:var(--border);color:var(--text-muted);" id="drop-zone">
@@ -1276,6 +1299,11 @@ const state = {
   flashcards: [],
   fcIndex: 0,
   fcFlipped: false,
+  fcMode: 'mix',
+  fcUnit: 1,
+  fcSource: 'default',
+  fcQueue: [],
+  fcSRS: {},
   wrongLog: [],
   flagged: [],
   flaggedSubunits: [],
@@ -1326,19 +1354,21 @@ const state = {
 const PROGRESS_KEY = 'physicsos_progress_v1';
 
 function loadProgress() {
+  const empty = { completedSubunits: [], flagged: [], flaggedSubunits: [], quizScores: [], fcSRS: {} };
   try {
     const raw = localStorage.getItem(PROGRESS_KEY);
-    if (!raw) return { completedSubunits: [], flagged: [], flaggedSubunits: [], quizScores: [] };
+    if (!raw) return empty;
     const parsed = JSON.parse(raw);
     return {
       completedSubunits: Array.isArray(parsed.completedSubunits) ? parsed.completedSubunits : [],
       flagged: Array.isArray(parsed.flagged) ? parsed.flagged : [],
       flaggedSubunits: Array.isArray(parsed.flaggedSubunits) ? parsed.flaggedSubunits : [],
       quizScores: Array.isArray(parsed.quizScores) ? parsed.quizScores : [],
+      fcSRS: (parsed.fcSRS && typeof parsed.fcSRS === 'object') ? parsed.fcSRS : {},
     };
   } catch (e) {
     console.error('Failed to load saved progress:', e);
-    return { completedSubunits: [], flagged: [], flaggedSubunits: [], quizScores: [] };
+    return empty;
   }
 }
 
@@ -1349,6 +1379,7 @@ function saveProgress() {
       flagged: state.flagged,
       flaggedSubunits: state.flaggedSubunits,
       quizScores: state.quizScores,
+      fcSRS: state.fcSRS,
     }));
   } catch (e) {
     console.error('Failed to save progress:', e);
@@ -1356,17 +1387,19 @@ function saveProgress() {
 }
 
 function resetProgress() {
-  if (!confirm('Reset all saved progress? This clears completed subunits, flagged items, and quiz score history. This cannot be undone.')) return;
+  if (!confirm('Reset all saved progress? This clears completed subunits, flagged items, quiz score history, and flashcard spaced-repetition data. This cannot be undone.')) return;
   state.completedSubunits = [];
   state.flagged = [];
   state.flaggedSubunits = [];
   state.quizScores = [];
+  state.fcSRS = {};
   saveProgress();
   showToast('Progress reset 🔄');
   if (state.currentPage === 'lessons') renderLessons();
   if (state.currentPage === 'flagged') renderFlagged();
   if (state.currentPage === 'quiz') renderQuizHistory();
   if (state.currentPage === 'my-scores') renderMyScores();
+  if (state.currentPage === 'flashcards') fcRebuildQueue();
 }
 
 // Official AP Physics 1 Units (College Board CED 2024-2025)
@@ -4184,56 +4217,56 @@ const QUIZ_QUESTIONS = [
 // Official AP Physics 1 Flashcards (based on College Board CED)
 const DEFAULT_FLASHCARDS = [
   // Unit 1: Kinematics
-  { q: 'What is the difference between a scalar and a vector?', a: 'A scalar has only magnitude (e.g., speed, distance). A vector has both magnitude AND direction (e.g., velocity, displacement).' },
-  { q: 'At the highest point of a projectile\'s path, what is its acceleration?', a: 'g ≈ 9.8 m/s² downward. Gravity NEVER stops acting! The vertical velocity is zero, but acceleration is NOT zero.' },
-  { q: 'Are horizontal and vertical motions of a projectile independent?', a: 'YES! The horizontal motion (constant velocity) and vertical motion (constant acceleration g) are completely independent of each other.' },
-  { q: 'What does the slope of a position-time graph represent?', a: 'Slope = velocity. Steeper slope = faster speed. Negative slope = negative velocity (moving backward).' },
-  { q: 'What does the area under a velocity-time graph represent?', a: 'Area = displacement. Area above t-axis = positive displacement; below = negative displacement.' },
-  
+  { unit: 1, q: 'What is the difference between a scalar and a vector?', a: 'A scalar has only magnitude (e.g., speed, distance). A vector has both magnitude AND direction (e.g., velocity, displacement).' },
+  { unit: 1, q: 'At the highest point of a projectile\'s path, what is its acceleration?', a: 'g ≈ 9.8 m/s² downward. Gravity NEVER stops acting! The vertical velocity is zero, but acceleration is NOT zero.' },
+  { unit: 1, q: 'Are horizontal and vertical motions of a projectile independent?', a: 'YES! The horizontal motion (constant velocity) and vertical motion (constant acceleration g) are completely independent of each other.' },
+  { unit: 1, q: 'What does the slope of a position-time graph represent?', a: 'Slope = velocity. Steeper slope = faster speed. Negative slope = negative velocity (moving backward).' },
+  { unit: 1, q: 'What does the area under a velocity-time graph represent?', a: 'Area = displacement. Area above t-axis = positive displacement; below = negative displacement.' },
+
   // Unit 2: Dynamics
-  { q: 'State Newton\'s 2nd Law', a: 'F_net = ma. The net force on an object equals its mass times its acceleration. Direction of acceleration = direction of net force.' },
-  { q: 'State Newton\'s 3rd Law and identify the key property', a: 'For every action, there is an equal and opposite reaction. KEY: The two forces act on DIFFERENT objects.' },
-  { q: 'What is the maximum static friction?', a: 'f_s,max = μₛN. Static friction can vary from 0 to this maximum value. It equals the applied force until motion begins.' },
-  { q: 'What provides centripetal force for a car turning on a flat road?', a: 'Friction between the tires and the road provides the centripetal force directed toward the center of the turn.' },
-  { q: 'What is the spring force formula?', a: 'F_spring = -kx (Hooke\'s Law). The force is RESTORATIVE — always directed toward equilibrium, opposite to displacement.' },
-  
+  { unit: 2, q: 'State Newton\'s 2nd Law', a: 'F_net = ma. The net force on an object equals its mass times its acceleration. Direction of acceleration = direction of net force.' },
+  { unit: 2, q: 'State Newton\'s 3rd Law and identify the key property', a: 'For every action, there is an equal and opposite reaction. KEY: The two forces act on DIFFERENT objects.' },
+  { unit: 2, q: 'What is the maximum static friction?', a: 'f_s,max = μₛN. Static friction can vary from 0 to this maximum value. It equals the applied force until motion begins.' },
+  { unit: 2, q: 'What provides centripetal force for a car turning on a flat road?', a: 'Friction between the tires and the road provides the centripetal force directed toward the center of the turn.' },
+  { unit: 2, q: 'What is the spring force formula?', a: 'F_spring = -kx (Hooke\'s Law). The force is RESTORATIVE — always directed toward equilibrium, opposite to displacement.' },
+
   // Unit 3: Work, Energy, Power
-  { q: 'What is the work-energy theorem?', a: 'W_net = ΔK = K_f - K_i. The net work done on an object equals its change in kinetic energy.' },
-  { q: 'What is the formula for elastic potential energy?', a: 'U_s = ½kx². Energy stored in a compressed or stretched spring. Depends on x² (not linear!).' },
-  { q: 'When is mechanical energy conserved?', a: 'When only conservative forces (gravity, springs) do work. If friction or air resistance does work, mechanical energy is NOT conserved.' },
-  { q: 'What is power?', a: 'P = W/t = Fv. Rate of energy transfer. Units: Watts (W) = Joules/second.' },
-  { q: 'If you double the compression of a spring, what happens to stored energy?', a: 'Quadruples! U = ½kx². Since energy is proportional to x², doubling x means (2)² = 4× the energy.' },
-  
+  { unit: 3, q: 'What is the work-energy theorem?', a: 'W_net = ΔK = K_f - K_i. The net work done on an object equals its change in kinetic energy.' },
+  { unit: 3, q: 'What is the formula for elastic potential energy?', a: 'U_s = ½kx². Energy stored in a compressed or stretched spring. Depends on x² (not linear!).' },
+  { unit: 3, q: 'When is mechanical energy conserved?', a: 'When only conservative forces (gravity, springs) do work. If friction or air resistance does work, mechanical energy is NOT conserved.' },
+  { unit: 3, q: 'What is power?', a: 'P = W/t = Fv. Rate of energy transfer. Units: Watts (W) = Joules/second.' },
+  { unit: 3, q: 'If you double the compression of a spring, what happens to stored energy?', a: 'Quadruples! U = ½kx². Since energy is proportional to x², doubling x means (2)² = 4× the energy.' },
+
   // Unit 4: Momentum
-  { q: 'What is momentum?', a: 'p = mv. A VECTOR quantity with units kg·m/s. Heavier objects or faster objects have more momentum.' },
-  { q: 'What is impulse?', a: 'J = FΔt = Δp. Impulse equals change in momentum. Units: N·s (which equals kg·m/s).' },
-  { q: 'What is conserved in an isolated system?', a: 'LINEAR MOMENTUM is conserved (Σp_initial = Σp_final) when no external net force acts on the system.' },
-  { q: 'In a perfectly inelastic collision, what is conserved?', a: 'Only MOMENTUM is conserved. Kinetic energy is NOT conserved (some converts to heat, sound, deformation).' },
-  
+  { unit: 4, q: 'What is momentum?', a: 'p = mv. A VECTOR quantity with units kg·m/s. Heavier objects or faster objects have more momentum.' },
+  { unit: 4, q: 'What is impulse?', a: 'J = FΔt = Δp. Impulse equals change in momentum. Units: N·s (which equals kg·m/s).' },
+  { unit: 4, q: 'What is conserved in an isolated system?', a: 'LINEAR MOMENTUM is conserved (Σp_initial = Σp_final) when no external net force acts on the system.' },
+  { unit: 4, q: 'In a perfectly inelastic collision, what is conserved?', a: 'Only MOMENTUM is conserved. Kinetic energy is NOT conserved (some converts to heat, sound, deformation).' },
+
   // Unit 5: Torque
-  { q: 'What is torque?', a: 'τ = rF sinθ. Rotational analog of force. r = distance from pivot, θ = angle between r and F. Units: N·m.' },
-  { q: 'How do you maximize torque with a given force?', a: 'Push perpendicular to the lever arm (θ = 90°, sinθ = 1) as far from the pivot as possible (maximize r).' },
-  { q: 'What is Newton\'s 2nd Law for rotation?', a: 'Στ = Iα. Net torque equals moment of inertia times angular acceleration. Analog of F = ma.' },
-  { q: 'What is the moment of inertia?', a: 'I = Σmr². Measures resistance to angular acceleration. Depends on mass distribution — more mass farther from axis = larger I.' },
-  
+  { unit: 5, q: 'What is torque?', a: 'τ = rF sinθ. Rotational analog of force. r = distance from pivot, θ = angle between r and F. Units: N·m.' },
+  { unit: 5, q: 'How do you maximize torque with a given force?', a: 'Push perpendicular to the lever arm (θ = 90°, sinθ = 1) as far from the pivot as possible (maximize r).' },
+  { unit: 5, q: 'What is Newton\'s 2nd Law for rotation?', a: 'Στ = Iα. Net torque equals moment of inertia times angular acceleration. Analog of F = ma.' },
+  { unit: 5, q: 'What is the moment of inertia?', a: 'I = Σmr². Measures resistance to angular acceleration. Depends on mass distribution — more mass farther from axis = larger I.' },
+
   // Unit 6: Rotating Systems
-  { q: 'What is angular momentum?', a: 'L = Iω. Rotational analog of linear momentum. Conserved if no external torque acts on system.' },
-  { q: 'A figure skater pulls in her arms — what happens and why?', a: 'She spins FASTER. Pulling arms in decreases I, so ω must increase to conserve angular momentum (L = Iω = constant).' },
-  { q: 'What is the condition for pure rolling (no slipping)?', a: 'v = rω. The translational velocity of the center of mass equals r times the angular velocity.' },
-  { q: 'What is the total KE of a rolling object?', a: 'K_total = ½mv² + ½Iω². It has BOTH translational AND rotational kinetic energy.' },
-  
+  { unit: 6, q: 'What is angular momentum?', a: 'L = Iω. Rotational analog of linear momentum. Conserved if no external torque acts on system.' },
+  { unit: 6, q: 'A figure skater pulls in her arms — what happens and why?', a: 'She spins FASTER. Pulling arms in decreases I, so ω must increase to conserve angular momentum (L = Iω = constant).' },
+  { unit: 6, q: 'What is the condition for pure rolling (no slipping)?', a: 'v = rω. The translational velocity of the center of mass equals r times the angular velocity.' },
+  { unit: 6, q: 'What is the total KE of a rolling object?', a: 'K_total = ½mv² + ½Iω². It has BOTH translational AND rotational kinetic energy.' },
+
   // Unit 7: Oscillations
-  { q: 'What is the period of a spring-mass system?', a: 'T = 2π√(m/k). Depends on mass and spring constant — NOT on amplitude!' },
-  { q: 'What is the period of a simple pendulum?', a: 'T = 2π√(L/g). Depends on length and gravity — NOT on mass or amplitude (for small angles)!' },
-  { q: 'Where in SHM is speed maximum? Acceleration maximum?', a: 'Speed max at equilibrium (x = 0). Acceleration max at extremes (x = ±A). They occur at different positions!' },
-  { q: 'What is total energy in SHM?', a: 'E = ½kA². Constant throughout oscillation. At extremes: all PE. At equilibrium: all KE.' },
-  
+  { unit: 7, q: 'What is the period of a spring-mass system?', a: 'T = 2π√(m/k). Depends on mass and spring constant — NOT on amplitude!' },
+  { unit: 7, q: 'What is the period of a simple pendulum?', a: 'T = 2π√(L/g). Depends on length and gravity — NOT on mass or amplitude (for small angles)!' },
+  { unit: 7, q: 'Where in SHM is speed maximum? Acceleration maximum?', a: 'Speed max at equilibrium (x = 0). Acceleration max at extremes (x = ±A). They occur at different positions!' },
+  { unit: 7, q: 'What is total energy in SHM?', a: 'E = ½kA². Constant throughout oscillation. At extremes: all PE. At equilibrium: all KE.' },
+
   // Unit 8: Fluids
-  { q: 'What is the pressure at depth h in a fluid?', a: 'P = P₀ + ρgh. Pressure increases linearly with depth. Depends on fluid density, not container shape.' },
-  { q: 'State Archimedes\' Principle', a: 'Buoyant force equals the weight of displaced fluid: F_b = ρ_fluid × V_submerged × g.' },
-  { q: 'When does an object float?', a: 'When buoyant force ≥ weight. Equivalently, when object\'s density ≤ fluid\'s density.' },
-  { q: 'What is the continuity equation for fluids?', a: 'A₁v₁ = A₂v₂. Fluid speeds up in narrow sections, slows in wide sections (for incompressible flow).' },
-  { q: 'What does Bernoulli\'s equation tell us?', a: 'P + ½ρv² + ρgh = constant. Where fluid moves faster, pressure is LOWER. Explains how planes fly!' },
+  { unit: 8, q: 'What is the pressure at depth h in a fluid?', a: 'P = P₀ + ρgh. Pressure increases linearly with depth. Depends on fluid density, not container shape.' },
+  { unit: 8, q: 'State Archimedes\' Principle', a: 'Buoyant force equals the weight of displaced fluid: F_b = ρ_fluid × V_submerged × g.' },
+  { unit: 8, q: 'When does an object float?', a: 'When buoyant force ≥ weight. Equivalently, when object\'s density ≤ fluid\'s density.' },
+  { unit: 8, q: 'What is the continuity equation for fluids?', a: 'A₁v₁ = A₂v₂. Fluid speeds up in narrow sections, slows in wide sections (for incompressible flow).' },
+  { unit: 8, q: 'What does Bernoulli\'s equation tell us?', a: 'P + ½ρv² + ρgh = constant. Where fluid moves faster, pressure is LOWER. Explains how planes fly!' },
 ];
 
 // ============ HELPERS ============
@@ -5792,24 +5825,132 @@ function nextConvPractice() {
 }
 
 // ============ FLASHCARDS ============
-function initFlashcards() {
-  if (state.flashcards.length === 0) {
-    state.flashcards = [...DEFAULT_FLASHCARDS];
-    state.fcIndex = 0;
+// Two modes (Mix = default, all units shuffled together; Unit = one unit only), two
+// sources (the default/imported deck, or missed quiz questions pulled live from the
+// Wrong Log), and a simple Leitner-style spaced-repetition schedule layered on top of
+// both. SRS state (state.fcSRS) is keyed by a stable card id and persisted the same way
+// as the rest of the app's progress (see PROGRESS_KEY / saveProgress()).
+const FC_SRS_INTERVAL_DAYS = [null, 0, 1, 3, 7, 14]; // index = box (1..5); box 1 = due immediately
+
+function fcCardId(card) {
+  return `c:${card.unit || 0}:${(card.q || '').slice(0, 60)}`;
+}
+
+function fcGetSRS(id) {
+  if (!state.fcSRS[id]) state.fcSRS[id] = { box: 1, dueAt: 0, timesRight: 0, timesWrong: 0 };
+  return state.fcSRS[id];
+}
+
+// Builds the current candidate pool from source (default deck vs. Wrong Log) and mode
+// (mix = everything, unit = filtered to state.fcUnit). Wrong Log entries are converted
+// into card shape and de-duplicated by question, so missing the same quiz question twice
+// consolidates into one flashcard rather than piling up duplicates.
+function fcBuildPool() {
+  let pool;
+  if (state.fcSource === 'wrong') {
+    const seen = new Map();
+    state.wrongLog.forEach(w => {
+      const card = {
+        unit: w.unit,
+        q: w.question,
+        a: `Correct answer: ${(w.options && w.options[w.correct]) || '—'}. ${w.explanation || ''}`
+      };
+      seen.set(fcCardId(card), card);
+    });
+    pool = [...seen.values()];
+  } else {
+    pool = state.flashcards;
   }
+  if (state.fcMode === 'unit' && state.fcUnit) {
+    pool = pool.filter(c => c.unit === state.fcUnit);
+  }
+  return pool;
+}
+
+function fcRebuildQueue(excludeId) {
+  const pool = fcBuildPool();
+  if (pool.length === 0) { state.fcQueue = []; state.fcIndex = 0; return; }
+  const now = Date.now();
+  const due = pool.filter(c => fcGetSRS(fcCardId(c)).dueAt <= now);
+  let queue = (due.length > 0 ? due : pool).slice().sort(() => Math.random() - 0.5);
+  if (excludeId && queue.length > 1 && fcCardId(queue[0]) === excludeId) {
+    [queue[0], queue[1]] = [queue[1], queue[0]];
+  }
+  state.fcQueue = queue;
+  state.fcIndex = 0;
+}
+
+function fcPopulateUnitSelect() {
+  const sel = $('fc-unit-select');
+  if (sel.options.length === 0) {
+    sel.innerHTML = UNITS.map(u => `<option value="${u.num}">Unit ${u.num}: ${UNIT_SHORT_NAMES[u.num]}</option>`).join('');
+  }
+  sel.value = state.fcUnit;
+}
+
+function setFcMode(mode) {
+  state.fcMode = mode;
+  fcPopulateUnitSelect();
+  $('fc-unit-select').classList.toggle('hidden', mode !== 'unit');
+  fcRebuildQueue();
+  updateFlashcardUI();
+}
+
+function setFcUnit(unitNum) {
+  state.fcUnit = unitNum;
+  $('fc-unit-select').value = unitNum;
+  fcRebuildQueue();
+  updateFlashcardUI();
+}
+
+function setFcSource(source) {
+  state.fcSource = source;
+  fcRebuildQueue();
+  updateFlashcardUI();
+}
+
+function fcSyncToggleButtons() {
+  document.querySelectorAll('[data-fc-mode]').forEach(btn => {
+    btn.className = 'btn btn-sm' + (btn.dataset.fcMode === state.fcMode ? ' btn-primary' : ' btn-secondary');
+  });
+  document.querySelectorAll('[data-fc-source]').forEach(btn => {
+    btn.className = 'btn btn-sm' + (btn.dataset.fcSource === state.fcSource ? ' btn-primary' : ' btn-secondary');
+  });
+}
+
+function initFlashcards() {
+  if (state.flashcards.length === 0) state.flashcards = [...DEFAULT_FLASHCARDS];
+  fcPopulateUnitSelect();
+  $('fc-unit-select').classList.toggle('hidden', state.fcMode !== 'unit');
+  fcRebuildQueue();
   updateFlashcardUI();
 }
 
 function updateFlashcardUI() {
-  $('fc-due').textContent = state.flashcards.length + ' total';
-  $('fc-hard').textContent = '0 hard';
-  $('fc-known').textContent = '0 known';
-  if (state.flashcards.length === 0) {
-    $('fc-front').textContent = 'No cards yet';
-    $('fc-back').textContent = 'Import some!';
+  fcSyncToggleButtons();
+  const pool = fcBuildPool();
+  const now = Date.now();
+  const dueCount = pool.filter(c => fcGetSRS(fcCardId(c)).dueAt <= now).length;
+  const masteredCount = pool.filter(c => fcGetSRS(fcCardId(c)).box >= 5).length;
+  $('fc-due').textContent = dueCount;
+  $('fc-hard').textContent = pool.length - masteredCount;
+  $('fc-known').textContent = masteredCount;
+  $('fc-pool-label').textContent = pool.length ? `· ${pool.length} card${pool.length === 1 ? '' : 's'} in this set` : '';
+
+  const empty = $('fc-empty');
+  const studyArea = $('fc-study-area');
+  if (state.fcQueue.length === 0) {
+    studyArea.classList.add('hidden');
+    empty.classList.remove('hidden');
+    empty.textContent = state.fcSource === 'wrong'
+      ? (pool.length === 0 ? "No wrong answers logged" + (state.fcMode === 'unit' ? ` for Unit ${state.fcUnit}` : '') + " yet — take a quiz first, then come back to drill what you missed." : 'No cards in this set right now.')
+      : (pool.length === 0 ? 'No cards in this set yet. Import some below, or switch mode.' : 'No cards in this set right now.');
     return;
   }
-  const card = state.flashcards[state.fcIndex % state.flashcards.length];
+  studyArea.classList.remove('hidden');
+  empty.classList.add('hidden');
+
+  const card = state.fcQueue[state.fcIndex % state.fcQueue.length];
   $('fc-front').textContent = card.q;
   $('fc-back').textContent = card.a;
   state.fcFlipped = false;
@@ -5817,12 +5958,25 @@ function updateFlashcardUI() {
 }
 
 function flipFlashcard() {
+  if (state.fcQueue.length === 0) return;
   state.fcFlipped = !state.fcFlipped;
   $('flashcard-inner').classList.toggle('flipped', state.fcFlipped);
 }
 
+// rating: 1 = Hard (wrong — resets to box 1, due again today), 3 = OK (correct, box +1),
+// 5 = Easy (correct, box +2). Box determines the next due date via FC_SRS_INTERVAL_DAYS,
+// so a card just rated Hard stays eligible for "due" selection immediately, while an Easy
+// card won't resurface for up to two weeks — the actual spaced-repetition behavior.
 function rateCard(rating) {
-  if (state.flashcards.length === 0) return;
+  if (state.fcQueue.length === 0) return;
+  const card = state.fcQueue[state.fcIndex % state.fcQueue.length];
+  const id = fcCardId(card);
+  const rec = fcGetSRS(id);
+  if (rating <= 1) { rec.box = 1; rec.timesWrong++; }
+  else { rec.box = Math.min(5, rec.box + (rating >= 5 ? 2 : 1)); rec.timesRight++; }
+  rec.dueAt = Date.now() + FC_SRS_INTERVAL_DAYS[rec.box] * 24 * 60 * 60 * 1000;
+  saveProgress();
+
   const xpGain = rating === 5 ? 20 : rating === 3 ? 10 : 5;
   state.xp += xpGain;
   state.cardsToday++;
@@ -5830,7 +5984,8 @@ function rateCard(rating) {
   state.totalCorrect += rating >= 3 ? 1 : 0;
   state.accuracyToday = state.totalAnswered > 0 ? (state.totalCorrect / state.totalAnswered) * 100 : null;
   if (state.cardsToday >= 10 && state.streak === 0) state.streak = 1;
-  state.fcIndex = (state.fcIndex + 1) % state.flashcards.length;
+
+  fcRebuildQueue(id);
   updateFlashcardUI();
   updateDashboard();
   showToast(`Rated ${rating}/5 · +${xpGain} XP ⚡`);
@@ -5842,11 +5997,11 @@ function importFlashcards() {
   const lines = text.split('\n').filter(l => l.trim());
   const newCards = lines.map(line => {
     const parts = line.split(/\t|,/);
-    return { q: (parts[0] || '').trim(), a: (parts[1] || '').trim() };
+    return { unit: 0, q: (parts[0] || '').trim(), a: (parts[1] || '').trim() };
   }).filter(c => c.q && c.a);
   if (newCards.length === 0) { showToast('No valid Q&A pairs found'); return; }
   state.flashcards = [...state.flashcards, ...newCards];
-  state.fcIndex = 0;
+  fcRebuildQueue();
   updateFlashcardUI();
   $('fc-import').value = '';
   showToast(`Imported ${newCards.length} flashcards! 📥`);
@@ -5867,8 +6022,6 @@ function handleFileImport(event) {
 document.addEventListener('keydown', (e) => {
   if (state.currentPage !== 'flashcards') return;
   if (e.code === 'Space') { e.preventDefault(); flipFlashcard(); }
-  if (e.code === 'ArrowLeft') { state.fcIndex = (state.fcIndex - 1 + state.flashcards.length) % state.flashcards.length; updateFlashcardUI(); }
-  if (e.code === 'ArrowRight') { state.fcIndex = (state.fcIndex + 1) % state.flashcards.length; updateFlashcardUI(); }
   if (e.key >= '1' && e.key <= '5') { const r = parseInt(e.key); if (state.fcFlipped) rateCard(r); }
 });
 
@@ -7049,6 +7202,7 @@ function init() {
   state.flagged = progress.flagged;
   state.flaggedSubunits = progress.flaggedSubunits;
   state.quizScores = progress.quizScores;
+  state.fcSRS = progress.fcSRS;
   state.flashcards = [...DEFAULT_FLASHCARDS];
   updateDashboard();
   navigateTo('dashboard');
