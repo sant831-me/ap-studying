@@ -2778,6 +2778,409 @@ using the identity 2 sin θ cos θ = sin(2θ). Since sin(2θ) reaches its maximu
 ## Where this goes next
 
 This is the last topic of Unit 1, and it's deliberately the fullest synthesis of everything before it: a sign convention (1.1), computing velocity from position change (1.2), reading motion as separate quantities (1.3), the constant-acceleration equations (1.4), and g for the vertical direction (1.5) all show up here at once. The same two-directions-solved-separately approach reappears the moment Unit 2 introduces forces at an angle — an inclined plane splits gravity into components exactly the way you just split velocity here — and again anywhere a vector needs decomposing for the rest of the course.`
+  },
+
+  // injected batch
+  '2.1': {
+    apNotes: `A force is an interaction between two objects — never a property one object just "has" on its own. The CED is explicit about this: a force exerted on an object is always due to that object interacting with something else, and an object can never exert a net force on itself. Contact forces (normal, friction, tension, applied pushes/pulls) are the macroscopic result of countless interatomic electric forces at the surfaces of two touching objects — they feel like a single push, but they're really billions of tiny interactions averaged together.
+
+## The types of force you need to know cold
+
+- **Weight (Fg = mg):** the gravitational force Earth exerts on an object. Always points straight down.
+- **Normal force (N):** a contact force perpendicular to a surface, pushing away from it. It adjusts to whatever value keeps the object from passing through the surface — it is NOT always equal to mg.
+- **Tension (T):** the pull transmitted through a string, rope, or cable. An ideal string has no mass and doesn't stretch, so tension is the same throughout its length.
+- **Friction (f):** a contact force parallel to a surface, opposing relative sliding (or attempted sliding).
+- **Spring force (F = −kx):** proportional to how far a spring is stretched or compressed from its natural length, always directed back toward that equilibrium length.
+
+## The single biggest beginner mistake
+
+Never draw a "force of motion" or "force of the throw" on an object that's already moving on its own. Once a ball leaves your hand, your hand is no longer touching it, so it can no longer exert a force on it — the ONLY force on a thrown ball in flight is gravity (ignoring air resistance). The ball keeps moving forward because of inertia, not because some leftover "force" is still pushing it.
+
+## Where students lose points
+
+- Drawing forces that don't correspond to an actual physical contact or interaction.
+- Assuming the normal force always equals mg — it only does on a flat surface with no other vertical forces involved.
+- Forgetting that friction and normal force are both contact forces with a common origin: the surfaces literally touching each other.`,
+    deepNotes: `The AP notes cover the five force types and the "no force of motion" rule. Here's why weight is really a simplification of something bigger, how spring force fits into the same "restoring toward equilibrium" pattern you'll see again in Unit 7, and a look at what "apparent weight" means — one of the more genuinely surprising ideas in this unit.
+
+## Weight is Newton's law of gravitation, simplified
+
+The CED introduces a full gravitational force law elsewhere in this unit (Topic 2.6): Fg = Gm₁m₂/r², the attractive force between any two masses, proportional to both masses and inversely proportional to the square of the distance between their centers. "Weight" (Fg = mg) is just this law applied to one specific, extremely common case: a relatively small object sitting near the surface of a much larger astronomical body (Earth). Because you're always at essentially the same distance from Earth's center (r ≈ Earth's radius, whether you're standing or on a tall building), the Gm/r² part of the law is nearly constant — and that constant is exactly what "g" is. So mg isn't a separate law from Gm₁m₂/r²; it's that same law with the second mass and the distance already baked into a single number.
+
+## Apparent weight vs. true weight — the scale in an elevator problem
+
+Here's a genuinely counterintuitive result worth sitting with: what a scale reads is NOT your weight — it's the normal force the scale exerts on you, which only equals your true weight (mg) when you aren't accelerating vertically. Stand on a scale in an elevator accelerating upward, and the scale must push up harder than mg to also accelerate you upward — so it reads MORE than your actual weight. Accelerate downward, and it reads less. In true free fall (elevator cable snaps, no other force), the scale would read zero — you'd be "weightless" even though gravity is still fully acting on you. This is called apparent weight, and the fact that an observer inside a sealed, accelerating box cannot distinguish "I'm in a gravitational field" from "I'm being accelerated by a normal force" is called the equivalence principle.
+
+## Spring force previews an idea you'll meet again in Unit 7
+
+Notice the shape of F = −kx: the force always points back TOWARD a specific equilibrium position, and grows the farther you move away from it. That's not unique to springs — it's the exact defining feature of simple harmonic motion, which is Unit 7's entire subject. Every SHM system you'll study later (pendulums, vibrating molecules, oscillating circuits) shares this same "restoring force proportional to displacement" structure that you're seeing here for the first time with an actual spring.
+
+## Where this goes next
+
+Every one of these five force types becomes an arrow on a free-body diagram in 2.3, gets summed into F_net = ma in 2.2, and reappears individually with its own dedicated topic later in this unit: friction in 2.4, incline-specific force decomposition in 2.5. The weight-vs-apparent-weight distinction here is also exactly what makes elevator and orbital "weightlessness" problems make sense whenever they show up on the exam.`
+  },
+
+  // injected batch
+  '2.2': {
+    apNotes: `Newton's three laws are the foundation of everything in this unit. The 1st law (inertia) says a system's velocity stays constant unless a nonzero net force acts on it. The 2nd law (F_net = ma) quantifies exactly how a net force changes that motion. The 3rd law says forces always come in equal-and-opposite pairs between two objects.
+
+## The three laws, precisely
+
+- **1st Law:** If the net force on a system is zero, its velocity remains constant (this includes staying at rest — rest is just velocity = 0, constant). Forces can be balanced in one direction while unbalanced in another; the system's velocity only changes along the unbalanced direction.
+- **2nd Law:** The net force (the full vector sum of every force acting on the system) determines acceleration: F_net = ma. Acceleration points in the same direction as F_net, and its magnitude is proportional to F_net's magnitude.
+- **3rd Law:** If object A exerts a force on object B, object B exerts an equal-magnitude, opposite-direction force back on A. These two forces act on two DIFFERENT objects — they can never appear together on the same free-body diagram, and they never cancel each other out.
+
+## Why 3rd-law pairs don't cancel
+
+This trips up almost everyone at first. If you push a wall with 50 N, the wall pushes back on you with 50 N — but "you" and "the wall" are different objects, each experiencing one of the two forces. For forces to cancel in the sense of producing zero net force, they need to act on the SAME object. A 3rd-law pair, by definition, never does.
+
+## Where students lose points
+
+- Believing 3rd-law force pairs cancel out — they act on different objects and are never both present in one object's F_net.
+- Thinking "at rest" or "zero net force" means "no forces are acting" — it means the forces present are balanced, which is a very different statement.
+- Applying F = ma using only one of several forces present, instead of first finding the full vector sum.`,
+    deepNotes: `The AP notes give you all three laws and the classic "3rd law pairs don't cancel" clarification. Here's the deeper relationship between the three laws (they're not three independent facts), a fully worked two-object system, and a specific tension/pulley boundary the CED sets that's easy to miss.
+
+## The three laws are really one law, viewed at three zoom levels
+
+It's worth seeing that the 1st law is actually a special case of the 2nd law: F_net = ma becomes F_net = 0 exactly when a = 0, i.e., exactly when velocity is constant. Newton didn't need to state the 1st law separately from a strict mathematical standpoint — he stated it because it makes a crucial POINT that's easy to miss inside the algebra of the 2nd law: objects don't need a cause to keep moving, they only need a cause to CHANGE how they're moving. That was a genuinely radical claim in Newton's time (Aristotle believed the opposite — that motion itself required a continuous cause) and it's still the single most common misconception new physics students bring into this unit.
+
+## Worked reasoning: an Atwood machine, from the 3rd law up
+
+Two masses, m₁ = 3 kg and m₂ = 5 kg, connected by a string over a pulley. Apply the 2nd law separately to each mass, using the fact (from the 3rd law, via the ideal-string assumption) that tension T is the same on both sides. For m₁ (lighter, accelerating up): T − m₁g = m₁a. For m₂ (heavier, accelerating down): m₂g − T = m₂a. Adding these two equations makes T cancel: m₂g − m₁g = (m₁+m₂)a, so a = (m₂−m₁)g/(m₁+m₂) = (2)(9.8)/8 ≈ 2.45 m/s². Notice that treating "the string" honestly — same tension throughout, by Newton's 3rd law and the ideal-string assumption — is what let two separate 2nd-law equations combine into one solvable system.
+
+## An edge case the CED specifically calls out: non-ideal strings
+
+The CED's boundary statement here is precise: you're only expected to describe (not calculate) tension qualitatively in a string that has its own mass — for example, recognizing that tension in a heavy hanging chain is greater near the top (where it's supporting more chain below it) than near the bottom. Every calculation-based tension problem on the exam assumes an ideal, massless string with uniform tension throughout.
+
+## Where this goes next
+
+F_net = ma is the equation this entire unit builds toward, and nearly every subsequent topic uses it directly: friction (2.4) and incline problems (2.5) are both just "identify every force, sum them, set equal to ma" applied to specific situations. The 3rd law resurfaces explicitly in Unit 4 (conservation of momentum is literally a consequence of internal 3rd-law force pairs canceling when summed over an entire system) and in Unit 5 (torque pairs on connected rotating objects).`
+  },
+
+  // injected batch
+  '2.3': {
+    apNotes: `A free-body diagram (FBD) isolates ONE object and shows every force the environment exerts on it — nothing else. It's not optional decoration: AP graders specifically look for a correct FBD on force-related free-response questions, and a missing or wrong FBD costs points even if your final answer happens to be right.
+
+## The CED's specific drawing rules
+
+- Represent the object as a single point (usually a dot), since a system is treated as though all its mass were concentrated at its center of mass.
+- Every force is drawn as a straight arrow starting AT that dot and pointing in the force's direction.
+- Forces that happen to point in the same direction must be drawn as separate, side-by-side arrows — never stacked directly on top of each other.
+- AP Physics 1 only expects you to draw the forces themselves, not their individual x/y components, on the diagram — component breakdown happens in a separate step, after the FBD.
+
+## The process, step by step
+
+1. Choose the one object you're analyzing.
+2. Draw it as a dot.
+3. Draw and label every force acting ON it: weight, normal, tension, friction, applied forces, spring force — whatever applies.
+4. Choose a coordinate system. If the object accelerates along a particular direction (like down a ramp), aligning one axis with that direction makes the algebra dramatically simpler.
+5. Break each force into components along your chosen axes (as a separate step from the diagram itself).
+6. Write ΣFₓ = maₓ and ΣF_y = ma_y and solve.
+
+## Where students lose points
+
+- Drawing the whole scene (the table, the ramp, the wall) instead of isolating a single object.
+- Including velocity, acceleration, or momentum as if they were forces — they are not forces and never belong on an FBD.
+- Overlapping two same-direction forces into one arrow instead of drawing them separately, or drawing force COMPONENTS directly on the diagram instead of the actual forces.`,
+    deepNotes: `The AP notes give you the CED's specific drawing rules and the step-by-step process. Here's why FBDs work as a problem-solving tool and not just a grading requirement, a fully worked incline example showing the smart-axis-choice trick in action, and what changes once a system has more than one object.
+
+## Why isolating one object is the actual point, not a formality
+
+An FBD's real power is that it lets you apply F_net = ma to exactly one clearly-defined object at a time, without accidentally mixing in forces that object exerts on OTHER things. Every object in a connected system (a block on a rope, a person in an elevator, two crates pushed together) has its own separate FBD and its own separate F_net = ma equation. The system only becomes solvable once each object's FBD has been drawn honestly and separately — try to reason about a multi-object system all at once, in your head, without isolating pieces, and it's very easy to double-count or lose track of a force.
+
+## Worked reasoning: choosing axes on an incline, and why it matters
+
+A block sits on a 30° frictionless incline. If you insist on horizontal/vertical axes, gravity is easy to draw (straight down) but the normal force and the direction of acceleration are BOTH at awkward angles — you'd need to break every single force into components. Instead, rotate your axes: let the x-axis point down the slope, y-axis perpendicular to it. Now the normal force is purely in the y-direction (zero x-component — no breaking it up at all), and the object's acceleration is purely in the x-direction. The only vector that still needs decomposing is gravity: mg sin θ along the slope (this accelerates the block) and mg cos θ into the slope (this is what the normal force balances). One smart axis choice turned a two-vector decomposition problem into a one-vector decomposition problem — that's exactly why the CED calls out axis alignment with acceleration as a suggested strategy.
+
+## Edge case: what changes with more than one object
+
+For a system of two connected objects (blocks connected by a string, for instance), you have a choice: draw a separate FBD for EACH object (giving you two F_net = ma equations you can combine, as in the Atwood machine reasoning from 2.2), or — if you only need the combined system's acceleration and don't care about the internal tension — treat the whole connected system as one larger "object" and draw a single FBD showing only the EXTERNAL forces acting on that combined system (internal forces, like the tension pulling the two objects toward each other, cancel out of consideration entirely once you zoom out to the system level). Both approaches are valid; which one to use depends on what the problem actually asks for.
+
+## Where this goes next
+
+Every topic for the rest of this unit is really "apply this exact FBD process to a specific kind of force": friction (2.4) adds one more arrow along the surface, inclines (2.5) apply the rotated-axis trick above, and circular motion (2.6) reframes "net force" as pointing toward a center rather than along a straight line. The same isolate-one-object habit reappears in Unit 5 the moment forces get replaced with torques.`
+  },
+
+  // injected batch
+  '2.4': {
+    apNotes: `Friction is a contact force parallel to a surface that opposes relative sliding between two surfaces. There are two regimes: kinetic (surfaces already sliding) and static (surfaces not sliding, but a force is trying to make them slide).
+
+## Kinetic friction
+
+Kinetic friction occurs once two surfaces are actually moving relative to each other, and it points opposite to that relative motion. Its magnitude is fixed: f_k = μₖN, where μₖ is the coefficient of kinetic friction (a property of the specific pair of materials in contact) and N is the normal force between them. A key CED point: friction does NOT depend on the size of the contact area — a brick lying flat and the same brick balanced on its narrow edge experience the same friction force (given the same N), even though the contact area is wildly different.
+
+## Static friction
+
+Static friction occurs when surfaces are NOT sliding, and it adjusts itself to whatever value is needed to prevent sliding — up to a maximum value, fs,max = μₛN. If the applied force is less than this maximum, static friction exactly matches it (net force along the surface stays zero, nothing slides). Push harder than the maximum, and the object starts sliding — at which point kinetic friction takes over. The CED notes that μₛ is typically greater than μₖ for a given pair of surfaces, which is why it usually takes more force to START something sliding than to keep it sliding.
+
+## Where students lose points
+
+- Using μₛ to compute the friction force on an object that's already sliding — once it's sliding, only μₖ applies.
+- Assuming friction always equals μN — that formula gives the MAXIMUM possible static friction; the actual static friction can be anywhere from zero up to that maximum.
+- Forgetting that N isn't always mg — an incline, a vertical applied force, or an accelerating frame all change N, and friction changes right along with it.`,
+    deepNotes: `The AP notes cover the kinetic/static distinction and the "friction doesn't care about contact area" rule. Here's the physical reasoning behind that surprising area-independence, a fully worked "does it move?" problem showing how to check static friction correctly, and how this connects to circular motion later in the unit.
+
+## Why friction doesn't depend on contact area (and why that seems wrong at first)
+
+It's genuinely counterintuitive that a wide contact patch and a narrow one produce the same friction force, given the same normal force. Here's the physical picture: friction ultimately comes from countless microscopic bumps and electric bonds between two surfaces catching on each other. A wider contact area does mean more points of contact — but spreading the same normal force over a wider area also means LESS force pressing down at each individual point of contact. Those two effects — more contact points, each pressed together less firmly — cancel out almost exactly, which is why the macroscopic force f = μN doesn't need an area term at all. This is an idealization that works extremely well for the rigid, everyday materials this course considers; it's not literally exact for all materials in all conditions, but the CED treats it as exact.
+
+## Worked reasoning: checking whether an object even moves
+
+A 15 kg box sits on a floor with μₛ = 0.40, μₖ = 0.25. You push with 50 N. Does it move? First find the maximum static friction available: fs,max = μₛN = (0.40)(15)(9.8) = 58.8 N. Your 50 N push is LESS than 58.8 N, so the box does not move — static friction simply matches your push at exactly 50 N (not at its maximum value), and net force is zero. This is the step people skip: before reaching for μₖ, always check whether the applied force actually exceeds the maximum static friction. If it did (say the push were 70 N instead), the box would start sliding, and THEN you'd switch to kinetic friction: fk = μₖN = (0.25)(15)(9.8) = 36.75 N, giving a net force of 70 − 36.75 = 33.25 N and an acceleration you could find from F = ma.
+
+## Where this goes next
+
+Friction reappears constantly for the rest of the course: as the force that provides centripetal acceleration for a car turning on a flat road (2.6, later in this unit), as a nonconservative force that removes mechanical energy from a system in Unit 3 (converting it to heat — exactly why "energy is not conserved" questions almost always involve friction), and implicitly whenever a rolling-without-slipping condition is invoked in Unit 6 (static friction is what prevents slipping in the first place).`
+  },
+
+  // injected batch
+  '2.5': {
+    apNotes: `Incline problems are really a direct application of the axis-choice trick from free-body diagrams: instead of horizontal/vertical axes, use axes parallel and perpendicular to the ramp's surface. The CED specifically calls out the inclined-plane case as its example of when a rotated coordinate system pays off.
+
+## Breaking weight into components
+
+Gravity always points straight down, regardless of the incline's angle — but relative to axes aligned with the ramp, gravity has two components:
+
+- **Parallel to the ramp:** mg sin θ — this is the component that drives the object down the slope.
+- **Perpendicular to the ramp:** mg cos θ — this is the component the normal force balances.
+
+Because the perpendicular direction has no acceleration (the object isn't lifting off or sinking into the ramp), N = mg cos θ exactly, as long as no other force has a perpendicular component. Notice N is LESS than mg on any incline — this is why you feel "lighter" standing on a slope than on flat ground.
+
+## Frictionless vs. friction inclines
+
+On a frictionless incline, the only force along the slope is mg sin θ, so a = g sin θ — and mass completely cancels out, meaning every object slides down a frictionless ramp at the same rate regardless of mass, just like free fall. Add friction, and the net force along the slope becomes mg sin θ − fₖ (if sliding down), where fₖ = μₖN = μₖmg cos θ.
+
+## Where students lose points
+
+- Using mg instead of mg cos θ for the normal force on an incline.
+- Mixing up sine and cosine — the component ALONG the ramp uses sine, the component INTO the ramp uses cosine (a quick sanity check: as θ → 0°, the ramp becomes flat, and the parallel component should vanish while the perpendicular component should become the full mg — sin(0°) = 0 and cos(0°) = 1 confirms which is which).
+- Continuing to use horizontal/vertical axes out of habit instead of rotating to match the incline.`,
+    deepNotes: `The AP notes give you the parallel/perpendicular decomposition and why mass cancels on a frictionless incline. Here's a full worked problem that determines whether a block even starts sliding — not just how fast it accelerates once it does — the derivation of the critical angle at which sliding begins, and why this exact reasoning generalizes to any surface at an angle.
+
+## Worked reasoning: will it slide at all?
+
+An 8.0 kg block sits on a 25° incline with μₛ = 0.35. Before computing any acceleration, check whether the block moves at all. The force trying to slide it down the ramp is mg sin θ = (8.0)(9.8)(sin 25°) ≈ 33.1 N. The maximum static friction available to resist that is μₛN = μₛmg cos θ = (0.35)(8.0)(9.8)(cos 25°) ≈ 24.9 N. Since the sliding force (33.1 N) exceeds the maximum available static friction (24.9 N), the block DOES slide — and only now do you switch to kinetic friction and solve for acceleration. Skipping this check is one of the most common ways students lose points on incline problems: computing an acceleration for a block that, physically, never actually starts moving.
+
+## Deriving the critical angle
+
+That same comparison — driving force vs. maximum static friction — has a clean general form. A block stays at rest exactly as long as mg sin θ ≤ μₛmg cos θ. The mass cancels (again!), leaving sin θ ≤ μₛ cos θ, or tan θ ≤ μₛ. So the critical angle at which a block JUST begins to slide is θ_c = tan⁻¹(μₛ) — a genuinely useful real-world fact (it's literally how some materials-testing setups measure a static friction coefficient: tilt a surface slowly and note the angle at which an object starts to slide).
+
+## Why this generalizes beyond ramps
+
+Nothing about this reasoning is special to a physical "ramp" — it's the general method for handling any situation where you'd like the acceleration direction and one of your axes to line up. Spacecraft docking problems, forces at an angle to displacement in Unit 3, and any off-axis applied force in a Newton's-2nd-law problem all use exactly this same rotate-your-axes reasoning, not just literal inclined ramps.
+
+## Where this goes next
+
+The frictionless-incline result — a = g sin θ, with mass canceling — is structurally the same result as free fall (a = g, mass-independent) from Unit 1, just with gravity's effective strength scaled down by sin θ. Incline problems with friction directly set up the energy-with-friction reasoning in Unit 3, where the same mg sin θ − fₖ net force gets integrated over a distance instead of just plugged into F = ma.`
+  },
+
+  // injected batch
+  '2.6': {
+    apNotes: `An object moving in a circle at constant speed is still accelerating — because acceleration means any change in velocity, and velocity's DIRECTION is constantly changing in circular motion, even if its magnitude (speed) isn't. This acceleration is called centripetal acceleration, and it always points toward the center of the circle.
+
+## The core relationships
+
+- **Centripetal acceleration:** ac = v²/r, always directed toward the center.
+- **Centripetal force:** Fc = mac = mv²/r — this is NOT a new, separate type of force. It's just whatever combination of real forces (tension, friction, gravity, normal force, or components of them) happens to sum to a net force pointing toward the center.
+- **Tangential acceleration:** the rate at which SPEED changes, directed tangent to the circular path (not toward the center). An object can have centripetal acceleration, tangential acceleration, or both at once — total acceleration is the vector sum of the two.
+- **Period and frequency:** period T is the time for one full revolution; frequency f = 1/T is revolutions per time.
+
+## Common sources of centripetal force
+
+- A car turning on a flat road: static friction between tires and road.
+- A ball on a string: tension.
+- A satellite in orbit: gravity.
+- A car on a banked curve: components of the normal force (and friction, if present).
+- The top of a vertical loop: at the minimum speed to maintain contact, gravity alone provides the centripetal force, giving v = √(gr).
+
+## Where students lose points
+
+- Invoking a "centrifugal force" pushing outward — in an inertial (non-rotating) frame, there is no such force; what you feel is your own inertia resisting the real inward force.
+- Treating centripetal force as a distinct force to add to a free-body diagram — it's the NET result of the real forces already there, not an additional arrow.
+- Forgetting that constant SPEED does not mean zero acceleration in circular motion — direction is still changing.`,
+    deepNotes: `The AP notes give you the core centripetal relationships and the common force sources. Here's the reasoning behind the minimum-speed-at-the-top-of-a-loop result, how banked curves work (and the specific boundary the CED sets on them), and where this topic quietly sets up two entire later units.
+
+## Worked reasoning: minimum speed at the top of a vertical loop
+
+At the very top of a vertical circular loop, two forces can point toward the center (which, at the top, is straight down): gravity and the normal force from the track. Both can contribute to centripetal force: N + mg = mv²/r. As speed decreases, less total centripetal force is needed, so N shrinks first — because gravity is fixed, but N can only push, never pull, the track can reduce N all the way to zero but not below it. The MINIMUM speed to maintain contact is exactly the speed at which N reaches zero and gravity alone supplies all the centripetal force: mg = mv²/r, which gives v = √(gr). Go any slower than this at the top, and the track would need to pull the object inward (negative N) to keep it on the circular path — which a track can't do, so the object falls away from the path instead.
+
+## Banked curves, and a boundary worth knowing
+
+On a curve banked at angle θ, the normal force is tilted, so it has a horizontal component that can contribute to (or entirely provide) the centripetal force, reducing or eliminating the need for friction. The CED sets a specific boundary here: AP Physics 1 only expects you to quantitatively analyze banked curves where NO friction is needed to maintain the turn (the "ideal" banking angle for a given speed) — situations that require friction on a banked curve are tested only qualitatively, not with full calculations.
+
+## The vector sum of centripetal and tangential acceleration
+
+If an object speeds up or slows down WHILE going around a curve (a car accelerating out of a turn, for instance), it has both centripetal acceleration (from changing direction) and tangential acceleration (from changing speed) simultaneously, and its total acceleration is the vector sum of the two — generally not pointing exactly toward the center. "Uniform circular motion" (constant speed) is the simple special case where tangential acceleration is zero and total acceleration IS purely centripetal; most real circular motion problems in later units aren't quite this simple.
+
+## Where this goes next
+
+This topic is the direct foundation for two entire later units. Units 5 and 6 (rotational dynamics) reuse period, frequency, and the v = rω relationship constantly. Unit 6's satellite/orbit topic is literally this exact circular-motion framework with gravity as the sole centripetal force — the CED's own boundary statement here even notes that a satellite in circular orbit has its centripetal acceleration caused only by gravity, connecting the period/radius relationship to the central body's mass (though Kepler's first and second laws are explicitly out of scope for this course).`
+  },
+
+  // injected batch
+  '3.1': {
+    apNotes: `Energy is a scalar — no direction, ever — which is exactly what makes it such a powerful problem-solving tool: you can add and subtract energy values with plain arithmetic, no vector components required. The CED frames this unit around conservation: energy can transform between forms, but the total amount in an isolated system never changes.
+
+## Kinetic energy
+
+K = ½mv² is the energy an object has because it's moving. It's always positive (mass and v² both are), and it's a scalar — the CED specifically notes that different observers, in different reference frames, may measure different values of an object's kinetic energy, because they may measure different values of v.
+
+## Potential energy
+
+Potential energy belongs to a SYSTEM of two or more objects that interact through a conservative force — not to a single object in isolation. Two forms matter most in this course:
+
+- **Gravitational PE:** Ug = mgh near a planet's surface (where g is approximately constant) — an approximation of the more general Ug = −Gm₁m₂/r that applies to any two masses at any distance.
+- **Elastic (spring) PE:** Us = ½kx², where x is the displacement from the spring's equilibrium (natural) length.
+
+You get to CHOOSE where potential energy equals zero — it's a decision made to simplify a specific problem, not a fixed property of the system.
+
+## Where students lose points
+
+- Treating energy as if it has a direction and trying to add it like a vector.
+- Forgetting that a gravitational PE value only means something relative to a chosen reference height.
+- Confusing energy (a total amount) with power (a rate) — related, but not the same units or the same question.`,
+    deepNotes: `The AP notes cover kinetic and potential energy as the two starting quantities of this unit. Here's why potential energy can only exist for CONSERVATIVE forces — a real restriction, not just a definition — the connection between the "approximate" mgh formula and the exact gravitational PE law, and a worked comparison that shows why energy conservation is often faster than a force approach.
+
+## Why potential energy requires a conservative force, specifically
+
+The CED is precise about this: potential energy is only associated with conservative forces (gravity, springs) — never with nonconservative ones like friction. The reason is structural: potential energy has to be a well-defined function of POSITION alone, so that "how much PE do we have" only depends on where the objects currently are, not on the path they took to get there. That's exactly the definition of a conservative force — its work is path-independent, depending only on start and end configuration. Friction fails this test completely: the work done by friction depends on the total DISTANCE traveled (more sliding, more energy lost, regardless of net displacement), so there's no way to assign a "friction potential energy" to a system's current position — you'd need to know its entire history first.
+
+## From mgh to the real gravitational PE law
+
+Ug = mgh isn't the fundamental law — it's an approximation of Ug = −Gm₁m₂/r, valid specifically when an object stays close enough to a planet's surface that the gravitational field g barely changes over the height involved. This is the same "approximately constant near the surface" idea from free fall (Unit 1) and weight (Unit 2) — it shows up here a third time because it's the same underlying physical fact (Earth's gravity is very nearly uniform over building-scale or even mountain-scale heights) doing double duty across three different units.
+
+## Worked reasoning: why this unit says "use energy when you can"
+
+Compare two approaches to "a 2 kg ball falls from 10 m — find its speed at the ground." Force approach: identify the only force (gravity), find a = g, then use a kinematic equation with the height as displacement. Energy approach: Ug at the top (mgh = 196 J) converts entirely into K at the bottom (½mv²), so v = √(2gh) directly — one line, no intermediate acceleration step, and mass cancels out entirely along the way. The energy approach wins here for the same reason it usually wins: it skips straight from "how much total energy is there" to "how is it currently distributed," without needing to track direction or intermediate accelerations at all.
+
+## Where this goes next
+
+Kinetic and potential energy are the two ingredients that Conservation of Energy (3.3) combines into one equation, Work (3.2) is the mechanism that transfers energy between them (or in/out of the system entirely), and Power (3.4) measures how quickly that transfer happens. Every one of these ideas returns in Unit 6 (rotational kinetic energy) and Unit 7 (elastic PE is the entire energy budget of SHM).`
+  },
+
+  // injected batch
+  '3.2': {
+    apNotes: `Work is how a force transfers energy into or out of a system. The CED's definition is precise: work is the energy transferred by a force acting over a distance — and crucially, only the component of the force PARALLEL to the displacement of the point where it's applied actually does work.
+
+## The formula and what the angle means
+
+W = Fd cos θ, where θ is the angle between the force and the displacement.
+
+- θ = 0° (force parallel to motion, same direction): W = Fd, maximum positive work.
+- θ = 90° (force perpendicular to motion): W = 0. No exceptions — normal force on flat ground, centripetal force in circular motion, and any force at a right angle to displacement all do exactly zero work.
+- θ = 180° (force directly opposes motion): W = −Fd, maximum negative work.
+
+Work is a scalar and can be positive, negative, or zero.
+
+## The work-energy theorem
+
+The net work done by ALL forces on an object equals its change in kinetic energy: W_net = ΔK. This connects work directly back to the kinetic energy from 3.1 — it's often the fastest way to find a final speed when you know the forces and distance involved, without needing to find acceleration or time at all.
+
+## Conservative vs. nonconservative forces
+
+Work by a conservative force (gravity, springs) doesn't depend on the path taken — only on the start and end configuration, and it's zero over any closed loop that returns to the start. Work by a nonconservative force (friction, air resistance) DOES depend on the path — more sliding distance always means more energy lost, regardless of net displacement.
+
+## Where students lose points
+
+- Computing W = Fd and forgetting the cos θ factor when force and displacement aren't parallel.
+- Assuming a large force must be doing work just because it's large — perpendicularity makes work exactly zero regardless of magnitude.
+- Losing track of the sign — forgetting that negative work means energy is being REMOVED from the object, not just "less work."`,
+    deepNotes: `The AP notes give you W = Fd cos θ and the work-energy theorem. Here's why the perpendicular-component rule isn't a technicality but the entire physical content of "work," what happens when a force acts on an extended system rather than a single point, and where graphical work (area under F-x) becomes essential later on.
+
+## Why only the parallel component counts — not a rule, a consequence
+
+It can feel like an arbitrary restriction that only the force component along the direction of motion "counts." It isn't arbitrary — it follows directly from how force actually changes velocity. Newton's 2nd law says a force changes velocity in the DIRECTION of that force. A force component perpendicular to an object's current velocity changes the object's direction, not its speed (this is exactly the centripetal acceleration idea from Unit 2 — perpendicular force, constant speed, changing direction). Since kinetic energy K = ½mv² only depends on SPEED, not direction, a force component that only changes direction can't change K at all — and since work is defined as what changes K, that component necessarily contributes zero work. The cos θ factor isn't a convention someone chose; it's what's left over once you ask "how much of this force actually changes how fast the object is going."
+
+## Worked reasoning: work done on a system vs. work done on a point
+
+The CED draws a subtle distinction worth knowing: work depends on the displacement of the POINT where a force is applied, not necessarily the displacement of the object's center of mass. For a single rigid, non-deforming object, these are the same thing, and you can ignore the distinction. But consider pushing on a system that can change shape (a person doing a push-up, a spring being compressed by hand) — the force's point of application might move a different distance than the system's center of mass. When they DO move the same distance, the CED confirms the system can be treated as a single object with only its kinetic energy changing — the situation nearly every AP Physics 1 problem sets up, but it's worth knowing why that simplification is valid rather than assuming it's always trivially true.
+
+## Work as area under a force-vs-displacement graph
+
+The CED states this directly: work equals the area under a graph of force as a function of displacement — this works even when force ISN'T constant (like a spring, where F = kx grows as you stretch it further). This is exactly how Us = ½kx² gets derived: the F-x graph for a spring is a straight line through the origin with slope k, so the area under it out to displacement x is a triangle, ½ × x × kx = ½kx² — the elastic potential energy formula from 3.1 is nothing more than "area under this particular F-x graph."
+
+## Where this goes next
+
+The work-energy theorem here is the direct bridge into Conservation of Energy (3.4): once you allow BOTH kinetic and potential energy into the accounting, "net work equals ΔK" generalizes into the full conservation statement. The area-under-a-force-graph idea reappears as area-under-a-torque-graph for rotational work in Units 5/6, and the conservative/nonconservative distinction here is exactly what determines whether mechanical energy is conserved in every energy problem for the rest of the course.`
+  },
+
+  // injected batch
+  '3.3': {
+    apNotes: `Energy is conserved in every interaction, full stop — the total energy of a properly chosen system never changes unless energy is transferred across that system's boundary. The skill this topic tests is less about a formula and more about correctly identifying what's inside your system and tracking every form of energy present.
+
+## The conservation statement
+
+Mechanical energy = kinetic + potential energy (K + U). If the only forces doing work are conservative (gravity, springs — no friction or air resistance), mechanical energy is constant:
+
+Ki + Ui = Kf + Uf
+
+If a nonconservative force (friction, air resistance) is present and does work, it removes mechanical energy from the system, typically as heat or sound:
+
+Ki + Ui + Wnc = Kf + Uf (Wnc is negative when it removes energy)
+
+## Choosing your system correctly
+
+A single isolated object can only have kinetic energy — potential energy requires at least two objects interacting via a conservative force (like "block + Earth" for gravitational PE, or "block + spring" for elastic PE). This is why you'll often see potential energy attributed to "the block," as a shorthand, when it technically belongs to the block-and-Earth SYSTEM together.
+
+## Where students lose points
+
+- Forgetting to define a consistent reference height for potential energy across every term in the same equation.
+- Leaving out an energy type that's actually present (spring PE alongside gravitational PE, for instance).
+- Applying pure Ki+Ui=Kf+Uf when friction is actually present and quietly removing energy from the system.`,
+    deepNotes: `The AP notes give you the conservation equation and the with-friction variant. Here's why "energy is always conserved" and "mechanical energy is sometimes NOT conserved" are both simultaneously true statements, a fully worked multi-stage problem (spring launch into a rough incline) that chains both equation forms together, and the reasoning behind a classic loop-the-loop conceptual question.
+
+## Reconciling "energy is always conserved" with "mechanical energy isn't"
+
+These sound contradictory until you separate TOTAL energy from MECHANICAL energy. Total energy — mechanical plus thermal, sound, and every other form — truly never changes; that's the universal conservation law. Mechanical energy (just K + U) can decrease, specifically when a nonconservative force like friction converts some of it into thermal energy or sound. Nothing was destroyed — it just left the "mechanical" bucket and entered a different one. The CED expects you to know mechanical energy can dissipate into thermal energy or sound (though tracking exactly how much becomes each is outside AP Physics 1's scope) — the key skill is recognizing when a problem's forces are entirely conservative (use the simple equation) versus when friction is doing work (use the version with Wnc).
+
+## Worked reasoning: a spring launching a block up a rough incline
+
+A 0.5 kg block is launched by a spring (k = 800 N/m, compressed 0.20 m) along a frictionless section, then travels up a 20° incline with μₖ = 0.10 for 1.0 m. Find its speed at the top of that 1.0 m stretch. Stage 1 (spring to base of incline, frictionless): all spring PE becomes KE — ½kx² = ½mv² gives v = x√(k/m) = 8.0 m/s at the base. Stage 2 (up the rough incline): now use the full conservation-with-friction equation, treating the base of the incline as the new "initial" state. Ki = ½(0.5)(8.0)² = 16 J. Uf = mgh = mg(1.0 sin 20°) ≈ 1.68 J. Friction does negative work: Wnc = −fₖd = −μₖ(mg cos 20°)(1.0) ≈ −0.46 J. So Kf = Ki + Wnc − Uf = 16 − 0.46 − 1.68 ≈ 13.9 J, giving vf = √(2×13.9/0.5) ≈ 7.45 m/s. Notice how the SAME conservation framework just gets re-applied stage by stage — each stage's final state becomes the next stage's initial state.
+
+## Why a loop-the-loop requires MORE height than the loop itself
+
+A classic conceptual question: a cart rolling from rest down a ramp into a vertical circular loop must be released from a height GREATER than the top of the loop, not just equal to it. Here's why, combining this topic with circular motion (Unit 2): at the top of the loop, the cart needs a minimum speed v = √(gr) just to maintain contact with the track (from Unit 2's circular motion reasoning) — meaning it needs to arrive at the top with nonzero kinetic energy, not zero. If released from exactly the loop's height, energy conservation would give it zero speed AT the top (all its initial PE would be used up just reaching that height) — nowhere near enough for the minimum circular-motion speed required. Extra release height is exactly what supplies that leftover kinetic energy.
+
+## Where this goes next
+
+This exact K+U conservation framework reappears with new terms bolted on throughout the rest of the course: rotational KE gets added in Unit 6 (K_total = ½mv² + ½Iω² for rolling objects), and the entire energy budget of Unit 7's oscillations (E = ½kA² = constant) is nothing more than this same conservation equation specialized to a spring-mass system.`
+  },
+
+  // injected batch
+  '3.4': {
+    apNotes: `Power is the RATE at which energy is transferred or converted — how much energy per unit time, not how much energy total. Two processes can transfer the exact same total energy while requiring very different power, depending purely on how fast the transfer happens.
+
+## The formulas
+
+- **Average power:** P = ΔE/Δt (energy transferred, divided by the time it took).
+- **Since work IS a transfer of energy:** P = W/t is the same idea applied specifically to work done by a force.
+- **Instantaneous power:** P = Fv, for the component of a constant force parallel to an object's velocity — this lets you find power at a specific instant without needing to know the total work or time separately.
+
+Power is measured in Watts (W), where 1 W = 1 Joule/second.
+
+## Where students lose points
+
+- Confusing power (a rate) with energy (a total amount) — assuming a "more powerful" device automatically uses more total energy to complete the same task, when it might just complete it faster.
+- Using P = Fv when the force isn't actually parallel to the velocity, without accounting for the angle between them.
+- Mixing up power and energy units when converting (a kilowatt-hour, despite the name, is a unit of ENERGY, not power).`,
+    deepNotes: `The AP notes give you the three power formulas. Here's why P = Fv falls directly out of the work-energy relationship rather than being a separate law to memorize, a worked comparison showing exactly what "more power" buys you, and where power reasoning becomes essential again much later in the course.
+
+## Deriving P = Fv from what you already know
+
+This isn't a new, independent formula — it's a direct consequence of P = W/t and W = Fd cos θ. Substitute: P = Fd cos θ / t. Since d/t is just velocity (when the force is roughly constant over that interval), this becomes P = Fv cos θ — and when the force is parallel to velocity (θ = 0°), that simplifies to the P = Fv you'll use most often. Seeing this derivation means you never have to wonder whether P = Fv is "a whole new equation" — it's the same work relationship from 3.2, just divided by time.
+
+## Worked reasoning: what power actually buys you
+
+Two motors each lift a 100 kg mass 10 m — identical work, W = mgh = 9800 J, in both cases. Motor A does it in 5.0 s: P = 9800/5.0 = 1960 W. Motor B does it in 20 s: P = 9800/20 = 490 W. Motor A is 4× more powerful, but here's the part worth sitting with: motor A did NOT do 4× the work, and it didn't use 4× the total energy (assuming both are equally efficient) — it did the identical amount of work, just four times faster. "More powerful" describes a rate of capability, not a larger total energy budget. This is exactly why a sports car with a powerful engine doesn't necessarily use more total fuel to travel a given distance at a given speed than a weaker one — power determines how quickly it CAN accelerate, not how much total energy a fixed task requires.
+
+## Edge case: power isn't always constant
+
+P = Fv assumes the force is roughly constant over the interval in question. In situations where force or velocity change continuously — a car accelerating from a stoplight, for instance — instantaneous power is genuinely changing moment to moment, and "the power" of the interaction only has a single, well-defined value at each individual instant, not over the whole event (you'd need an average, P_avg = W_total/t_total, to describe the whole event with one number).
+
+## Where this goes next
+
+Power reasoning becomes directly relevant again the moment rotational quantities are introduced in Units 5 and 6, where P = τω plays the exact same role for rotating systems that P = Fv plays here for translational ones — same underlying idea (energy transferred per time), just with torque and angular velocity standing in for force and velocity.`
   }
 };
 
