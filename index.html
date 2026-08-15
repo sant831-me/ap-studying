@@ -7053,9 +7053,8 @@ If asked about non-physics topics, gently redirect: "I'm specialized in AP Physi
 
 // Spark.E calls a Cloudflare Worker (see /worker), which holds the real
 // Anthropic API key server-side and proxies the request — the key is never
-// exposed to the browser. Replace this with your deployed Worker's URL
-// (see worker/README.md for deploy steps).
-const SPARKE_API_URL = 'https://REPLACE-WITH-YOUR-WORKER-URL.workers.dev';
+// exposed to the browser.
+const SPARKE_API_URL = 'https://physicsos-sparke.werw8087.workers.dev';
 
 async function sendSparkeMessage() {
   const input = $('sparke-chat-input');
