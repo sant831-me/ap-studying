@@ -2518,20 +2518,16 @@ const LESSON_SUBUNITS = {
 // ============ UNIT NOTES CONTENT ============
 // Written notes for the Unit Notes page, keyed by subunit code. Distinct from the Lessons
 // page's tutoring-style copy (explain/deepIntuition/etc.) — this is meant to read like real
-// study notes: apSummary is a tight skim for AP mode, deepNotes is markdown (rendered via
-// parseMarkdown) for Deep mode. Grounded in the AP Physics 1 CED (2026); citations in comments
-// refer to the CED's own printed page numbers. Currently written for Unit 1 only — remaining
-// units render a "not written yet" fallback in renderSubunitNotesPage() until added.
+// study notes. Both apNotes and deepNotes are markdown (rendered via parseMarkdown) and are
+// each self-contained (a reader picks one mode and reads only that): apNotes is the full
+// explanation — what's true, why it's true, and where students go wrong. deepNotes covers
+// the same ground in more depth, plus worked reasoning, edge cases/boundary statements, and
+// explicit connections to other units. Grounded in the AP Physics 1 CED (2026); citations in
+// comments refer to the CED's own printed page numbers.
 const SUBUNIT_NOTES = {
   // CED Topic 1.1 "Scalars and Vectors in One Dimension", LO 1.1.A/1.1.B, EK 1.1.A.1-3, 1.1.B.1 — CED p. 27
   '1.1': {
-    apSummary: [
-      'Scalar = magnitude only (mass, time, distance, speed). Vector = magnitude + direction (position, displacement, velocity, acceleration).',
-      "In one dimension you don't need arrows — the sign (+/−) of a vector component IS its direction, once you've picked a positive direction.",
-      'Pick your positive direction FIRST, before writing a single equation, and hold it for the entire problem.',
-      'Distance (total path length, always positive) and displacement (net change in position, can be + / − / 0) answer different questions — they are only numerically equal for one-directional motion.'
-    ],
-    deepNotes: `A scalar is a number, full stop — mass, time, distance, speed. It tells you "how much" and nothing else. A vector tells you "how much" **and** "which way" — displacement, velocity, acceleration, force. Position matters here too: knowing an object is "5 meters away" is useless without knowing which direction.
+    apNotes: `A scalar is a number, full stop — mass, time, distance, speed. It tells you "how much" and nothing else. A vector tells you "how much" **and** "which way" — displacement, velocity, acceleration, force. Position matters here too: knowing an object is "5 meters away" is useless without knowing which direction.
 
 ## Why direction becomes a sign, not an arrow
 
@@ -2545,19 +2541,30 @@ Distance is the total length of the path actually walked — it only grows, neve
 
 - Treating "negative" as "wrong" or "slower." Negative just means "opposite to whatever you called positive." A car at −20 m/s is moving exactly as fast as one at +20 m/s, just the other way.
 - Assuming distance and displacement are interchangeable. They only agree when the motion never reverses direction.
-- Picking a positive direction and then silently flipping it partway through a multi-step problem — usually by accident, when a "return trip" leg feels like it should also be positive.`
+- Picking a positive direction and then silently flipping it partway through a multi-step problem — usually by accident, when a "return trip" leg feels like it should also be positive.`,
+    deepNotes: `Everything from the AP notes still holds — this is the same topic, taken further: why the scalar/vector split matters beyond this one unit, worked reasoning behind the sign convention, and a couple of edge cases worth knowing before you move on.
+
+## Why the vector/scalar split runs through the entire course
+
+Trace it forward: every core quantity you'll meet from here on is either fundamentally scalar (energy, work, power) or fundamentally vector (force, velocity, acceleration, momentum, displacement). This isn't a minor bookkeeping detail — it's why Unit 3 (Work, Energy, Power) often feels easier than Unit 2 (Force and Translational Dynamics): energy problems only require adding numbers, while force problems require you to add vectors correctly, respecting direction, every time. When a later unit lets you choose between an energy approach and a force approach, the real question being tested is often "which one lets you avoid vector bookkeeping."
+
+## Worked reasoning: what "choosing a positive direction" is actually doing
+
+Say a ball moves 12 m right, then 5 m left. Naively you might add 12 + 5 = 17 — that's the DISTANCE, correct but not the displacement. To get displacement, bring in the coordinate system: call right positive. Now the motion is +12 m and then −5 m (moving left is negative in this convention). Net displacement = 12 + (−5) = +7 m, i.e., 7 m to the right. Notice what happened: choosing a positive direction converted a geometric fact (this move was backward) into an algebraic fact (this number is negative), so ordinary addition — not geometric reasoning — could do the rest of the work. That's the entire point of signed quantities: turning direction into arithmetic.
+
+## Edge cases worth knowing
+
+- **Zero displacement, nonzero distance.** A round trip (out and back to the exact start) always has displacement = 0, no matter how far you traveled. This is a favorite AP-style conceptual trap: "what is the average velocity over one full lap of a track?" is zero, because Δx = 0, even though the runner obviously moved.
+- **Direction in casual language isn't always a real vector.** "The temperature is rising" sounds directional, but temperature is a scalar — what's changing directionally is time, not some "temperature vector," because no such thing exists.
+
+## Where this goes next
+
+This same sign-convention habit is exactly what you'll use for velocity and acceleration in 1.2, for the kinematic equations in 1.4, and for free fall in 1.5, where "up" or "down" being positive changes every sign in the equations. It then generalizes directly into Unit 2: a free-body diagram is, at its core, a more elaborate version of "pick a positive direction and track signs" — just done in two dimensions, with several vectors added together instead of one.`
   },
 
   // CED Topic 1.2 "Displacement, Velocity, and Acceleration", LO 1.2.A/1.2.B, EK 1.2.A.1-2, 1.2.B.1-5 — CED pp. 28-29
   '1.2': {
-    apSummary: [
-      'Position (x): where the object is, relative to a chosen origin.',
-      'Average velocity = Δx/Δt (displacement over the time interval — not total distance).',
-      'Average acceleration = Δv/Δt.',
-      "An object is accelerating any time velocity's magnitude OR direction changes — this includes turning a corner at constant speed.",
-      'Shrink the time interval toward zero and the average value approaches the instantaneous value — this is the idea behind slope on a graph.'
-    ],
-    deepNotes: `Position tells you where something is relative to some origin you chose. Velocity tells you how fast — and in which direction — that position is changing. Acceleration tells you how fast the velocity itself is changing. Each one builds directly on the one before it.
+    apNotes: `Position tells you where something is relative to some origin you chose. Velocity tells you how fast — and in which direction — that position is changing. Acceleration tells you how fast the velocity itself is changing. Each one builds directly on the one before it.
 
 ## Average vs. instantaneous — same formula, different time window
 
@@ -2571,21 +2578,31 @@ This is the single biggest conceptual trap in this topic. "Accelerating" in phys
 
 - Reading "constant speed" and assuming "zero acceleration" — only true if direction is ALSO constant (straight-line motion).
 - Assuming zero velocity means zero acceleration. They're independent: a ball at the peak of its toss has v = 0 but a = g.
-- Mixing up average and instantaneous values — an object's average velocity over a whole trip can be very different from its velocity at any single instant during that trip.`
+- Mixing up average and instantaneous values — an object's average velocity over a whole trip can be very different from its velocity at any single instant during that trip.`,
+    deepNotes: `The AP notes cover what average velocity and acceleration are and why "accelerating" doesn't mean "speeding up." Here's why they're defined as ratios in the first place, a concrete look at the shrinking-interval idea the CED describes, and where this reasoning resurfaces later in the course.
+
+## Why velocity and acceleration are defined as ratios, not raw differences
+
+The reason these are rate quantities (divided by time) rather than raw differences is that physics needs a description of motion that doesn't depend on how long you happened to watch it. Someone who covers 100 m in 10 s and someone who covers 10 m in 1 s have the same average velocity (10 m/s), even though the raw numbers are completely different — the ratio is what captures "how fast this motion actually is," which is exactly why velocity, not displacement alone, is the physically meaningful quantity.
+
+## Worked reasoning: the "shrinking interval" idea, without calculus notation
+
+The CED's essential knowledge says directly: calculate average velocity or acceleration over a smaller and smaller Δt, and the result approaches the instantaneous value. Concretely — say a ball is at x = 0 m at t = 0 s and x = 20 m at t = 4 s. Average velocity over that whole window is 5 m/s. But if the ball wasn't moving at a constant rate, that 5 m/s doesn't tell you its speed at, say, t = 1 s. Now measure over a narrower window instead: t = 0.9 s to t = 1.1 s. Whatever Δx you find divided by 0.2 s gets you much closer to the true instantaneous velocity at t = 1 s than the coarse 4-second average did. Keep shrinking that window — 0.1 s, 0.01 s — and the average converges to a single number: the instantaneous velocity at t = 1 s. That convergence is, informally, exactly what a derivative is — though AP Physics 1 never asks you to compute one symbolically. You're expected to understand this conceptually and read it off a graph as a slope.
+
+## Edge cases worth knowing
+
+- **Average velocity ≠ average speed.** If a ball goes 10 m forward then 10 m back over 4 seconds total, average velocity = 0/4 = 0, but average speed (distance/time) = 20/4 = 5 m/s. The CED distinguishes these; don't blend them.
+- **Average acceleration over an interval can be nonzero even if the instantaneous acceleration was zero at some point inside it** — average acceleration only cares about the velocity at the two endpoints, not what happened in between. This shows up as a "gotcha" in multi-part FRQs.
+
+## Where this goes next
+
+Slope-reading here is the direct setup for Topic 1.3 (motion graphs) — the same v_avg = Δx/Δt idea, just read visually off a graph instead of computed from numbers. It's also the conceptual seed for Unit 2's F_net = ma: acceleration is what a net force PRODUCES, so understanding precisely what acceleration means — not just "speeding up" — is what makes Newton's second law feel like a physical statement instead of a memorized formula.`
   },
 
   // CED Topic 1.3 "Representing Motion" — graph-reading portion, EK 1.3.A.1, 1.3.A.4, 1.3.A.4.i-iv, plus the
   // nonuniform-acceleration boundary statement — CED pp. 30-31
   '1.3': {
-    apSummary: [
-      'Position-time graph: SLOPE = velocity.',
-      'Velocity-time graph: SLOPE = acceleration; AREA under the curve = displacement.',
-      'Acceleration-time graph: AREA under the curve = change in velocity.',
-      'A curved position-time graph means changing velocity: concave up → positive acceleration, concave down → negative acceleration.',
-      "AP Physics 1 only expects QUALITATIVE analysis of nonuniform (non-constant) acceleration — sketch and describe it, don't compute exact numbers from a curved a-t graph.",
-      'Motion can be represented five ways: diagrams, graphs, equations, figures, narrative description — expect to translate between them.'
-    ],
-    deepNotes: `Every motion graph is answering the same underlying question in a different visual language: how is this quantity changing? The CED lists five ways to represent motion — motion diagrams, graphs, equations, figures, and plain narrative description — and expects you to translate fluently between them. Graphs are just the visual one.
+    apNotes: `Every motion graph is answering the same underlying question in a different visual language: how is this quantity changing? The CED lists five ways to represent motion — motion diagrams, graphs, equations, figures, and plain narrative description — and expects you to translate fluently between them. Graphs are just the visual one.
 
 ## Slope and area are the whole game
 
@@ -2603,18 +2620,31 @@ The course's boundary statement is specific: you are not expected to quantitativ
 
 - Reading the HEIGHT of a position-time graph as if it were speed — it's the SLOPE, not the height.
 - Forgetting that area under a v-t graph below the time axis counts as NEGATIVE displacement.
-- Treating a curved position-time graph as a mistake — it just means the object is accelerating.`
+- Treating a curved position-time graph as a mistake — it just means the object is accelerating.`,
+    deepNotes: `The AP notes give you slope-and-area as the two operations that unlock any motion graph. Here's why that toolkit is more powerful than it looks, a fully worked example using it without a single kinematic equation, and where it resurfaces for the rest of the course.
+
+## Why slope and area work as a universal translator
+
+The deep reason slope-equals-rate-of-change and area-equals-accumulated-change works is that it holds for ANY x-t, v-t, or a-t graph — not just constant-acceleration ones. That actually makes it MORE general than the kinematic equations in 1.4, which only work when acceleration is constant. Graph reading is the tool that still works when the physics gets messy (a rocket burning fuel, a car with changing acceleration): the equations from 1.4 break down there, but "slope tells you the next quantity down, area tells you the accumulated quantity up" never does.
+
+## Worked reasoning: reading a trapezoid-shaped velocity-time graph
+
+Picture a v-t graph: velocity rises in a straight line from 0 to 10 m/s over the first 2 s, stays flat at 10 m/s for the next 3 s, then drops in a straight line back to 0 over the last 2 s. What's the total displacement? Break the region under the curve into shapes: a triangle for the first 2 s (½ × 2 × 10 = 10 m), a rectangle for the next 3 s (3 × 10 = 30 m), a triangle for the last 2 s (½ × 2 × 10 = 10 m). Total = 50 m. What's the acceleration during each phase? It's the SLOPE of each segment: +5 m/s² while speeding up, 0 while cruising, −5 m/s² while slowing down. Notice a single kinematic equation was never needed — pure geometry on the graph gave you everything.
+
+## Edge cases worth knowing
+
+- **A position-time graph that returns to its starting height** doesn't mean velocity was zero throughout — it means displacement over that full interval was zero. The velocity (slope) can be nonzero at every individual instant along the way.
+- **Negative area subtracts, it doesn't just "not count."** If a v-t graph dips below the time axis, that region represents motion in the negative direction, and you subtract that area when finding total displacement — as opposed to total distance, which would need you to add the absolute values of both regions instead.
+- **AP Physics 1 will only give you graphs where the area is computable with simple shapes** (straight-line segments, so triangles/rectangles/trapezoids) — consistent with the boundary statement that nonuniform acceleration is only tested qualitatively, never by demanding you compute an area under a true curve.
+
+## Where this goes next
+
+This slope/area toolkit doesn't retire after Unit 1. You'll use the exact same logic on F-t graphs (area = impulse, Unit 4), F-x graphs (area = work, Unit 3), and ω-t/α-t graphs for rotational motion (Units 5–6), which behave identically to v-t/a-t graphs. Getting fluent at reading slope and area here pays off for the rest of the course.`
   },
 
   // CED Topic 1.3, EK 1.3.A.2 (the three official kinematic equations) — CED p. 30
   '1.4': {
-    apSummary: [
-      'The CED gives exactly three constant-acceleration equations: v = v₀ + at, x = x₀ + v₀t + ½at², v² = v₀² + 2a(x − x₀).',
-      'The common "4th equation," Δx = ½(v₀ + v)t, is a quick algebra combination of the other two — useful, but not one of the three the CED lists.',
-      'Strategy: list your knowns, name your one unknown, pick the equation missing nothing else you don\'t know.',
-      'These equations only hold when acceleration is constant.'
-    ],
-    deepNotes: `Once acceleration is constant, five quantities describe the whole motion: initial velocity v₀, final velocity v, acceleration a, time t, and displacement (x − x₀). The CED provides three equations connecting them:
+    apNotes: `Once acceleration is constant, five quantities describe the whole motion: initial velocity v₀, final velocity v, acceleration a, time t, and displacement (x − x₀). The CED provides three equations connecting them:
 
 - v = v₀ + at
 - x = x₀ + v₀t + ½at²
@@ -2634,18 +2664,31 @@ They all come from the same assumption: acceleration is constant. If acceleratio
 
 - Picking an equation before writing down what's known and what's asked — leads to picking one with two unknowns in it.
 - Forgetting "starts from rest" means v₀ = 0, and "comes to rest" means v = 0 — not the same statement.
-- Plugging in a positive value for a when the object is actually slowing down, without checking that it's consistent with the chosen positive direction.`
+- Plugging in a positive value for a when the object is actually slowing down, without checking that it's consistent with the chosen positive direction.`,
+    deepNotes: `The AP notes give you the three official equations and the "pick what's missing" strategy. Here's why there are exactly three (and where they all come from), a derivation of the popular "fourth" equation so you never have to just memorize it, and a couple of situations where the strategy needs an extra step.
+
+## Why exactly three equations, and why they're not independent
+
+It can feel arbitrary that the CED lists exactly three kinematic equations. It isn't. All three come from the same two starting facts: acceleration is constant, and by definition a = Δv/Δt and v_avg = Δx/Δt. The first equation (v = v₀ + at) is just the definition of constant acceleration, rearranged. The second (x = x₀ + v₀t + ½at²) comes from combining the average-velocity definition for a linearly-changing velocity — v_avg = (v₀ + v)/2, since velocity changes at a steady rate — with the first equation. The third (v² = v₀² + 2a(x − x₀)) is algebraically derivable from the first two by eliminating t. None of these are separate laws of nature; they're three algebraic rearrangements of the same constant-acceleration assumption, each one happening to omit a different one of the five variables — which is exactly what makes the "pick the equation missing what you don't have" strategy work.
+
+## Worked reasoning: deriving the "missing" fourth equation yourself
+
+Since Δx = ½(v + v₀)t is genuinely useful, it's worth seeing where it comes from instead of memorizing it as a separate rule. Start from x = x₀ + v₀t + ½at² and substitute at = v − v₀ (from the first equation) into the "at" term: x − x₀ = v₀t + ½(v − v₀)t = v₀t + ½vt − ½v₀t = ½v₀t + ½vt = ½(v₀ + v)t. That's it — the "fourth equation" falls straight out of the first two with one substitution.
+
+## Edge cases worth knowing
+
+- **"Uniformly accelerated" and "constant acceleration" mean the same thing** in CED language — watch for either phrasing.
+- **Acceleration given as a function of time, position, or velocity** (rather than a fixed number) means these three equations don't apply — that's non-constant acceleration, explicitly outside AP Physics 1's quantitative scope.
+- **Multi-phase motion** (accelerate, then cruise, then decelerate) needs these equations applied separately to each constant-acceleration segment, using the final velocity of one segment as the initial velocity of the next. FRQs test this topic more often by chaining several applications of the same equations than by making any single application harder.
+
+## Where this goes next
+
+These same three equations reappear almost unchanged as the mathematical engine behind free fall (1.5, just with a = g) and behind each individual axis of projectile motion (1.6, applied once horizontally and once vertically). You aren't learning new equations in those topics — you're applying this exact toolkit to increasingly specific situations.`
   },
 
   // CED Topic 1.3, EK 1.3.A.3, plus the g-value boundary statement — CED pp. 30-31
   '1.5': {
-    apSummary: [
-      "Near Earth's surface, free-fall acceleration is downward, constant, and — per the CED's boundary statement — should be taken as g = 10 m/s² for calculations.",
-      'g = 9.8 m/s² or 9.81 m/s² is also fully accepted; you will not be penalized for using the more precise value.',
-      'Free fall means gravity is the ONLY force acting — no air resistance, no string, no push.',
-      "The three kinematic equations apply directly, with a = g pointed down for the object's entire flight — rising, falling, and at the peak."
-    ],
-    deepNotes: `Free fall isn't really a new topic — it's the three kinematic equations from the last topic with one number filled in: acceleration is g, directed straight down, the same for every object regardless of mass. That last part is the genuinely surprising physics: a bowling ball and a feather, dropped in a vacuum from the same height, hit the ground at the exact same instant. The heavier object is pulled down harder, but it's also proportionally harder to accelerate — the two effects cancel exactly.
+    apNotes: `Free fall isn't really a new topic — it's the three kinematic equations from the last topic with one number filled in: acceleration is g, directed straight down, the same for every object regardless of mass. That last part is the genuinely surprising physics: a bowling ball and a feather, dropped in a vacuum from the same height, hit the ground at the exact same instant. The heavier object is pulled down harder, but it's also proportionally harder to accelerate — the two effects cancel exactly.
 
 ## What "free fall" actually requires
 
@@ -2663,18 +2706,38 @@ Whichever direction you called positive, gravity's acceleration is constant and 
 
 - Believing heavier objects fall faster — true in air because of air resistance, false in the idealized vacuum case this course tests.
 - Setting acceleration to zero at the peak of a toss because velocity is zero there — acceleration is still g.
-- Forgetting that "free fall" excludes situations with strings, air resistance, or any other applied force.`
+- Forgetting that "free fall" excludes situations with strings, air resistance, or any other applied force.`,
+    deepNotes: `The AP notes cover what free fall requires and which g-value to use. Here's WHY mass cancels out of free fall — not just that it does — a full numeric walkthrough of a toss tracked through its whole flight, and where "approximately constant g" stops being a good enough approximation later in the course.
+
+## Why the mass-independence of g is not a coincidence
+
+This is worth deriving, because it's one of the more conceptually important results in the whole course. Newton's second law says a = F_net/m. The force of gravity on an object is F_g = mg (its weight). Combine them: a = mg/m = g. The mass CANCELS. It cancels because the same property — mass — appears in both "how hard gravity pulls on you" (via F = mg) and "how hard it is to accelerate you" (via a = F/m). Physicists call this the equivalence of gravitational and inertial mass, and it's the exact reason a bowling ball and a feather fall together in vacuum. You're not expected to derive this on the AP exam, but understanding WHY it's true — rather than memorizing "objects fall at the same rate" as a bare fact — is what lets you apply it confidently to a problem you haven't seen before.
+
+## Worked reasoning: a ball thrown upward, tracked through the whole flight
+
+Take up as positive, so a = −g = −10 m/s² throughout. Ball leaves your hand at v₀ = +20 m/s.
+
+- At t = 1 s: v = 20 + (−10)(1) = 10 m/s (still rising, slowing down).
+- At t = 2 s: v = 20 + (−10)(2) = 0 m/s (the peak — momentarily at rest).
+- At t = 3 s: v = 20 + (−10)(3) = −10 m/s (now falling, speeding up downward).
+- At t = 4 s: v = 20 + (−10)(4) = −20 m/s (back at launch height, moving downward exactly as fast as it left, by symmetry).
+
+Acceleration was −10 m/s² at every single one of those instants, including t = 2 s where velocity was zero. That's "gravity never turns off" made concrete with numbers instead of just asserted.
+
+## Edge cases worth knowing
+
+- **Launch height ≠ landing height breaks the timing symmetry** (though not the equations themselves) — "time up = time down" only holds when the object returns to the height it launched from.
+- **"Maximum height" questions are really "v = 0" questions.** The fastest path to an answer is recognizing v = 0 at the peak and plugging straight into v² = v₀² − 2gΔy, rather than solving for time first and then position.
+- **Objects thrown downward** use the exact same equations, just with v₀ pointing in the negative direction (if up is positive) — there's no separate formula for "thrown down" versus "dropped."
+
+## Where this goes next
+
+Free fall is the vertical half of every projectile motion problem in 1.6 — nothing new gets introduced there for the vertical direction, it's this exact topic reused. It's also the conceptual basis for gravitational potential energy in Unit 3 (U_g = mgh assumes constant g), and it's the special case of a much more general idea in Unit 6: orbital mechanics uses the full inverse-square gravitational force, where g is no longer approximately constant — free fall near Earth's surface is the flat, short-distance limit of that more general law.`
   },
 
   // CED Topic 1.5 "Vectors and Motion in Two Dimensions", LO 1.5.A/1.5.B, EK 1.5.A.1-3, 1.5.B.1-2 — CED pp. 33-34
   '1.6': {
-    apSummary: [
-      'Projectile motion is a special case of 2D motion: zero acceleration along one axis, constant nonzero acceleration along the other.',
-      'Split the initial velocity into perpendicular components with v₀ₓ = v₀cosθ, v₀ᵧ = v₀sinθ.',
-      'Horizontal: constant velocity (a = 0). Vertical: constant acceleration g — solved with the same equations as free fall.',
-      'Time is the only shared link between the two directions — solve one, then plug that time into the other.'
-    ],
-    deepNotes: `The CED frames this topic as "Vectors and Motion in Two Dimensions" — and projectile motion is explicitly called out as one special case of it: two-dimensional motion where acceleration is zero along one axis and constant (and nonzero) along the other. Seen that way, projectile motion isn't a separate set of rules — it's the same 1D kinematics from earlier topics, just done twice, once per direction.
+    apNotes: `The CED frames this topic as "Vectors and Motion in Two Dimensions" — and projectile motion is explicitly called out as one special case of it: two-dimensional motion where acceleration is zero along one axis and constant (and nonzero) along the other. Seen that way, projectile motion isn't a separate set of rules — it's the same 1D kinematics from earlier topics, just done twice, once per direction.
 
 ## Why the two directions don't talk to each other
 
@@ -2691,7 +2754,30 @@ Gravity points straight down. It has no horizontal component. That means horizon
 
 - Forgetting to split the initial velocity into components before doing anything else.
 - Setting the TOTAL speed to zero at the peak of the trajectory — only the vertical component (vᵧ) is zero there; the horizontal component (vₓ) is unchanged and still contributes to the object's actual speed.
-- Assuming "time up equals time down" always holds — it's only true when the launch height and landing height are the same.`
+- Assuming "time up equals time down" always holds — it's only true when the launch height and landing height are the same.`,
+    deepNotes: `The AP notes give you the split-into-components method. Here's why that independence isn't an assumption you have to trust — it falls straight out of Newton's second law — a derivation of the "45° maximizes range" fact everyone memorizes without seeing why, and the edge cases that trip people up once heights or angles stop being convenient.
+
+## Why "independence of horizontal and vertical motion" is a consequence, not a rule
+
+It can feel like physics is just asserting "trust us, horizontal and vertical don't interact." It isn't an assumption — it's a direct consequence of how Newton's second law works component-by-component, a fact you'll formalize further in Unit 2 but that's already in play here. The net force on a projectile is gravity, and gravity's vector points straight down: (Fₓ, Fᵧ) = (0, −mg). Apply Newton's second law separately to each component: aₓ = Fₓ/m = 0, and aᵧ = Fᵧ/m = −g. There is no mathematical mechanism by which a force with zero horizontal component could ever produce horizontal acceleration. The "independence" isn't a simplifying assumption for this course — it's what falls out of vector addition and F = ma applied honestly to each direction.
+
+## Worked reasoning: why range is maximized at 45°
+
+Range R = v₀ₓ × t_total. For a projectile launched and landing at the same height, t_total = 2v₀ᵧ/g (twice the time to reach the peak). Substituting v₀ₓ = v₀cos θ and v₀ᵧ = v₀sin θ:
+
+R = v₀cos θ × (2v₀sin θ/g) = (2v₀²/g)·sin θ cos θ = (v₀²/g)·sin(2θ)
+
+using the identity 2 sin θ cos θ = sin(2θ). Since sin(2θ) reaches its maximum value of 1 exactly when 2θ = 90°, i.e., θ = 45°, that's the launch angle that maximizes range — and it's also why complementary angles (30°/60°, 20°/70°) give the SAME range: sin(2 × 30°) = sin(60°) = sin(120°) = sin(2 × 60°).
+
+## Edge cases worth knowing
+
+- **Horizontal launches (θ = 0°)** are just free fall with a sideways-constant velocity added on — v₀ᵧ = 0 means the object starts falling immediately, with no rising phase at all.
+- **Different launch and landing heights** break the range formula above and the "time up = time down" symmetry — fall back on the raw vertical equation (Δy = v₀ᵧt − ½gt²) and solve for t directly, usually via the quadratic formula.
+- **The CED restricts relative-motion vector addition (Topic 1.4) to one dimension**, so while you'll do genuine two-dimensional vector work in this topic to split a single velocity into components, AP Physics 1 will not ask you to add two independently-moving 2D velocities together (e.g., a plane's velocity relative to the ground, given its velocity relative to the air and a 2D wind velocity) — that combination is out of scope, even though each individual skill involved (2D components here, relative velocity in 1.4) is separately in scope.
+
+## Where this goes next
+
+This is the last topic of Unit 1, and it's deliberately the fullest synthesis of everything before it: a sign convention (1.1), computing velocity from position change (1.2), reading motion as separate quantities (1.3), the constant-acceleration equations (1.4), and g for the vertical direction (1.5) all show up here at once. The same two-directions-solved-separately approach reappears the moment Unit 2 introduces forces at an angle — an inclined plane splits gravity into components exactly the way you just split velocity here — and again anywhere a vector needs decomposing for the rest of the course.`
   }
 };
 
@@ -3923,14 +4009,12 @@ function renderSubunitNotesPage() {
   if (notes) {
     html += isAP ? `
       <div class="card mb-4">
-        <div class="font-semibold text-sm mb-3">🎯 Quick Summary — AP Exam Focus</div>
-        <ul class="space-y-2 text-sm" style="color:var(--text-secondary);">
-          ${notes.apSummary.map(b => `<li class="flex gap-2"><span style="color:${unit.color};flex-shrink-0;">•</span><span>${b}</span></li>`).join('')}
-        </ul>
+        <div class="font-semibold text-sm mb-3">🎯 Notes — AP Exam Focus</div>
+        <div class="text-sm leading-relaxed" style="color:var(--text-secondary);">${parseMarkdown(notes.apNotes)}</div>
       </div>
     ` : `
       <div class="card mb-4">
-        <div class="font-semibold text-sm mb-3">🔬 Full Notes — Deep Learning</div>
+        <div class="font-semibold text-sm mb-3">🔬 Deep Dive — Extended Notes</div>
         <div class="text-sm leading-relaxed" style="color:var(--text-secondary);">${parseMarkdown(notes.deepNotes)}</div>
       </div>
     `;
