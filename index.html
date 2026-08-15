@@ -3775,6 +3775,172 @@ A scenario worth thinking through: if something adds or removes energy partway t
 ## Where this goes next
 
 This K+U conservation framework is the same one from Unit 3, now specialized to a spring's ½kx² potential energy instead of gravity's mgh — and it will reappear once more, essentially unchanged, in Unit 8's discussion of energy considerations in fluid systems. The oscillation-energy picture here is also the conceptual root of how vibrating systems store and release energy in far more advanced physics (waves, sound, AC circuits) that build on exactly this same E ∝ A² relationship.`
+  },
+
+  // injected batch
+  '8.1': {
+    apNotes: `Density describes how much mass is packed into a given volume: ρ = m/V. Pressure describes how much perpendicular force is spread over a given area: P = F/A. Both are scalars — pressure has no direction, even though the individual forces creating it do.
+
+## Ideal fluids
+
+The CED treats fluids as "ideal" unless stated otherwise: incompressible (constant volume and density regardless of the pressure exerted on it) and with no viscosity. This idealization is what makes clean formulas like P = ρgh and A₁v₁ = A₂v₂ possible — real fluids only approximate this behavior.
+
+## Pressure at depth
+
+Absolute pressure at a point in a fluid is the sum of a reference pressure (usually atmospheric pressure at the surface) and gauge pressure — the additional pressure due to the fluid itself: P = P₀ + ρgh, where h is depth below the surface. Gauge pressure increases linearly with depth; roughly every 10 m of water adds about 1 atmosphere of pressure.
+
+## What pressure does and doesn't depend on
+
+Pressure at a given depth depends only on the fluid's density, the depth, and gravity — NOT on the shape or width of the container, and not on how much total fluid is present. A narrow tube and a wide tank filled with water to the same depth have identical pressure at the bottom.
+
+## Where students lose points
+
+- Assuming a wider or differently-shaped container changes the pressure at a given depth — the formula has no area or volume term at all.
+- Forgetting that pressure pushes in ALL directions at a point within a fluid, not just straight down.
+- Mixing up gauge pressure (above atmospheric) with absolute pressure (gauge + atmospheric).`,
+    deepNotes: `The AP notes give you ρ = m/V, P = F/A, and P = P₀ + ρgh. Here's why an incompressible fluid's pressure formula has no width or volume term at all — the reasoning, not just the rule — a worked multi-fluid layering problem, and what the CED's "ideal fluid" assumption is actually hiding.
+
+## Why pressure at depth depends only on depth — the reasoning
+
+It's worth seeing why P = P₀ + ρgh has no container-width term in it. Imagine an imaginary vertical column of fluid, of any cross-sectional area A, extending from the surface down to depth h. The weight of that column is ρ(Ah)g (density × volume × g), and this weight is entirely supported by the pressure difference between the top and bottom of the column, spread over that same area A: (P_bottom − P_top)A = ρAhg. The area A appears on both sides of this equation and cancels out completely — leaving P_bottom − P_top = ρgh, with no trace of A left. This is exactly why a skinny straw and a wide swimming pool have identical pressure at the same depth: the "extra" weight of a wider column is exactly matched by the "extra" area it's spread across.
+
+## Worked reasoning: pressure beneath layered fluids
+
+A tank has 0.50 m of oil (ρ = 800 kg/m³) floating on top of 1.0 m of water (ρ = 1000 kg/m³), open to the atmosphere. Find the absolute pressure at the very bottom. Work downward, layer by layer: pressure at the oil-water interface = P_atm + ρ_oil·g·h_oil = 101,325 + (800)(9.8)(0.50) = 101,325 + 3,920 = 105,245 Pa. Continue downward through the water layer, using THAT pressure as the new starting point: pressure at the bottom = 105,245 + ρ_water·g·h_water = 105,245 + (1000)(9.8)(1.0) = 105,245 + 9,800 = 115,045 Pa. Each fluid layer just adds its own ρgh on top of whatever pressure already existed above it — you can stack this reasoning through as many layers as a problem gives you.
+
+## What "ideal fluid" is quietly assuming away
+
+Real fluids have viscosity (internal friction that resists flow) and are at least slightly compressible (their density changes a little under pressure — this is why deep-ocean water is very slightly denser than surface water). The CED's ideal-fluid assumption sets both of these aside, which is precisely what allows density to be treated as a single constant number throughout a problem, rather than a function of pressure or depth. This assumption is stated as the default for the entire unit; problems will say so explicitly if a fluid should be treated differently.
+
+## Where this goes next
+
+The P = P₀ + ρgh relationship here is the direct foundation for buoyancy in 8.2 (the buoyant force is really just the NET effect of pressure being larger at the bottom of a submerged object than at its top) and for Bernoulli's equation in 8.4, which is essentially this same pressure-height relationship generalized to include a fluid's own kinetic energy.`
+  },
+
+  // injected batch
+  '8.2': {
+    apNotes: `The buoyant force is the net upward force a fluid exerts on an object submerged (fully or partially) within it. Archimedes' principle gives its magnitude directly: the buoyant force equals the WEIGHT of the fluid the object displaces.
+
+## The buoyancy formula
+
+F_b = ρ_fluid × V_displaced × g
+
+Notice this depends on the FLUID's density and the volume displaced — never on the submerged object's own mass or density directly (though those determine how much volume ends up displaced).
+
+## Floating, sinking, and neutral buoyancy
+
+- **Floats:** the object displaces exactly enough fluid that F_b equals its own weight — equilibrium, with part of the object above the surface.
+- **Sinks:** even fully submerged (displacing its entire volume), F_b is still less than the object's weight.
+- **Neutrally buoyant:** F_b exactly equals weight while fully submerged — the object neither rises nor sinks (a submarine holding depth, for instance).
+
+## Where a floating object's submerged fraction comes from
+
+For a floating object, F_b = weight leads directly to: (fraction of volume submerged) = ρ_object/ρ_fluid. An object with density 80% that of water floats with exactly 80% of its volume underwater.
+
+## Where students lose points
+
+- Using the submerged object's own density instead of the FLUID's density in the buoyancy formula.
+- Assuming buoyant force depends on depth — for a fully submerged object, it doesn't; it only depends on displaced volume.
+- Forgetting that a floating object's buoyant force must exactly equal its weight, which is precisely what determines how much of it sits underwater.`,
+    deepNotes: `The AP notes give you F_b = ρ_fluid V_displaced g and the float/sink/neutral classification. Here's why buoyancy is really just a pressure DIFFERENCE, derivable directly from 8.1 rather than a separate law, a fully worked "does it float, and how deep" problem, and why a massive steel ship floats when a small steel ball sinks.
+
+## Buoyancy derived from pressure, not asserted as a separate law
+
+The CED frames this as a direct application of Newton's laws to a fluid, and it's worth seeing why. Pressure increases with depth (from 8.1), so the fluid pushes UP on the bottom of a submerged object harder than it pushes DOWN on the top (since the bottom is deeper). That imbalance — more upward push at the bottom than downward push at the top — is the buoyant force, and it can be derived directly from P = ρgh applied to the top and bottom surfaces of a submerged shape (say, a simple cube) without needing Archimedes' principle as a separate starting assumption at all. Archimedes' principle is the convenient SHORTCUT (displaced fluid weight) for what is, underneath, just a pressure-difference calculation.
+
+## Worked reasoning: does it float, and how deep does it sit?
+
+A block of wood (ρ = 650 kg/m³, volume 0.020 m³) is placed in water (ρ = 1000 kg/m³). Since ρ_wood < ρ_water, it floats. Fraction submerged = ρ_wood/ρ_water = 650/1000 = 0.65 — 65% of the block sits underwater. Check with forces directly: weight = (650)(0.020)(9.8) = 127.4 N. Buoyant force at 65% submerged = ρ_water × (0.65 × 0.020) × g = (1000)(0.013)(9.8) = 127.4 N — matches the weight exactly, confirming equilibrium, as it must for a floating object.
+
+## Why a massive steel ship floats but a small steel ball sinks
+
+This is worth resolving directly, since it's one of the most common buoyancy misconceptions the CED itself calls out. It's never about the MATERIAL alone — steel (ρ ≈ 7,800 kg/m³) is much denser than water either way. What matters is the ship's OVERALL average density, including the large air-filled hollow space its hull encloses. A solid steel ball has nowhere for that averaging to happen — it's steel throughout, denser than water throughout, so it sinks. A ship's hull encloses enough low-density air that the ship-plus-air system's AVERAGE density drops below water's, even though the steel itself never stops being denser than water. This is exactly why a damaged ship that fills with water (replacing that air with more water) can sink, despite being made of the exact same steel throughout.
+
+## Where this goes next
+
+This pressure-difference reasoning reappears directly in 8.3 (fluid statics more broadly) and 8.4, where Bernoulli's equation generalizes the same P + ρgh combination to include a moving fluid's kinetic energy term as well — buoyancy is really the h-dependent, static special case of that more general relationship.`
+  },
+
+  // injected batch
+  '8.3': {
+    apNotes: `Static fluids transmit pressure changes throughout their volume. If you increase the pressure applied at one point in an enclosed, incompressible fluid, that same pressure increase appears throughout the entire fluid — this is the physical basis for hydraulic systems like car brakes and hydraulic lifts.
+
+## The hydraulic relationship
+
+Since pressure is transmitted equally throughout an enclosed fluid, the pressure at a small piston equals the pressure at a large piston: F₁/A₁ = F₂/A₂. A small force on a small-area piston can therefore produce a much larger force at a large-area piston — force gets multiplied by the ratio of the areas.
+
+## The trade-off: force for distance
+
+Multiplying force isn't free. Since the same volume of fluid is displaced on both sides, the smaller piston must move a proportionally LARGER distance than the large piston: A₁d₁ = A₂d₂. Force is gained, but distance is lost, in exactly the ratio needed to conserve energy — force × distance is the same on both sides.
+
+## A scope note worth knowing
+
+This hydraulic force-multiplication idea (sometimes called Pascal's Principle in general physics courses) follows directly from the fluid pressure relationships this unit already establishes (P = F/A, and pressure transmission through an enclosed, incompressible fluid) — but it is not called out by that name as its own required topic in the current AP Physics 1 Course and Exam Description. Treat it as a natural extension of the pressure concepts you already know, useful for understanding real hydraulic systems, rather than as a separately-named law you need to recall by title.
+
+## Where students lose points
+
+- Believing hydraulic systems create force or energy from nothing — they trade force for distance, conserving energy throughout.
+- Forgetting that the smaller piston must move a proportionally larger distance than the large piston.
+- Applying pressure-transmission reasoning to a fluid system that isn't actually enclosed.`,
+    deepNotes: `The AP notes give you F₁/A₁ = F₂/A₂ and the force-for-distance trade-off. Here's a fully worked hydraulic lift problem, why this idea is really just P = F/A applied twice rather than a new law, and a closer look at the scope note from the AP-level notes.
+
+## This is P = F/A, used twice — not a new formula
+
+It's worth seeing that F₁/A₁ = F₂/A₂ isn't introducing new physics — it's the SAME pressure definition from 8.1/8.2 (P = F/A) applied at two different points in the same connected, enclosed fluid, combined with the fact that pressure throughout a connected static fluid at the same height is uniform. Set P₁ = P₂ (same fluid, same pressure), substitute F/A for each, and F₁/A₁ = F₂/A₂ falls out immediately. There's no additional physical principle beyond "pressure is force per area" and "an enclosed fluid transmits pressure changes uniformly."
+
+## Worked reasoning: a hydraulic car lift
+
+A small piston (area 0.0080 m²) and a large piston (area 0.32 m²) are connected through an enclosed hydraulic fluid. A 1200 kg car sits on the large piston. What force must be applied to the small piston to hold the car in place? Weight of car: F₂ = (1200)(9.8) = 11,760 N. Using F₁/A₁ = F₂/A₂: F₁ = F₂(A₁/A₂) = 11,760 × (0.0080/0.32) = 294 N — lifting a 1200 kg car with roughly 30 kg-force worth of push, a mechanical advantage of 40×. The trade-off: to raise the car 0.010 m, the small piston must move d₁ = d₂(A₂/A₁) = 0.010 × 40 = 0.40 m — forty times the distance, for forty times less force, keeping total work (force × distance) the same on both sides.
+
+## On the "Pascal's Principle" naming question
+
+To be precise about scope: searching the current CED's required-content sections for "Pascal" or "hydraulic" turns up nothing — the specific named principle and the hydraulic-lift equation aren't listed as their own essential knowledge statement in Topic 8.3 ("Fluids and Newton's Laws," which explicitly covers buoyancy but is otherwise fairly general about fluid particle interactions and Newton's laws). That doesn't mean the physics is wrong or unhelpful — it's entirely correct and a natural, well-motivated extension of P = F/A — but if you're using this app's content to gauge what's guaranteed to appear on the actual AP exam by name, know that this specific application sits a half-step outside the CED's explicit list, unlike buoyancy (8.3.B) or the continuity equation (8.4), which are both named directly.
+
+## Where this goes next
+
+The "enclosed fluid transmits pressure equally" idea underlying this topic is the same static-pressure reasoning from 8.1, just applied horizontally between two pistons instead of vertically with depth. Once fluids start MOVING rather than sitting in static equilibrium, 8.4 takes over with the continuity equation and Bernoulli's equation — genuinely new relationships, not just P = F/A applied again.`
+  },
+
+  // injected batch
+  '8.4': {
+    apNotes: `Moving fluids obey two connected principles: the continuity equation (mass conservation) and Bernoulli's equation (energy conservation). Together they explain why fluids speed up in narrow sections and why faster-moving fluid has lower pressure.
+
+## Continuity: conservation of mass in a flowing fluid
+
+For an incompressible fluid flowing through a tube, the rate at which fluid enters must equal the rate at which it exits, at every cross-section: A₁v₁ = A₂v₂. If a pipe narrows, the fluid speeds up — there's no other way for the same amount of fluid to get through per second.
+
+## Bernoulli's equation: energy conservation for flowing fluid
+
+P₁ + ½ρv₁² + ρgh₁ = P₂ + ½ρv₂² + ρgh₂
+
+This is conservation of mechanical energy, written in terms of pressure, kinetic energy per volume, and gravitational potential energy per volume, rather than in terms of a single object's K and U.
+
+## The key (counterintuitive) result
+
+At the same height, a faster-moving fluid has LOWER pressure. This is what generates lift on an airplane wing (air moves faster over the curved top, lowering pressure there relative to underneath) and is why a shower curtain gets pulled inward when the water starts running.
+
+## Where students lose points
+
+- Assuming faster-moving fluid must have HIGHER pressure — Bernoulli's equation says the opposite.
+- Applying continuity or Bernoulli's equation to fluids or situations that aren't the assumed ideal (incompressible, no viscosity) without the appropriate caveats.
+- Forgetting that Bernoulli's equation is height-dependent too — comparing two points at different heights requires including the ρgh terms, not just pressure and speed.`,
+    deepNotes: `The AP notes give you A₁v₁ = A₂v₂ and Bernoulli's equation. Here's Torricelli's theorem — a specific, CED-named consequence of Bernoulli's equation worth deriving — a fully worked pipe-narrowing problem combining both relationships, and why Bernoulli's equation is genuinely just Unit 3's conservation of energy wearing different notation.
+
+## Bernoulli's equation is Unit 3's conservation of energy, per unit volume
+
+This is worth stating plainly: P + ½ρv² + ρgh = constant is structurally identical to K + U = constant from Unit 3, just divided through by volume. The ½ρv² term is kinetic energy per unit volume (compare to ½mv²), the ρgh term is gravitational potential energy per unit volume (compare to mgh), and the pressure term P plays the role of a kind of "flow work" energy per unit volume that a moving fluid carries by virtue of the pressure pushing it along. Nothing new is being conserved here beyond energy — it's the same bookkeeping from Unit 3, reframed for a continuous fluid instead of a discrete object.
+
+## Deriving Torricelli's theorem from Bernoulli's equation
+
+The CED names this specific, useful result directly: for fluid exiting a small opening near the bottom of an open container, the exit speed depends only on the height of fluid above the opening. Derive it: apply Bernoulli's equation between the fluid's top surface (point 1, open to atmosphere, moving slowly if the container is wide) and the exit hole (point 2, also open to atmosphere). Both points are at atmospheric pressure, so the P terms cancel: ½ρv₁² + ρgh₁ = ½ρv₂² + ρgh₂. If the container is wide compared to the hole, v₁ ≈ 0 (the surface drops very slowly compared to the exit speed). Let h = h₁ − h₂ (height of fluid above the hole). This simplifies to ρgh = ½ρv₂², giving v₂ = √(2gh) — exactly the same form as the speed of an object in free fall from height h, which makes physical sense: the fluid's potential energy is converting directly into kinetic energy, just as it would for a falling object.
+
+## Worked reasoning: a narrowing, rising pipe
+
+Water flows at 2.0 m/s through a horizontal pipe of cross-sectional area 0.030 m² at pressure 150,000 Pa. The pipe narrows to 0.010 m² while also rising 1.5 m. Find the new speed and pressure. Continuity: v₂ = v₁(A₁/A₂) = 2.0 × (0.030/0.010) = 6.0 m/s. Bernoulli (with h₁ = 0): 150,000 + ½(1000)(2.0)² + 0 = P₂ + ½(1000)(6.0)² + (1000)(9.8)(1.5). Left side: 150,000 + 2,000 = 152,000. Right-side terms: ½(1000)(36) = 18,000, and (1000)(9.8)(1.5) = 14,700. So P₂ = 152,000 − 18,000 − 14,700 = 119,300 Pa — pressure drops due to BOTH the speed increase and the height increase working in the same direction.
+
+## Where this goes next
+
+This is the final topic of the course, and it's a fitting capstone: Bernoulli's equation is conservation of energy (Unit 3) generalized to fluids, the pressure-height relationship at its core is the same one from 8.1, and the speed-height trade-off in Torricelli's theorem is literally free-fall kinematics (Unit 1) reappearing in fluid form. Very little in this final unit is conceptually new — it's the same handful of conservation principles from across the entire course, applied to a new kind of system.`
   }
 };
 
