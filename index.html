@@ -3487,6 +3487,294 @@ Worth knowing precisely: AP Physics 1 only expects you to calculate rotational i
 ## Where this goes next
 
 τ = Iα is the equation Unit 6 builds directly on top of: rotational kinetic energy is K_rot = ½Iω² (the exact rotational analog of ½mv², using I in place of m), and angular momentum L = Iω plays the same role for rotation that p = mv plays for translation. Every one of those Unit 6 relationships exists because this topic established I as mass's rotational stand-in.`
+  },
+
+  // injected batch
+  '6.1': {
+    apNotes: `A rotating object has kinetic energy even if its center of mass isn't going anywhere — this is rotational kinetic energy, K_rot = ½Iω², the direct rotational counterpart of ½mv². For an object that's both moving through space AND spinning (a rolling ball, for instance), total kinetic energy is the SUM of both forms.
+
+## The total kinetic energy of a rolling object
+
+K_total = K_trans + K_rot = ½mv² + ½Iω²
+
+## Rolling without slipping
+
+While an object rolls without slipping, its center-of-mass translational motion and its rotational motion are linked by v = rω (and, for changing speeds, a = rα). This connection lets you rewrite total kinetic energy entirely in terms of v (substituting ω = v/r) or entirely in terms of ω (substituting v = rω), whichever is more convenient for a given problem.
+
+## Why a rolling object is slower than a sliding one
+
+For a frictionless block sliding down a ramp, ALL the gravitational potential energy converts into translational kinetic energy. For a ball or disk rolling down the same ramp, some of that potential energy has to go into rotational kinetic energy instead — leaving less for translation, so the rolling object arrives at the bottom moving slower than the sliding block would. Objects with a larger rotational inertia (relative to their mass and radius) divert more energy into rotation and arrive even slower — this is why, in a race down a ramp, a solid sphere beats a solid disk, which beats a hoop, for objects of equal mass and radius.
+
+## Where students lose points
+
+- Forgetting to include the rotational kinetic energy term entirely when analyzing a rolling object.
+- Not using v = rω to connect the two forms of kinetic energy in a rolling problem.
+- Assuming a heavier rolling object always wins a race down a ramp — shape (which determines I relative to mr²) matters more than total mass, since mass cancels out of the final speed either way.`,
+    deepNotes: `The AP notes give you K_total = ½mv² + ½Iω² and the rolling-without-slipping connection. Here's the CED's rotational-work idea that explains WHERE this rotational kinetic energy comes from in the first place, a fully worked ramp-race comparison with actual numbers, and the boundary the CED sets on rolling-while-slipping.
+
+## Where rotational kinetic energy actually comes from: rotational work
+
+The CED covers this as its own topic (Torque and Work): just as linear work W = Fd transfers energy into translational KE, rotational work transfers energy into rotational KE. The relevant relationship is W = τΔθ — torque times the angular displacement over which it acts — and, just like linear work, it can be found as the area under a torque-vs-angular-position graph. This is the rotational parallel to everything Unit 3 taught about work and the work-energy theorem, just with torque and angle standing in for force and displacement. It's also where rotational POWER comes from: P = τω, the exact rotational analog of P = Fv from Unit 3.
+
+## Worked reasoning: a race down a ramp, with real numbers
+
+A solid sphere (I = ⅖mr²) and a hoop (I = mr²) of equal mass and radius are released from rest at the top of a 2.0 m high ramp. Using energy conservation, mgh = ½mv² + ½Iω², and substituting ω = v/r: for the sphere, mgh = ½mv² + ½(⅖mr²)(v/r)² = ½mv² + ⅕mv² = (7/10)mv², giving v = √(10gh/7) = √(10×9.8×2/7) ≈ 5.29 m/s. For the hoop, mgh = ½mv² + ½(mr²)(v/r)² = ½mv² + ½mv² = mv², giving v = √(gh) = √(9.8×2) ≈ 4.43 m/s. The sphere is noticeably faster — not because of mass (which canceled out of both results completely) but because the hoop's mass sits entirely at its rim (maximum I for its mass), diverting a full half of its kinetic energy into rotation, while the sphere's more spread-out mass diverts only 2/7 of its total kinetic energy into rotation.
+
+## The boundary on rolling while slipping
+
+Worth knowing precisely: when a rolling object IS slipping (tires spinning out, for instance), v = rω no longer holds, kinetic friction acts and DOES dissipate energy (unlike the ideal rolling-without-slipping case, where friction does no work at all), and the CED explicitly states that the exact mathematical relationships during slipping are beyond the scope of this course — you're only expected to reason qualitatively about what happens (which quantities increase, decrease, or stay the same), not calculate them.
+
+## Where this goes next
+
+This is the direct energy-side counterpart to angular momentum (6.2, next in this unit): both describe a rotating system, but energy tracks ½Iω² while momentum tracks Iω — related quantities that behave differently in collisions (angular momentum is always conserved when external torque is zero; rotational kinetic energy is only conserved if the interaction happens to be "elastic," exactly paralleling the linear momentum/KE distinction from Unit 4). Rolling motion combined with torque and rotational equilibrium (Unit 5) is also exactly what governs orbital motion in Unit 6's own final topic, Satellites and Orbits.`
+  },
+
+  // injected batch
+  '6.2': {
+    apNotes: `Angular momentum (L) is the rotational counterpart of linear momentum, and it follows the exact same conservation logic: if no external torque acts on a system, its total angular momentum stays constant, no matter how the system's shape or spin rate changes internally.
+
+## The key relationships
+
+- **For a rigid, rotating system:** L = Iω.
+- **For a point object** (moving in a straight line or a curve, relative to some chosen axis): L = mvr sin θ, where r is the distance from the axis to the object and θ is the angle between that position vector and the object's velocity. Notably, even an object moving in a straight line has nonzero angular momentum about any axis it isn't currently passing through.
+- **Angular impulse:** the rotational counterpart of impulse, defined as torque times the time interval it acts: angular impulse = τΔt.
+- **Rotational impulse-momentum theorem:** angular impulse equals the change in angular momentum, ΔL — the direct rotational analog of J = Δp.
+- On a torque-vs-time graph, the AREA under the curve is the angular impulse delivered. On an angular-momentum-vs-time graph, the SLOPE is the net torque.
+
+## Conservation of angular momentum
+
+If net external torque on a system is zero, L stays constant: L_initial = L_final, or I₁ω₁ = I₂ω₂ for a system whose moment of inertia changes (a figure skater pulling her arms in, for example). Since I and ω are inversely related when L is fixed, decreasing I forces ω to increase, and vice versa.
+
+## Where students lose points
+
+- Forgetting that L = Iω involves BOTH I and ω — a change in one doesn't necessarily mean L changed, if the other compensates.
+- Applying conservation of angular momentum when there actually IS a nonzero external torque acting (friction at a pivot, for instance).
+- Confusing angular momentum (L, a rotational quantity) with linear momentum (p, a translational one) — related by analogy, but not interchangeable or equal.`,
+    deepNotes: `The AP notes give you L = Iω, the point-object formula, and the conservation statement. Here's why angular momentum conservation is really Newton's third law again (same derivation pattern as linear momentum in Unit 4), a fully worked figure-skater problem, and the CED's specific boundary on angular momentum's direction.
+
+## Deriving conservation of angular momentum from the 3rd law
+
+This follows the identical logical pattern as linear momentum conservation in Unit 4, just with torque and angular impulse standing in for force and impulse. The CED states it directly: the angular impulse exerted by one object on a second is equal and opposite to the angular impulse the second exerts on the first — a direct consequence of Newton's third law. Sum the angular impulse-momentum theorem over every object in a system with no external torque, and the internal angular impulses cancel in pairs, leaving total angular momentum unchanged. Nothing new is being assumed here beyond what you already used to derive linear momentum conservation — it's the same argument, one level up.
+
+## Worked reasoning: the figure skater, with actual numbers
+
+A skater spins at ω₁ = 3.0 rad/s with arms extended, giving I₁ = 5.0 kg·m². She pulls her arms in, reducing her moment of inertia to I₂ = 2.0 kg·m². Conservation of angular momentum (no external torque, ignoring ice friction): I₁ω₁ = I₂ω₂ → (5.0)(3.0) = (2.0)ω₂ → ω₂ = 7.5 rad/s — two and a half times faster. Worth noting what does NOT stay constant here: rotational kinetic energy. K₁ = ½(5.0)(3.0)² = 22.5 J, but K₂ = ½(2.0)(7.5)² = 56.25 J — her kinetic energy increased, even though no external torque acted. This isn't a contradiction: conservation of angular momentum says nothing about kinetic energy, and the skater's own muscles do real (internal) work pulling her arms inward, adding that extra energy — angular momentum conservation and energy conservation are two separate bookkeeping systems, and only one of them (angular momentum) is guaranteed to hold here.
+
+## A nonrigid system can change its spin rate without any external torque at all
+
+This is worth stating explicitly, because it initially sounds like it violates the very idea of "constant angular velocity when torque-free." It doesn't — angular momentum, not angular velocity, is what stays constant. A NONRIGID system (the skater, again, or a diver changing shape mid-air) can change its angular SPEED purely by redistributing its own mass closer to or farther from the rotation axis, with L = Iω staying fixed throughout even as I and ω individually change in opposite directions.
+
+## The CED's boundary on direction
+
+Worth knowing precisely: while you're expected to mathematically manipulate the MAGNITUDE of angular momentum using one-dimensional (signed, +/−) vector conventions, the true directional nature of angular momentum and angular impulse — treating them as vectors pointing along the rotation axis via the right-hand rule — is beyond this course's scope, matching the identical boundary set on torque's direction in Unit 5.
+
+## Where this goes next
+
+Conservation of angular momentum governs orbital mechanics directly in this unit's final topic (6.3, Satellites and Orbits) — an object in an elliptical orbit speeds up as it gets closer to the central body and slows down as it moves farther away, precisely because its angular momentum (not its speed) is what stays constant as its distance r changes.`
+  },
+
+  // injected batch
+  '6.3': {
+    apNotes: `A satellite in circular orbit is held in its path entirely by gravity acting as the centripetal force: GMm/r² = mv²/r. Solving this gives the orbital speed, and from speed, the orbital period.
+
+## Key relationships for circular orbits
+
+- **Orbital speed:** v = √(GM/r) — depends only on the central body's mass M and the orbital radius r. Notably, the satellite's OWN mass cancels out completely.
+- **Orbital period:** T = 2π√(r³/GM) — larger orbits take longer to complete, and not in direct proportion to r; period grows with r^(3/2).
+- Higher orbit → slower orbital speed, longer period. This is the opposite of what intuition often suggests.
+
+## Satellites are falling, not floating
+
+A satellite in orbit is in continuous free fall — gravity is the only force acting on it. It "misses" the Earth (or whatever it orbits) because it's also moving sideways fast enough that the surface curves away beneath it just as fast as it falls. This is exactly why astronauts aboard an orbiting spacecraft feel weightless: not because gravity has stopped acting on them, but because they and their spacecraft are falling together, at the same rate, with nothing pushing back on them.
+
+## Where students lose points
+
+- Believing astronauts in orbit experience "no gravity" — they experience continuous free fall, which feels weightless but is not the same as gravity being absent.
+- Assuming a satellite's own mass affects its orbital speed — it cancels out of v = √(GM/r) entirely.
+- Assuming a higher orbit means a faster speed — it's the opposite; higher orbits are slower.`,
+    deepNotes: `The AP notes cover circular orbital speed and period. Here's what changes for elliptical orbits (which the CED treats as equally central to this topic, not just an aside), the derivation and meaning of escape velocity, and how gravitational potential energy's true form — introduced back in Unit 3 — becomes essential here.
+
+## Circular orbits are the simple special case — elliptical orbits are just as much "in scope"
+
+It's easy to assume this topic is only about circular orbits, but the CED treats elliptical orbits as fully part of this topic's required content, just governed by different conserved quantities. In a CIRCULAR orbit, the CED notes that total mechanical energy, gravitational potential energy, kinetic energy, AND angular momentum are all individually constant — nothing about the orbit changes as the satellite moves. In an ELLIPTICAL orbit, only total mechanical energy and angular momentum stay constant — potential energy and kinetic energy both continuously trade off as the satellite's distance from the central body changes, exactly the same K+U conservation logic from Unit 3, just applied to an orbit instead of a ramp or pendulum. This is why a satellite in an elliptical orbit moves fastest at its closest approach (lowest PE, highest KE) and slowest at its farthest point (highest PE, lowest KE) — angular momentum conservation (L = mvr sin θ, from 6.2) requires exactly this trade-off as r changes.
+
+## Gravitational potential energy, properly this time
+
+Unit 3 introduced Ug = mgh as an approximation valid near a planet's surface. Here's the real, general form the CED actually wants for orbital problems: Ug = −Gm₁m₂/r. Notice it's NEGATIVE — this comes from a deliberate convention where potential energy is defined to be exactly zero when the two objects are infinitely far apart. As the satellite gets closer to the central body (smaller r), Ug becomes more and more negative, meaning the system's potential energy is actually LOWER (more negative) closer in — which fits: gravity pulls things together, so being bound closer together corresponds to lower potential energy, precisely mirroring how mgh is lowest at h = 0 and increases as an object rises.
+
+## Escape velocity: the speed at which total mechanical energy reaches exactly zero
+
+Escape velocity is defined as the exact speed at which a satellite's total mechanical energy (K + Ug) equals zero — meaning it can travel infinitely far from the central body, with its kinetic energy dropping to exactly zero only in the limit as r → ∞ (it asymptotically slows to a stop, but never actually needs to turn back). Setting K + Ug = 0: ½mv² − GMm/r = 0, which solves to v_esc = √(2GM/r). Notice this is exactly √2 times the circular orbital speed at that same radius (v_orbit = √(GM/r)) — a clean, memorable relationship that falls directly out of the energy condition rather than needing to be memorized separately.
+
+## Where this goes next
+
+This topic is the natural capstone of the entire mechanics portion of the course: it combines circular motion (Unit 2), conservation of energy (Unit 3) with the FULL gravitational PE formula, angular momentum conservation (this unit's own 6.2), and gravity as a force (Unit 2's Topic 2.6) into a single, unified picture of orbital motion — genuinely one of the more satisfying "everything connects" moments in AP Physics 1.`
+  },
+
+  // injected batch
+  '7.1': {
+    apNotes: `Simple harmonic motion (SHM) is a special case of periodic (repeating) motion that occurs whenever the restoring force on an object is directly proportional to its displacement from equilibrium: F = −kx. The negative sign means the force always points back TOWARD equilibrium, opposing whatever displacement currently exists.
+
+## The defining condition
+
+- **Equilibrium position:** where the net force on the object is zero.
+- **Restoring force:** any force that points opposite to the object's displacement from equilibrium — the farther displaced, the stronger the restoring force.
+- SHM specifically requires this restoring force to be proportional to displacement (not just "pointing back," but scaling linearly with how far away you are).
+
+## Where SHM shows up
+
+A mass on a spring (horizontal or vertical) is the cleanest example. A pendulum swinging at small angles ALSO counts, because for small angles, the restoring torque turns out to be proportional to angular displacement — this is a genuine approximation, not exact, but it's an excellent one for small swings.
+
+## What happens at equilibrium vs. at the extremes
+
+At equilibrium (x = 0): the restoring force is zero, so acceleration is zero — but the object is moving at its MAXIMUM speed there, since it's been continuously accelerated toward that point the entire way in. At the extremes (maximum displacement): the restoring force — and therefore acceleration — is at its MAXIMUM, while speed is momentarily zero.
+
+## Where students lose points
+
+- Thinking the object is "stopped" or motionless at equilibrium — it's moving fastest there, not slowest.
+- Forgetting the restoring force always points TOWARD equilibrium, opposite to the current displacement (hence the negative sign in F = −kx).
+- Assuming any repeating back-and-forth motion automatically qualifies as SHM — it only counts if the restoring force is specifically proportional to displacement.`,
+    deepNotes: `The AP notes give you the F = −kx defining condition and the equilibrium/extremes contrast. Here's exactly why the pendulum approximation works only for small angles — with the actual physics reasoning, not just the rule — a worked comparison distinguishing SHM from other repeating motion, and why this specific mathematical form turns out to be so common in nature.
+
+## Why the pendulum only counts as SHM for SMALL angles
+
+This deserves the real reason, not just the rule. A pendulum's actual restoring torque is proportional to sin θ (from the geometry of gravity acting on a swinging bob), not to θ itself: τ = −mgL sin θ. True SHM requires the restoring influence to be proportional to the displacement variable itself (θ, in this case), not to some function of it. Here's the key fact that rescues the pendulum: for SMALL angles (roughly under 15°), sin θ ≈ θ (in radians) — the two values are nearly indistinguishable. So the small-angle pendulum's torque is approximately τ ≈ −mgLθ, which IS proportional to θ, and SHM becomes an excellent approximation. Swing the pendulum through a large angle, and sin θ meaningfully diverges from θ, the restoring torque is no longer proportional to displacement, and the motion, while still periodic, is no longer true SHM (its period even starts to depend slightly on amplitude, unlike ideal SHM).
+
+## Worked reasoning: is this SHM, or just periodic motion?
+
+Consider a ball bouncing elastically and repeatedly between two rigid walls, moving at constant speed and simply reversing direction at each wall. This motion is periodic (it repeats regularly) — but it is NOT SHM. Why not? Between bounces, the net force on the ball is zero (constant velocity), and at the instant of each bounce, the force is a sudden, enormous impulsive force, not one that grows smoothly in proportion to displacement from some central equilibrium point. There's no restoring force at all in the SHM sense — just a repeating pattern of free motion interrupted by sudden collisions. Contrast this with a mass on a spring, where the force acts continuously, at every position, growing smoothly and predictably with displacement. "Periodic" is a much broader category than "SHM" — SHM is one specific, mathematically clean member of that broader family.
+
+## Why this particular mathematical form is everywhere in nature
+
+It's worth appreciating why F = −kx specifically, rather than some other restoring-force rule, turns out to describe so many real systems: near ANY stable equilibrium point, for ANY smooth restoring force, a general mathematical result guarantees the force looks approximately linear in displacement for SMALL enough displacements — almost like how any smooth curve looks approximately straight if you zoom in enough. This is the deep reason SHM shows up constantly across physics — vibrating atoms in a solid, oscillating electrical circuits, sound waves — even in systems that have nothing to do with springs: they're all examples of small oscillations near a stable equilibrium, and F = −kx is what that generically looks like up close.
+
+## Where this goes next
+
+This F = −kx condition is what makes the period formulas in 7.2 possible in the first place — T = 2π√(m/k) and T = 2π√(L/g) both come directly from solving the equation of motion that F = −kx produces. The equilibrium-vs-extremes contrast here previews exactly how energy trades between kinetic and potential in 7.4, and the small-angle approximation reasoning here is the same style of "linearize near equilibrium" thinking that appears anywhere physics deals with small oscillations.`
+  },
+
+  // injected batch
+  '7.2': {
+    apNotes: `Period (T) is the time for one complete oscillation; frequency (f) is how many oscillations happen per unit time. They're reciprocals: T = 1/f.
+
+## The two period formulas
+
+- **Mass-spring system:** T = 2π√(m/k). Depends only on mass and spring constant.
+- **Simple pendulum (small angle):** T = 2π√(L/g). Depends only on length and local gravitational field strength.
+
+## What does NOT affect period
+
+This is the most important — and most counterintuitive — fact in this topic: amplitude does not affect the period of ideal SHM. A gently nudged pendulum and a widely swung one (both within the small-angle regime) take exactly the same time per swing. Similarly, a spring pulled 2 cm and one pulled 10 cm oscillate with the identical period, even though the larger one is clearly moving faster to cover more ground in the same time.
+
+## What each system's period does depend on
+
+- More mass on a spring → longer period (slower oscillation); a stiffer spring (larger k) → shorter period.
+- A longer pendulum → longer period; stronger gravity → shorter period. Notice pendulum period does NOT depend on mass at all.
+
+## Where students lose points
+
+- Assuming a bigger swing or larger oscillation changes the period — it doesn't, for ideal SHM.
+- Treating period and frequency as the same quantity instead of recognizing they're reciprocals.
+- Forgetting that pendulum period depends on length and g, NOT on the mass of the bob.`,
+    deepNotes: `The AP notes give you both period formulas and the amplitude-independence fact. Here's why amplitude-independence isn't a coincidence but a direct mathematical consequence of F = −kx, a worked comparison showing exactly how much period changes when mass or length changes, and a practical implication for pendulum clocks.
+
+## Why amplitude doesn't affect period — the reasoning, not just the rule
+
+This genuinely surprising fact follows directly from the LINEARITY of F = −kx. A larger amplitude means a larger maximum restoring force AND a larger distance to travel — and for a linear (proportional) restoring force, these two effects scale together in exactly the right way to cancel out. Double the amplitude, and the maximum force doubles too, providing exactly enough extra acceleration to cover the doubled distance in the same amount of time. This delicate cancellation is a special property of LINEAR restoring forces specifically — it's precisely why the large-angle pendulum (where the restoring torque is only approximately proportional to displacement, per 7.1) does NOT have this property: its period actually does depend slightly on amplitude once you swing it far enough that sin θ meaningfully differs from θ.
+
+## Worked reasoning: how period scales with mass and length
+
+Since T = 2π√(m/k), period depends on the SQUARE ROOT of mass — quadrupling the mass on a spring only doubles the period (√4 = 2), it doesn't quadruple it. The same square-root scaling applies to pendulum length: quadrupling a pendulum's length also only doubles its period. Concretely: a 1.0 kg mass on a k = 100 N/m spring has T = 2π√(1/100) ≈ 0.628 s. Increase the mass to 4.0 kg: T = 2π√(4/100) ≈ 1.257 s — exactly double, not quadruple. This square-root relationship is worth internalizing as a pattern, since it recurs anywhere a period or time-scale depends on a ratio of quantities inside a square root (orbital period in this course's own Unit 6 has the same structural shape).
+
+## A practical payoff: why pendulum clocks work at all
+
+The amplitude-independence of pendulum period is precisely why pendulum clocks were historically such a breakthrough in timekeeping accuracy: a clock's pendulum naturally loses a little energy to air resistance and friction over time, causing its swing amplitude to gradually shrink — but because period doesn't depend on amplitude, the clock keeps essentially the same time regardless. If period DID depend on amplitude, a pendulum clock would drift slower or faster as its swing naturally dampened, making it useless for reliable timekeeping without constant recalibration.
+
+## Where this goes next
+
+These period formulas are what 7.3's position/velocity/acceleration equations are built on directly — the angular frequency ω = 2π/T = 2πf that appears in x(t) = A cos(ωt) comes straight from the period established here. The mass-spring period formula also connects back to Unit 2's spring force (F = −kx) and forward to this unit's own energy topic (7.4), where the same k and m determine not just how fast the system oscillates but how much total energy it carries.`
+  },
+
+  // injected batch
+  '7.3': {
+    apNotes: `For an object in SHM, position as a function of time follows a sinusoidal pattern: x(t) = A cos(ωt) if it starts at maximum displacement, or x(t) = A sin(ωt) if it starts at equilibrium moving in the positive direction. Here ω = 2πf = 2π/T is the angular frequency, and A is the amplitude — the maximum displacement from equilibrium.
+
+## Reading the graphs
+
+Velocity is the slope of the position graph, and acceleration is the slope of the velocity graph — the exact same slope-reading skill from Unit 1's motion graphs, just applied to oscillating curves instead of straight lines and parabolas. The key features to track are the MINIMA, MAXIMA, and ZEROS of position, velocity, and acceleration, and how they line up (or don't) with each other in time.
+
+## How the three graphs relate to each other
+
+Position and acceleration are always exactly OPPOSITE in sign at any given instant (a = −ω²x) — when displacement is at its positive maximum, acceleration is at its negative maximum, and vice versa. Velocity is offset from both: it's zero exactly when position is at an extreme, and at its maximum exactly when position is zero (at equilibrium).
+
+## What changing amplitude does and doesn't change
+
+Changing the amplitude changes how FAR the object swings and how fast it moves at each point, but — consistent with 7.2 — it never changes the period or frequency of the motion.
+
+## Where students lose points
+
+- Expecting the velocity and position graphs to reach their peaks at the same time — they don't; they're offset from each other.
+- Losing track of which quantity (position, velocity, or acceleration) is zero versus at a maximum at a given instant.
+- Confusing angular frequency ω (radians/second) with regular frequency f (cycles/second, Hz) — they differ by a factor of 2π.`,
+    deepNotes: `The AP notes give you x(t) = A cos(ωt) and the position/velocity/acceleration relationships. Here's why the three graphs are offset from each other in exactly the way they are — grounded in the slope relationships from Unit 1, not a new rule to memorize — a complete worked example writing out all three equations of motion, and how to read qualitative features off a graph without doing any calculation at all.
+
+## Why the offsets between the three graphs are exactly what Unit 1 already taught you
+
+This isn't a new fact to memorize — it's the SAME slope relationship from Unit 1's motion graphs, just applied to a sinusoidal curve instead of a straight line. Velocity is the slope of position; for a cosine curve, the slope is steepest (in magnitude) exactly where the curve crosses zero, and exactly zero at the curve's peaks and troughs — which is precisely why velocity is maximum at x = 0 and zero at the extremes. The same logic one level up (acceleration is the slope of velocity) produces the position/acceleration relationship. If you already trust "slope of position gives velocity, slope of velocity gives acceleration" from Unit 1, the SHM graph relationships aren't a new skill — they're that exact same skill applied to a new shape of curve.
+
+## Worked reasoning: writing all three equations from a description
+
+An object oscillates with amplitude 0.20 m and period 0.40 s, starting at maximum positive displacement. First find ω = 2π/T = 2π/0.40 ≈ 15.7 rad/s. Since it starts at maximum displacement, use the cosine form: x(t) = 0.20 cos(15.7t) m. Velocity: v(t) = −Aω sin(ωt) = −(0.20)(15.7) sin(15.7t) ≈ −3.14 sin(15.7t) m/s. Acceleration: a(t) = −Aω² cos(ωt) = −(0.20)(15.7)² cos(15.7t) ≈ −49.3 cos(15.7t) m/s². Notice the acceleration equation has the same cosine shape as position, just scaled by −ω² — confirming a = −ω²x directly.
+
+## Reading a graph qualitatively, without any equation at all
+
+The CED explicitly expects you to identify minima, maxima, and zeros directly from a graph and reason about the motion from those features alone — this is often faster than writing out full equations. For instance: if you're shown a velocity-time graph and asked where the object is at its maximum positive displacement, you don't need x(t) at all — just find where velocity crosses zero WHILE transitioning from positive to negative (not the other zero-crossing, where it's transitioning from negative to positive, which corresponds to maximum NEGATIVE displacement instead).
+
+## Where this goes next
+
+These equations and graph relationships are the mathematical backbone for 7.4's energy analysis: knowing exactly when velocity (and therefore kinetic energy) is at a maximum or zero is what lets you predict where potential energy must be doing the opposite. The same amplitude-doesn't-affect-period fact from 7.2 shows up here as amplitude scaling the height of all three graphs uniformly, without ever stretching or compressing them along the time axis.`
+  },
+
+  // injected batch
+  '7.4': {
+    apNotes: `In SHM, total mechanical energy stays constant, continuously trading between kinetic and potential energy as the object oscillates. For a spring-mass system, that total energy is fixed entirely by the amplitude: E_total = ½kA².
+
+## The energy trade-off
+
+- At the extremes (x = ±A): all energy is potential (U = ½kA² = E_total), kinetic energy is exactly zero — this is the minimum possible KE in the system.
+- At equilibrium (x = 0): all energy is kinetic (K = E_total), potential energy is exactly zero — this is the maximum possible KE.
+- At any position in between: E_total = K + U = ½mv² + ½kx², constant throughout the motion.
+
+## Why amplitude determines everything about the energy
+
+Since E_total = ½kA² depends on amplitude SQUARED, doubling the amplitude doesn't double the energy — it QUADRUPLES it. This is exactly why increasing a system's amplitude requires a disproportionate amount of additional energy input.
+
+## Finding speed at any position
+
+From conservation, ½mv² = E_total − ½kx² = ½kA² − ½kx², which rearranges to v = ω√(A² − x²) — a direct way to find speed at any displacement without needing to track time at all.
+
+## Where students lose points
+
+- Forgetting total energy scales with amplitude SQUARED, not linearly.
+- Leaving one of the two energy terms (kinetic or potential) out of the conservation equation at an intermediate position.
+- Assuming kinetic energy is maximum at the extremes — it's actually zero there, and maximum at equilibrium (exactly backward from where potential energy peaks).`,
+    deepNotes: `The AP notes give you E_total = ½kA² and the K/U trade-off. Here's a fully worked problem finding speed at a specific position using energy alone, why the amplitude-squared energy scaling connects to a broader pattern you've already seen, and how an external disturbance mid-oscillation changes the system's energy budget.
+
+## Worked reasoning: finding speed without touching time at all
+
+A 0.40 kg mass oscillates on a spring with k = 250 N/m and amplitude 0.15 m. Find its speed when it's at x = 0.09 m. Total energy: E = ½kA² = ½(250)(0.15)² = 2.8125 J. Potential energy at x = 0.09 m: U = ½kx² = ½(250)(0.09)² = 1.0125 J. So kinetic energy there: K = E − U = 2.8125 − 1.0125 = 1.8 J. Solving ½mv² = 1.8 for v: v = √(2×1.8/0.40) = 3.0 m/s. Notice this entire calculation never referenced time, angular frequency, or the position equation from 7.3 at all — pure energy conservation, exactly the same K+U bookkeeping skill from Unit 3, just applied to a spring's potential energy instead of gravitational.
+
+## The amplitude-squared scaling is the same pattern as kinetic energy itself
+
+It's worth connecting this to something you already know: E ∝ A² for SHM is structurally the same relationship as K ∝ v² from Unit 3 — in both cases, doubling the relevant "size" quantity (amplitude here, speed there) quadruples the associated energy. This isn't a coincidence: at the instant an oscillator passes through equilibrium, its total energy IS purely kinetic, E_total = ½mv_max², and v_max = Aω — substitute that in and E_total = ½m(Aω)² = ½mω²A², which is proportional to A² for exactly the same algebraic reason ½mv² is proportional to v². The two facts are really one fact viewed from different positions in the oscillation.
+
+## What happens if you disturb the system mid-swing
+
+A scenario worth thinking through: if something adds or removes energy partway through an oscillation (a piece of clay dropped onto an oscillating cart and sticking, say), the system's total energy changes to a new value, which means its amplitude changes too (since amplitude and total energy are locked together by E = ½kA²) — but interestingly, its PERIOD does not change due to the energy shift itself, only if the change in mass alters T = 2π√(m/k) directly. Energy and period are governed by genuinely separate relationships in SHM, even though both ultimately depend on the same k and m.
+
+## Where this goes next
+
+This K+U conservation framework is the same one from Unit 3, now specialized to a spring's ½kx² potential energy instead of gravity's mgh — and it will reappear once more, essentially unchanged, in Unit 8's discussion of energy considerations in fluid systems. The oscillation-energy picture here is also the conceptual root of how vibrating systems store and release energy in far more advanced physics (waves, sound, AC circuits) that build on exactly this same E ∝ A² relationship.`
   }
 };
 
