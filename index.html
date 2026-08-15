@@ -3181,6 +3181,312 @@ P = Fv assumes the force is roughly constant over the interval in question. In s
 ## Where this goes next
 
 Power reasoning becomes directly relevant again the moment rotational quantities are introduced in Units 5 and 6, where P = τω plays the exact same role for rotating systems that P = Fv plays here for translational ones — same underlying idea (energy transferred per time), just with torque and angular velocity standing in for force and velocity.`
+  },
+
+  // injected batch
+  '4.1': {
+    apNotes: `Momentum is defined as p = mv — mass times velocity. It's a vector, pointing in the same direction as the object's velocity, and it measures something distinct from both speed and kinetic energy: roughly, how hard an object is to stop.
+
+## Why momentum, specifically
+
+The CED frames momentum as the tool for analyzing collisions and explosions. A collision is modeled as an interaction where the forces the objects exert on EACH OTHER are much larger than any external force acting during the (typically very short) time of contact — which is exactly what lets you ignore outside forces like friction or gravity during the collision itself and just look at the states right before and right after. An explosion is the reverse: internal forces push objects of a system apart.
+
+## What momentum captures that speed alone doesn't
+
+A heavy, slow-moving truck and a light, fast-moving motorcycle can have identical momentum — the same "how hard to stop," even though their speeds are wildly different. This is precisely why momentum, not just speed, is the right quantity for predicting what happens when things collide.
+
+## Where students lose points
+
+- Treating momentum as a scalar and dropping direction — it's a vector, and sign/direction matters in every calculation.
+- Confusing momentum with force — they're related (through impulse, in the next topic) but momentum itself is not a force.
+- Assuming a bigger or heavier object automatically has more momentum, regardless of its actual speed.`,
+    deepNotes: `The AP notes define momentum and explain why it's the right tool for collisions. Here's the "unless otherwise stated" boundary the CED sets for the word "momentum" itself, a worked comparison showing momentum genuinely differs from kinetic energy, and where this single definition becomes the seed for the entire rest of the unit.
+
+## A small but useful boundary: "momentum" always means linear momentum here
+
+The CED states directly: unless otherwise specified, "momentum" refers to LINEAR momentum (p = mv), as opposed to angular momentum (L = Iω), a completely different quantity introduced later, in Unit 6. This matters because both quantities get called "momentum" casually, and conflating them is an easy mistake once rotational motion enters the course.
+
+## Worked reasoning: momentum and kinetic energy tell different stories
+
+A 1000 kg car moving at 2 m/s and a 2000 kg truck moving at 1 m/s: momentum is (1000)(2) = 2000 kg·m/s for the car, and (2000)(1) = 2000 kg·m/s for the truck — identical. But kinetic energy is ½(1000)(2)² = 2000 J for the car, versus ½(2000)(1)² = 1000 J for the truck — the car has TWICE the kinetic energy despite equal momentum. This isn't a contradiction; it's because momentum scales linearly with speed (p ∝ v) while kinetic energy scales with speed squared (K ∝ v²). Doubling an object's speed doubles its momentum but quadruples its kinetic energy. This is exactly why a collision can conserve momentum while NOT conserving kinetic energy (an inelastic collision) — the two quantities are simply tracking different things, and there's no requirement that both stay constant just because one does.
+
+## Why collisions get modeled as "before and after" instead of moment-to-moment
+
+The CED's collision model — comparing only the state right before contact to the state right after — is a deliberate simplification, and it's valid specifically because collision forces are typically enormous and last for a very short time, dwarfing any external force (gravity, friction, air resistance) during that brief window. This is what justifies treating momentum as effectively conserved DURING the collision itself, even in situations where it wouldn't be conserved over a longer timescale (a ball bouncing on a table, for instance, isn't part of an isolated system in the long run — gravity and normal force are always present — but during the literal instant of the bounce, those forces are negligible compared to the contact force).
+
+## Where this goes next
+
+Everything else in this unit builds directly on p = mv: impulse (4.2) is what CHANGES momentum, conservation (4.3) is what happens to TOTAL momentum in a system with no external force, and elastic/inelastic collisions (also folded into this app's 4.3) categorize collisions by whether kinetic energy also happens to be conserved alongside momentum. Center of mass (4.4) extends this same p = mv idea to an entire multi-object system at once.`
+  },
+
+  // injected batch
+  '4.2': {
+    apNotes: `Impulse connects force to momentum change. The CED's central relationship is the impulse-momentum theorem: the net external force on a system equals the rate of change of its momentum, and — integrated over time — the impulse delivered equals the total change in momentum.
+
+## The key relationships
+
+- **Impulse:** J = FΔt (average force times the time interval it acts over). Units: N·s, equivalent to kg·m/s.
+- **Impulse-momentum theorem:** J = Δp = mv_f − mv_i. Impulse IS the change in momentum — not a separate quantity that merely relates to it.
+- Impulse is a vector, pointing in the same direction as the net force.
+- On a force-vs-time graph, the AREA under the curve equals the impulse delivered.
+- On a momentum-vs-time graph, the SLOPE equals the net external force.
+
+## Why this matters for safety engineering
+
+Since J = FΔt is fixed by how much momentum needs to change, stretching out Δt (a longer collision time) means a smaller average force is needed for the same impulse. This is the entire principle behind airbags, crumple zones, and padded flooring: they don't change how much momentum has to change — they change how long it takes to change, trading a short, violent force for a longer, gentler one.
+
+## Where students lose points
+
+- Treating impulse and momentum as the same quantity, rather than recognizing impulse as the CHANGE in momentum.
+- Dropping the vector/sign convention — a ball that bounces back experiences a LARGER impulse than one that simply stops, because its momentum reverses sign rather than just going to zero.
+- Assuming force must be constant to use J = FΔt — when force varies, that formula gives the AVERAGE force over the interval, found from the total impulse (area under an F-t graph) divided by Δt.`,
+    deepNotes: `The AP notes give you J = FΔt = Δp and the safety-engineering implication. Here's why the impulse-momentum theorem is actually Newton's second law in disguise (the CED says this directly), a worked bouncing-ball problem that shows why "stopping" and "bouncing" aren't the same event, and the specific mass-change boundary the CED sets.
+
+## The impulse-momentum theorem IS Newton's second law
+
+This is worth taking seriously, not just noting in passing: the CED states that Newton's second law is a direct result of applying the impulse-momentum theorem to a system of constant mass. Start from F_net = Δp/Δt (the rate-of-change form). If mass is constant, Δp = Δ(mv) = mΔv, so F_net = mΔv/Δt = ma — there's F = ma, falling directly out of the momentum relationship. This means momentum and force were never two separate ideas needing two separate frameworks; F = ma is the special, constant-mass case of a more general momentum-based law. That generality is exactly why momentum (not F = ma directly) is the right tool once mass itself might be changing — a rocket burning fuel, for instance — even though the CED specifically states AP Physics 1 does not require quantitatively analyzing such changing-mass systems.
+
+## Worked reasoning: why a bounce hurts more than a stop
+
+A 0.50 kg ball hits a wall at 8.0 m/s. Case A: it sticks (stops completely). Δp = m(0 − 8.0) = −4.0 kg·m/s, so |J| = 4.0 N·s. Case B: it bounces straight back at 6.0 m/s. Δp = m(−6.0 − 8.0) = m(−14.0) = −7.0 kg·m/s, so |J| = 7.0 N·s — nearly double, even though the ball was moving SLOWER after the bounce than its original speed. The reason: stopping only requires removing the original momentum, but bouncing requires removing the original momentum AND adding an equal amount in the opposite direction. This is exactly why catchers' mitts are padded and why a "bouncy" collision transmits more force than a "dead" one for the same incoming speed — a direct, quantitative consequence of momentum being a vector.
+
+## Where this goes next
+
+The impulse-momentum theorem here is the direct bridge into Conservation of Momentum (4.3): apply the impulse-momentum theorem to EVERY object in a system at once, note that internal forces between objects come in equal-and-opposite Newton's-3rd-law pairs (so their impulses cancel exactly when summed over the whole system), and what's left is the conservation law. The area-under-a-force-graph idea reappears identically as area-under-a-torque-graph for angular impulse in Unit 6.`
+  },
+
+  // injected batch
+  '4.3': {
+    apNotes: `If no external net force acts on a system, its total momentum stays constant — no matter how complicated the internal interactions are. This is one of the most powerful tools in the course because it lets you relate a system's state long before an interaction to its state long after, without needing to know any details of what happened in between.
+
+## The conservation statement
+
+Σp_initial = Σp_final, applied to the ENTIRE system (all objects together), as long as the net external force on that system is zero. Internal forces — the forces the objects exert on each other during the interaction — never change the total, because by Newton's third law they always come in equal-and-opposite pairs that cancel when summed over the whole system.
+
+## Elastic vs. inelastic collisions
+
+- **Elastic:** total kinetic energy is the same before and after — momentum AND kinetic energy are both conserved. Rare in everyday life (very hard, low-deformation collisions come closest), but a common idealized case in problems.
+- **Inelastic:** total kinetic energy DECREASES — some of it converts into other forms (heat, sound, deformation) via nonconservative forces during the collision. Momentum is still conserved; kinetic energy is not.
+- **Perfectly inelastic:** the most extreme inelastic case — the objects stick together and move with one shared final velocity. This is the maximum possible kinetic-energy loss for a given momentum.
+
+## Where students lose points
+
+- Trying to also conserve kinetic energy in a collision that's inelastic — only momentum is guaranteed to be conserved there.
+- Forgetting to define a positive direction before assigning signs to each object's velocity.
+- Applying conservation of momentum to a "system" that actually has a significant external force acting on it (friction with the ground during a car crash, for instance).`,
+    deepNotes: `The AP notes give you the conservation statement and the elastic/inelastic classification. Here's a full derivation connecting conservation of momentum directly to Newton's third law, the specific boundary the CED sets on 2D momentum problems, and the center-of-mass velocity idea the CED folds into this exact topic.
+
+## Deriving conservation of momentum from the 3rd law
+
+This is worth seeing once rather than just accepting as a rule. Consider two objects colliding, with no external forces. During the collision, object 1 exerts a force F₂₁ on object 2, and by Newton's third law, object 2 exerts −F₂₁ (equal magnitude, opposite direction) back on object 1. Apply the impulse-momentum theorem to each object separately over the collision's duration Δt: Δp₁ = (−F₂₁)Δt and Δp₂ = (F₂₁)Δt. Add these together: Δp₁ + Δp₂ = (−F₂₁)Δt + (F₂₁)Δt = 0. The total momentum change of the system is exactly zero — not approximately, not "if you're careful," but exactly, as a direct mathematical consequence of the 3rd law. This is precisely the CED's own point: "the impulse exerted by one object on a second object is equal and opposite to the impulse exerted by the second object on the first" — conservation of momentum isn't a separate law from Newton's laws, it's what Newton's third law looks like once you sum over an entire system.
+
+## The CED's specific boundary on 2D collisions
+
+Worth knowing precisely: AP Physics 1 includes full quantitative treatment of momentum conservation in ONE dimension, but only a "semiquantitative" treatment in two dimensions — meaning you may be asked to set up the correct component equations (Σpₓ,ᵢ = Σpₓ,f and Σp_y,ᵢ = Σp_y,f) and reason about how changing a mass, speed, or angle would affect other quantities, but you will NOT be asked to solve simultaneous equations for an unknown 2D final velocity. That fuller 2D treatment is explicitly reserved for AP Physics 2.
+
+## Center-of-mass velocity: the same topic, one level up
+
+The CED folds a genuinely useful idea into this exact topic: any collection of objects can be described as a single system with one center-of-mass velocity, v_cm = Σmᵢvᵢ/Σmᵢ, and that center-of-mass velocity stays constant whenever there's no net external force — exactly the same conservation statement as for a single object's momentum, just applied to the system's "average" motion. This is the direct seed of this app's own 4.4 topic (Center of Mass), which develops this idea further.
+
+## Where this goes next
+
+This conservation law reappears, structurally unchanged, as conservation of angular momentum in Unit 6 (replace linear momentum with L = Iω, and "no external force" with "no external torque"). The elastic-vs-inelastic classification here is also a direct callback to conservative-vs-nonconservative forces from Unit 3 — an inelastic collision is, at its core, just a nonconservative-force interaction happening over a very short time and distance.`
+  },
+
+  // injected batch
+  '4.4': {
+    apNotes: `The center of mass (COM) is the single point that represents a system's overall position — the mass-weighted average location of every object (or every piece of an object) in the system. A system can be modeled as if all its mass were concentrated at this one point.
+
+## Locating the center of mass
+
+For objects along a line: x_cm = (m₁x₁ + m₂x₂ + ...)/(m₁ + m₂ + ...) — a weighted average that sits closer to whichever mass is larger. For a symmetric mass distribution, the CED notes the COM simply lies on the line(s) of symmetry — no calculation needed for something like a uniform rod or a uniform disk.
+
+## How the center of mass moves
+
+The velocity of a system's center of mass is v_cm = Σmᵢvᵢ/Σmᵢ — and critically, this velocity stays constant whenever there's no net EXTERNAL force on the system, regardless of what INTERNAL forces or interactions (collisions, explosions, one part of the system pushing another) are happening inside it.
+
+## Where students lose points
+
+- Expecting an internal explosion or collision to change the system's overall (COM) trajectory — it can't, without an external force.
+- Treating the center of mass as a simple midpoint instead of a mass-weighted average that sits closer to the heavier object.
+- Forgetting that a system can be modeled as a single object located at its COM only when you don't need details about the individual pieces' separate motions.`,
+    deepNotes: `The AP notes give you the COM location formula and the fact that COM velocity is unaffected by internal forces. Here's why that's true — not just asserted — a fully worked two-stage problem (find the COM, then predict what happens after an internal push), and the specific scope the CED sets on COM calculations.
+
+## Why internal forces can't move the center of mass — the derivation
+
+This follows the exact same logic as conservation of momentum (4.3), because it's really the same fact stated differently. Total momentum is p_total = Mv_cm (total mass times COM velocity, by definition of COM velocity). Since total momentum only changes due to external force (F_ext = Δp_total/Δt), and internal forces always cancel in equal-and-opposite pairs by Newton's third law, v_cm can only change because of an external force too. An explosion, a collision, two parts of a system pushing off each other — all of these are INTERNAL to the system, so none of them can shift where the COM is headed, even though they can dramatically change how the system's mass is distributed or how fast its individual pieces move.
+
+## Worked reasoning: locating the COM, then predicting an explosion's aftermath
+
+A system has a 3.0 kg mass at x = 0 and a 7.0 kg mass at x = 8.0 m, both initially at rest. x_cm = (3.0×0 + 7.0×8.0)/10 = 5.6 m — closer to the heavier mass, as expected. Now suppose an internal spring between them releases, pushing them apart. No matter how fast each piece ends up moving, or how much kinetic energy the spring adds to the system, the COM remains at x = 5.6 m and stays there (zero net external force), because internal forces — spring force included — cannot shift it. You could immediately find one piece's velocity from the other's using conservation of momentum (4.3) without ever needing to know the details of the spring or how the release happened.
+
+## A useful real-world instance: fireworks
+
+A firework shell explodes in mid-air. Before the explosion, its COM followed a simple parabolic path (projectile motion, Unit 1) under gravity alone. After the explosion, dozens of fragments scatter in every direction — but their COLLECTIVE center of mass continues along that exact same parabolic arc, completely unaffected by the explosion, because the explosion is entirely an internal interaction. Only gravity (the external force) affects the COM's trajectory before, during, and after.
+
+## The CED's scope for COM calculations
+
+Worth knowing precisely: AP Physics 1 only expects you to calculate the center of mass for systems of five or fewer particles arranged in a two-dimensional configuration, or for systems that are highly symmetrical (where you can use symmetry to locate it without any calculation at all).
+
+## Where this goes next
+
+This exact "internal forces can't change it, only external forces can" logic reappears in Unit 5/6 for rotational inertia and angular momentum — a system's rotational behavior about its own COM is independent of its COM's translational motion, which is precisely why rolling motion (Unit 6) can be split cleanly into "translation of the COM" plus "rotation about the COM" and analyzed as two separate, independent problems.`
+  },
+
+  // injected batch
+  '5.1': {
+    apNotes: `Every rotational quantity has a direct linear counterpart. Angular position θ (radians) parallels linear position x. Angular velocity ω parallels linear velocity v. Angular acceleration α parallels linear acceleration a. The CED states directly that these follow the exact same mathematical relationships as their linear counterparts.
+
+## The definitions
+
+- **Angular displacement (θ):** the angle, in radians, through which a point on a rigid system rotates about a fixed axis.
+- **Average angular velocity:** ω_avg = Δθ/Δt.
+- **Average angular acceleration:** α_avg = Δω/Δt.
+- For constant angular acceleration, the same three constant-acceleration equations from Unit 1 apply directly, with θ, ω, α standing in for x, v, a.
+
+## Connecting to linear quantities
+
+For a point at distance r from the rotation axis: v = rω (linear speed) and a_t = rα (tangential acceleration — the part of acceleration that changes speed, as opposed to centripetal acceleration, which changes direction). Every point on a rigid, rotating system shares the SAME ω and α, but different points have different v and a_t depending on how far they sit from the axis.
+
+## Where students lose points
+
+- Treating ω (rad/s) as if it were the same kind of quantity as v (m/s) — they're related by v = rω, not interchangeable.
+- Forgetting that points farther from the axis move faster in a straight-line sense, even though every point shares the same ω.
+- Mixing degrees and radians in the same calculation without converting (2π rad = 360°).`,
+    deepNotes: `The AP notes give you the angular quantities and how they connect to linear ones through v = rω. Here's a worked example showing how differently two points on the same rotating object can behave, the CED's specific "rigid system vs. object" distinction that determines when you can even use the simpler object model, and a real mechanical application.
+
+## When can a rotating thing be treated as "one object"?
+
+This is worth being precise about, because the CED draws a real distinction: a RIGID system holds its shape, but different points on it move in different directions during rotation — it CANNOT be modeled as a single object (a single point), because different parts of it are genuinely doing different things simultaneously. This is different from the object model used constantly in Units 1-4, where an entire object's motion could be summarized by tracking just its center of mass. The CED gives a nice example of when the distinction collapses: Earth's own daily rotation is negligible when you're just tracking Earth's yearly orbit around the Sun — for THAT purpose, Earth can be treated as a single object at its center of mass, even though it's also independently spinning.
+
+## Worked reasoning: a spinning wheel, two points, very different experiences
+
+A wheel of radius 0.40 m spins at ω = 12 rad/s. A point on the rim (r = 0.40 m) has speed v = rω = (0.40)(12) = 4.8 m/s. A point halfway to the center (r = 0.20 m) has speed v = (0.20)(12) = 2.4 m/s — exactly half, because v scales directly with r for a fixed ω. Both points complete a full revolution in the exact same time (they share ω), but the outer point physically travels twice the distance to do it, which is exactly what "twice the speed" means here. This is the whole reason a bicycle's outer tire tread wears differently from a point near its hub, and why the outer edge of a spinning record needs a higher linear speed to keep up with the same rotation rate as a point near its center.
+
+## Where this goes next
+
+This vocabulary is the language the rest of Units 5 and 6 are written in: torque (5.2) causes angular acceleration the way force causes linear acceleration, rotational inertia (5.4) is mass's rotational counterpart, and rotational kinetic energy and angular momentum in Unit 6 are both built directly on ω. Getting comfortable with the x↔θ, v↔ω, a↔α translation here is what makes everything that follows feel familiar instead of new.`
+  },
+
+  // injected batch
+  '5.2': {
+    apNotes: `Torque (τ) is what causes angular acceleration — the rotational counterpart of force. The CED defines it precisely: torque results ONLY from the component of a force that's perpendicular to the position vector from the rotation axis to the point where the force is applied.
+
+## The formula
+
+τ = rF sin θ, where r is the distance from the axis to the point of application, F is the force's magnitude, and θ is the angle between the force vector and that position vector (r). Equivalently, τ = (lever arm) × F, where the lever arm is the perpendicular distance from the axis to the force's line of action.
+
+## Maximizing or eliminating torque
+
+- Torque is maximized when the force is applied perpendicular to r (θ = 90°, sin θ = 1) — pushing straight against a wrench handle, not along its length.
+- Torque is zero when the force acts directly through the axis (r = 0) or is parallel to r (θ = 0°, sin θ = 0) — pushing along a wrench's handle toward the bolt does nothing to turn it.
+
+## What the CED does and doesn't ask about torque's direction
+
+You're expected to work with the sign of torque (typically counterclockwise = positive, clockwise = negative, as a mathematical convention for combining multiple torques) — but the full 3D vector direction of torque, and tools like the right-hand rule for finding that 3D direction, are explicitly beyond this course's scope.
+
+## Where students lose points
+
+- Forgetting the sin θ factor and just multiplying r × F, even when the force isn't perpendicular to r.
+- Measuring r from the wrong point — it must be from the actual axis of rotation to where the force is applied, not some other reference point.
+- Confusing torque's units (N·m) with work or energy (also N·m, i.e., Joules) — same units, but conceptually unrelated quantities.`,
+    deepNotes: `The AP notes give you τ = rF sin θ and the maximize/eliminate cases. Here's why torque and work end up with the same units despite being different concepts, a worked multi-force torque-balance setup, and how "force diagrams" (the CED's term) differ subtly from the free-body diagrams of Unit 2.
+
+## Why torque and work share units, without being the same thing
+
+Both come out to N·m dimensionally, and it's worth understanding why without concluding they're related. Work is Fd cos θ — force times the PARALLEL component of displacement, producing a scalar that measures energy transferred. Torque is rF sin θ — force times the PERPENDICULAR component of the position vector, producing a (in this course, direction-less-but-signed) quantity that measures rotational "twisting effect." The N·m coincidence is exactly that: a coincidence of dimensional analysis (both are [force] × [length]), not a sign that the two concepts are secretly the same thing.
+
+## Worked reasoning: multiple torques on one rigid system
+
+A 5.0 m beam pivots at its left end. A 40 N force pushes straight down at the far right end (r = 5.0 m, θ = 90° from the beam), while a 60 N force pushes straight down at the midpoint (r = 2.5 m, θ = 90°). Taking counterclockwise as positive, and with both forces creating clockwise rotation about the left-end pivot: τ₁ = −(5.0)(40)(sin 90°) = −200 N·m, τ₂ = −(2.5)(60)(sin 90°) = −150 N·m. Net torque = −350 N·m (350 N·m clockwise). Notice each torque is computed completely independently, using its OWN r and its OWN force — there's no need to find some combined "net force" first, because torque depends on WHERE a force acts, not just how big it is.
+
+## Force diagrams vs. free-body diagrams — a subtle but real distinction
+
+The CED specifically introduces "force diagrams" for torque analysis, distinct from the free-body diagrams of Unit 2. They're visually similar — both show forces as arrows with relative magnitude and direction — but a force diagram for torque ALSO has to show WHERE on the rigid system each force is applied relative to the axis of rotation, since that location (via r) is now just as important as the force itself. A free-body diagram from Unit 2 only cared about the net effect of all forces (added as vectors from one central dot); a force diagram for torque cares about each force's specific point of application.
+
+## Where this goes next
+
+Every wrench, door handle, see-saw, and gear in Units 5 and 6 is an application of exactly this r-times-perpendicular-force idea. Rotational equilibrium (5.3) is the direct next step: balancing multiple torques (like the two computed above) to find an unknown force or distance. τ = Iα (5.4) is where torque plays the exact same role for rotation that F = ma plays for translation.`
+  },
+
+  // injected batch
+  '5.3': {
+    apNotes: `A system is in rotational equilibrium when the net torque acting on it is zero — its angular velocity stays constant (which includes staying at rest). This is the direct rotational counterpart of Newton's first law: no net torque means no change in rotational motion, exactly as no net force means no change in linear motion.
+
+## Rotational equilibrium is independent of translational equilibrium
+
+A system can be in rotational equilibrium (Στ = 0) while accelerating translationally, and vice versa — a spinning object flying through the air at constant angular velocity but changing linear velocity (falling) is one example. For an object to be in FULL static equilibrium (completely motionless, not translating or rotating), you need BOTH ΣF = 0 AND Στ = 0 simultaneously.
+
+## Strategy for equilibrium problems
+
+1. Draw a force diagram showing every force and exactly where it's applied.
+2. Choose a pivot point strategically — usually wherever an unknown force acts, since that force then contributes zero torque (r = 0 about that point) and drops out of the equation entirely.
+3. Set clockwise and counterclockwise torques equal (or, with a sign convention, set their sum to zero).
+4. Solve for the unknown.
+
+## Where students lose points
+
+- Forgetting to include an object's own weight as a torque, acting at its center of mass — a uniform beam's weight acts at its midpoint, not at either end.
+- Not exploiting the freedom to choose a pivot — a poor pivot choice leaves multiple unknowns in the same equation.
+- Assuming ΣF = 0 alone guarantees no rotation — it only guarantees no translation; a net torque can still exist even when all forces balance.`,
+    deepNotes: `The AP notes give you the equilibrium condition and the smart-pivot strategy. Here's why choosing the pivot doesn't change the physics — a genuinely subtle point worth understanding — a fully worked multi-force beam problem, and the specific boundary the CED sets on how many planes of rotation you need to juggle at once.
+
+## Why you can choose ANY pivot point — and the physics doesn't care
+
+This tends to feel like a trick the first time you see it: if an object is truly in rotational equilibrium, Στ = 0 is true about EVERY possible pivot point you could choose, not just one "correct" one. That's because true rotational equilibrium means the object isn't rotating about ANY axis — so no matter which point you mentally designate as the axis for your calculation, the net torque about it must come out to zero. This is exactly why you're free to pick whichever pivot makes an unknown force's torque vanish (by putting r = 0 for that force) — you're not cheating or approximating anything, you're just choosing the specific axis that makes YOUR equation simplest, out of infinitely many equally valid choices.
+
+## Worked reasoning: a beam with an off-center load
+
+A uniform 6.0 m beam (weight 40 N, acting at its 3.0 m midpoint) rests on two supports: one at the very left end, one at the very right end. A 100 N weight hangs 2.0 m from the left end. Find the force each support exerts. Choose the pivot at the LEFT support — this makes that support's own force contribute zero torque, leaving one equation with one unknown (the right support's force, N_R). Taking counterclockwise as positive and downward forces as creating clockwise (negative) torque about the left end: Στ = 0: N_R(6.0) − 40(3.0) − 100(2.0) = 0 → 6N_R = 120 + 200 = 320 → N_R ≈ 53.3 N. Then use ΣF = 0 (translational equilibrium) to find the left support: N_L + N_R = 40 + 100 = 140 → N_L ≈ 86.7 N. Notice the two equilibrium conditions (Στ = 0 and ΣF = 0) had to work together — torque balance alone couldn't find both unknowns.
+
+## The CED's boundary: one plane of rotation at a time
+
+Worth knowing precisely: AP Physics 1 does not expect you to simultaneously analyze rotation in multiple planes at once (the kind of 3D, multi-axis analysis that shows up in more advanced mechanics, like gyroscopic precession). Every rotational equilibrium problem in this course involves torques all acting to rotate a system about a single, well-defined axis.
+
+## Where this goes next
+
+The pivot-choice strategy here — pick the point that eliminates an unknown — is a technique you'll reuse immediately in 5.4 whenever a torque problem involves multiple unknown forces. The ΣF = 0 AND Στ = 0 combination previews exactly how Unit 6 will later combine translational and rotational equations together for rolling objects, where both linear and angular quantities have to be tracked simultaneously.`
+  },
+
+  // injected batch
+  '5.4': {
+    apNotes: `Just as F = ma governs linear acceleration, τ = Iα governs angular acceleration. Here, I (rotational inertia, also called moment of inertia) is the rotational counterpart of mass — it measures how strongly a system resists a CHANGE in its rotational motion.
+
+## What rotational inertia depends on
+
+I = mr² for a single point mass at distance r from the axis; for a system of multiple objects, total I is just the sum of each individual mr². Critically, I depends not just on how much mass a system has, but on HOW FAR that mass sits from the axis — mass farther out contributes much more to I (because of the r² term) than the same mass sitting close to the axis.
+
+## Two facts about choosing an axis
+
+- Rotational inertia is at its MINIMUM when the rotation axis passes through the system's own center of mass — any other parallel axis gives a larger I.
+- The parallel axis theorem lets you find I about any axis parallel to one through the center of mass, without recalculating from scratch, once you know I about the center-of-mass axis and the distance between the two axes.
+
+## Newton's second law, rotational form
+
+Στ = Iα: net torque determines angular acceleration, in direct proportion to torque and inverse proportion to rotational inertia. A system with more I needs more torque to achieve the same angular acceleration — exactly parallel to how more mass needs more force to achieve the same linear acceleration.
+
+## Where students lose points
+
+- Using the wrong formula for I — a hoop, disk, and sphere of the same mass and radius all have different I, because their mass is distributed differently relative to the axis.
+- Forgetting that I depends on axis choice — the same object has a different I depending on where exactly it's rotating about.
+- Adding several torques together without tracking their rotational direction (sign) correctly.`,
+    deepNotes: `The AP notes give you τ = Iα and the parallel axis theorem. Here's the reasoning behind why the center-of-mass axis always minimizes rotational inertia, a fully worked comparison of two systems with identical mass but different I, and the CED's specific scope limit on rotational inertia calculations.
+
+## Why the center-of-mass axis minimizes rotational inertia
+
+This isn't just a memorized fact — it follows from what the parallel axis theorem actually says: I = I_cm + Md², where d is the distance from the center-of-mass axis to whatever parallel axis you're actually using, and M is the total mass. Since d² is always ≥ 0, every parallel axis OTHER than the center-of-mass axis adds a nonnegative amount (Md²) on top of I_cm — meaning I_cm is necessarily the smallest possible value among all parallel axes. The farther you move the axis from the center of mass, the larger d becomes, and the larger I grows, with no upper limit.
+
+## Worked reasoning: two systems, same mass, very different I
+
+Two point masses of 2.0 kg each, one system with them placed 0.10 m from the axis, another with them placed 0.40 m from the axis (four times farther). System A: I = 2(2.0)(0.10)² = 0.04 kg·m². System B: I = 2(2.0)(0.40)² = 0.64 kg·m² — sixteen times larger, not four times, because I depends on r SQUARED. Doubling the distance from the axis quadruples that mass's contribution to I; quadrupling the distance multiplies its contribution by sixteen. This r² dependence is exactly why a figure skater's arm position matters so much for her spin (a topic that returns explicitly in Unit 6): moving her arms just slightly farther from her body's rotation axis increases I by the SQUARE of that small distance change, not in direct proportion to it.
+
+## What the CED actually expects you to calculate
+
+Worth knowing precisely: AP Physics 1 only expects you to calculate rotational inertia for systems of five or fewer point-like objects arranged in a 2D configuration — you're never expected to know or derive the rotational inertia formula for an extended, continuous rigid body (a solid disk, a rod, a sphere) from scratch; any such formula will be provided directly on the exam if a problem requires it. Your job is to know how to USE a given I, and how to combine several point-mass I's, not to memorize or derive formulas for extended shapes.
+
+## Where this goes next
+
+τ = Iα is the equation Unit 6 builds directly on top of: rotational kinetic energy is K_rot = ½Iω² (the exact rotational analog of ½mv², using I in place of m), and angular momentum L = Iω plays the same role for rotation that p = mv plays for translation. Every one of those Unit 6 relationships exists because this topic established I as mass's rotational stand-in.`
   }
 };
 
