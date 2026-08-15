@@ -840,44 +840,103 @@
 
   <!-- FRQ -->
   <section id="page-frq" class="hidden animate-in">
-    <h1 class="text-2xl font-bold mb-4">✍️ FRQ Practice</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">Free Response Questions — worth 50% of your AP score. Write your answer, then reveal the rubric point by point.</p>
-    <div class="card mb-4">
-      <div class="font-semibold mb-2" id="frq-title">Loading FRQ...</div>
-      <p style="color:var(--text-secondary);font-size:14px;" id="frq-question"></p>
+    <h1 class="text-2xl font-bold mb-1">✍️ FRQ Practice</h1>
+    <p class="mb-4" style="color:var(--text-secondary);">Free Response Questions — worth 50% of your AP score. Write your answer, then reveal the rubric point by point.</p>
+
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button class="btn btn-sm" data-frq-mode="mix" onclick="setFrqMode('mix')">🔀 Mix — all units</button>
+      <button class="btn btn-sm" data-frq-mode="unit" onclick="setFrqMode('unit')">🎯 Unit</button>
+      <button class="btn btn-sm" data-frq-mode="imported" onclick="setFrqMode('imported')">📥 Imported only</button>
+      <select id="frq-unit-select" class="hidden text-sm rounded-lg px-2" style="background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);" onchange="setFrqUnit(parseInt(this.value))"></select>
     </div>
-    <textarea id="frq-answer" placeholder="Write your answer here..." rows="6" class="w-full p-4 rounded-xl border text-white text-sm mb-3" style="background:var(--bg-secondary);border-color:var(--border);font-family:inherit;resize:vertical;"></textarea>
-    <div class="flex gap-3">
-      <button class="btn btn-primary" onclick="revealRubric()">Reveal Rubric</button>
-      <button class="btn btn-secondary" onclick="generateFRQ()">🤖 Generate New FRQ</button>
+
+    <div id="frq-empty" class="card text-center text-sm hidden" style="color:var(--text-muted);padding:40px 20px;"></div>
+
+    <div id="frq-play-area">
+      <div class="card mb-4">
+        <div class="font-semibold mb-2" id="frq-title">Loading FRQ...</div>
+        <p style="color:var(--text-secondary);font-size:14px;white-space:pre-line;" id="frq-question"></p>
+      </div>
+      <textarea id="frq-answer" placeholder="Write your answer here..." rows="6" class="w-full p-4 rounded-xl border text-white text-sm mb-3" style="background:var(--bg-secondary);border-color:var(--border);font-family:inherit;resize:vertical;"></textarea>
+      <div class="flex gap-3 flex-wrap">
+        <button class="btn btn-secondary" onclick="frqGoPrev()">← Previous</button>
+        <button class="btn btn-primary" onclick="revealRubric()">Reveal Rubric</button>
+        <button class="btn btn-secondary" onclick="frqGoNext()">Next →</button>
+      </div>
+      <div id="frq-rubric" class="mt-4 hidden card">
+        <div class="font-semibold mb-2">Rubric Points:</div>
+        <ul id="frq-rubric-list" class="space-y-2 text-sm"></ul>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs mt-3" style="color:var(--text-muted);">
+        <span><kbd>Enter</kbd> reveal / next</span>
+        <span><kbd>←</kbd> <kbd>→</kbd> previous / next FRQ</span>
+      </div>
     </div>
-    <div id="frq-rubric" class="mt-4 hidden card">
-      <div class="font-semibold mb-2">Rubric Points:</div>
-      <ul id="frq-rubric-list" class="space-y-2 text-sm"></ul>
+
+    <div class="mt-6">
+      <div class="font-semibold mb-2 text-sm">📥 Import FRQs</div>
+      <p class="text-xs mb-3" style="color:var(--text-muted);">One per line, tab- or comma-separated: Title, Question, Rubric points (separate multiple points with semicolons). Imported FRQs show up in Mix mode.</p>
+      <textarea id="frq-import" placeholder="Title&#9;Question&#9;Rubric point 1; Rubric point 2; Rubric point 3" rows="4" class="w-full p-3 rounded-xl border text-white text-sm mb-2" style="background:var(--bg-secondary);border-color:var(--border);font-family:'JetBrains Mono',monospace;resize:vertical;"></textarea>
+      <button class="btn btn-primary btn-sm" onclick="importFRQs()">Import</button>
+      <div class="mt-3 p-4 border-2 border-dashed rounded-xl text-center text-sm cursor-pointer" style="border-color:var(--border);color:var(--text-muted);" id="frq-drop-zone">
+        Drop file here or click to browse (.csv, .txt)
+        <input type="file" id="frq-file" accept=".csv,.txt" class="hidden" onchange="handleFRQFileImport(event)">
+      </div>
     </div>
   </section>
 
   <!-- QUIZ -->
   <section id="page-quiz" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-1">⚡ Quiz</h1>
-    <div class="text-xs mb-4" id="quiz-mode-label" style="color:var(--text-muted);"></div>
-    <div class="flex gap-6 text-sm mb-6" id="quiz-stats">
+    <div class="text-xs mb-3" id="quiz-mode-label" style="color:var(--text-muted);"></div>
+
+    <div class="flex flex-wrap gap-2 mb-3">
+      <button class="btn btn-sm" data-quiz-mode="mix" onclick="setQuizMode('mix')">🔀 Mix — all units</button>
+      <button class="btn btn-sm" data-quiz-mode="unit" onclick="setQuizMode('unit')">🎯 Unit</button>
+      <button class="btn btn-sm" data-quiz-mode="imported" onclick="setQuizMode('imported')">📥 Imported only</button>
+      <select id="quiz-unit-select" class="hidden text-sm rounded-lg px-2" style="background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);" onchange="setQuizUnit(parseInt(this.value))"></select>
+    </div>
+
+    <div class="flex gap-6 text-sm mb-4 flex-wrap" id="quiz-stats">
       <span>Score: <b id="qz-score">0/0</b></span>
-      <span>Q <b id="qz-qnum">1</b></span>
+      <span>Q <b id="qz-qnum">1</b>/<b id="qz-qtotal">5</b></span>
       <span>Accuracy: <b id="qz-acc">—</b></span>
       <span>Avg time: <b id="qz-time">—</b></span>
     </div>
-    <div class="card mb-4" id="quiz-card">
-      <div class="text-xs mb-2" style="color:var(--text-muted);" id="qz-unit-label"></div>
-      <div class="font-semibold mb-4" id="qz-question"></div>
-      <div class="space-y-2" id="qz-options"></div>
+
+    <div id="quiz-empty" class="card text-center text-sm hidden" style="color:var(--text-muted);padding:40px 20px;"></div>
+
+    <div id="quiz-play-area">
+      <div class="card mb-4" id="quiz-card">
+        <div class="text-xs mb-2" style="color:var(--text-muted);" id="qz-unit-label"></div>
+        <div class="font-semibold mb-4" id="qz-question"></div>
+        <div class="space-y-2" id="qz-options"></div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button class="btn btn-secondary" onclick="quizGoPrev()">← Previous</button>
+        <button class="btn btn-primary" id="qz-submit" onclick="submitQuiz()">Submit</button>
+        <button class="btn btn-secondary" onclick="nextQuizQuestion()">Skip →</button>
+      </div>
+      <div id="qz-feedback" class="mt-3 text-sm hidden"></div>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs mt-3" style="color:var(--text-muted);">
+        <span><kbd>1</kbd>–<kbd>4</kbd> select</span>
+        <span><kbd>Enter</kbd> submit / next</span>
+        <span><kbd>←</kbd> <kbd>→</kbd> previous / next question</span>
+      </div>
     </div>
-    <div class="flex gap-3">
-      <button class="btn btn-primary" id="qz-submit" onclick="submitQuiz()">Submit</button>
-      <button class="btn btn-secondary" onclick="nextQuizQuestion()">Skip →</button>
-    </div>
-    <div id="qz-feedback" class="mt-3 text-sm hidden"></div>
+
     <div id="quiz-history" class="mt-6"></div>
+
+    <div class="mt-6">
+      <div class="font-semibold mb-2 text-sm">📥 Import questions</div>
+      <p class="text-xs mb-3" style="color:var(--text-muted);">One question per line, tab- or comma-separated: Question, Option A, Option B, Option C, Option D, Correct answer (A–D or 1–4)[, Explanation]. Imported questions show up in Mix mode, and in Challenge Mode's Imported scope.</p>
+      <textarea id="quiz-import" placeholder="Question&#9;Option A&#9;Option B&#9;Option C&#9;Option D&#9;Correct&#9;Explanation" rows="4" class="w-full p-3 rounded-xl border text-white text-sm mb-2" style="background:var(--bg-secondary);border-color:var(--border);font-family:'JetBrains Mono',monospace;resize:vertical;"></textarea>
+      <button class="btn btn-primary btn-sm" onclick="importQuizQuestions()">Import</button>
+      <div class="mt-3 p-4 border-2 border-dashed rounded-xl text-center text-sm cursor-pointer" style="border-color:var(--border);color:var(--text-muted);" id="quiz-drop-zone">
+        Drop file here or click to browse (.csv, .txt)
+        <input type="file" id="quiz-file" accept=".csv,.txt" class="hidden" onchange="handleQuizFileImport(event)">
+      </div>
+    </div>
   </section>
 
   <!-- MY SCORES -->
@@ -890,7 +949,16 @@
   <!-- CHALLENGE MODE -->
   <section id="page-challenge" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-2">🏆 Challenge Mode</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">Race against the clock. Score points for speed AND accuracy. Build a streak for bonus XP.</p>
+    <p class="mb-4" style="color:var(--text-secondary);">Race against the clock. Score points for speed AND accuracy. Build a streak for bonus XP.</p>
+
+    <div class="flex flex-wrap gap-2 mb-2">
+      <button class="btn btn-sm" data-challenge-scope="mix" onclick="setChallengeScope('mix')">🔀 Mix — all units</button>
+      <button class="btn btn-sm" data-challenge-scope="unit" onclick="setChallengeScope('unit')">🎯 Unit</button>
+      <button class="btn btn-sm" data-challenge-scope="imported" onclick="setChallengeScope('imported')">📥 Imported only</button>
+      <select id="challenge-unit-select" class="hidden text-sm rounded-lg px-2" style="background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);" onchange="setChallengeUnit(parseInt(this.value))"></select>
+    </div>
+    <p class="text-xs mb-6" style="color:var(--text-muted);">Imported-only pulls from the questions you add on the Quiz page.</p>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       <div class="card text-center cursor-pointer" onclick="startChallenge('speed')">
         <div class="text-3xl mb-2">🏃</div>
@@ -915,7 +983,10 @@
       </div>
       <div id="challenge-question" class="mb-3 font-semibold"></div>
       <div id="challenge-options" class="space-y-2 mb-3"></div>
-      <div class="text-sm" style="color:var(--text-muted);">Score: <b id="challenge-score">0</b> · Streak: <b id="challenge-streak">0</b></div>
+      <div class="text-sm mb-3" style="color:var(--text-muted);">Score: <b id="challenge-score">0</b> · Streak: <b id="challenge-streak">0</b></div>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs" style="color:var(--text-muted);">
+        <span><kbd>1</kbd>–<kbd>4</kbd> select answer</span>
+      </div>
     </div>
   </section>
 
@@ -1325,18 +1396,29 @@ const state = {
   completedSubunits: [],
   quizScores: [],
   quizScoreLogged: false,
-  quizUnit: null,
+  quizMode: 'mix',
+  quizUnit: 1,
   quizMissed: [],
   quizIndex: 0,
+  quizHistory: [],
   quizCorrect: 0,
   quizAnswered: 0,
   quizSelected: null,
+  importedQuizQuestions: [],
+  frqMode: 'mix',
+  frqUnit: 1,
+  frqPool: [],
+  frqIndex: 0,
+  frqRevealed: false,
+  importedFRQs: [],
   challengeMode: null,
   challengeTimer: null,
   challengeRemaining: 0,
   challengeScore: 0,
   challengeStreak: 0,
   challengeQIndex: 0,
+  challengeScope: 'mix',
+  challengeUnit: 1,
   pomodoroActive: false,
   pomodoroInterval: null,
   pomodoroSeconds: 25 * 60,
@@ -4084,8 +4166,9 @@ const FORMULA_SHEET = [
 
 // Official AP Physics 1 FRQs (based on College Board released questions)
 const FRQS = [
-  { 
-    title: 'Unit 1: Kinematics — Experimental Design', 
+  {
+    unit: 1,
+    title: 'Unit 1: Kinematics — Experimental Design',
     question: 'A student needs to determine the acceleration of a cart on a ramp using only a meter stick and a stopwatch. Design an experiment to measure the acceleration.\n\n(a) Describe the experimental procedure you would use.\n(b) What measurements would you record?\n(c) How would you calculate acceleration from your measurements?\n(d) What assumptions are you making?',
     rubric: [
       'Release cart from rest at top of ramp (v₀ = 0)',
@@ -4098,8 +4181,9 @@ const FRQS = [
       'Could also vary distance and plot d vs t² to find a from slope'
     ] 
   },
-  { 
-    title: 'Unit 2: Forces — Pulley System', 
+  {
+    unit: 2,
+    title: 'Unit 2: Forces — Pulley System',
     question: 'Two blocks are connected by a massless string over a massless, frictionless pulley (Atwood machine). Block A (mass 3.0 kg) hangs on the left. Block B (mass 5.0 kg) hangs on the right.\n\n(a) Draw free-body diagrams for each block.\n(b) Determine the acceleration of the system.\n(c) Find the tension in the string.',
     rubric: [
       'FBDs: Each block has weight down, tension up',
@@ -4111,8 +4195,9 @@ const FRQS = [
       'Or: T = mB(g - a) = 5(9.8 - 2.45) = 36.75 N (verifies answer)'
     ] 
   },
-  { 
-    title: 'Unit 3: Energy — Loop-the-Loop', 
+  {
+    unit: 3,
+    title: 'Unit 3: Energy — Loop-the-Loop',
     question: 'A block slides from rest down a frictionless ramp of height h, then goes around a frictionless vertical loop of radius R.\n\n(a) What is the minimum speed needed at the top of the loop for the block to stay on the track?\n(b) What is the minimum height h from which the block must be released?\n(c) Explain using energy.',
     rubric: [
       'At top of loop: centripetal force needed, F_c = mv²/R',
@@ -4124,8 +4209,9 @@ const FRQS = [
       'If h < 2.5R: block falls off track before completing loop'
     ] 
   },
-  { 
-    title: 'Unit 4: Momentum — Collision Analysis', 
+  {
+    unit: 4,
+    title: 'Unit 4: Momentum — Collision Analysis',
     question: 'A 2.0 kg cart moving at 3.0 m/s to the right collides with a 4.0 kg cart moving at 1.0 m/s to the left. They stick together after collision.\n\n(a) Find the velocity of the combined carts after collision.\n(b) Calculate the kinetic energy lost.\n(c) Is this collision elastic? Justify your answer.',
     rubric: [
       'Define direction: right = positive',
@@ -4137,8 +4223,9 @@ const FRQS = [
       'Not elastic: KE is not conserved (objects stuck together = perfectly inelastic)'
     ] 
   },
-  { 
-    title: 'Unit 5: Torque — Static Equilibrium', 
+  {
+    unit: 5,
+    title: 'Unit 5: Torque — Static Equilibrium',
     question: 'A 4.0 m long uniform beam (mass 10 kg) is supported by a cable at its right end and a hinge at the wall on the left end. A 20 kg sign hangs from the right end of the beam.\n\n(a) Draw a free-body diagram of the beam showing all forces.\n(b) Write the torque equation about the hinge.\n(c) Find the tension in the cable.',
     rubric: [
       'FBD: Weight of beam at center (2.0 m from hinge), weight of sign at right end, tension at right end (upward), hinge forces at left',
@@ -4147,10 +4234,25 @@ const FRQS = [
       'T(4.0) = (10)(9.8)(2.0) + (20)(9.8)(4.0) = 196 + 784 = 980 N·m',
       'T = 980/4.0 = 245 N',
       'Check: Tension is positive (upward as assumed)'
-    ] 
+    ]
   },
-  { 
-    title: 'Unit 7: Oscillations — Mass-Spring System', 
+  {
+    unit: 6,
+    title: 'Unit 6: Rotating Systems — Rolling Sphere on a Ramp',
+    question: 'A solid sphere (mass 2.0 kg, radius 0.10 m, I = ⅖mr²) is released from rest at the top of a ramp of height 1.4 m and rolls without slipping to the bottom.\n\n(a) Write the energy conservation equation for this situation, including both forms of kinetic energy.\n(b) Calculate the sphere\'s speed at the bottom of the ramp.\n(c) Calculate the sphere\'s angular velocity at the bottom.\n(d) A block of the same mass slides down the same height on a separate, frictionless ramp instead of rolling. Would it be moving faster or slower than the sphere at the bottom? Justify using energy.',
+    rubric: [
+      'Energy conservation: mgh = ½mv² + ½Iω² (both translational and rotational KE)',
+      'Rolling without slipping condition: ω = v/r',
+      'Substitute I = ⅖mr² and ω = v/r: mgh = ½mv² + ½(⅖mr²)(v/r)² = ½mv² + ⅕mv² = (7/10)mv²',
+      'Solve for speed: v = √(10gh/7) = √(10(9.8)(1.4)/7) ≈ 4.43 m/s',
+      'Angular velocity: ω = v/r = 4.43/0.10 ≈ 44.3 rad/s',
+      'Sliding block (frictionless, no rotation): mgh = ½mv² only, so v = √(2gh) = √(2(9.8)(1.4)) ≈ 5.24 m/s',
+      'Block is faster: none of its gravitational PE is diverted into rotational KE, so all of it becomes translational KE'
+    ]
+  },
+  {
+    unit: 7,
+    title: 'Unit 7: Oscillations — Mass-Spring System',
     question: 'A 0.50 kg mass is attached to a spring with spring constant k = 200 N/m. The mass is pulled 0.10 m from equilibrium and released from rest.\n\n(a) Calculate the period of oscillation.\n(b) What is the maximum speed of the mass?\n(c) At what position is the kinetic energy maximum?\n(d) What is the total mechanical energy?',
     rubric: [
       'Period: T = 2π√(m/k) = 2π√(0.5/200) = 2π(0.05) ≈ 0.314 s',
@@ -4161,8 +4263,9 @@ const FRQS = [
       'Or: E = ½mv_max² = ½(0.5)(4) = 1.0 J (verifies)'
     ] 
   },
-  { 
-    title: 'Unit 8: Fluids — Buoyancy and Pressure', 
+  {
+    unit: 8,
+    title: 'Unit 8: Fluids — Buoyancy and Pressure',
     question: 'A 5.0 kg block of wood (density 600 kg/m³) is placed in water (density 1000 kg/m³).\n\n(a) Will the block float or sink? Justify.\n(b) What fraction of the block\'s volume is submerged when floating?\n(c) What is the buoyant force on the floating block?',
     rubric: [
       'Block floats because density of wood (600 kg/m³) < density of water (1000 kg/m³)',
@@ -4286,6 +4389,15 @@ const DEFAULT_FLASHCARDS = [
 
 // ============ HELPERS ============
 function $(id) { return document.getElementById(id); }
+// True while focus is in a text input/textarea/select — used to make page-level keyboard
+// shortcuts (flip/rate/select-answer/navigate) stand down while the user is typing or
+// pasting, e.g. into an import box or an FRQ answer, so Enter/arrows/digits behave normally.
+function isTypingInField() {
+  const el = document.activeElement;
+  if (!el) return false;
+  const tag = el.tagName;
+  return tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'SELECT';
+}
 function escapeAttr(str) {
   return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 }
@@ -4448,6 +4560,7 @@ function navigateTo(page, meta) {
   if (page === 'flashcards') initFlashcards();
   if (page === 'frq') generateFRQ();
   if (page === 'quiz') initQuiz(meta && meta.unit);
+  if (page === 'challenge') initChallenge();
   if (page === 'wrong-log') renderWrongLog();
   if (page === 'flagged') renderFlagged();
   if (page === 'my-scores') renderMyScores();
@@ -6064,7 +6177,7 @@ function fcGoPrev() {
 }
 
 document.addEventListener('keydown', (e) => {
-  if (state.currentPage !== 'flashcards') return;
+  if (state.currentPage !== 'flashcards' || isTypingInField()) return;
   if (e.code === 'Space') { e.preventDefault(); flipFlashcard(); }
   if (e.code === 'ArrowLeft') { e.preventDefault(); fcGoPrev(); }
   if (e.code === 'ArrowRight') { e.preventDefault(); fcGoNext(); }
@@ -6072,34 +6185,204 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============ FRQ ============
-let currentFRQ = 0;
+// Same Mix/Unit/Imported structure as Flashcards. state.frqPool is the current filtered
+// array (rebuilt on mode/unit change or import); state.frqIndex walks through it. FRQ
+// practice isn't scored/spaced-repetition-tracked, so navigation is simple index movement
+// with no history bookkeeping (unlike Quiz, which has to guard against re-scoring).
+function frqBuildPool() {
+  if (state.frqMode === 'imported') return state.importedFRQs;
+  if (state.frqMode === 'unit' && state.frqUnit) return FRQS.filter(f => f.unit === state.frqUnit);
+  return [...FRQS, ...state.importedFRQs];
+}
+
+function frqRebuildPool() {
+  state.frqPool = frqBuildPool();
+  state.frqIndex = state.frqPool.length ? Math.floor(Math.random() * state.frqPool.length) : 0;
+}
+
+function frqPopulateUnitSelect() {
+  const sel = $('frq-unit-select');
+  if (sel.options.length === 0) {
+    sel.innerHTML = UNITS.map(u => `<option value="${u.num}">Unit ${u.num}: ${UNIT_SHORT_NAMES[u.num]}</option>`).join('');
+  }
+  sel.value = state.frqUnit;
+}
+
+function frqSyncToggleButtons() {
+  document.querySelectorAll('[data-frq-mode]').forEach(btn => {
+    btn.className = 'btn btn-sm' + (btn.dataset.frqMode === state.frqMode ? ' btn-primary' : ' btn-secondary');
+  });
+}
+
+function setFrqMode(mode) {
+  state.frqMode = mode;
+  frqPopulateUnitSelect();
+  $('frq-unit-select').classList.toggle('hidden', mode !== 'unit');
+  frqRebuildPool();
+  renderFRQ();
+}
+
+function setFrqUnit(unitNum) {
+  state.frqUnit = unitNum;
+  $('frq-unit-select').value = unitNum;
+  frqRebuildPool();
+  renderFRQ();
+}
+
+// Kept as the entry point other pages/nav call; now (re)initializes the pool rather than
+// always drawing from the raw FRQS array.
 function generateFRQ() {
-  currentFRQ = Math.floor(Math.random() * FRQS.length);
-  $('frq-title').textContent = FRQS[currentFRQ].title;
-  $('frq-question').textContent = FRQS[currentFRQ].question;
+  frqPopulateUnitSelect();
+  $('frq-unit-select').classList.toggle('hidden', state.frqMode !== 'unit');
+  frqRebuildPool();
+  renderFRQ();
+}
+
+function renderFRQ() {
+  frqSyncToggleButtons();
+  const empty = $('frq-empty');
+  const playArea = $('frq-play-area');
+  if (state.frqPool.length === 0) {
+    playArea.classList.add('hidden');
+    empty.classList.remove('hidden');
+    empty.textContent = state.frqMode === 'imported'
+      ? 'No imported FRQs yet — paste text or drop a file below, then come back here.'
+      : 'No FRQs in this set right now.';
+    return;
+  }
+  playArea.classList.remove('hidden');
+  empty.classList.add('hidden');
+  const frq = state.frqPool[state.frqIndex % state.frqPool.length];
+  $('frq-title').textContent = frq.title;
+  $('frq-question').textContent = frq.question;
   $('frq-answer').value = '';
   $('frq-rubric').classList.add('hidden');
+  state.frqRevealed = false;
+}
+
+function frqGoNext() {
+  if (state.frqPool.length === 0) return;
+  state.frqIndex = (state.frqIndex + 1) % state.frqPool.length;
+  renderFRQ();
+}
+
+function frqGoPrev() {
+  if (state.frqPool.length === 0) return;
+  state.frqIndex = (state.frqIndex - 1 + state.frqPool.length) % state.frqPool.length;
+  renderFRQ();
 }
 
 function revealRubric() {
-  const rubric = FRQS[currentFRQ].rubric;
-  $('frq-rubric-list').innerHTML = rubric.map((r, i) => `<li class="flex gap-2"><span style="color:var(--accent);">${i+1}.</span> ${r}</li>`).join('');
+  if (state.frqPool.length === 0) return;
+  const frq = state.frqPool[state.frqIndex % state.frqPool.length];
+  $('frq-rubric-list').innerHTML = frq.rubric.map((r, i) => `<li class="flex gap-2"><span style="color:var(--accent);">${i+1}.</span> ${r}</li>`).join('');
   $('frq-rubric').classList.remove('hidden');
+  state.frqRevealed = true;
   state.xp += 15;
   updateDashboard();
   showToast('Rubric revealed! Self-grade your answer. +15 XP ⚡');
 }
 
+// Import format: Title <TAB or ,> Question <TAB or ,> Rubric points separated by semicolons.
+function importFRQs() {
+  const text = $('frq-import').value.trim();
+  if (!text) { showToast('Paste some data first'); return; }
+  const lines = text.split('\n').filter(l => l.trim());
+  const newFRQs = lines.map(line => {
+    const parts = line.includes('\t') ? line.split('\t') : line.split(',');
+    const title = (parts[0] || '').trim();
+    const question = (parts[1] || '').trim();
+    const rubric = (parts[2] || '').split(';').map(r => r.trim()).filter(Boolean);
+    return { unit: 0, imported: true, title, question, rubric: rubric.length ? rubric : ['No rubric provided.'] };
+  }).filter(f => f.title && f.question);
+  if (newFRQs.length === 0) { showToast('No valid FRQs found'); return; }
+  state.importedFRQs = [...state.importedFRQs, ...newFRQs];
+  frqRebuildPool();
+  renderFRQ();
+  $('frq-import').value = '';
+  showToast(`Imported ${newFRQs.length} FRQ${newFRQs.length === 1 ? '' : 's'}! 📥`);
+}
+
+$('frq-drop-zone').addEventListener('click', () => $('frq-file').click());
+function handleFRQFileImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    $('frq-import').value = e.target.result;
+    importFRQs();
+  };
+  reader.readAsText(file);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (state.currentPage !== 'frq' || isTypingInField()) return;
+  if (e.key === 'Enter') { e.preventDefault(); if (!state.frqRevealed) revealRubric(); else frqGoNext(); }
+  if (e.code === 'ArrowLeft') { e.preventDefault(); frqGoPrev(); }
+  if (e.code === 'ArrowRight') { e.preventDefault(); frqGoNext(); }
+});
+
 // ============ QUIZ ============
+// Same Mix/Unit/Imported structure as Flashcards and FRQ. Unlike those, quiz sessions are
+// scored, so navigating between questions (arrow keys / Previous / Skip) can't just move a
+// pointer — state.quizHistory[i] records each question's outcome the first time it's
+// submitted, and re-visiting an already-answered question re-renders it read-only from that
+// record instead of re-scoring it.
 let quizQuestions = [];
-function initQuiz(unitNum) {
-  state.quizUnit = unitNum || null;
-  const pool = state.quizUnit ? QUIZ_QUESTIONS.filter(q => q.unit === state.quizUnit) : QUIZ_QUESTIONS;
+
+function quizBuildPool() {
+  if (state.quizMode === 'imported') return state.importedQuizQuestions;
+  if (state.quizMode === 'unit' && state.quizUnit) return QUIZ_QUESTIONS.filter(q => q.unit === state.quizUnit);
+  return [...QUIZ_QUESTIONS, ...state.importedQuizQuestions];
+}
+
+function quizPopulateUnitSelect() {
+  const sel = $('quiz-unit-select');
+  if (sel.options.length === 0) {
+    sel.innerHTML = UNITS.map(u => `<option value="${u.num}">Unit ${u.num}: ${UNIT_SHORT_NAMES[u.num]}</option>`).join('');
+  }
+  sel.value = state.quizUnit;
+}
+
+function quizSyncToggleButtons() {
+  document.querySelectorAll('[data-quiz-mode]').forEach(btn => {
+    btn.className = 'btn btn-sm' + (btn.dataset.quizMode === state.quizMode ? ' btn-primary' : ' btn-secondary');
+  });
+}
+
+function setQuizMode(mode) {
+  state.quizMode = mode;
+  initQuiz();
+}
+
+function setQuizUnit(unitNum) {
+  state.quizUnit = unitNum;
+  $('quiz-unit-select').value = unitNum;
+  initQuiz();
+}
+
+// forcedUnit: when called from a lesson's "Take Unit Quiz" button, forces Unit mode for
+// that unit. Called with no argument, it (re)builds a session from the current mode/unit.
+function initQuiz(forcedUnit) {
+  if (forcedUnit) { state.quizMode = 'unit'; state.quizUnit = forcedUnit; }
+  quizPopulateUnitSelect();
+  $('quiz-unit-select').classList.toggle('hidden', state.quizMode !== 'unit');
+  quizSyncToggleButtons();
+
+  const pool = quizBuildPool();
   quizQuestions = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
+  state.quizHistory = new Array(quizQuestions.length).fill(null);
+
   const modeLabelEl = $('quiz-mode-label');
   if (modeLabelEl) {
-    const unitObj = state.quizUnit ? UNITS.find(u => u.num === state.quizUnit) : null;
-    modeLabelEl.textContent = unitObj ? `🎯 Unit ${unitObj.num} Quiz: ${unitObj.name}` : '🎲 Mixed Quiz — questions from all units';
+    if (state.quizMode === 'unit') {
+      const unitObj = UNITS.find(u => u.num === state.quizUnit);
+      modeLabelEl.textContent = unitObj ? `🎯 Unit ${unitObj.num} Quiz: ${unitObj.name}` : '';
+    } else if (state.quizMode === 'imported') {
+      modeLabelEl.textContent = '📥 Imported Questions Only';
+    } else {
+      modeLabelEl.textContent = '🔀 Mixed Quiz — questions from all units';
+    }
   }
   state.quizIndex = 0;
   state.quizCorrect = 0;
@@ -6112,31 +6395,47 @@ function initQuiz(unitNum) {
 }
 
 function renderQuizQuestion() {
+  const empty = $('quiz-empty');
+  const playArea = $('quiz-play-area');
+  if (quizQuestions.length === 0) {
+    playArea.classList.add('hidden');
+    empty.classList.remove('hidden');
+    empty.textContent = state.quizMode === 'imported'
+      ? 'No imported questions yet — add some below, then come back here.'
+      : 'No questions in this set right now.';
+    return;
+  }
+  playArea.classList.remove('hidden');
+  empty.classList.add('hidden');
+
   if (state.quizIndex >= quizQuestions.length) {
     $('quiz-card').innerHTML = `<div class="text-center py-8"><div class="text-4xl mb-2">🎉</div><div class="font-semibold text-lg">Quiz Complete!</div><p class="text-sm" style="color:var(--text-secondary);">Score: ${state.quizCorrect}/${quizQuestions.length}</p></div>`;
     $('qz-submit').classList.add('hidden');
     $('qz-feedback').classList.add('hidden');
-    const acc = quizQuestions.length > 0 ? Math.round((state.quizCorrect / quizQuestions.length) * 100) : 0;
-    state.xp += state.quizCorrect * 10;
-    state.accuracyToday = state.totalAnswered > 0 ? (state.totalCorrect / state.totalAnswered) * 100 : acc;
-    if (state.streak === 0) state.streak = 1;
-    if (!state.quizScoreLogged && quizQuestions.length > 0) {
+    if (!state.quizScoreLogged) {
+      const acc = quizQuestions.length > 0 ? Math.round((state.quizCorrect / quizQuestions.length) * 100) : 0;
+      state.xp += state.quizCorrect * 10;
+      state.accuracyToday = state.totalAnswered > 0 ? (state.totalCorrect / state.totalAnswered) * 100 : acc;
+      if (state.streak === 0) state.streak = 1;
       state.quizScoreLogged = true;
       state.quizScores.push({
         date: new Date().toISOString(),
-        unit: state.quizUnit || null,
+        unit: state.quizMode === 'unit' ? state.quizUnit : null,
+        mode: state.quizMode,
         score: state.quizCorrect,
         total: quizQuestions.length,
         missed: state.quizMissed.slice(),
       });
       saveProgress();
       renderQuizHistory();
+      updateDashboard();
     }
-    updateDashboard();
     return;
   }
+
   const q = quizQuestions[state.quizIndex];
-  $('qz-unit-label').textContent = `Unit ${q.unit} · ${UNITS[q.unit-1].name}`;
+  const hist = state.quizHistory[state.quizIndex];
+  $('qz-unit-label').textContent = q.unit ? `Unit ${q.unit} · ${UNITS[q.unit - 1].name}` : 'Imported question';
   $('qz-question').textContent = q.q;
   $('qz-options').innerHTML = q.options.map((o, i) => `
     <div class="p-3 rounded-xl cursor-pointer border transition-all text-sm option-item" data-idx="${i}"
@@ -6146,13 +6445,30 @@ function renderQuizQuestion() {
     </div>
   `).join('');
   $('qz-submit').classList.remove('hidden');
-  $('qz-submit').textContent = 'Submit';
   $('qz-feedback').classList.add('hidden');
   state.quizSelected = null;
+
+  if (hist) {
+    // Already answered this session (revisited via Previous/Next) — read-only, no re-scoring.
+    state.quizSelected = hist.selected;
+    $('qz-submit').textContent = 'Next →';
+    document.querySelectorAll('.option-item').forEach((o, i) => {
+      o.style.pointerEvents = 'none';
+      if (i === q.correct) { o.style.borderColor = 'var(--green)'; o.style.background = 'rgba(52,211,153,0.1)'; }
+      if (i === hist.selected && !hist.correct) { o.style.borderColor = 'var(--red)'; o.style.background = 'rgba(248,113,113,0.1)'; }
+    });
+    $('qz-feedback').classList.remove('hidden');
+    $('qz-feedback').innerHTML = hist.correct
+      ? `<span style="color:var(--green);">✅ Correct! ${q.explanation}</span>`
+      : `<span style="color:var(--red);">❌ Wrong. ${q.explanation}</span>`;
+  } else {
+    $('qz-submit').textContent = 'Submit';
+  }
   updateQuizStats();
 }
 
 function selectQuizOption(idx, el) {
+  if (state.quizHistory[state.quizIndex]) return; // already answered — read-only
   document.querySelectorAll('.option-item').forEach(o => { o.style.borderColor = 'var(--border)'; o.style.background = 'var(--bg-secondary)'; });
   el.style.borderColor = 'var(--accent)';
   el.style.background = 'rgba(124,92,252,0.1)';
@@ -6160,16 +6476,14 @@ function selectQuizOption(idx, el) {
 }
 
 function submitQuiz() {
-  // If the quiz is currently showing feedback and the button is 'Next →',
-  // advance to the next question instead of submitting.
-  if ($('qz-submit').textContent.trim() === 'Next →') {
-    nextQuizQuestion();
-    return;
-  }
+  if (quizQuestions.length === 0) return;
+  // Revisiting an already-answered question: this button now just means "advance."
+  if (state.quizHistory[state.quizIndex]) { nextQuizQuestion(); return; }
 
   if (state.quizSelected === null) { showToast('Select an answer first'); return; }
   const q = quizQuestions[state.quizIndex];
   const correct = state.quizSelected === q.correct;
+  state.quizHistory[state.quizIndex] = { selected: state.quizSelected, correct };
   state.quizAnswered++;
   state.totalAnswered++;
   if (correct) { state.quizCorrect++; state.totalCorrect++; }
@@ -6182,7 +6496,7 @@ function submitQuiz() {
     ? `<span style="color:var(--green);">✅ Correct! ${q.explanation}</span>`
     : `<span style="color:var(--red);">❌ Wrong. ${q.explanation}</span>`;
   $('qz-submit').textContent = 'Next →';
-  
+
   // Highlight correct answer
   document.querySelectorAll('.option-item').forEach((o, i) => {
     o.style.pointerEvents = 'none';
@@ -6193,18 +6507,77 @@ function submitQuiz() {
   updateDashboard();
 }
 
+// Quizlet-style "move between questions" — always safe to call: an unanswered question is
+// simply skipped (not scored), an answered one is just left behind in quizHistory.
 function nextQuizQuestion() {
-  state.quizIndex++;
-  state.quizSelected = null;
+  state.quizIndex = Math.min(state.quizIndex + 1, quizQuestions.length);
+  renderQuizQuestion();
+}
+
+function quizGoPrev() {
+  state.quizIndex = Math.max(state.quizIndex - 1, 0);
   renderQuizQuestion();
 }
 
 function updateQuizStats() {
   $('qz-score').textContent = `${state.quizCorrect}/${state.quizAnswered}`;
   $('qz-qnum').textContent = Math.min(state.quizIndex + 1, quizQuestions.length);
+  $('qz-qtotal').textContent = quizQuestions.length;
   $('qz-acc').textContent = state.quizAnswered > 0 ? Math.round((state.quizCorrect / state.quizAnswered) * 100) + '%' : '—';
   $('qz-time').textContent = '—';
 }
+
+// Import format: Question <TAB or ,> Option A <TAB or ,> Option B <TAB or ,> Option C
+// <TAB or ,> Option D <TAB or ,> Correct answer (A-D or 1-4) [<TAB or ,> Explanation].
+function importQuizQuestions() {
+  const text = $('quiz-import').value.trim();
+  if (!text) { showToast('Paste some data first'); return; }
+  const lines = text.split('\n').filter(l => l.trim());
+  const letterMap = { A: 0, B: 1, C: 2, D: 3 };
+  const newQuestions = [];
+  lines.forEach(line => {
+    const parts = (line.includes('\t') ? line.split('\t') : line.split(',')).map(p => p.trim());
+    if (parts.length < 6) return;
+    const [q, a, b, c, d, correctRaw, explanation] = parts;
+    if (!q || !a || !b || !c || !d) return;
+    const upper = correctRaw.toUpperCase();
+    let correct;
+    if (letterMap[upper] !== undefined) correct = letterMap[upper];
+    else if (/^[1-4]$/.test(correctRaw)) correct = parseInt(correctRaw, 10) - 1;
+    else return;
+    newQuestions.push({ unit: 0, imported: true, q, options: [a, b, c, d], correct, explanation: explanation || '' });
+  });
+  if (newQuestions.length === 0) { showToast('No valid questions found — check the format'); return; }
+  state.importedQuizQuestions = [...state.importedQuizQuestions, ...newQuestions];
+  $('quiz-import').value = '';
+  showToast(`Imported ${newQuestions.length} question${newQuestions.length === 1 ? '' : 's'}! 📥`);
+  initQuiz();
+}
+
+$('quiz-drop-zone').addEventListener('click', () => $('quiz-file').click());
+function handleQuizFileImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    $('quiz-import').value = e.target.result;
+    importQuizQuestions();
+  };
+  reader.readAsText(file);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (state.currentPage !== 'quiz' || isTypingInField()) return;
+  if (e.key === 'Enter') { e.preventDefault(); submitQuiz(); }
+  if (e.code === 'ArrowLeft') { e.preventDefault(); quizGoPrev(); }
+  if (e.code === 'ArrowRight') { e.preventDefault(); nextQuizQuestion(); }
+  if (e.key >= '1' && e.key <= '4') {
+    if (state.quizHistory[state.quizIndex]) return; // already answered — read-only
+    const idx = parseInt(e.key, 10) - 1;
+    const opts = document.querySelectorAll('.option-item');
+    if (opts[idx]) selectQuizOption(idx, opts[idx]);
+  }
+});
 
 function renderQuizHistory() {
   const el = $('quiz-history');
@@ -6224,7 +6597,7 @@ function renderQuizHistory() {
         const pct = r.total > 0 ? Math.round((r.score / r.total) * 100) : 0;
         const d = new Date(r.date);
         const dateLabel = isNaN(d) ? '' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        const unitLabel = r.unit ? `Unit ${r.unit}` : 'Mixed';
+        const unitLabel = r.mode === 'imported' ? 'Imported' : (r.unit ? `Unit ${r.unit}` : 'Mixed');
         return `<div class="flex justify-between text-xs p-2 rounded-lg" style="background:var(--bg-secondary);">
           <span style="color:var(--text-muted);">${dateLabel} · ${unitLabel}</span>
           <span>${r.score}/${r.total} · ${pct}%</span>
@@ -6342,7 +6715,49 @@ function renderMyScores() {
 }
 
 // ============ CHALLENGE ============
+// Same Mix/Unit/Imported scope as Quiz, kept in state.challengeScope/challengeUnit (distinct
+// from state.challengeMode, which is the speed/streak/death game type). Imported reuses
+// state.importedQuizQuestions - there's no separate import UI here, just the Quiz page's.
+let challengePool = [];
+
+function challengeBuildPool() {
+  if (state.challengeScope === 'imported') return state.importedQuizQuestions;
+  if (state.challengeScope === 'unit' && state.challengeUnit) return QUIZ_QUESTIONS.filter(q => q.unit === state.challengeUnit);
+  return [...QUIZ_QUESTIONS, ...state.importedQuizQuestions];
+}
+
+function challengePopulateUnitSelect() {
+  const sel = $('challenge-unit-select');
+  if (sel.options.length === 0) {
+    sel.innerHTML = UNITS.map(u => `<option value="${u.num}">Unit ${u.num}: ${UNIT_SHORT_NAMES[u.num]}</option>`).join('');
+  }
+  sel.value = state.challengeUnit;
+}
+
+function challengeSyncToggleButtons() {
+  document.querySelectorAll('[data-challenge-scope]').forEach(btn => {
+    btn.className = 'btn btn-sm' + (btn.dataset.challengeScope === state.challengeScope ? ' btn-primary' : ' btn-secondary');
+  });
+}
+
+function setChallengeScope(scope) {
+  state.challengeScope = scope;
+  challengePopulateUnitSelect();
+  $('challenge-unit-select').classList.toggle('hidden', scope !== 'unit');
+  challengeSyncToggleButtons();
+}
+
+function setChallengeUnit(unitNum) {
+  state.challengeUnit = unitNum;
+  $('challenge-unit-select').value = unitNum;
+}
+
 function startChallenge(mode) {
+  challengePool = challengeBuildPool();
+  if (challengePool.length === 0) {
+    showToast(state.challengeScope === 'imported' ? 'No imported questions yet — add some on the Quiz page first.' : 'No questions in this set.');
+    return;
+  }
   state.challengeMode = mode;
   state.challengeScore = 0;
   state.challengeStreak = 0;
@@ -6361,7 +6776,7 @@ function startChallenge(mode) {
 }
 
 function renderChallengeQuestion() {
-  const q = QUIZ_QUESTIONS[Math.floor(Math.random() * QUIZ_QUESTIONS.length)];
+  const q = challengePool[Math.floor(Math.random() * challengePool.length)];
   state._challengeQ = q;
   $('challenge-question').textContent = q.q;
   $('challenge-options').innerHTML = q.options.map((o, i) => `
@@ -6413,6 +6828,22 @@ function endChallenge() {
   $('challenge-active').classList.add('hidden');
   showToast(`Challenge over! Score: ${state.challengeScore} · +${state.challengeScore} XP ⚡`);
 }
+
+function initChallenge() {
+  challengePopulateUnitSelect();
+  $('challenge-unit-select').classList.toggle('hidden', state.challengeScope !== 'unit');
+  challengeSyncToggleButtons();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (state.currentPage !== 'challenge' || isTypingInField()) return;
+  if (!state._challengeQ || state._challengeAnswered) return;
+  if (e.key >= '1' && e.key <= '4') {
+    const idx = parseInt(e.key, 10) - 1;
+    const opts = document.querySelectorAll('#challenge-options > div');
+    if (opts[idx]) answerChallenge(idx, opts[idx], state._challengeQ.correct);
+  }
+});
 
 // ============ WRONG LOG ============
 function renderWrongLog() {
