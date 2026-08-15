@@ -1047,7 +1047,7 @@
     <div class="flex justify-between items-center mb-4">
       <div>
         <h1 class="text-2xl font-bold">🤖 Spark.E AI Tutor</h1>
-        <p class="text-sm" style="color:var(--text-secondary);">Your 24/7 personal physics copilot powered by StudyFetch technology.</p>
+        <p class="text-sm" style="color:var(--text-secondary);">Ask Spark.E anything about AP Physics 1 — real answers, worked through step by step.</p>
       </div>
       <div class="flex gap-2">
         <button class="btn btn-secondary" onclick="toggleSparkeVoice()"><span id="sparke-voice-btn">📞 Call Spark.E</span></button>
@@ -7001,16 +7001,6 @@ function updatePomodoroDisplay() {
 }
 
 // ============ SPARK.E AI TUTOR ============
-const SPARKE_RESPONSES = {
-  'atwood': `An Atwood machine is two masses hanging off a string over a pulley — one side falls, the other rises, and since it's the same string, they share one acceleration.\n\nDraw a free-body diagram for each mass separately. For the lighter one (m₁, moving up): T - m₁g = m₁a. For the heavier one (m₂, moving down): m₂g - T = m₂a. Add those two equations and the tension cancels out, leaving a = (m₂ - m₁)g / (m₁ + m₂).\n\nOne thing that trips people up: the tension isn't equal to either weight — it's somewhere in between. You get it by plugging your acceleration back into either equation, e.g. T = m₁(g + a).\n\nIf you've got actual numbers for the two masses, send them over and I'll plug them in and work out the real numbers with you.`,
-
-  'spring': `Spring potential energy is U = ½kx² — and the reason it's squared instead of linear comes down to the force not being constant. The farther you stretch a spring, the harder it pushes back (F = kx), so the work you put in is the area under that force-vs-displacement line, which is a triangle: ½ × base × height = ½ × x × kx = ½kx².\n\nA couple things worth remembering: x is the displacement from the spring's equilibrium position, not its total length, and because it's squared, doubling how far you stretch it quadruples the stored energy — that shows up a lot on multiple choice.`,
-
-  'bernoulli': `Bernoulli's equation is really just energy conservation applied to a moving fluid: pressure energy plus kinetic energy plus height energy stays constant along the flow — P + ½ρv² + ρgh = constant.\n\nThe part that trips people up is that when a pipe narrows, the fluid has to speed up to keep the same volume moving through per second (that's the continuity equation, A₁v₁ = A₂v₂), and faster-moving fluid actually has LOWER pressure, not higher. That's counterintuitive the first time you see it, but it's exactly why an airplane wing generates lift: air moves faster over the curved top, pressure drops there, and the higher pressure underneath pushes the wing up.`,
-
-  'default': `Happy to help — what are you working on specifically? If you've got an actual problem with numbers, paste it in and I'll work through it with you step by step. If it's more of a concept you're stuck on, tell me which one and where it's not clicking, and we'll talk it through.`
-};
-
 function initSparkeTutor() {
   if (state.sparkeMessages.length === 0) {
     state.sparkeMessages = [{ role: 'assistant', text: "Hi, I'm Spark.E — I'm here to help you work through AP Physics 1. Give me a problem with actual numbers and I'll solve it with you, not just hand you the formula. Or if you're stuck on a concept, just ask and we'll talk it through. What are you working on?" }];
@@ -7061,6 +7051,12 @@ FORMATTING MECHANICS (for when you do use structure, e.g. a calculation):
 
 If asked about non-physics topics, gently redirect: "I'm specialized in AP Physics 1, but I can help you with [related physics topic]!"`;
 
+// Spark.E calls a Cloudflare Worker (see /worker), which holds the real
+// Anthropic API key server-side and proxies the request — the key is never
+// exposed to the browser. Replace this with your deployed Worker's URL
+// (see worker/README.md for deploy steps).
+const SPARKE_API_URL = 'https://REPLACE-WITH-YOUR-WORKER-URL.workers.dev';
+
 async function sendSparkeMessage() {
   const input = $('sparke-chat-input');
   const text = input.value.trim();
@@ -7079,87 +7075,52 @@ async function sendSparkeMessage() {
   container.appendChild(typing);
   container.scrollTop = container.scrollHeight;
   
+  // Build conversation history for context
+  const messages = [
+    { role: 'system', content: SPARKE_SYSTEM_PROMPT },
+    ...state.sparkeMessages.slice(-10).map(m => ({
+      role: m.role === 'assistant' ? 'assistant' : 'user',
+      content: m.text
+    }))
+  ];
+
+  let response = '';
+  let errorMessage = '';
   try {
-    // Build conversation history for context
-    const messages = [
-      { role: 'system', content: SPARKE_SYSTEM_PROMPT },
-      ...state.sparkeMessages.slice(-10).map(m => ({
-        role: m.role === 'assistant' ? 'assistant' : 'user',
-        content: m.text
-      }))
-    ];
-    
-    // Call Pollinations.ai - free LLM API, no key required
-    const apiResponse = await fetch('https://text.pollinations.ai/openai', {
+    if (SPARKE_API_URL.includes('REPLACE-WITH-YOUR-WORKER-URL')) {
+      throw new Error('Spark.E is not connected to a backend yet — deploy the Worker in /worker and set SPARKE_API_URL');
+    }
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const apiResponse = await fetch(SPARKE_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'openai',
-        messages: messages,
-        temperature: 0.7,
-        max_tokens: 600,
-        private: true
-      })
+      body: JSON.stringify({ messages }),
+      signal: controller.signal
     });
-    
-    let response;
-    if (apiResponse.ok) {
-      const data = await apiResponse.json();
-      response = data.choices?.[0]?.message?.content || data.content || data.text || '';
-    }
-    
-    // Fallback to simpler GET endpoint if POST failed
-    if (!response) {
-      const prompt = encodeURIComponent(`${SPARKE_SYSTEM_PROMPT}\n\nStudent question: ${text}\n\nSpark.E response:`);
-      const fallbackResponse = await fetch(`https://text.pollinations.ai/${prompt}?model=openai`);
-      if (fallbackResponse.ok) {
-        response = await fallbackResponse.text();
-      }
-    }
-    
-    // Final fallback to local response if API completely fails
-    if (!response || response.length < 5) {
-      response = generateLocalSparkeResponse(text);
-    }
-    
-    // Remove typing indicator
-    const typingEl = $('sparke-typing');
-    if (typingEl) typingEl.remove();
-    
-    state.sparkeMessages.push({ role: 'assistant', text: response.trim() });
-    renderSparkeChat();
-    state.xp += 5;
-    updateDashboard();
+    clearTimeout(timeoutId);
+
+    const data = await apiResponse.json();
+    if (!apiResponse.ok) throw new Error(data?.error || `API returned status ${apiResponse.status}`);
+    response = data.content || '';
+    if (!response) throw new Error('The model returned an empty response');
   } catch (error) {
     console.error('Spark.E API error:', error);
-    const typingEl = $('sparke-typing');
-    if (typingEl) typingEl.remove();
-    
-    const fallback = generateLocalSparkeResponse(text);
-    state.sparkeMessages.push({ role: 'assistant', text: fallback });
-    renderSparkeChat();
+    errorMessage = error.name === 'AbortError' ? 'the request timed out' : error.message;
   }
-}
 
-// Local fallback if API is unreachable
-function generateLocalSparkeResponse(text) {
-  const lower = text.toLowerCase();
-  if (lower.includes('atwood') || lower.includes('pulley')) return SPARKE_RESPONSES.atwood;
-  if (lower.includes('spring') || lower.includes('hooke')) return SPARKE_RESPONSES.spring;
-  if (lower.includes('bernoulli') || lower.includes('fluid')) return SPARKE_RESPONSES.bernoulli;
-  if (lower.includes('kinematic') || lower.includes('projectile') || lower.includes('free fall')) {
-    return `Kinematics is just tracking position, velocity, and acceleration over time. The four equations you'll use constantly (they're on the AP formula sheet, so you don't need to memorize them) are v = v₀ + at, Δx = v₀t + ½at², v² = v₀² + 2aΔx, and Δx = ½(v₀ + v)t.\n\nThe trick isn't memorizing them, it's picking the right one — list what you know and what you're solving for, and choose the equation that has exactly those variables. One classic trap: at the top of a projectile's flight, the vertical velocity is zero, but the acceleration is still g downward — it never turns off.\n\nGot a specific problem? Send me the numbers and I'll walk through it with you.`;
+  // Remove typing indicator
+  const typingEl = $('sparke-typing');
+  if (typingEl) typingEl.remove();
+
+  if (response) {
+    state.sparkeMessages.push({ role: 'assistant', text: response.trim() });
+    state.xp += 5;
+    updateDashboard();
+  } else {
+    state.sparkeMessages.push({ role: 'assistant', text: `⚠️ I couldn't reach the AI model just now (${errorMessage}). Try again in a moment.` });
   }
-  if (lower.includes('newton') || lower.includes('force') || lower.includes('fbd')) {
-    return `Newton's three laws are the backbone of this unit. First law: things keep doing what they're doing unless a net force acts on them. Second law: F_net = ma. Third law: forces always come in equal-and-opposite pairs, but those two forces act on two different objects, so they never cancel out on the same object's free-body diagram.\n\nSpeaking of which — when you draw a free-body diagram, only include forces actually acting ON the object, never velocity, acceleration, or a "force of motion" that doesn't exist.\n\nWhat's the specific force problem you're stuck on?`;
-  }
-  if (lower.includes('energy') || lower.includes('work')) {
-    return `Energy's nice to work with because it's a scalar — no direction to track, unlike force. The main quantities are kinetic energy K = ½mv², gravitational PE U_g = mgh, and spring PE U_s = ½kx². When only conservative forces are acting, total mechanical energy is conserved: K_i + U_i = K_f + U_f. If friction's doing work, some of that energy leaves the system: K_i + U_i - |W_friction| = K_f + U_f.\n\nWhat's the setup you're working with?`;
-  }
-  if (lower.includes('momentum') || lower.includes('collision')) {
-    return `Momentum, p = mv, is a vector, so direction matters — unlike energy. The impulse-momentum theorem ties force and momentum together: J = FΔt = Δp. And in an isolated system, total momentum is conserved before and after a collision, no matter what type it is.\n\nThe type of collision matters for energy though: elastic collisions conserve both momentum and kinetic energy, inelastic ones only conserve momentum, and in a perfectly inelastic collision the objects stick together and you lose the most kinetic energy possible. Big trap: never assume kinetic energy is conserved unless you're told the collision is elastic.\n\nWhat's the momentum problem you're working on?`;
-  }
-  return `Happy to help — what are you working on specifically? If you've got an actual problem with numbers, send it over and I'll work through it with you step by step. If it's more of a concept you're stuck on, tell me which one and where it's not clicking.`;
+  renderSparkeChat();
 }
 
 function suggestSparkePrompt(prompt) {
@@ -7190,9 +7151,9 @@ function simulateVoiceQuery(topic) {
 
 function analyzeVisual(type) {
   const visuals = {
-    atwood: { title: '⚙️ Atwood Machine Detected', desc: '**Setup:** Two masses (m₁, m₂) connected by a massless string over a frictionless pulley.\n\n**Forces identified:**\n• m₁: Tension (up), Weight m₁g (down)\n• m₂: Tension (up), Weight m₂g (down)\n\n**Key equations:**\n• a = (m₂ - m₁)g / (m₁ + m₂)\n• T = 2m₁m₂g / (m₁ + m₂)\n\n**AP Tip:** If m₁ = m₂, acceleration = 0 and T = mg. The system is in equilibrium!' },
-    incline: { title: '📐 Inclined Plane Detected', desc: '**Setup:** Block on a ramp at angle θ.\n\n**Forces identified:**\n• Weight mg (straight down)\n• Normal force N (perpendicular to ramp)\n• Friction f (parallel to ramp, opposing motion)\n\n**Components of weight:**\n• Parallel to ramp: mg sin θ (causes sliding)\n• Perpendicular to ramp: mg cos θ (balanced by N)\n\n**Key results:**\n• N = mg cos θ\n• a = g(sin θ - μₖcos θ) [with friction]\n• a = g sin θ [frictionless]\n\n**AP Tip:** Always rotate your axes for incline problems!' },
-    fluid: { title: '💧 Venturi Tube Detected', desc: '**Setup:** Pipe narrows from wide section (A₁) to narrow section (A₂).\n\n**Physics identified:**\n• Continuity: A₁v₁ = A₂v₂ (narrower = faster)\n• Bernoulli: P₁ + ½ρv₁² = P₂ + ½ρv₂² (faster = lower pressure)\n\n**Key insight:** The fluid speeds up in the narrow section, and the pressure DROPS. This pressure difference can be measured with a manometer.\n\n**Applications:** Carburetors, atomizers, airplane wings, Venturi flow meters.' }
+    atwood: { title: '⚙️ Atwood Machine — Example', desc: '**Setup:** Two masses (m₁, m₂) connected by a massless string over a frictionless pulley.\n\n**Forces identified:**\n• m₁: Tension (up), Weight m₁g (down)\n• m₂: Tension (up), Weight m₂g (down)\n\n**Key equations:**\n• a = (m₂ - m₁)g / (m₁ + m₂)\n• T = 2m₁m₂g / (m₁ + m₂)\n\n**AP Tip:** If m₁ = m₂, acceleration = 0 and T = mg. The system is in equilibrium!' },
+    incline: { title: '📐 Inclined Plane — Example', desc: '**Setup:** Block on a ramp at angle θ.\n\n**Forces identified:**\n• Weight mg (straight down)\n• Normal force N (perpendicular to ramp)\n• Friction f (parallel to ramp, opposing motion)\n\n**Components of weight:**\n• Parallel to ramp: mg sin θ (causes sliding)\n• Perpendicular to ramp: mg cos θ (balanced by N)\n\n**Key results:**\n• N = mg cos θ\n• a = g(sin θ - μₖcos θ) [with friction]\n• a = g sin θ [frictionless]\n\n**AP Tip:** Always rotate your axes for incline problems!' },
+    fluid: { title: '💧 Venturi Tube — Example', desc: '**Setup:** Pipe narrows from wide section (A₁) to narrow section (A₂).\n\n**Physics identified:**\n• Continuity: A₁v₁ = A₂v₂ (narrower = faster)\n• Bernoulli: P₁ + ½ρv₁² = P₂ + ½ρv₂² (faster = lower pressure)\n\n**Key insight:** The fluid speeds up in the narrow section, and the pressure DROPS. This pressure difference can be measured with a manometer.\n\n**Applications:** Carburetors, atomizers, airplane wings, Venturi flow meters.' }
   };
   const v = visuals[type];
   $('visual-output').classList.remove('hidden');
@@ -7201,13 +7162,71 @@ function analyzeVisual(type) {
   showToast('Diagram analyzed! Check the output panel.');
 }
 
-function uploadVisual(event) {
+async function uploadVisual(event) {
   const file = event.target.files[0];
   if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    $('visual-output').classList.remove('hidden');
+    $('visual-title').textContent = '⚠️ Unsupported file';
+    $('visual-desc').textContent = "That doesn't look like an image file — try a photo or screenshot of the diagram.";
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    $('visual-output').classList.remove('hidden');
+    $('visual-title').textContent = '⚠️ Image too large';
+    $('visual-desc').textContent = 'That image is over 5MB — try a smaller photo or a cropped screenshot.';
+    return;
+  }
+
   $('visual-output').classList.remove('hidden');
-  $('visual-title').textContent = '📸 Image Uploaded: ' + file.name;
-  $('visual-desc').innerHTML = '<strong>Analysis:</strong> Image received! This appears to be a physics diagram. Based on the visual elements, I can identify forces, motion vectors, and setup geometry.<br><br><strong>Detected elements:</strong> Free-body diagram with weight vector, normal force, and applied force. The setup suggests a dynamics problem on a horizontal surface.<br><br><strong>Suggested approach:</strong> Draw FBD → Apply Newton\'s 2nd Law in x and y → Solve for unknowns.';
-  showToast('Image uploaded and analyzed!');
+  $('visual-title').textContent = '📸 ' + file.name;
+  $('visual-desc').textContent = 'Analyzing image…';
+
+  try {
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error('could not read the file'));
+      reader.readAsDataURL(file);
+    });
+
+    if (SPARKE_API_URL.includes('REPLACE-WITH-YOUR-WORKER-URL')) {
+      throw new Error('Spark.E is not connected to a backend yet — deploy the Worker in /worker and set SPARKE_API_URL');
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const apiResponse = await fetch(SPARKE_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: SPARKE_SYSTEM_PROMPT },
+          { role: 'user', content: [
+            { type: 'text', text: 'This is a photo or screenshot of an AP Physics 1 diagram or problem setup. Describe what you actually see, identify the forces or quantities involved, and give the relevant equation(s) — only describe things actually visible in the image.' },
+            { type: 'image_url', image_url: { url: dataUrl } }
+          ] }
+        ]
+      }),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    const data = await apiResponse.json();
+    if (!apiResponse.ok) throw new Error(data?.error || `API returned status ${apiResponse.status}`);
+    const text = data.content || '';
+    if (!text) throw new Error('the model returned an empty response');
+
+    $('visual-title').textContent = '📸 ' + file.name;
+    $('visual-desc').innerHTML = parseMarkdown(text);
+    showToast('Image analyzed!');
+  } catch (error) {
+    console.error('Spark.E visual analysis error:', error);
+    const reason = error.name === 'AbortError' ? 'the request timed out' : error.message;
+    $('visual-title').textContent = '⚠️ Analysis failed';
+    $('visual-desc').textContent = `Couldn't analyze this image (${reason}). Try again in a moment.`;
+  }
 }
 
 // ============ LIVE LECTURE ============
