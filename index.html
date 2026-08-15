@@ -116,6 +116,16 @@
     font-size: 11px;
     border-radius: 6px;
   }
+  kbd {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 5px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+  }
   .btn-sm {
     padding: 6px 14px;
     font-size: 13px;
@@ -803,7 +813,11 @@
           <div class="flashcard-back" id="fc-back">—</div>
         </div>
       </div>
-      <p class="text-sm mb-3" style="color:var(--text-muted);">space or tap to flip</p>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs mb-3" style="color:var(--text-muted);">
+        <span>⌨️ tap / <kbd>space</kbd> flip</span>
+        <span><kbd>←</kbd> <kbd>→</kbd> prev / next</span>
+        <span><kbd>1</kbd> hard · <kbd>3</kbd> ok · <kbd>5</kbd> easy</span>
+      </div>
       <div class="flex gap-2 flex-wrap" id="fc-rating">
         <button class="btn btn-secondary btn-sm" onclick="rateCard(1)">1 — Hard</button>
         <button class="btn btn-secondary btn-sm" onclick="rateCard(3)">3 — OK</button>
@@ -6036,10 +6050,25 @@ function handleFileImport(event) {
   reader.readAsText(file);
 }
 
+// Quizlet-style browsing: arrows just move the pointer within the current session queue
+// (no rating, no SRS change) — separate from rateCard(), which reshuffles the queue.
+function fcGoNext() {
+  if (state.fcQueue.length === 0) return;
+  state.fcIndex = (state.fcIndex + 1) % state.fcQueue.length;
+  updateFlashcardUI();
+}
+function fcGoPrev() {
+  if (state.fcQueue.length === 0) return;
+  state.fcIndex = (state.fcIndex - 1 + state.fcQueue.length) % state.fcQueue.length;
+  updateFlashcardUI();
+}
+
 document.addEventListener('keydown', (e) => {
   if (state.currentPage !== 'flashcards') return;
   if (e.code === 'Space') { e.preventDefault(); flipFlashcard(); }
-  if (e.key >= '1' && e.key <= '5') { const r = parseInt(e.key); if (state.fcFlipped) rateCard(r); }
+  if (e.code === 'ArrowLeft') { e.preventDefault(); fcGoPrev(); }
+  if (e.code === 'ArrowRight') { e.preventDefault(); fcGoNext(); }
+  if (e.key === '1' || e.key === '3' || e.key === '5') { if (state.fcFlipped) rateCard(parseInt(e.key)); }
 });
 
 // ============ FRQ ============
