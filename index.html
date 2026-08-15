@@ -541,10 +541,16 @@
   <!-- CONCEPT MAP -->
   <section id="page-concept-map" class="hidden animate-in">
     <h1 class="text-2xl font-bold mb-4">🗺 Concept Connection Map</h1>
-    <p class="mb-6" style="color:var(--text-secondary);">See how AP Physics 1 units connect. Click any node to jump to that unit's notes.</p>
-    <div class="card relative" style="height:500px;" id="concept-map-container">
+    <p class="mb-4" style="color:var(--text-secondary);">Not every unit connects to every other one — these are the connections worth knowing, because each one helps you solve a problem you couldn't before or reuse something you already know. Tap a unit to filter; tap a connection card for detail.</p>
+    <div class="flex flex-wrap gap-2 mb-4" id="concept-legend"></div>
+    <div class="card relative" style="height:420px;" id="concept-map-container">
       <svg class="absolute inset-0 w-full h-full" id="concept-svg"></svg>
     </div>
+    <div class="flex items-center justify-between mt-5 mb-3">
+      <div class="font-semibold text-sm" id="concept-list-heading">All connections</div>
+      <button class="btn btn-ghost btn-xs hidden" id="concept-clear-filter" onclick="filterConceptMap(null)">Show all ✕</button>
+    </div>
+    <div class="space-y-3" id="concept-list"></div>
   </section>
 
   <!-- FORMULAS -->
@@ -1266,6 +1272,7 @@ const state = {
   selectedMode: 'ap',
   notesUnit: null,
   notesSubIndex: null,
+  conceptFilter: null,
   flashcards: [],
   fcIndex: 0,
   fcFlipped: false,
@@ -5215,51 +5222,146 @@ function flagUnit(unitNum) {
 }
 
 // ============ CONCEPT MAP ============
+// Curated (not exhaustive) connections between units. Each one passes a specific test:
+// does it help solve a problem you couldn't before, or transfer something you already
+// know? Every connection is tagged with which of the four kinds of relationship it is.
+const CONCEPT_CATEGORIES = {
+  context: { label: 'Same idea, new context', color: '#7c5cfc' },
+  conservation: { label: 'Shared conservation logic', color: '#34d399' },
+  prerequisite: { label: 'Prerequisite chain', color: '#fb923c' },
+  choosing: { label: 'Choosing between approaches', color: '#22d3ee' }
+};
+
+// Short display names, distinct from UNITS' full names, so nodes fit on a phone screen.
+const UNIT_SHORT_NAMES = {
+  1: 'Kinematics', 2: 'Forces', 3: 'Energy', 4: 'Momentum',
+  5: 'Torque', 6: 'Rotation', 7: 'Oscillations', 8: 'Fluids'
+};
+
+const CONCEPT_CONNECTIONS = [
+  { a: 1, b: 2, category: 'prerequisite', text: "Force problems end in a kinematics answer. Solving F=ma gives you acceleration — Unit 1's equations then get you velocity, position, or time. Circular motion (2.6) specifically needs vector reasoning (1.1) and F=ma (2.2) before centripetal force makes sense." },
+  { a: 1, b: 7, category: 'context', text: "SHM's x(t), v(t), a(t) graphs read exactly like Unit 1's motion graphs — slope of position gives velocity, slope of velocity gives acceleration. Same skill, now applied to a curve that oscillates instead of a parabola." },
+  { a: 2, b: 3, category: 'choosing', text: "A block sliding down a ramp: the force approach needs an FBD, then a kinematics equation to get speed. The energy approach (mgh=½mv²) skips straight to the answer. Use energy when you don't need time or a specific force like tension or normal force; use forces when you do." },
+  { a: 2, b: 4, category: 'context', text: "Conservation of momentum IS Newton's third law, summed over an entire system. Internal force pairs are equal and opposite, so they cancel exactly when you add up every object's momentum change — that's why it always works for an isolated system, not just a convenient shortcut." },
+  { a: 2, b: 5, category: 'context', text: "Unit 5 is Unit 2 rotated: force → torque, mass → rotational inertia, F=ma → τ=Iα, ΣF=0 → Στ=0. Every technique you learned for translational dynamics has a direct rotational twin." },
+  { a: 2, b: 6, category: 'context', text: "A satellite in orbit is Unit 2's circular motion with gravity as the only centripetal force: GMm/r² = mv²/r. Same v²/r reasoning as a car on a curve, just with gravity supplying the inward pull instead of friction or tension." },
+  { a: 2, b: 7, category: 'prerequisite', text: "Hooke's law, F=−kx, from Unit 2 isn't just a force — it's THE force that defines SHM. Unit 7 doesn't introduce a new force; it asks what motion this specific, already-familiar force produces." },
+  { a: 2, b: 8, category: 'context', text: "Buoyant force is just another arrow on the free-body diagram from Unit 2. Once you calculate F_b = ρVg, an object hanging in a fluid solves exactly like a block on an incline — sum the forces, apply equilibrium or F=ma." },
+  { a: 3, b: 4, category: 'choosing', text: "In a collision, momentum is ALWAYS conserved — kinetic energy only is if the collision happens to be elastic. When you don't know which type of collision you're looking at, start with momentum; it never fails." },
+  { a: 3, b: 6, category: 'conservation', text: "Energy (K+U) and angular momentum (L) are both conserved for an isolated system by the same logic: total before equals total after, and only an outside influence — nonconservative work, or external torque — can change the total." },
+  { a: 3, b: 7, category: 'context', text: "SHM's energy analysis is Unit 3's K+U conservation, applied to a spring: E=½kA²=K+U, constant throughout the motion. Same bookkeeping, now U=½kx² trades with K as the object oscillates instead of falls." },
+  { a: 3, b: 8, category: 'context', text: "Bernoulli's equation is Unit 3's energy conservation, divided by volume: P+½ρv²+ρgh=constant is K+U=constant wearing fluid notation." },
+  { a: 4, b: 6, category: 'conservation', text: "Angular momentum conservation is linear momentum conservation's rotational twin: isolate the system, and if no external torque acts, total L before equals total L after — same isolate-and-compare logic as Unit 4, different quantity." },
+  { a: 5, b: 6, category: 'prerequisite', text: "Unit 6 can't start without Unit 5's rotational inertia. K_rot=½Iω² and L=Iω both need I — you can't compute either one without first knowing how to find I for the system in question." }
+];
+
 function renderConceptMap() {
   const container = $('concept-map-container');
   const svg = $('concept-svg');
   const w = container.offsetWidth;
-  const h = 500;
+  const h = container.offsetHeight;
   const cx = w / 2;
-  const cy = 250;
-  const radius = 170;
+  const cy = h / 2 - 10;
+  const radius = Math.max(90, Math.min(150, w / 2 - 70, h / 2 - 60));
   const positions = UNITS.map((_, i) => {
     const angle = (i / 8) * 2 * Math.PI - Math.PI / 2;
     return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
   });
 
-  // Draw SVG connections
   let svgContent = '';
-  for (let i = 0; i < 8; i++) {
-    for (let j = i + 1; j < 8; j++) {
-      const dx = positions[j].x - positions[i].x;
-      const dy = positions[j].y - positions[i].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 250) {
-        svgContent += `<line x1="${positions[i].x}" y1="${positions[i].y}" x2="${positions[j].x}" y2="${positions[j].y}" stroke="var(--border)" stroke-width="1" opacity="0.6"/>`;
-      }
-    }
-  }
-  // Highlight connections between adjacent units
-  for (let i = 0; i < 8; i++) {
-    const j = (i + 1) % 8;
-    svgContent += `<line x1="${positions[i].x}" y1="${positions[i].y}" x2="${positions[j].x}" y2="${positions[j].y}" stroke="var(--accent)" stroke-width="2" opacity="0.4" stroke-dasharray="6,4"/>`;
-  }
+  CONCEPT_CONNECTIONS.forEach(c => {
+    const p1 = positions[c.a - 1], p2 = positions[c.b - 1];
+    const color = CONCEPT_CATEGORIES[c.category].color;
+    const active = !state.conceptFilter || state.conceptFilter === c.a || state.conceptFilter === c.b;
+    svgContent += `<line data-a="${c.a}" data-b="${c.b}" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="${color}" stroke-width="2" opacity="${active ? 0.55 : 0.08}"/>`;
+  });
   svg.innerHTML = svgContent;
 
-  // Position node divs
-  // Remove old nodes
-  container.querySelectorAll('.map-node').forEach(n => n.remove());
+  container.querySelectorAll('.map-node, .map-node-label').forEach(n => n.remove());
   positions.forEach((pos, i) => {
+    const unitNum = i + 1;
+    const dimmed = state.conceptFilter && state.conceptFilter !== unitNum;
     const node = document.createElement('div');
     node.className = 'map-node';
-    node.textContent = 'U' + (i + 1);
-    node.style.left = (pos.x - 28) + 'px';
-    node.style.top = (pos.y - 28) + 'px';
+    node.textContent = unitNum;
+    node.style.left = (pos.x - 22) + 'px';
+    node.style.top = (pos.y - 22) + 'px';
+    node.style.width = '44px';
+    node.style.height = '44px';
+    node.style.fontSize = '14px';
+    node.style.opacity = dimmed ? '0.35' : '1';
+    if (state.conceptFilter === unitNum) { node.style.borderColor = 'var(--accent)'; node.style.boxShadow = '0 0 20px var(--accent-glow)'; }
     node.title = UNITS[i].name;
-    node.onclick = () => { navigateTo('notes'); setTimeout(() => { const list = $(`notes-sublist-${i+1}`); if (list && list.classList.contains('hidden')) toggleNotesUnit(i+1); const el = document.querySelector(`#notes-grid .card:nth-child(${i+1})`); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200); };
+    node.onclick = () => filterConceptMap(state.conceptFilter === unitNum ? null : unitNum);
     container.appendChild(node);
+
+    const label = document.createElement('div');
+    label.className = 'map-node-label';
+    label.textContent = UNIT_SHORT_NAMES[unitNum];
+    label.style.position = 'absolute';
+    label.style.left = (pos.x - 40) + 'px';
+    label.style.top = (pos.y + 24) + 'px';
+    label.style.width = '80px';
+    label.style.textAlign = 'center';
+    label.style.fontSize = '10px';
+    label.style.lineHeight = '1.2';
+    label.style.color = 'var(--text-muted)';
+    label.style.pointerEvents = 'none';
+    label.style.opacity = dimmed ? '0.35' : '1';
+    container.appendChild(label);
   });
+
+  renderConceptLegend();
+  renderConceptList();
+}
+
+function renderConceptLegend() {
+  $('concept-legend').innerHTML = Object.entries(CONCEPT_CATEGORIES).map(([key, cat]) => `
+    <div class="text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5" style="background:var(--bg-secondary);border:1px solid var(--border);">
+      <span style="width:8px;height:8px;border-radius:50%;background:${cat.color};display:inline-block;flex-shrink:0;"></span>
+      <span style="color:var(--text-secondary);">${cat.label}</span>
+    </div>
+  `).join('');
+}
+
+function filterConceptMap(unitNum) {
+  state.conceptFilter = unitNum;
+  renderConceptMap();
+  if (unitNum) {
+    const el = document.querySelector(`#concept-list [data-unit-pair]`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function renderConceptList() {
+  const filter = state.conceptFilter;
+  const heading = $('concept-list-heading');
+  const clearBtn = $('concept-clear-filter');
+  const conns = CONCEPT_CONNECTIONS.filter(c => !filter || c.a === filter || c.b === filter);
+
+  if (filter) {
+    heading.textContent = `Unit ${filter}: ${UNITS[filter - 1].name} — ${conns.length} connection${conns.length === 1 ? '' : 's'}`;
+    clearBtn.classList.remove('hidden');
+  } else {
+    heading.textContent = `All connections (${conns.length})`;
+    clearBtn.classList.add('hidden');
+  }
+
+  $('concept-list').innerHTML = conns.map(c => {
+    const cat = CONCEPT_CATEGORIES[c.category];
+    const unitA = UNITS[c.a - 1], unitB = UNITS[c.b - 1];
+    return `
+    <div class="card" data-unit-pair style="border-left:3px solid ${cat.color};">
+      <div class="flex items-center gap-2 mb-2 flex-wrap">
+        <button class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:${unitA.color}20;color:${unitA.color};" onclick="event.stopPropagation(); filterConceptMap(${c.a})">Unit ${c.a}: ${UNIT_SHORT_NAMES[c.a]}</button>
+        <span style="color:var(--text-muted);">↔</span>
+        <button class="text-xs font-semibold px-2 py-1 rounded-lg" style="background:${unitB.color}20;color:${unitB.color};" onclick="event.stopPropagation(); filterConceptMap(${c.b})">Unit ${c.b}: ${UNIT_SHORT_NAMES[c.b]}</button>
+        <span class="text-xs px-2 py-0.5 rounded-full ml-auto" style="background:${cat.color}20;color:${cat.color};">${cat.label}</span>
+      </div>
+      <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">${c.text}</p>
+    </div>
+  `;
+  }).join('');
 }
 
 window.addEventListener('resize', () => { if (state.currentPage === 'concept-map') renderConceptMap(); });
