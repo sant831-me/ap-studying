@@ -1044,6 +1044,17 @@
 
   <!-- SPARK.E AI TUTOR (StudyFetch & Mindgrasp) -->
   <section id="page-sparke-tutor" class="hidden animate-in">
+    <!-- Password gate -->
+    <div id="sparke-gate" class="hidden card max-w-sm mx-auto mt-12 p-6 text-center">
+      <div class="text-3xl mb-2">🔒</div>
+      <h2 class="font-bold text-lg mb-1">Spark.E is locked</h2>
+      <p class="text-sm mb-4" style="color:var(--text-secondary);">Enter the password to use the AI tutor.</p>
+      <input type="password" id="sparke-gate-input" placeholder="Password" class="w-full p-3 rounded-xl border text-white text-sm mb-2" style="background:var(--bg-secondary); border-color:var(--border);" onkeydown="if(event.key === 'Enter') checkSparkeGate()">
+      <div id="sparke-gate-error" class="hidden text-xs mb-2" style="color:var(--red);">Incorrect password — try again.</div>
+      <button class="btn btn-primary w-full" onclick="checkSparkeGate()">Unlock</button>
+    </div>
+
+    <div id="sparke-gated-content">
     <div class="flex justify-between items-center mb-4">
       <div>
         <h1 class="text-2xl font-bold">🤖 Spark.E AI Tutor</h1>
@@ -1131,6 +1142,7 @@
           <p id="visual-desc" style="color:var(--text-secondary);"></p>
         </div>
       </div>
+    </div>
     </div>
   </section>
 
@@ -4566,7 +4578,7 @@ function navigateTo(page, meta) {
   if (page === 'my-scores') renderMyScores();
   if (page === 'night-before') renderNightBefore();
   if (page === 'lessons') renderLessons();
-  if (page === 'sparke-tutor') initSparkeTutor();
+  if (page === 'sparke-tutor') initSparkeTutorPage();
   if (page === 'live-lecture') initLiveLecture();
   if (page === 'doc-processor') initDocProcessor();
   if (page === 'essay-grader') initEssayGrader();
@@ -7001,6 +7013,43 @@ function updatePomodoroDisplay() {
 }
 
 // ============ SPARK.E AI TUTOR ============
+// Simple client-side gate — not real security, just enough friction to stop
+// random strangers from burning the AI credits. The password is visible to
+// anyone who reads the page source; that's an accepted tradeoff here.
+const SPARKE_PASSWORD = 'Angela';
+const SPARKE_UNLOCK_KEY = 'sparke_unlocked';
+
+function isSparkeUnlocked() {
+  return localStorage.getItem(SPARKE_UNLOCK_KEY) === 'true';
+}
+
+function initSparkeTutorPage() {
+  if (isSparkeUnlocked()) {
+    $('sparke-gate').classList.add('hidden');
+    $('sparke-gated-content').classList.remove('hidden');
+    initSparkeTutor();
+  } else {
+    $('sparke-gate').classList.remove('hidden');
+    $('sparke-gated-content').classList.add('hidden');
+    $('sparke-gate-error').classList.add('hidden');
+    $('sparke-gate-input').value = '';
+  }
+}
+
+function checkSparkeGate() {
+  const input = $('sparke-gate-input');
+  if (input.value === SPARKE_PASSWORD) {
+    localStorage.setItem(SPARKE_UNLOCK_KEY, 'true');
+    $('sparke-gate').classList.add('hidden');
+    $('sparke-gated-content').classList.remove('hidden');
+    initSparkeTutor();
+  } else {
+    $('sparke-gate-error').classList.remove('hidden');
+    input.value = '';
+    input.focus();
+  }
+}
+
 function initSparkeTutor() {
   if (state.sparkeMessages.length === 0) {
     state.sparkeMessages = [{ role: 'assistant', text: "Hi, I'm Spark.E — I'm here to help you work through AP Physics 1. Give me a problem with actual numbers and I'll solve it with you, not just hand you the formula. Or if you're stuck on a concept, just ask and we'll talk it through. What are you working on?" }];
@@ -7057,6 +7106,7 @@ If asked about non-physics topics, gently redirect: "I'm specialized in AP Physi
 const SPARKE_API_URL = 'https://physicsos-sparke.werw8087.workers.dev';
 
 async function sendSparkeMessage() {
+  if (!isSparkeUnlocked()) return;
   const input = $('sparke-chat-input');
   const text = input.value.trim();
   if (!text) return;
@@ -7162,6 +7212,7 @@ function analyzeVisual(type) {
 }
 
 async function uploadVisual(event) {
+  if (!isSparkeUnlocked()) return;
   const file = event.target.files[0];
   if (!file) return;
 
