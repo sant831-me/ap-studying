@@ -7002,18 +7002,18 @@ function updatePomodoroDisplay() {
 
 // ============ SPARK.E AI TUTOR ============
 const SPARKE_RESPONSES = {
-  'atwood': `Great question! An **Atwood Machine** is a classic AP Physics setup. Here is how the *College Board CED* defines we should analyze it:\n\n**What it is:** Two masses connected by a string over a pulley.\n\n**How to solve (based on standard textbook methods like Giancoli):**\n1. Draw FBD for EACH mass separately\n2. Write Newton's 2nd Law for each:\n   - Mass 1 (lighter, going up): T - m₁g = m₁a\n   - Mass 2 (heavier, going down): m₂g - T = m₂a\n3. Add equations to eliminate T:\n   (m₂ - m₁)g = (m₁ + m₂)a\n4. Solve: a = (m₂ - m₁)g / (m₁ + m₂)\n\n**AP Tip from Official Scoring Guidelines:** The tension is NOT equal to either weight! It's between them. T = m₁(g + a) = m₂(g - a). Graders frequently take off points if you assume T = mg for an accelerating system!`,
-  
-  'spring': `Spring potential energy is U = ½kx². Here's WHY it's x² (a concept highly emphasized in *Halliday, Resnick & Krane*):\n\n**Intuition:** As you stretch a spring further, it pushes back HARDER. The force isn't constant — it grows linearly (F = kx). So the work you do is the AREA under the F-vs-x graph, which is a triangle: Area = ½ × base × height = ½ × x × kx = ½kx².\n\n**Key points from the AP CED:**\n• x = displacement from equilibrium (NOT total length!)\n• k = spring constant (stiffness)\n• Energy is ALWAYS positive (x² is always positive)\n• Double the stretch → 4× the energy (quadratic relationship — commonly tested in MCQ!)`,
-  
-  'bernoulli': `**Bernoulli's Principle** in simple terms, as introduced in the new AP Physics 1 (2024-2025) Fluids unit:\n\nImagine water flowing through a pipe. When the pipe gets narrower, the water MUST speed up (continuity equation: A₁v₁ = A₂v₂). But here's the surprising part: **faster water = LOWER pressure.**\n\n**Why?** According to *Knight's Physics for Scientists and Engineers*, think of it as energy conservation for ideal fluids:\nPressure energy + Kinetic energy + Height energy = constant\n\nP + ½ρv² + ρgh = constant\n\nIf v goes up (narrow pipe), P must go down to keep the total constant!\n\n**Real examples (often tested in AP FRQs):**\n• Airplane wings: air moves faster over the curved top → lower pressure above → LIFT\n• Shower curtain gets sucked inward when water runs`,
-  
-  'default': `That's a great physics question! Let me break it down using principles straight from the *College Board CED* and top resources like *Flipping Physics*:\n\n**Key Concept:** In AP Physics 1, always start by identifying:\n1. What system are you analyzing?\n2. What forces act on it? (Draw an FBD!)\n3. Is mechanical energy conserved? (Check for friction/non-conservative forces)\n4. Is linear momentum conserved? (Check for external forces)\n\n**Strategy (from Princeton Review/Barron's):** List your knowns and unknowns, then pick the principle that connects them. Energy problems are often easier than force problems because energy is a scalar (no direction needed!).\n\nWant me to go deeper on any specific topic? Try asking about kinematics, forces, energy, momentum, rotation, oscillations, or fluids!`
+  'atwood': `An Atwood machine is two masses hanging off a string over a pulley — one side falls, the other rises, and since it's the same string, they share one acceleration.\n\nDraw a free-body diagram for each mass separately. For the lighter one (m₁, moving up): T - m₁g = m₁a. For the heavier one (m₂, moving down): m₂g - T = m₂a. Add those two equations and the tension cancels out, leaving a = (m₂ - m₁)g / (m₁ + m₂).\n\nOne thing that trips people up: the tension isn't equal to either weight — it's somewhere in between. You get it by plugging your acceleration back into either equation, e.g. T = m₁(g + a).\n\nIf you've got actual numbers for the two masses, send them over and I'll plug them in and work out the real numbers with you.`,
+
+  'spring': `Spring potential energy is U = ½kx² — and the reason it's squared instead of linear comes down to the force not being constant. The farther you stretch a spring, the harder it pushes back (F = kx), so the work you put in is the area under that force-vs-displacement line, which is a triangle: ½ × base × height = ½ × x × kx = ½kx².\n\nA couple things worth remembering: x is the displacement from the spring's equilibrium position, not its total length, and because it's squared, doubling how far you stretch it quadruples the stored energy — that shows up a lot on multiple choice.`,
+
+  'bernoulli': `Bernoulli's equation is really just energy conservation applied to a moving fluid: pressure energy plus kinetic energy plus height energy stays constant along the flow — P + ½ρv² + ρgh = constant.\n\nThe part that trips people up is that when a pipe narrows, the fluid has to speed up to keep the same volume moving through per second (that's the continuity equation, A₁v₁ = A₂v₂), and faster-moving fluid actually has LOWER pressure, not higher. That's counterintuitive the first time you see it, but it's exactly why an airplane wing generates lift: air moves faster over the curved top, pressure drops there, and the higher pressure underneath pushes the wing up.`,
+
+  'default': `Happy to help — what are you working on specifically? If you've got an actual problem with numbers, paste it in and I'll work through it with you step by step. If it's more of a concept you're stuck on, tell me which one and where it's not clicking, and we'll talk it through.`
 };
 
 function initSparkeTutor() {
   if (state.sparkeMessages.length === 0) {
-    state.sparkeMessages = [{ role: 'assistant', text: "Hi! I'm **Spark.E**, your AI Physics tutor. I'm powered by a real LLM and trained on the official AP CED, Giancoli, Knight, Princeton Review, Barron's, and Flipping Physics.\n\n**I can help you with:**\n• Solving any AP Physics 1 problem step-by-step\n• Explaining concepts in multiple ways\n• Walking through past AP FRQs\n• Identifying common exam traps\n• Working through your specific homework\n\n**Just ask me anything in plain English** — I'll give you a real answer, not a canned response. Try me!" }];
+    state.sparkeMessages = [{ role: 'assistant', text: "Hi, I'm Spark.E — I'm here to help you work through AP Physics 1. Give me a problem with actual numbers and I'll solve it with you, not just hand you the formula. Or if you're stuck on a concept, just ask and we'll talk it through. What are you working on?" }];
   }
   renderSparkeChat();
 }
@@ -7030,19 +7030,7 @@ function renderSparkeChat() {
 }
 
 // SPARK.E SYSTEM PROMPT — Makes the AI act like an expert AP Physics tutor
-const SPARKE_SYSTEM_PROMPT = `You are Spark.E, an expert AP Physics 1 tutor. You are friendly, patient, and incredibly knowledgeable. You teach students like a brilliant peer who deeply understands physics.
-
-YOUR KNOWLEDGE SOURCES (cite these naturally when relevant):
-- College Board AP Physics 1 Course and Exam Description (CED) — the official curriculum
-- College Board released FRQs and scoring guidelines — real past exam questions
-- Giancoli — Physics: Principles with Applications (standard AP textbook)
-- Serway & Jewett — Physics for Scientists and Engineers
-- Knight — Physics for Scientists and Engineers
-- Halliday, Resnick & Krane — classic university physics text
-- Princeton Review AP Physics 1 prep book
-- Barron's AP Physics 1 prep book
-- Flipping Physics (YouTube channel — extremely good for AP)
-- Khan Academy Physics
+const SPARKE_SYSTEM_PROMPT = `You are Spark.E, an AP Physics 1 tutor having a real conversation with a student. You're patient, sharp, and talk like a knowledgeable peer explaining things out loud — not like a textbook or a study guide.
 
 THE 8 OFFICIAL AP PHYSICS 1 UNITS (2024-2025):
 1. Kinematics (10-15%)
@@ -7054,25 +7042,22 @@ THE 8 OFFICIAL AP PHYSICS 1 UNITS (2024-2025):
 7. Oscillations / SHM (5-8%)
 8. Fluids — NEW for 2024-2025 (10-15%)
 
-YOUR TEACHING STYLE:
-- Use the Socratic method when appropriate (ask questions back)
-- Show step-by-step solutions with clear reasoning
-- Always include relevant equations with proper units
-- Highlight common AP exam traps and misconceptions
-- Use **bold** for key terms (will be rendered)
-- Use bullet points for lists
-- Keep responses focused — don't overwhelm with info
-- For math: use proper notation like v² = v₀² + 2aΔx, ½mv², F_net = ma
-- Reference specific textbooks/sources naturally when it adds credibility
+NUMBERS ARE NOT OPTIONAL: If the student's question includes specific numeric values (masses, forces, angles, velocities, whatever), you MUST actually substitute them in and solve for a numeric answer with correct units — never just hand back the general symbolic formula and stop there. Show the arithmetic, not just the setup. If a value you need is missing, say exactly what's missing and ask for it instead of guessing or staying purely symbolic.
 
-IMPORTANT FORMATTING:
-- Use standard Markdown formatting. You can output Markdown tables (using | columns |) and bullet lists. They will be rendered perfectly in the user interface!
-- For equations, write them clearly in plain text using Unicode mathematical characters (like Δ, θ, μ, τ, α, ω, ½, ², ³, ₀, ₓ, ᵧ, etc.). Example: v² = v₀² + 2aΔx or F_net = ma.
-- Do NOT use raw LaTeX brackets (like \\[, \\], \\(, \\)) in your text. Just write math cleanly.
+BE HONEST ABOUT WHAT YOU ACTUALLY KNOW: Do not attribute claims to specific textbooks (Giancoli, Knight, Serway, Halliday, Princeton Review, Barron's, etc.), YouTube channels, or "official scoring guidelines" — you don't have verified access to their specific text, and inventing a citation is worse than having none. You can say a mistake is "a common trap on this exam" or "something a lot of students get wrong" without naming a source for that claim. You may reference the College Board AP Physics 1 Course and Exam Description (CED) by name when stating something genuinely and generically true about its scope (e.g. which unit a topic falls under, or that a topic is/isn't tested) — but never invent specific quotes, page numbers, or wording from it.
+
+HOW YOU TALK:
+- Default to plain conversational sentences, like you're actually talking to the student — not writing a page of a study guide. Don't reach for headers, bold key-term dumps, or bullet lists as your default response shape.
+- If the student's question is vague or broad ("help with momentum", "I don't get energy"), don't dump a full lesson — ask what specifically they're stuck on, or what problem they're looking at, the way a real tutor would before launching into an explanation.
+- Save structured formatting — numbered steps, equation blocks, bullet lists — for when you're actually walking through a step-by-step calculation. That's the one place structure earns its keep.
+- It's fine to ask the student a question back (Socratic-style) instead of just telling them the answer, especially for conceptual questions.
+- Keep it tight. Don't pad a short answer with unnecessary boilerplate ("here's my general approach to any physics problem") when the student asked something specific.
+
+FORMATTING MECHANICS (for when you do use structure, e.g. a calculation):
+- Standard Markdown is supported and rendered: **bold**, bullet lists, and tables (| columns |).
+- Write equations in plain text using Unicode math characters (Δ, θ, μ, τ, α, ω, ½, ², ³, ₀, ₓ, ᵧ) — e.g. v² = v₀² + 2aΔx. No raw LaTeX brackets like \\[ \\] or \\( \\).
 - Use \\n for line breaks and \\n\\n for paragraph breaks.
-- Use **text** for bolding key terms.
-- Keep responses under 300 words unless the question requires depth.
-- Always end with an offer to go deeper or a follow-up question prompt.
+- Keep responses under 300 words unless the question genuinely requires more depth.
 
 If asked about non-physics topics, gently redirect: "I'm specialized in AP Physics 1, but I can help you with [related physics topic]!"`;
 
@@ -7163,18 +7148,18 @@ function generateLocalSparkeResponse(text) {
   if (lower.includes('spring') || lower.includes('hooke')) return SPARKE_RESPONSES.spring;
   if (lower.includes('bernoulli') || lower.includes('fluid')) return SPARKE_RESPONSES.bernoulli;
   if (lower.includes('kinematic') || lower.includes('projectile') || lower.includes('free fall')) {
-    return `**Kinematics** describes motion using position, velocity, and acceleration!\n\n**The 4 Kinematic Equations** (from the AP Formula Sheet):\n• v = v₀ + at\n• Δx = v₀t + ½at²\n• v² = v₀² + 2aΔx\n• Δx = ½(v₀ + v)t\n\n**Strategy:** List your 3 knowns, identify the unknown, pick the equation containing those 4 variables.\n\n**Common AP Trap:** At the peak of a projectile's path, vertical velocity = 0 BUT acceleration is still g downward!\n\nWant me to walk through a specific problem?`;
+    return `Kinematics is just tracking position, velocity, and acceleration over time. The four equations you'll use constantly (they're on the AP formula sheet, so you don't need to memorize them) are v = v₀ + at, Δx = v₀t + ½at², v² = v₀² + 2aΔx, and Δx = ½(v₀ + v)t.\n\nThe trick isn't memorizing them, it's picking the right one — list what you know and what you're solving for, and choose the equation that has exactly those variables. One classic trap: at the top of a projectile's flight, the vertical velocity is zero, but the acceleration is still g downward — it never turns off.\n\nGot a specific problem? Send me the numbers and I'll walk through it with you.`;
   }
   if (lower.includes('newton') || lower.includes('force') || lower.includes('fbd')) {
-    return `**Newton's Laws** are the heart of Unit 2!\n\n**1st Law:** Objects resist changes in motion (inertia)\n**2nd Law:** F_net = ma\n**3rd Law:** Forces come in equal-and-opposite pairs on DIFFERENT objects\n\n**Free-Body Diagram Rules:**\n• Draw only forces ACTING ON the object\n• Never draw velocity or acceleration as forces\n• Label every force\n\nWhat specific force problem are you working on?`;
+    return `Newton's three laws are the backbone of this unit. First law: things keep doing what they're doing unless a net force acts on them. Second law: F_net = ma. Third law: forces always come in equal-and-opposite pairs, but those two forces act on two different objects, so they never cancel out on the same object's free-body diagram.\n\nSpeaking of which — when you draw a free-body diagram, only include forces actually acting ON the object, never velocity, acceleration, or a "force of motion" that doesn't exist.\n\nWhat's the specific force problem you're stuck on?`;
   }
   if (lower.includes('energy') || lower.includes('work')) {
-    return `**Energy** is a SCALAR — that's why it's often easier than forces!\n\n**Key formulas:**\n• K = ½mv²\n• U_g = mgh\n• U_s = ½kx²\n• W = Fd cos θ\n\n**Conservation:** K_i + U_i = K_f + U_f (when only conservative forces act)\n\n**With friction:** K_i + U_i - |W_friction| = K_f + U_f\n\nWhich energy problem can I help with?`;
+    return `Energy's nice to work with because it's a scalar — no direction to track, unlike force. The main quantities are kinetic energy K = ½mv², gravitational PE U_g = mgh, and spring PE U_s = ½kx². When only conservative forces are acting, total mechanical energy is conserved: K_i + U_i = K_f + U_f. If friction's doing work, some of that energy leaves the system: K_i + U_i - |W_friction| = K_f + U_f.\n\nWhat's the setup you're working with?`;
   }
   if (lower.includes('momentum') || lower.includes('collision')) {
-    return `**Momentum (p = mv)** is a VECTOR — direction matters!\n\n**Impulse-Momentum Theorem:** J = FΔt = Δp\n\n**Conservation:** Σp_before = Σp_after (in isolated systems)\n\n**Collision Types:**\n• Elastic: momentum AND KE conserved\n• Inelastic: only momentum conserved\n• Perfectly inelastic: objects STICK together\n\n**AP Trap:** Never use KE conservation for inelastic collisions!\n\nWhat momentum problem are you tackling?`;
+    return `Momentum, p = mv, is a vector, so direction matters — unlike energy. The impulse-momentum theorem ties force and momentum together: J = FΔt = Δp. And in an isolated system, total momentum is conserved before and after a collision, no matter what type it is.\n\nThe type of collision matters for energy though: elastic collisions conserve both momentum and kinetic energy, inelastic ones only conserve momentum, and in a perfectly inelastic collision the objects stick together and you lose the most kinetic energy possible. Big trap: never assume kinetic energy is conserved unless you're told the collision is elastic.\n\nWhat's the momentum problem you're working on?`;
   }
-  return `Great question! Let me help you think about this systematically.\n\n**My approach for any AP Physics problem:**\n1. **Identify the system** — what are you analyzing?\n2. **Draw a diagram** (FBD for forces, energy bar chart for energy)\n3. **List knowns and unknowns**\n4. **Choose the principle** — Newton's Laws? Energy conservation? Momentum?\n5. **Solve symbolically first**, then plug in numbers with units\n\nCan you tell me more about your specific question? I'm here to help you understand the WHY, not just give answers!`;
+  return `Happy to help — what are you working on specifically? If you've got an actual problem with numbers, send it over and I'll work through it with you step by step. If it's more of a concept you're stuck on, tell me which one and where it's not clicking.`;
 }
 
 function suggestSparkePrompt(prompt) {
